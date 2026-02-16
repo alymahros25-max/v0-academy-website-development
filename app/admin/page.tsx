@@ -1,0 +1,661 @@
+"use client"
+
+import { useEffect, useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import {
+  BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
+  Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
+  Menu, XIcon
+} from "lucide-react"
+import useSWR, { mutate as globalMutate } from "swr"
+
+const fetcher = (url: string) => fetch(url).then(r => r.json())
+
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings"
+
+export default function AdminDashboard() {
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState<Tab>("dashboard")
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [authenticated, setAuthenticated] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/admin/auth")
+      .then(r => r.json())
+      .then(data => {
+        if (!data.authenticated) router.push("/admin/login")
+        else setAuthenticated(true)
+      })
+      .catch(() => router.push("/admin/login"))
+      .finally(() => setLoading(false))
+  }, [router])
+
+  const handleLogout = async () => {
+    await fetch("/api/admin/auth", { method: "DELETE" })
+    router.push("/admin/login")
+  }
+
+  if (loading || !authenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background" dir="rtl">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-muted-foreground">جاري التحميل...</p>
+        </div>
+      </div>
+    )
+  }
+
+  const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
+    { id: "dashboard", label: "الرئيسية", icon: LayoutDashboard },
+    { id: "packages", label: "الباقات", icon: Package },
+    { id: "teachers", label: "المعلمين", icon: Users },
+    { id: "reviews", label: "آراء الطلاب", icon: Star },
+    { id: "messages", label: "الرسائل", icon: MessageSquare },
+    { id: "settings", label: "الإعدادات", icon: Settings },
+  ]
+
+  return (
+    <div className="min-h-screen bg-background flex" dir="rtl">
+      {/* Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-foreground/40 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 right-0 z-50 w-64 bg-primary text-primary-foreground transition-transform duration-300 lg:relative lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}`}>
+        <div className="flex flex-col h-full">
+          {/* Logo */}
+          <div className="flex items-center justify-between p-5 border-b border-primary-foreground/10">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-lg bg-secondary text-secondary-foreground flex items-center justify-center">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="font-bold text-sm">لوحة التحكم</p>
+                <p className="text-[10px] text-primary-foreground/60">الحافظ المتميز</p>
+              </div>
+            </div>
+            <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-primary-foreground/60">
+              <XIcon className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Nav */}
+          <nav className="flex-1 p-3 flex flex-col gap-1">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setSidebarOpen(false) }}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? "bg-primary-foreground/10 text-secondary"
+                    : "text-primary-foreground/70 hover:bg-primary-foreground/5 hover:text-primary-foreground"
+                }`}
+              >
+                <tab.icon className="w-5 h-5" />
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Logout */}
+          <div className="p-3 border-t border-primary-foreground/10">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-primary-foreground/70 hover:bg-destructive/20 hover:text-destructive transition-colors w-full"
+            >
+              <LogOut className="w-5 h-5" />
+              تسجيل الخروج
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 min-h-screen">
+        {/* Top bar */}
+        <header className="sticky top-0 z-30 bg-card/95 backdrop-blur-md border-b border-border px-4 lg:px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-muted">
+              <Menu className="w-5 h-5" />
+            </button>
+            <h1 className="text-lg font-bold text-foreground">
+              {tabs.find(t => t.id === activeTab)?.label}
+            </h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground hidden sm:inline">enamel311@gmail.com</span>
+            <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+              م
+            </div>
+          </div>
+        </header>
+
+        {/* Tab Content */}
+        <div className="p-4 lg:p-6">
+          {activeTab === "dashboard" && <DashboardTab />}
+          {activeTab === "packages" && <PackagesTab />}
+          {activeTab === "teachers" && <TeachersTab />}
+          {activeTab === "reviews" && <ReviewsTab />}
+          {activeTab === "messages" && <MessagesTab />}
+          {activeTab === "settings" && <SettingsTab />}
+        </div>
+      </main>
+    </div>
+  )
+}
+
+// Dashboard Tab
+function DashboardTab() {
+  const { data: stats } = useSWR("/api/admin/data?type=stats", fetcher, { refreshInterval: 10000 })
+
+  const cards = [
+    { label: "رسائل جديدة", value: stats?.unreadMessages ?? 0, icon: Mail, color: "bg-blue-500" },
+    { label: "المعلمين النشطين", value: stats?.totalTeachers ?? 0, icon: Users, color: "bg-emerald-500" },
+    { label: "آراء الطلاب", value: stats?.totalReviews ?? 0, icon: Star, color: "bg-amber-500" },
+    { label: "إجمالي الرسائل", value: stats?.totalMessages ?? 0, icon: MessageSquare, color: "bg-purple-500" },
+  ]
+
+  return (
+    <div>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {cards.map((card, idx) => (
+          <div key={idx} className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
+            <div className={`w-12 h-12 rounded-xl ${card.color} text-white flex items-center justify-center`}>
+              <card.icon className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-2xl font-extrabold text-foreground">{card.value}</p>
+              <p className="text-xs text-muted-foreground">{card.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h2 className="font-bold text-foreground mb-3">مرحباً بك في لوحة التحكم</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          من هنا يمكنك إدارة جميع محتويات الموقع: الباقات والأسعار، المعلمين، آراء الطلاب، رسائل التواصل، وإعدادات الموقع العامة.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Packages Tab
+function PackagesTab() {
+  const { data: packages, isLoading } = useSWR("/api/admin/data?type=packages", fetcher)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editData, setEditData] = useState<Record<string, unknown>>({})
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("هل أنت متأكد من حذف هذه الباقة؟")) return
+    await fetch(`/api/admin/data?type=packages&id=${id}`, { method: "DELETE" })
+    globalMutate("/api/admin/data?type=packages")
+  }
+
+  const handleSave = async (id: string) => {
+    await fetch("/api/admin/data", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "packages", id, data: editData }),
+    })
+    setEditingId(null)
+    globalMutate("/api/admin/data?type=packages")
+  }
+
+  if (isLoading) return <LoadingState />
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-bold text-foreground">إدارة الباقات</h2>
+      </div>
+
+      <div className="grid gap-4">
+        {packages?.map((pkg: { id: string; type: string; sessions: number; price: number; popular: boolean }) => (
+          <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
+            {editingId === pkg.id ? (
+              <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-muted-foreground mb-1 block">عدد الحصص</label>
+                    <input
+                      type="number"
+                      value={(editData.sessions as number) ?? pkg.sessions}
+                      onChange={(e) => setEditData({...editData, sessions: parseInt(e.target.value)})}
+                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground mb-1 block">السعر ($)</label>
+                    <input
+                      type="number"
+                      value={(editData.price as number) ?? pkg.price}
+                      onChange={(e) => setEditData({...editData, price: parseInt(e.target.value)})}
+                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-xs text-muted-foreground">الأكثر طلباً:</label>
+                  <button
+                    onClick={() => setEditData({...editData, popular: !(editData.popular ?? pkg.popular)})}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold ${(editData.popular ?? pkg.popular) ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"}`}
+                  >
+                    {(editData.popular ?? pkg.popular) ? "نعم" : "لا"}
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => handleSave(pkg.id)} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
+                    <Check className="w-4 h-4" /> حفظ
+                  </button>
+                  <button onClick={() => setEditingId(null)} className="flex items-center gap-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">
+                    <X className="w-4 h-4" /> إلغاء
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${pkg.type === "quran" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"}`}>
+                    <Package className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-foreground">
+                      {pkg.type === "quran" ? "قرآن" : "عربي"} - {pkg.sessions} حصص
+                      {pkg.popular && <span className="ms-2 text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">الأكثر طلباً</span>}
+                    </p>
+                    <p className="text-sm text-muted-foreground">${pkg.price} شهرياً</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { setEditingId(pkg.id); setEditData(pkg) }}
+                    className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(pkg.id)}
+                    className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Teachers Tab
+function TeachersTab() {
+  const { data: teachers, isLoading } = useSWR("/api/admin/data?type=teachers", fetcher)
+  const [showForm, setShowForm] = useState(false)
+  const [newTeacher, setNewTeacher] = useState({ name: { ar: "", en: "", fr: "" }, specialty: { ar: "", en: "", fr: "" }, experience: "", image: "/images/teacher-quran.jpg", active: true })
+
+  const handleAdd = async () => {
+    if (!newTeacher.name.ar) return
+    await fetch("/api/admin/data", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "teachers", data: newTeacher }),
+    })
+    setShowForm(false)
+    setNewTeacher({ name: { ar: "", en: "", fr: "" }, specialty: { ar: "", en: "", fr: "" }, experience: "", image: "/images/teacher-quran.jpg", active: true })
+    globalMutate("/api/admin/data?type=teachers")
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("هل أنت متأكد من حذف هذا المعلم؟")) return
+    await fetch(`/api/admin/data?type=teachers&id=${id}`, { method: "DELETE" })
+    globalMutate("/api/admin/data?type=teachers")
+  }
+
+  if (isLoading) return <LoadingState />
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-bold text-foreground">إدارة المعلمين</h2>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold"
+        >
+          <Plus className="w-4 h-4" />
+          إضافة معلم
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="bg-card rounded-2xl border border-border p-5 mb-6">
+          <h3 className="font-bold text-foreground mb-4">معلم جديد</h3>
+          <div className="grid sm:grid-cols-2 gap-3 mb-4">
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">الاسم (عربي)</label>
+              <input
+                value={newTeacher.name.ar}
+                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher.name, ar: e.target.value}})}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                placeholder="الاسم بالعربية"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">الاسم (إنجليزي)</label>
+              <input
+                value={newTeacher.name.en}
+                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher.name, en: e.target.value}})}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                placeholder="Name in English"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">التخصص (عربي)</label>
+              <input
+                value={newTeacher.specialty.ar}
+                onChange={(e) => setNewTeacher({...newTeacher, specialty: {...newTeacher.specialty, ar: e.target.value}})}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                placeholder="التخصص"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">سنوات الخبرة</label>
+              <input
+                type="number"
+                value={newTeacher.experience}
+                onChange={(e) => setNewTeacher({...newTeacher, experience: e.target.value})}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                placeholder="10"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={handleAdd} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
+              <Check className="w-4 h-4" /> حفظ
+            </button>
+            <button onClick={() => setShowForm(false)} className="flex items-center gap-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">
+              <X className="w-4 h-4" /> إلغاء
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="grid gap-4">
+        {teachers?.map((teacher: { id: string; name: Record<string, string>; specialty: Record<string, string>; experience: string; active: boolean }) => (
+          <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="font-bold text-foreground">{teacher.name.ar}</p>
+                <p className="text-sm text-muted-foreground">{teacher.specialty.ar} - {teacher.experience} سنة خبرة</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleDelete(teacher.id)}
+                className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Reviews Tab
+function ReviewsTab() {
+  const { data: reviews, isLoading } = useSWR("/api/admin/data?type=reviews", fetcher)
+
+  const handleToggle = async (id: string, active: boolean) => {
+    await fetch("/api/admin/data", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "reviews", id, data: { active: !active } }),
+    })
+    globalMutate("/api/admin/data?type=reviews")
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("هل أنت متأكد؟")) return
+    await fetch(`/api/admin/data?type=reviews&id=${id}`, { method: "DELETE" })
+    globalMutate("/api/admin/data?type=reviews")
+  }
+
+  if (isLoading) return <LoadingState />
+
+  return (
+    <div>
+      <h2 className="text-lg font-bold text-foreground mb-6">آراء الطلاب</h2>
+      <div className="grid gap-4">
+        {reviews?.map((review: { id: string; name: string; rating: number; text: Record<string, string>; active: boolean; createdAt: string }) => (
+          <div key={review.id} className={`bg-card rounded-2xl border p-5 ${review.active ? "border-border" : "border-destructive/30 opacity-60"}`}>
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <p className="font-bold text-foreground">{review.name}</p>
+                <div className="flex items-center gap-1 mt-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? "text-secondary fill-secondary" : "text-muted-foreground/30"}`} />
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => handleToggle(review.id, review.active)}
+                  className={`p-2 rounded-lg transition-colors ${review.active ? "hover:bg-muted text-primary" : "hover:bg-primary/10 text-muted-foreground"}`}
+                  title={review.active ? "إخفاء" : "إظهار"}
+                >
+                  {review.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                </button>
+                <button onClick={() => handleDelete(review.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">{review.text.ar}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Messages Tab
+function MessagesTab() {
+  const { data: messages, isLoading } = useSWR("/api/admin/data?type=messages", fetcher)
+
+  const handleRead = async (id: string) => {
+    await fetch("/api/admin/data", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "messages", id, data: { read: true } }),
+    })
+    globalMutate("/api/admin/data?type=messages")
+    globalMutate("/api/admin/data?type=stats")
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("هل أنت متأكد؟")) return
+    await fetch(`/api/admin/data?type=messages&id=${id}`, { method: "DELETE" })
+    globalMutate("/api/admin/data?type=messages")
+    globalMutate("/api/admin/data?type=stats")
+  }
+
+  if (isLoading) return <LoadingState />
+
+  if (!messages || messages.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <MessageSquare className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
+        <p className="text-lg text-muted-foreground">لا توجد رسائل بعد</p>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <h2 className="text-lg font-bold text-foreground mb-6">رسائل التواصل</h2>
+      <div className="grid gap-4">
+        {messages.map((msg: { id: string; name: string; email: string; phone: string; message: string; read: boolean; createdAt: string }) => (
+          <div key={msg.id} className={`bg-card rounded-2xl border p-5 ${msg.read ? "border-border" : "border-primary/30 bg-primary/5"}`}>
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <p className="font-bold text-foreground flex items-center gap-2">
+                  {msg.name}
+                  {!msg.read && <span className="w-2 h-2 rounded-full bg-primary" />}
+                </p>
+                <p className="text-xs text-muted-foreground">{msg.email} | {msg.phone}</p>
+                <p className="text-xs text-muted-foreground">{new Date(msg.createdAt).toLocaleDateString("ar-EG")}</p>
+              </div>
+              <div className="flex items-center gap-1">
+                {!msg.read && (
+                  <button onClick={() => handleRead(msg.id)} className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="تحديد كمقروء">
+                    <Check className="w-4 h-4" />
+                  </button>
+                )}
+                <button onClick={() => handleDelete(msg.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            <p className="text-sm text-foreground leading-relaxed bg-muted/50 rounded-xl p-3">{msg.message}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Settings Tab
+function SettingsTab() {
+  const { data: settings, isLoading } = useSWR("/api/admin/data?type=settings", fetcher)
+  const [formData, setFormData] = useState<Record<string, unknown> | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+
+  useEffect(() => {
+    if (settings && !formData) setFormData(settings)
+  }, [settings, formData])
+
+  const handleSave = async () => {
+    if (!formData) return
+    setSaving(true)
+    await fetch("/api/admin/data", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "settings", data: formData }),
+    })
+    setSaving(false)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
+    globalMutate("/api/admin/data?type=settings")
+  }
+
+  if (isLoading || !formData) return <LoadingState />
+
+  const s = formData as Record<string, string | Record<string, string>>
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-bold text-foreground">إعدادات الموقع</h2>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold disabled:opacity-50"
+        >
+          {saving ? "جاري الحفظ..." : saved ? "تم الحفظ" : "حفظ التغييرات"}
+        </button>
+      </div>
+
+      <div className="grid gap-6">
+        {/* Contact info */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-bold text-foreground mb-4">بيانات الاتصال</h3>
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">البريد الإلكتروني</label>
+              <input
+                value={s.email as string}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">واتساب</label>
+              <input
+                value={s.whatsapp as string}
+                onChange={(e) => setFormData({...formData, whatsapp: e.target.value})}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">تيليجرام</label>
+              <input
+                value={s.telegram as string}
+                onChange={(e) => setFormData({...formData, telegram: e.target.value})}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Site Names */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-bold text-foreground mb-4">اسم الموقع</h3>
+          <div className="grid sm:grid-cols-3 gap-4">
+            {["ar", "en", "fr"].map((lang) => (
+              <div key={lang}>
+                <label className="text-xs text-muted-foreground mb-1 block">
+                  {lang === "ar" ? "عربي" : lang === "en" ? "إنجليزي" : "فرنسي"}
+                </label>
+                <input
+                  value={(s.siteName as Record<string, string>)?.[lang] || ""}
+                  onChange={(e) => setFormData({...formData, siteName: {...(s.siteName as Record<string, string>), [lang]: e.target.value}})}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero titles */}
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <h3 className="font-bold text-foreground mb-4">عنوان الصفحة الرئيسية</h3>
+          <div className="grid gap-4">
+            {["ar", "en", "fr"].map((lang) => (
+              <div key={lang}>
+                <label className="text-xs text-muted-foreground mb-1 block">
+                  العنوان ({lang === "ar" ? "عربي" : lang === "en" ? "إنجليزي" : "فرنسي"})
+                </label>
+                <input
+                  value={(s.heroTitle as Record<string, string>)?.[lang] || ""}
+                  onChange={(e) => setFormData({...formData, heroTitle: {...(s.heroTitle as Record<string, string>), [lang]: e.target.value}})}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Loading State
+function LoadingState() {
+  return (
+    <div className="flex items-center justify-center py-16">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  )
+}
