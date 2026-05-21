@@ -1,0 +1,25 @@
+# أكاديمية الحافظ المتميز - robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /private
+
+# Sitemap
+Sitemap: https://alhafiz-academy.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /private
+
+# Bing crawler
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /api

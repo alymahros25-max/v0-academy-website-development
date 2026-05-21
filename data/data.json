@@ -1,0 +1,171 @@
+{
+  "packages": [
+    {
+      "id": "pkg_quran_4",
+      "type": "quran",
+      "name_ar": "باقة 4 حصص",
+      "name_en": "4 Sessions Package",
+      "name_fr": "Forfait 4 séances",
+      "sessions": 4,
+      "price": 15,
+      "duration": 30,
+      "features_ar": "مرونة في الوقت، معلمون مجازون، إشراف، حفظ وتجويد ومراجعة وتفسير",
+      "features_en": "Time flexibility, qualified teachers, supervision, memorization, Tajweed, review and interpretation",
+      "features_fr": "Flexibilité horaire, professeurs qualifiés, supervision, mémorisation et Tajweed"
+    },
+    {
+      "id": "pkg_quran_8",
+      "type": "quran",
+      "name_ar": "باقة 8 حصص",
+      "name_en": "8 Sessions Package",
+      "name_fr": "Forfait 8 séances",
+      "sessions": 8,
+      "price": 27,
+      "duration": 30,
+      "features_ar": "مرونة في الوقت، معلمون مجازون، إشراف، حفظ وتجويد ومراجعة وتفسير",
+      "features_en": "Time flexibility, qualified teachers, supervision, memorization, Tajweed, review and interpretation",
+      "features_fr": "Flexibilité horaire, professeurs qualifiés, supervision, mémorisation et Tajweed"
+    },
+    {
+      "id": "pkg_quran_12",
+      "type": "quran",
+      "name_ar": "باقة 12 حصة",
+      "name_en": "12 Sessions Package",
+      "name_fr": "Forfait 12 séances",
+      "sessions": 12,
+      "price": 38,
+      "duration": 30,
+      "features_ar": "مرونة في الوقت، معلمون مجازون، إشراف، حفظ وتجويد ومراجعة وتفسير",
+      "features_en": "Time flexibility, qualified teachers, supervision, memorization, Tajweed, review and interpretation",
+      "features_fr": "Flexibilité horaire, professeurs qualifiés, supervision, mémorisation et Tajweed"
+    },
+    {
+      "id": "pkg_arabic_4",
+      "type": "arabic",
+      "name_ar": "باقة 4 حصص",
+      "name_en": "4 Sessions Package",
+      "name_fr": "Forfait 4 séances",
+      "sessions": 4,
+      "price": 24,
+      "duration": 30,
+      "features_ar": "قراءة وكتابة بطرق حديثة، معلمون مجازون",
+      "features_en": "Reading and writing with modern methods, qualified teachers",
+      "features_fr": "Lecture et écriture avec des méthodes modernes, professeurs qualifiés"
+    },
+    {
+      "id": "pkg_arabic_8",
+      "type": "arabic",
+      "name_ar": "باقة 8 حصص",
+      "name_en": "8 Sessions Package",
+      "name_fr": "Forfait 8 séances",
+      "sessions": 8,
+      "price": 38,
+      "duration": 30,
+      "features_ar": "قراءة وكتابة بطرق حديثة، معلمون مجازون",
+      "features_en": "Reading and writing with modern methods, qualified teachers",
+      "features_fr": "Lecture et écriture avec des méthodes modernes, professeurs qualifiés"
+    },
+    {
+      "id": "pkg_arabic_12",
+      "type": "arabic",
+      "name_ar": "باقة 12 حصة",
+      "name_en": "12 Sessions Package",
+      "name_fr": "Forfait 12 séances",
+      "sessions": 12,
+      "price": 50,
+      "duration": 30,
+      "features_ar": "قراءة وكتابة بطرق حديثة، معلمون مجازون",
+      "features_en": "Reading and writing with modern methods, qualified teachers",
+      "features_fr": "Lecture et écriture avec des méthodes modernes, professeurs qualifiés"
+    }
+  ],
+  "teachers": [
+    {
+      "id": "teacher_1",
+      "name_ar": "أ. فاطمة محمد",
+      "name_en": "Fatima Mohammed",
+      "name_fr": "Fatima Mohammed",
+      "specialization_ar": "تحفيظ قرآن",
+      "specialization_en": "Quran Memorization",
+      "specialization_fr": "Mémorisation du Coran",
+      "experience": "8",
+      "qualification_ar": "ماجستير في الدراسات القرآنية",
+      "qualification_en": "Master's in Quranic Studies",
+      "qualification_fr": "Master en Études Coraniques",
+      "image": "/images/teacher-quran.jpg",
+      "active": true
+    },
+    {
+      "id": "teacher_2",
+      "name_ar": "أ. محمود علي",
+      "name_en": "Mahmoud Ali",
+      "name_fr": "Mahmoud Ali",
+      "specialization_ar": "تأسيس اللغة العربية",
+      "specialization_en": "Arabic Language Fundamentals",
+      "specialization_fr": "Fondamentaux de la langue arabe",
+      "experience": "6",
+      "qualification_ar": "بكالوريوس لغة عربية",
+      "qualification_en": "Bachelor's in Arabic Language",
+      "qualification_fr": "Licence en Langue Arabe",
+      "image": "/images/teacher-quran.jpg",
+      "active": true
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "test_1",
+      "studentName_ar": "عمر أحمد",
+      "studentName_en": "Omar Ahmed",
+      "studentName_fr": "Omar Ahmed",
+      "parentName_ar": "أحمد محمد",
+      "parentName_en": "Ahmed Mohammed",
+      "parentName_fr": "Ahmed Mohammed",
+      "rating": 5,
+      "text_ar": "أكاديمية رائعة جداً، معلمون محترفون والطفل تحسن كثيراً في حفظ القرآن",
+      "text_en": "Excellent academy, professional teachers and the child improved a lot in Quran memorization",
+      "text_fr": "Excellente académie, professeurs professionnels et l'enfant s'est beaucoup amélioré",
+      "approved": true
+    },
+    {
+      "id": "test_2",
+      "studentName_ar": "نور علي",
+      "studentName_en": "Nour Ali",
+      "studentName_fr": "Nour Ali",
+      "parentName_ar": "علي محمود",
+      "parentName_en": "Ali Mahmoud",
+      "parentName_fr": "Ali Mahmoud",
+      "rating": 5,
+      "text_ar": "تطبيق ممتاز وسهل الاستخدام، المعلمة رائعة جداً",
+      "text_en": "Excellent and easy to use app, wonderful teacher",
+      "text_fr": "Excellente application facile à utiliser, professeur merveilleux",
+      "approved": true
+    }
+  ],
+  "contactMessages": [],
+  "libraryBooks": [
+    {
+      "id": "book_1",
+      "title_ar": "تفسير الجلالين",
+      "title_en": "Tafsir Al-Jalalayn",
+      "title_fr": "Tafsir Al-Jalalayn",
+      "description_ar": "تفسير مختصر وسهل للقرآن الكريم",
+      "description_en": "A concise and easy interpretation of the Quran",
+      "description_fr": "Une interprétation concise et facile du Coran",
+      "category": "quran",
+      "image": "/images/library.jpg",
+      "downloadUrl": "#"
+    },
+    {
+      "id": "book_2",
+      "title_ar": "تعليم اللغة العربية للأطفال",
+      "title_en": "Teaching Arabic to Children",
+      "title_fr": "Enseigner l'arabe aux enfants",
+      "description_ar": "كتاب متخصص في تعليم العربية للأطفال",
+      "description_en": "A specialized book for teaching Arabic to children",
+      "description_fr": "Un livre spécialisé pour enseigner l'arabe aux enfants",
+      "category": "arabic",
+      "image": "/images/library.jpg",
+      "downloadUrl": "#"
+    }
+  ]
+}
