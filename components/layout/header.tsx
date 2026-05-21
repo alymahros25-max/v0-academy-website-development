@@ -33,7 +33,9 @@ export function Header() {
     { href: "/library", label: t("nav.library") },
     { href: "/games", label: t("nav.games") },
     { href: "/faq", label: t("nav.faq") },
+    { href: "/blog", label: t("nav.blog") },
     { href: "/contact", label: t("nav.contact") },
+    { href: "/account", label: t("nav.account") },
   ]
 
   return (

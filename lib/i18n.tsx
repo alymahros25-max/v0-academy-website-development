@@ -17,7 +17,9 @@ const translations: Translations = {
   "nav.library": { ar: "المكتبة", en: "Library", fr: "Biblioth\u00e8que" },
   "nav.games": { ar: "الألعاب والمسابقات", en: "Games & Quizzes", fr: "Jeux & Quiz" },
   "nav.faq": { ar: "الأسئلة الشائعة", en: "FAQ", fr: "FAQ" },
+  "nav.blog": { ar: "المدونة", en: "Blog", fr: "Blog" },
   "nav.contact": { ar: "اتصل بنا", en: "Contact Us", fr: "Contactez-nous" },
+  "nav.account": { ar: "حسابي", en: "My Account", fr: "Mon compte" },
   "nav.subscribe": { ar: "اشترك الآن", en: "Subscribe Now", fr: "Abonnez-vous" },
 
   // Hero
@@ -120,14 +122,38 @@ const translations: Translations = {
   "footer.terms": { ar: "شروط الاستخدام", en: "Terms of Use", fr: "Conditions d'utilisation" },
   "footer.contact": { ar: "معلومات الاتصال", en: "Contact Info", fr: "Coordonn\u00e9es" },
 
+  // Blog
+  "blog.title": { ar: "مدونة الحافظ المتميز", en: "Al-Hafiz Blog", fr: "Blog Al-Hafiz" },
+  "blog.desc": { ar: "مقالات وإرشادات حول تحفيظ القرآن وتعليم اللغة العربية", en: "Articles and guides on Quran memorization and Arabic language teaching", fr: "Articles et guides sur la mémorisation du Coran" },
+  "blog.readTime": { ar: "دقائق القراءة", en: "min read", fr: "min de lecture" },
+  "blog.publishedOn": { ar: "نُشرت في", en: "Published on", fr: "Publié le" },
+  "blog.author": { ar: "الكاتب", en: "Author", fr: "Auteur" },
+  "blog.category": { ar: "الفئة", en: "Category", fr: "Catégorie" },
+  "blog.relatedArticles": { ar: "مقالات ذات صلة", en: "Related Articles", fr: "Articles connexes" },
+  "blog.backToBlog": { ar: "العودة للمدونة", en: "Back to Blog", fr: "Retour au blog" },
+
+  // Account
+  "account.title": { ar: "حسابي", en: "My Account", fr: "Mon compte" },
+  "account.login": { ar: "تسجيل الدخول", en: "Sign In", fr: "Se connecter" },
+  "account.signup": { ar: "إنشاء حساب", en: "Sign Up", fr: "S'inscrire" },
+  "account.logout": { ar: "تسجيل الخروج", en: "Sign Out", fr: "Se déconnecter" },
+  "account.email": { ar: "البريد الإلكتروني", en: "Email", fr: "E-mail" },
+  "account.password": { ar: "كلمة المرور", en: "Password", fr: "Mot de passe" },
+  "account.name": { ar: "الاسم الكامل", en: "Full Name", fr: "Nom complet" },
+  "account.phone": { ar: "رقم الهاتف", en: "Phone Number", fr: "Numéro de téléphone" },
+  "account.dontHaveAccount": { ar: "ليس لديك حساب؟", en: "Don't have an account?", fr: "Vous n'avez pas de compte?" },
+  "account.haveAccount": { ar: "هل لديك حساب بالفعل؟", en: "Already have an account?", fr: "Vous avez déjà un compte?" },
+  "account.profile": { ar: "الملف الشخصي", en: "Profile", fr: "Profil" },
+  "account.myOrders": { ar: "طلباتي", en: "My Orders", fr: "Mes commandes" },
+
   // Common
   "common.readMore": { ar: "اقرأ المزيد", en: "Read More", fr: "En savoir plus" },
-  "common.download": { ar: "تحميل", en: "Download", fr: "T\u00e9l\u00e9charger" },
+  "common.download": { ar: "تحميل", en: "Download", fr: "Télécharger" },
   "common.read": { ar: "قراءة", en: "Read", fr: "Lire" },
   "common.play": { ar: "العب الآن", en: "Play Now", fr: "Jouer" },
   "common.score": { ar: "النتيجة", en: "Score", fr: "Score" },
   "common.next": { ar: "التالي", en: "Next", fr: "Suivant" },
-  "common.tryAgain": { ar: "حاول مرة أخرى", en: "Try Again", fr: "R\u00e9essayer" },
+  "common.tryAgain": { ar: "حاول مرة أخرى", en: "Try Again", fr: "Réessayer" },
   "common.correct": { ar: "إجابة صحيحة!", en: "Correct!", fr: "Correct!" },
   "common.wrong": { ar: "إجابة خاطئة!", en: "Wrong!", fr: "Incorrect!" },
 }

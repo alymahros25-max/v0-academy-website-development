@@ -1,7 +1,27 @@
 import { NextResponse } from "next/server"
-import { DataStore } from "@/lib/data-store"
+import { getMessages, setMessages } from "@/lib/data-store"
+import fs from "fs/promises"
+import path from "path"
 
-const dataStore = new DataStore()
+async function loadData() {
+  try {
+    const dataPath = path.join(process.cwd(), "data", "data.json")
+    const content = await fs.readFile(dataPath, "utf-8")
+    return JSON.parse(content)
+  } catch {
+    return { contactMessages: [] }
+  }
+}
+
+async function saveData(data: any) {
+  try {
+    const dataPath = path.join(process.cwd(), "data", "data.json")
+    await fs.mkdir(path.dirname(dataPath), { recursive: true })
+    await fs.writeFile(dataPath, JSON.stringify(data, null, 2))
+  } catch (error) {
+    console.error("Failed to save data:", error)
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -36,10 +56,10 @@ export async function POST(request: Request) {
       replied: false,
     }
 
-    const data = await dataStore.loadData()
+    const data = await loadData()
     data.contactMessages = data.contactMessages || []
     data.contactMessages.push(newMessage)
-    await dataStore.saveData(data)
+    await saveData(data)
 
     console.log("[Contact Message Received]", newMessage)
 
@@ -63,7 +83,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const data = await dataStore.loadData()
+    const data = await loadData()
     return NextResponse.json({ messages: data.contactMessages || [] })
   } catch (error) {
     console.error("Failed to fetch messages:", error)
