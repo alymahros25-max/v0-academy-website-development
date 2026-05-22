@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ar_SA",
     alternateLocale: ["en_US", "fr_FR"],
-    url: "https://alhafiz-academy.com",
+    url: "https://quran-elhafez.com",
     siteName: "أكاديمية الحافظ المتميز اون لاين",
     title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
     description:

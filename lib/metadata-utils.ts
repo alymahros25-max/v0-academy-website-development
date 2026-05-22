@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const defaultMetadata: Metadata = {
-  metadataBase: new URL('https://alhafiz-academy.com'),
+  metadataBase: new URL('https://quran-elhafez.com'),
   title: {
     default: 'أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي',
     template: '%s | أكاديمية الحافظ المتميز',
@@ -19,7 +19,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'تحفيظ القرآن الكريم اون لاين',
         description: 'حلقات تحفيظ قران اون لاين مع معلمين مجازين',
         type: 'website',
-        url: 'https://alhafiz-academy.com/quran',
+        url: 'https://quran-elhafez.com/quran',
       },
     },
     arabic: {
@@ -30,7 +30,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'تأسيس اللغة العربية للأطفال',
         description: 'برامج تأسيس اللغة العربية بطرق حديثة',
         type: 'website',
-        url: 'https://alhafiz-academy.com/arabic',
+        url: 'https://quran-elhafez.com/arabic',
       },
     },
     about: {
@@ -41,7 +41,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'من نحن',
         description: 'تعرف على أكاديمية الحافظ المتميز',
         type: 'website',
-        url: 'https://alhafiz-academy.com/about',
+        url: 'https://quran-elhafez.com/about',
       },
     },
     teachers: {
@@ -52,7 +52,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'المعلمين',
         description: 'فريق المعلمين المجازين والمتخصصين',
         type: 'website',
-        url: 'https://alhafiz-academy.com/teachers',
+        url: 'https://quran-elhafez.com/teachers',
       },
     },
     reviews: {
@@ -63,7 +63,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'آراء الطلاب',
         description: 'آراء وتقييمات الطلاب وأولياء الأمور',
         type: 'website',
-        url: 'https://alhafiz-academy.com/reviews',
+        url: 'https://quran-elhafez.com/reviews',
       },
     },
     library: {
@@ -74,7 +74,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'المكتبة الرقمية',
         description: 'موارد تعليمية وكتب رقمية',
         type: 'website',
-        url: 'https://alhafiz-academy.com/library',
+        url: 'https://quran-elhafez.com/library',
       },
     },
     games: {
@@ -85,7 +85,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'الألعاب والمسابقات',
         description: 'ألعاب تعليمية وممتعة',
         type: 'website',
-        url: 'https://alhafiz-academy.com/games',
+        url: 'https://quran-elhafez.com/games',
       },
     },
     faq: {
@@ -96,7 +96,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'الأسئلة الشائعة',
         description: 'الأسئلة الشائعة والإجابات',
         type: 'website',
-        url: 'https://alhafiz-academy.com/faq',
+        url: 'https://quran-elhafez.com/faq',
       },
     },
     contact: {
@@ -107,7 +107,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         title: 'اتصل بنا',
         description: 'تواصل معنا لأي استفسارات',
         type: 'website',
-        url: 'https://alhafiz-academy.com/contact',
+        url: 'https://quran-elhafez.com/contact',
       },
     },
     privacy: {

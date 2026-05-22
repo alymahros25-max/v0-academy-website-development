@@ -782,7 +782,7 @@ function PagesTab() {
 
 // SEO Guide Tab
 function SEOGuideTab() {
-  const siteUrl = "https://alhafiz-academy.com"
+  const siteUrl = "https://quran-elhafez.com"
   
   const steps = [
     {
