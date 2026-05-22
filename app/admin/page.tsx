@@ -11,7 +11,7 @@ import useSWR, { mutate as globalMutate } from "swr"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -53,7 +53,9 @@ export default function AdminDashboard() {
     { id: "teachers", label: "المعلمين", icon: Users },
     { id: "reviews", label: "آراء الطلاب", icon: Star },
     { id: "messages", label: "الرسائل", icon: MessageSquare },
+    { id: "pages", label: "الصفحات", icon: BookOpen },
     { id: "settings", label: "الإعدادات", icon: Settings },
+    { id: "seo-guide", label: "نشر Google", icon: Mail },
   ]
 
   return (
@@ -126,7 +128,7 @@ export default function AdminDashboard() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground hidden sm:inline">enamel311@gmail.com</span>
+            <span className="text-xs text-muted-foreground hidden sm:inline">alymahros25@gmail.com</span>
             <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
               م
             </div>
@@ -140,7 +142,9 @@ export default function AdminDashboard() {
           {activeTab === "teachers" && <TeachersTab />}
           {activeTab === "reviews" && <ReviewsTab />}
           {activeTab === "messages" && <MessagesTab />}
+          {activeTab === "pages" && <PagesTab />}
           {activeTab === "settings" && <SettingsTab />}
+          {activeTab === "seo-guide" && <SEOGuideTab />}
         </div>
       </main>
     </div>
@@ -647,6 +651,112 @@ function SettingsTab() {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+// Pages Tab - للتحكم في جميع صفحات الموقع
+function PagesTab() {
+  const pages = [
+    { name: "الصفحة الرئيسية", path: "/", description: "الصفحة الرئيسية للموقع" },
+    { name: "من نحن", path: "/about", description: "معلومات عن الأكاديمية" },
+    { name: "القرآن الكريم", path: "/quran", description: "باقات تحفيظ القرآن" },
+    { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
+    { name: "المعلمين", path: "/teachers", description: "قائمة المعلمين المجازين" },
+    { name: "آراء الطلاب", path: "/reviews", description: "تقييمات وآراء الطلاب" },
+    { name: "المكتبة", path: "/library", description: "المكتبة الرقمية" },
+    { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
+    { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
+    { name: "المدونة", path: "/blog", description: "مقالات وإرشادات" },
+    { name: "اتصل بنا", path: "/contact", description: "نموذج التواصل" },
+    { name: "حسابي", path: "/account", description: "تسجيل الحساب" },
+    { name: "الخصوصية", path: "/privacy", description: "سياسة الخصوصية" },
+    { name: "الشروط والأحكام", path: "/terms", description: "شروط الاستخدام" },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h2 className="text-2xl font-bold text-foreground mb-4">إدارة الصفحات</h2>
+        <p className="text-sm text-muted-foreground mb-6">اضغط على أي صفحة لفتحها وتحريرها</p>
+        
+        <div className="grid sm:grid-cols-2 gap-4">
+          {pages.map((page, idx) => (
+            <a
+              key={idx}
+              href={page.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col gap-2 p-4 rounded-xl border border-border hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
+            >
+              <p className="font-medium text-foreground flex items-center justify-between">
+                {page.name}
+                <span className="text-xs text-primary">→</span>
+              </p>
+              <p className="text-xs text-muted-foreground">{page.description}</p>
+              <p className="text-[10px] text-muted-foreground/50 font-mono">{page.path}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// SEO Guide Tab
+function SEOGuideTab() {
+  const siteUrl = "https://alhafiz-academy.com"
+  
+  const steps = [
+    {
+      title: "1. التحقق من ملفات SEO الأساسية",
+      items: [
+        { label: "✓ Sitemap", desc: "متوفر على /sitemap.xml" },
+        { label: "✓ Robots.txt", desc: "متوفر على /robots.txt" },
+        { label: "✓ Meta Tags", desc: "محسّنة في جميع الصفحات" },
+      ]
+    },
+    {
+      title: "2. إنشاء Google Search Console",
+      items: [
+        { label: "الخطوة 1", desc: "اذهب إلى https://search.google.com/search-console" },
+        { label: "الخطوة 2", desc: "اختر 'Property' > 'Add property'" },
+        { label: "الخطوة 3", desc: "أدخل URL الموقع" },
+      ]
+    },
+    {
+      title: "3. إرسال Sitemap إلى Google",
+      items: [
+        { label: "الخطوة 1", desc: "في Search Console، اذهب إلى Sitemaps" },
+        { label: "الخطوة 2", desc: `أدخل: ${siteUrl}/sitemap.xml` },
+        { label: "الخطوة 3", desc: "اضغط 'Submit'" },
+      ]
+    },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-card rounded-2xl border border-border p-6 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <h2 className="text-2xl font-bold text-foreground mb-2">نشر الموقع على Google</h2>
+        <p className="text-sm text-muted-foreground">دليل شامل لتسجيل وتفهرس الموقع</p>
+      </div>
+
+      {steps.map((step, idx) => (
+        <div key={idx} className="bg-card rounded-2xl border border-border p-6">
+          <h3 className="font-bold text-lg text-foreground mb-4">{step.title}</h3>
+          <div className="space-y-3">
+            {step.items.map((item, i) => (
+              <div key={i} className="flex gap-3">
+                <div className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{item.label}</p>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

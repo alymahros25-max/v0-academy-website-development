@@ -1,8 +1,9 @@
 import { cookies } from "next/headers"
 import { createHash } from "crypto"
 
-const ADMIN_EMAIL = "enamel311@gmail.com"
-const ADMIN_PASSWORD_HASH = createHash("sha256").update("admin@hafiz2025").digest("hex")
+const ADMIN_EMAIL = "alymahros25@gmail.com"
+const ADMIN_PASSWORD = "admin@hafiz2025"
+const ADMIN_PASSWORD_HASH = createHash("sha256").update(ADMIN_PASSWORD).digest("hex")
 const SESSION_COOKIE = "admin_session"
 const SESSION_SECRET = "hafiz-academy-secret-key-2025"
 
