@@ -189,33 +189,61 @@ function DashboardTab() {
 
 // Packages Tab
 function PackagesTab() {
-  const { data: packages, isLoading } = useSWR("/api/admin/data?type=packages", fetcher)
+  const { data: packages, isLoading, error } = useSWR("/api/admin/data?type=packages", fetcher, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 60000 
+  })
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editData, setEditData] = useState<Record<string, unknown>>({})
+  const [message, setMessage] = useState("")
 
   const handleDelete = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذه الباقة؟")) return
-    await fetch(`/api/admin/data?type=packages&id=${id}`, { method: "DELETE" })
-    globalMutate("/api/admin/data?type=packages")
+    try {
+      const res = await fetch(`/api/admin/data?type=packages&id=${id}`, { method: "DELETE" })
+      if (res.ok) {
+        setMessage("تم حذف الباقة بنجاح")
+        globalMutate("/api/admin/data?type=packages")
+      }
+    } catch (err) {
+      console.error("Delete error:", err)
+      setMessage("خطأ في الحذف")
+    }
   }
 
   const handleSave = async (id: string) => {
-    await fetch("/api/admin/data", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "packages", id, data: editData }),
-    })
-    setEditingId(null)
-    globalMutate("/api/admin/data?type=packages")
+    try {
+      const res = await fetch("/api/admin/data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "packages", id, data: editData }),
+      })
+      if (res.ok) {
+        setMessage("تم الحفظ بنجاح")
+        setEditingId(null)
+        globalMutate("/api/admin/data?type=packages")
+      }
+    } catch (err) {
+      console.error("Save error:", err)
+      setMessage("خطأ في الحفظ")
+    }
   }
 
   if (isLoading) return <LoadingState />
+  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (!packages || packages.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-bold text-foreground">إدارة الباقات</h2>
       </div>
+
+      {message && (
+        <div className="mb-4 p-3 rounded-lg bg-green-500/10 text-green-600 text-sm">
+          {message}
+        </div>
+      )}
 
       <div className="grid gap-4">
         {packages?.map((pkg: { id: string; type: string; sessions: number; price: number; popular: boolean }) => (
@@ -299,29 +327,47 @@ function PackagesTab() {
 
 // Teachers Tab
 function TeachersTab() {
-  const { data: teachers, isLoading } = useSWR("/api/admin/data?type=teachers", fetcher)
-  const [showForm, setShowForm] = useState(false)
-  const [newTeacher, setNewTeacher] = useState({ name: { ar: "", en: "", fr: "" }, specialty: { ar: "", en: "", fr: "" }, experience: "", image: "/images/teacher-quran.jpg", active: true })
-
-  const handleAdd = async () => {
-    if (!newTeacher.name.ar) return
-    await fetch("/api/admin/data", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "teachers", data: newTeacher }),
-    })
-    setShowForm(false)
-    setNewTeacher({ name: { ar: "", en: "", fr: "" }, specialty: { ar: "", en: "", fr: "" }, experience: "", image: "/images/teacher-quran.jpg", active: true })
-    globalMutate("/api/admin/data?type=teachers")
-  }
+  const { data: teachers, isLoading, error } = useSWR("/api/admin/data?type=teachers", fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000
+  })
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editData, setEditData] = useState<Record<string, unknown>>({})
+  const [message, setMessage] = useState("")
 
   const handleDelete = async (id: string) => {
-    if (!confirm("هل أنت متأكد من حذف هذا المعلم؟")) return
-    await fetch(`/api/admin/data?type=teachers&id=${id}`, { method: "DELETE" })
-    globalMutate("/api/admin/data?type=teachers")
+    if (!confirm("هل أنت متأكد من حذف المعلم؟")) return
+    try {
+      const res = await fetch(`/api/admin/data?type=teachers&id=${id}`, { method: "DELETE" })
+      if (res.ok) {
+        setMessage("تم حذف المعلم بنجاح")
+        globalMutate("/api/admin/data?type=teachers")
+      }
+    } catch (err) {
+      console.error("Delete error:", err)
+    }
+  }
+
+  const handleSave = async (id: string) => {
+    try {
+      const res = await fetch("/api/admin/data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "teachers", id, data: editData }),
+      })
+      if (res.ok) {
+        setMessage("تم الحفظ بنجاح")
+        setEditingId(null)
+        globalMutate("/api/admin/data?type=teachers")
+      }
+    } catch (err) {
+      console.error("Save error:", err)
+    }
   }
 
   if (isLoading) return <LoadingState />
+  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (!teachers || teachers.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
 
   return (
     <div>
@@ -335,6 +381,12 @@ function TeachersTab() {
           إضافة معلم
         </button>
       </div>
+
+      {message && (
+        <div className="mb-4 p-3 rounded-lg bg-green-500/10 text-green-600 text-sm">
+          {message}
+        </div>
+      )}
 
       {showForm && (
         <div className="bg-card rounded-2xl border border-border p-5 mb-6">
@@ -418,24 +470,14 @@ function TeachersTab() {
 
 // Reviews Tab
 function ReviewsTab() {
-  const { data: reviews, isLoading } = useSWR("/api/admin/data?type=reviews", fetcher)
-
-  const handleToggle = async (id: string, active: boolean) => {
-    await fetch("/api/admin/data", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "reviews", id, data: { active: !active } }),
-    })
-    globalMutate("/api/admin/data?type=reviews")
-  }
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("هل أنت متأكد؟")) return
-    await fetch(`/api/admin/data?type=reviews&id=${id}`, { method: "DELETE" })
-    globalMutate("/api/admin/data?type=reviews")
-  }
+  const { data: reviews, isLoading, error } = useSWR("/api/admin/data?type=reviews", fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000
+  })
 
   if (isLoading) return <LoadingState />
+  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (!reviews || reviews.length === 0) return <div className="p-4 text-muted-foreground">لا توجد آراء</div>
 
   return (
     <div>
@@ -764,8 +806,9 @@ function SEOGuideTab() {
 // Loading State
 function LoadingState() {
   return (
-    <div className="flex items-center justify-center py-16">
+    <div className="flex flex-col items-center justify-center py-16 gap-4">
       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-sm text-muted-foreground">جاري التحميل...</p>
     </div>
   )
 }
