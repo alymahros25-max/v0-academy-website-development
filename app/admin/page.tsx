@@ -8,7 +8,6 @@ import {
   Menu, XIcon
 } from "lucide-react"
 import useSWR, { mutate as globalMutate } from "swr"
-import { translateObject } from "@/lib/auto-translate"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
@@ -214,34 +213,23 @@ function PackagesTab() {
 
   const handleSave = async (id: string) => {
     try {
-      setMessage("جاري الحفظ والترجمة...")
-      
-      let dataToSave = { ...editData }
-      
-      // Auto-translate if there's Arabic text
-      const fieldsToTranslate = ["name", "description", "features"]
-      for (const field of fieldsToTranslate) {
-        if (editData[field] && typeof editData[field] === "string") {
-          const translations = await translateObject({ [field]: editData[field] }, [field], "ar")
-          dataToSave[`${field}_ar`] = translations[`${field}_ar`]
-          dataToSave[`${field}_en`] = translations[`${field}_en`]
-          dataToSave[`${field}_fr`] = translations[`${field}_fr`]
-        }
-      }
+      setMessage("جاري الحفظ...")
       
       const res = await fetch("/api/admin/data", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "packages", id, data: dataToSave }),
+        body: JSON.stringify({ type: "packages", id, data: editData }),
       })
       if (res.ok) {
-        setMessage("تم الحفظ والترجمة بنجاح")
+        setMessage("تم الحفظ بنجاح")
         setEditingId(null)
-        setTimeout(() => globalMutate("/api/admin/data?type=packages"), 500)
+        globalMutate("/api/admin/data?type=packages")
+      } else {
+        setMessage("خطأ في الحفظ")
       }
     } catch (err) {
       console.error("Save error:", err)
-      setMessage("خطأ في الحفظ أو الترجمة")
+      setMessage("خطأ في الحفظ")
     }
   }
 
@@ -350,6 +338,32 @@ function TeachersTab() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editData, setEditData] = useState<Record<string, unknown>>({})
   const [message, setMessage] = useState("")
+  const [showForm, setShowForm] = useState(false)
+  const [newTeacher, setNewTeacher] = useState({
+    name: { ar: "", en: "" },
+    specialty: { ar: "", en: "" },
+    experience: ""
+  })
+
+  const handleAdd = async () => {
+    try {
+      setMessage("جاري الإضافة...")
+      const res = await fetch("/api/admin/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "teachers", data: newTeacher }),
+      })
+      if (res.ok) {
+        setMessage("تم إضافة المعلم بنجاح")
+        setShowForm(false)
+        setNewTeacher({ name: { ar: "", en: "" }, specialty: { ar: "", en: "" }, experience: "" })
+        globalMutate("/api/admin/data?type=teachers")
+      }
+    } catch (err) {
+      console.error("Add error:", err)
+      setMessage("خطأ في الإضافة")
+    }
+  }
 
   const handleDelete = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف المعلم؟")) return
@@ -366,34 +380,23 @@ function TeachersTab() {
 
   const handleSave = async (id: string) => {
     try {
-      setMessage("جاري الحفظ والترجمة...")
-      
-      let dataToSave = { ...editData }
-      
-      // Auto-translate if there's Arabic text
-      const fieldsToTranslate = ["name", "specialization", "qualification"]
-      for (const field of fieldsToTranslate) {
-        if (editData[field] && typeof editData[field] === "string") {
-          const translations = await translateObject({ [field]: editData[field] }, [field], "ar")
-          dataToSave[`${field}_ar`] = translations[`${field}_ar`]
-          dataToSave[`${field}_en`] = translations[`${field}_en`]
-          dataToSave[`${field}_fr`] = translations[`${field}_fr`]
-        }
-      }
+      setMessage("جاري الحفظ...")
       
       const res = await fetch("/api/admin/data", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "teachers", id, data: dataToSave }),
+        body: JSON.stringify({ type: "teachers", id, data: editData }),
       })
       if (res.ok) {
-        setMessage("تم الحفظ والترجمة بنجاح")
+        setMessage("تم الحفظ بنجاح")
         setEditingId(null)
-        setTimeout(() => globalMutate("/api/admin/data?type=teachers"), 500)
+        globalMutate("/api/admin/data?type=teachers")
+      } else {
+        setMessage("خطأ في الحفظ")
       }
     } catch (err) {
       console.error("Save error:", err)
-      setMessage("خطأ في الحفظ أو الترجمة")
+      setMessage("خطأ في الحفظ")
     }
   }
 
