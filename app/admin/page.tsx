@@ -11,7 +11,7 @@ import useSWR, { mutate as globalMutate } from "swr"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -54,6 +54,7 @@ export default function AdminDashboard() {
     { id: "reviews", label: "آراء الطلاب", icon: Star },
     { id: "messages", label: "الرسائل", icon: MessageSquare },
     { id: "pages", label: "الصفحات", icon: BookOpen },
+    { id: "zapier", label: "Zapier (مقالات)", icon: Mail },
     { id: "settings", label: "الإعدادات", icon: Settings },
     { id: "seo-guide", label: "نشر Google", icon: Mail },
   ]
@@ -143,6 +144,7 @@ export default function AdminDashboard() {
           {activeTab === "reviews" && <ReviewsTab />}
           {activeTab === "messages" && <MessagesTab />}
           {activeTab === "pages" && <PagesTab />}
+          {activeTab === "zapier" && <ZapierTab />}
           {activeTab === "settings" && <SettingsTab />}
           {activeTab === "seo-guide" && <SEOGuideTab />}
         </div>
@@ -834,6 +836,144 @@ function SEOGuideTab() {
           </div>
         </div>
       ))}
+    </div>
+  )
+}
+
+// Zapier Integration Tab
+function ZapierTab() {
+  const [apiKey, setApiKey] = useState('')
+  const [showKey, setShowKey] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const apiEndpoint = 'https://quran-elhafez.com/api/zapier/publish-article'
+  const defaultApiKey = process.env.NEXT_PUBLIC_ZAPIER_API_KEY || 'your-secret-key-here'
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl border border-primary/20 p-8">
+        <h2 className="text-2xl font-bold text-foreground mb-2">ربط Zapier مع الموقع</h2>
+        <p className="text-muted-foreground">نشر المقالات تلقائياً من Google Docs، Notion، أو Airtable</p>
+      </div>
+
+      {/* API Endpoint */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">API Endpoint</h3>
+        <div className="flex items-center gap-2 p-4 bg-muted rounded-lg font-mono text-sm">
+          <span className="flex-1 text-foreground break-all">{apiEndpoint}</span>
+          <button
+            onClick={() => copyToClipboard(apiEndpoint)}
+            className="px-3 py-2 bg-primary text-primary-foreground rounded text-xs font-medium hover:opacity-90"
+          >
+            {copied ? '✓ تم' : 'نسخ'}
+          </button>
+        </div>
+      </div>
+
+      {/* API Key */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">مفتاح API</h3>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">استخدم هذا المفتاح في headers الـ Zapier</p>
+          <div className="flex items-center gap-2 p-4 bg-muted rounded-lg font-mono text-sm">
+            <span className="flex-1">
+              {showKey ? 'your-secret-key-here' : '••••••••••••••••'}
+            </span>
+            <button
+              onClick={() => setShowKey(!showKey)}
+              className="p-2 text-muted-foreground hover:text-foreground"
+            >
+              {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+            <button
+              onClick={() => copyToClipboard('your-secret-key-here')}
+              className="px-3 py-2 bg-primary text-primary-foreground rounded text-xs font-medium hover:opacity-90"
+            >
+              {copied ? '✓ تم' : 'نسخ'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Instructions */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">خطوات الربط</h3>
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">1</div>
+            <div>
+              <p className="font-medium text-foreground">افتح Zapier واختر Create Zap</p>
+              <p className="text-sm text-muted-foreground">https://zapier.com/app/home</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">2</div>
+            <div>
+              <p className="font-medium text-foreground">اختر Trigger (Google Docs / Notion / Airtable)</p>
+              <p className="text-sm text-muted-foreground">الحدث الذي يشغل النشر</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">3</div>
+            <div>
+              <p className="font-medium text-foreground">اختر Action: Webhooks by Zapier</p>
+              <p className="text-sm text-muted-foreground">اختر POST من الخيارات</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">4</div>
+            <div>
+              <p className="font-medium text-foreground">أدخل البيانات أعلاه</p>
+              <p className="text-sm text-muted-foreground">URL + API Key + Body JSON</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Example Body */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">مثال JSON Body</h3>
+        <pre className="bg-muted p-4 rounded-lg text-xs overflow-auto text-foreground font-mono">
+{`{
+  "slug": "article-slug",
+  "title": {
+    "ar": "عنوان المقالة",
+    "en": "Article Title",
+    "fr": "Titre de l'article"
+  },
+  "description": {
+    "ar": "وصف المقالة",
+    "en": "Description",
+    "fr": "Description"
+  },
+  "content": {
+    "ar": "<h2>محتوى المقالة</h2>",
+    "en": "<h2>Article Content</h2>",
+    "fr": "<h2>Contenu</h2>"
+  },
+  "category": "تحفيظ القرآن",
+  "image": "https://example.com/image.jpg"
+}`}
+        </pre>
+      </div>
+
+      {/* Documentation Link */}
+      <div className="bg-card rounded-2xl border border-border p-6 text-center">
+        <a
+          href="/ZAPIER_SETUP.md"
+          target="_blank"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90"
+        >
+          📖 دليل كامل لـ Zapier
+          <ChevronDown className="w-4 h-4" />
+        </a>
+      </div>
     </div>
   )
 }
