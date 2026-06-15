@@ -38,6 +38,14 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "أكاديمية الحافظ المتميز" }],
   creator: "أكاديمية الحافظ المتميز",
+  alternates: {
+    languages: {
+      'ar': 'https://quran-elhafez.com',
+      'en': 'https://quran-elhafez.com?lang=en',
+      'fr': 'https://quran-elhafez.com?lang=fr',
+      'x-default': 'https://quran-elhafez.com',
+    },
+  },
   openGraph: {
     type: "website",
     locale: "ar_SA",
