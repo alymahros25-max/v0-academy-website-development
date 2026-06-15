@@ -38,14 +38,36 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const post = blogPosts[params.slug]
   if (!post) return { title: "Not Found" }
 
+  const baseUrl = 'https://quran-elhafez.com'
+  const articleUrl = `${baseUrl}/blog/${params.slug}`
+
   return {
     title: post.title.ar,
     description: post.description.ar,
     keywords: post.keywords.ar,
+    alternates: {
+      languages: {
+        'ar': articleUrl,
+        'en': `${articleUrl}?lang=en`,
+        'fr': `${articleUrl}?lang=fr`,
+        'x-default': articleUrl,
+      },
+    },
     openGraph: {
       title: post.title.ar,
       description: post.description.ar,
+      type: 'article',
+      url: articleUrl,
       images: [{ url: post.image }],
+      publishedTime: post.date,
+      authors: [post.author.ar],
+      tags: post.keywords.ar.split(', '),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title.ar,
+      description: post.description.ar,
+      images: [post.image],
     },
   }
 }

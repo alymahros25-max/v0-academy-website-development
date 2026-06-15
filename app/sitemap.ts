@@ -21,9 +21,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   const blogPages = [
-    { slug: 'quran-memorization-tips', title: 'نصائح لحفظ القرآن' },
-    { slug: 'arabic-learning-methods', title: 'طرق تعلم اللغة العربية' },
-    { slug: 'online-education-benefits', title: 'فوائد التعليم الإلكتروني' },
+    { slug: 'quran-memorization-techniques', title: 'تقنيات حفظ القرآن' },
+    { slug: 'arabic-foundation-importance', title: 'أهمية التأسيس العربي' },
+    { slug: 'online-learning-benefits', title: 'فوائد التعليم الإلكتروني' },
   ]
 
   const sitemapEntries = [

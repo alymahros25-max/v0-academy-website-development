@@ -75,21 +75,20 @@ export default function BlogArticleClient({ slug, blogPosts }: { slug: string; b
           </div>
 
           {/* Content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none mb-12 space-y-6">
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              {locale === "ar" && "محتوى المقالة يتضمن معلومات قيمة وشاملة عن الموضوع المختار."}
-              {locale === "en" && "This article contains valuable and comprehensive information about the selected topic."}
-              {locale === "fr" && "Cet article contient des informations précieuses et complètes sur le sujet sélectionné."}
-            </p>
+          <div className="prose prose-lg dark:prose-invert max-w-none mb-12"
+            dangerouslySetInnerHTML={{
+              __html: post.content[locale]
+            }}
+          />
 
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
-              <h3 className="font-bold text-foreground mb-2">{t("blog.relatedArticles")}</h3>
-              <p className="text-sm text-muted-foreground">
-                {locale === "ar" && "تابع مدونتنا للمزيد من المقالات المفيدة والمتخصصة في مجال تعليم القرآن واللغة العربية."}
-                {locale === "en" && "Follow our blog for more useful articles on Quran education and Arabic language."}
-                {locale === "fr" && "Suivez notre blog pour d'autres articles utiles sur l'éducation coranique et la langue arabe."}
-              </p>
-            </div>
+          {/* CTA Section */}
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-8 my-12 text-center">
+            <h3 className="text-2xl font-bold text-foreground mb-4">هل أعجبتك هذه المقالة؟</h3>
+            <p className="text-muted-foreground mb-6">اشترك في برامجنا الآن واحصل على حصص تفاعلية مع معلمينا المتخصصين</p>
+            <Link href="/contact" className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition">
+              تواصل معنا الآن
+              <ChevronLeft className="w-4 h-4" />
+            </Link>
           </div>
 
           {/* Share & Navigation */}
