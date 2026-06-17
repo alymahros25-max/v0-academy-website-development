@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Noto_Sans_Arabic, Inter } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 import "./globals.css"
 import { ClientProviders } from "@/components/client-providers"
 
@@ -96,6 +97,7 @@ export default function RootLayout({
         className={`${notoArabic.variable} ${inter.variable} font-sans antialiased`}
       >
         <ClientProviders>{children}</ClientProviders>
+        <Analytics />
         <SpeedInsights />
       </body>
     </html>
