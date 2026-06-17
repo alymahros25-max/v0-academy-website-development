@@ -136,12 +136,13 @@ async function readZapierArticles() {
   }
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = blogPosts[params.slug]
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const post = blogPosts[slug]
   if (!post) return { title: "Not Found" }
 
   const baseUrl = 'https://quran-elhafez.com'
-  const articleUrl = `${baseUrl}/blog/${params.slug}`
+  const articleUrl = `${baseUrl}/blog/${slug}`
 
   return {
     title: post.title.ar,
@@ -168,10 +169,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function BlogArticlePage({ params }: { params: { slug: string } }) {
+export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   // دمج المقالات الثابتة مع مقالات Zapier
+  const { slug } = await params
   const zapierArticles = await readZapierArticles()
   const allPosts = { ...blogPosts, ...zapierArticles }
   
-  return <BlogArticleClient slug={params.slug} blogPosts={allPosts} />
+  console.log('[v0] Loading article:', slug, 'Found:', slug in allPosts)
+  
+  return <BlogArticleClient slug={slug} blogPosts={allPosts} />
 }

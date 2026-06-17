@@ -1,6 +1,5 @@
 "use client"
 
-import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
@@ -17,6 +16,19 @@ const blogPosts = [
       en: "Effective Techniques for Quran Memorization in Less Time",
       fr: "Techniques efficaces pour mémoriser le Coran en moins de temps"
     },
+    category: {
+      ar: "تحفيظ القرآن",
+      en: "Quran Memorization",
+      fr: "Mémorisation du Coran"
+    },
+    author: {
+      ar: "فريق الأكاديمية",
+      en: "Academy Team",
+      fr: "Équipe de l'académie"
+    },
+    date: "2024-06-15",
+    readTime: 9,
+    image: "/images/hero-children.jpg",
     excerpt: {
       ar: "اكتشف الطرق العملية والمثبتة لتحسين كفاءة الحفظ وتقليل الوقت المستغرق بمساعدة معلمينا المتخصصين.",
       en: "Discover practical and proven methods to improve memorization efficiency and reduce time with the help of our specialized teachers.",
