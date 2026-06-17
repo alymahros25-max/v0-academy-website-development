@@ -1,25 +1,110 @@
-# أكاديمية الحافظ المتميز - robots.txt
+# ============================================================
+# Robots.txt for أكاديمية الحافظ المتميز
+# https://quran-elhafez.com
+# Multi-language SEO optimized for Google, Bing, and Yandex
+# ============================================================
+
+# Global rules - Allow all legitimate traffic
 User-agent: *
 Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
+Allow: /blog
+Allow: /quran
+Allow: /arabic
+Allow: /teachers
+Allow: /reviews
+Allow: /library
+Allow: /games
+Allow: /faq
+Allow: /contact
+Allow: /about
+
+# Disallow internal/admin routes that shouldn't be indexed
 Disallow: /admin
-Disallow: /api
-Disallow: /private
+Disallow: /admin/
+Disallow: /api/
+Disallow: /account
+Disallow: /_next/
+Disallow: /static/
+Disallow: /.well-known/
+Disallow: /private/
+Disallow: /.env
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /public/
+Disallow: /dist/
+Disallow: /build/
 
-# Sitemap
-Sitemap: https://quran-elhafez.com/sitemap.xml
+# Prevent indexing of dynamic URLs with query parameters
+Disallow: /*?*
+Disallow: /*lang=
 
-# Crawl delay
+# Crawl delay for general bots
 Crawl-delay: 1
+Request-rate: 1/10
 
-# Specific rules for Google
+# ============================================================
+# GOOGLE BOT - HIGH PRIORITY
+# ============================================================
 User-agent: Googlebot
 Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
 Disallow: /admin
-Disallow: /api
-Disallow: /private
+Disallow: /api/
+Disallow: /_next/
+Crawl-delay: 0.5
+Request-rate: 1/5
 
-# Bing crawler
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /
+
+# ============================================================
+# BING BOT - HIGH PRIORITY
+# ============================================================
 User-agent: Bingbot
 Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
 Disallow: /admin
-Disallow: /api
+Disallow: /api/
+Crawl-delay: 1
+Request-rate: 1/10
+
+# ============================================================
+# YANDEX BOT
+# ============================================================
+User-agent: Yandexbot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 1
+
+# ============================================================
+# BLOCK UNWANTED BOTS
+# ============================================================
+User-agent: MJ12bot
+User-agent: SemrushBot
+User-agent: DotBot
+User-agent: AhrefsBot
+User-agent: BLEXBot
+User-agent: PetalBot
+User-agent: GPTBot
+User-agent: ChatGPT-User
+Disallow: /
+
+# ============================================================
+# SITEMAPS & CRAWL DIRECTIVES
+# ============================================================
+Sitemap: https://quran-elhafez.com/sitemap.xml
+
+# Additional configuration for multi-language content
+# All language versions are in the same domain with path prefixes
+# /ar = Arabic (default)
+# /en = English
+# /fr = French
