@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { revalidateThemeSettings } from '@/lib/api-revalidate'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -151,10 +152,19 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Revalidate theme/settings on successful save
+    try {
+      await revalidateThemeSettings()
+    } catch (revalidateError) {
+      console.warn('[v0] Revalidation warning:', revalidateError)
+      // Don't fail the request if revalidation fails
+    }
+
     return NextResponse.json({
       success: true,
       data: data?.[0],
       message: 'Setting saved successfully',
+      revalidated: true,
     })
   } catch (error) {
     console.error('[v0] Settings creation error:', error)
@@ -213,11 +223,20 @@ export async function PATCH(request: NextRequest) {
       )
     }
 
+    // Revalidate theme/settings on successful batch save
+    try {
+      await revalidateThemeSettings()
+    } catch (revalidateError) {
+      console.warn('[v0] Revalidation warning:', revalidateError)
+      // Don't fail the request if revalidation fails
+    }
+
     return NextResponse.json({
       success: true,
       data,
       updated_count: data?.length || 0,
       message: 'Settings updated successfully',
+      revalidated: true,
     })
   } catch (error) {
     console.error('[v0] Settings batch update error:', error)

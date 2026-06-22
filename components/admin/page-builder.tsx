@@ -85,37 +85,53 @@ export function PageBuilder({ onPageSaved }: PageBuilderProps) {
       }
 
       setIsCreatingPage(true)
+      console.log('[v0] Saving page:', formData)
 
-      const response = await fetch('/api/cms/pages', {
+      // Prepare the URL - for PATCH, append ID as query parameter
+      let url = '/api/cms/pages'
+      if (formData.id) {
+        url = `/api/cms/pages?id=${formData.id}`
+      }
+
+      const response = await fetch(url, {
         method: formData.id ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           template_type: selectedTemplate || formData.template_type,
         }),
-        ...(formData.id && { signal: AbortSignal.timeout(5000) }),
       })
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`)
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `API error: ${response.statusText}`)
       }
 
       const result = await response.json()
+      console.log('[v0] Save result:', result)
 
-      toast({
-        title: 'تم بنجاح',
-        description: `تم ${formData.id ? 'تحديث' : 'إنشاء'} الصفحة بنجاح`,
-      })
+      if (result.success || result.data) {
+        toast({
+          title: 'تم بنجاح',
+          description: `تم ${formData.id ? 'تحديث' : 'إنشاء'} الصفحة بنجاح وتحديث الموقع`,
+          duration: 3000,
+        })
 
-      onPageSaved?.(result.data)
-      mutatePage()
-      resetForm()
+        onPageSaved?.(result.data)
+        mutatePage()
+        resetForm()
+      } else {
+        throw new Error(result.error || 'Unexpected response')
+      }
     } catch (error) {
       console.error('[v0] Save page error:', error)
+      const errorMsg =
+        error instanceof Error ? error.message : 'فشل حفظ الصفحة'
       toast({
         title: 'خطأ',
-        description: 'فشل حفظ الصفحة',
+        description: errorMsg,
         variant: 'destructive',
+        duration: 4000,
       })
     } finally {
       setIsCreatingPage(false)
@@ -183,44 +199,68 @@ export function PageBuilder({ onPageSaved }: PageBuilderProps) {
     setSelectedTemplate(null)
   }
 
-  // Auto-translate using the existing translate API
+  // Auto-translate using the translation API
   const autoTranslate = async () => {
-    if (!formData.title_ar) {
+    if (!formData.title_ar && !formData.meta_description_ar) {
       toast({
         title: 'خطأ',
-        description: 'يرجى ملء العنوان بالعربية أولاً',
+        description: 'يرجى ملء العنوان أو الوصف بالعربية أولاً',
         variant: 'destructive',
       })
       return
     }
 
     try {
+      const textToTranslate = formData.title_ar || formData.meta_description_ar
+      console.log('[v0] Starting translation for:', textToTranslate)
+
       const response = await fetch('/api/translate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: formData.title_ar }),
+        body: JSON.stringify({
+          text: textToTranslate,
+          sourceLang: 'ar',
+        }),
       })
 
-      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(`Translation API error: ${response.statusText}`)
+      }
 
-      if (data.translations) {
+      const result = await response.json()
+      console.log('[v0] Translation result:', result)
+
+      if (result.success && result.data) {
+        // Update form with translated text
         setFormData(prev => ({
           ...prev,
-          title_en: data.translations.en || '',
-          title_fr: data.translations.fr || '',
+          title_en: formData.title_ar ? (result.data.en || '') : prev.title_en,
+          title_fr: formData.title_ar ? (result.data.fr || '') : prev.title_fr,
+          meta_description_en: formData.meta_description_ar
+            ? (result.data.en || '')
+            : prev.meta_description_en,
+          meta_description_fr: formData.meta_description_ar
+            ? (result.data.fr || '')
+            : prev.meta_description_fr,
         }))
 
         toast({
-          title: 'تم الترجمة',
-          description: 'تم ترجمة العنوان تلقائياً',
+          title: 'تم الترجمة بنجاح',
+          description: 'تم ترجمة النصوص تلقائياً إلى الإنجليزية والفرنسية',
+          duration: 3000,
         })
+      } else {
+        throw new Error(result.error || 'Translation failed')
       }
     } catch (error) {
       console.error('[v0] Auto-translate error:', error)
+      const errorMsg =
+        error instanceof Error ? error.message : 'فشل الترجمة التلقائية'
       toast({
-        title: 'خطأ',
-        description: 'فشل الترجمة التلقائية',
+        title: 'خطأ الترجمة',
+        description: errorMsg,
         variant: 'destructive',
+        duration: 4000,
       })
     }
   }

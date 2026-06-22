@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { revalidateContentChanges } from '@/lib/api-revalidate'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -155,10 +156,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Revalidate content on successful save
+    try {
+      await revalidateContentChanges()
+    } catch (revalidateError) {
+      console.warn('[v0] Revalidation warning:', revalidateError)
+    }
+
     return NextResponse.json({
       success: true,
       data: data?.[0],
       message: 'Content saved successfully',
+      revalidated: true,
     })
   } catch (error) {
     console.error('[v0] Content creation error:', error)

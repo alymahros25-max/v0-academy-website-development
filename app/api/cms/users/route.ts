@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { revalidateUsers } from '@/lib/api-revalidate'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -88,7 +89,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    return NextResponse.json({ data: data?.[0] }, { status: 201 })
+    // Revalidate users on successful creation
+    try {
+      await revalidateUsers()
+    } catch (revalidateError) {
+      console.warn('[v0] Revalidation warning:', revalidateError)
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: data?.[0],
+      message: 'User created successfully',
+      revalidated: true,
+    }, { status: 201 })
   } catch (error) {
     console.error('[v0] POST /api/cms/users error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -131,7 +144,19 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    return NextResponse.json({ data: data?.[0] }, { status: 200 })
+    // Revalidate users on successful update
+    try {
+      await revalidateUsers()
+    } catch (revalidateError) {
+      console.warn('[v0] Revalidation warning:', revalidateError)
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: data?.[0],
+      message: 'User updated successfully',
+      revalidated: true,
+    }, { status: 200 })
   } catch (error) {
     console.error('[v0] PATCH /api/cms/users error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

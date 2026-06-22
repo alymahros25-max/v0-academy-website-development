@@ -80,6 +80,7 @@ export function UsersManager({ onUserUpdated }: UsersManagerProps) {
       }
 
       setIsCreating(true)
+      console.log('[v0] Saving user:', formData)
 
       const method = editingId ? 'PATCH' : 'POST'
       const url = editingId ? `/api/cms/users?id=${editingId}` : '/api/cms/users'
@@ -91,12 +92,17 @@ export function UsersManager({ onUserUpdated }: UsersManagerProps) {
       })
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`)
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `API error: ${response.statusText}`)
       }
+
+      const result = await response.json()
+      console.log('[v0] Save result:', result)
 
       toast({
         title: 'تم بنجاح',
-        description: `تم ${editingId ? 'تحديث' : 'إضافة'} المستخدم بنجاح`,
+        description: `تم ${editingId ? 'تحديث' : 'إضافة'} المستخدم بنجاح${result.revalidated ? ' وتحديث النظام' : ''}`,
+        duration: 3000,
       })
 
       resetForm()
@@ -104,10 +110,13 @@ export function UsersManager({ onUserUpdated }: UsersManagerProps) {
       onUserUpdated?.()
     } catch (error) {
       console.error('[v0] Save user error:', error)
+      const errorMsg =
+        error instanceof Error ? error.message : 'فشل حفظ المستخدم'
       toast({
         title: 'خطأ',
-        description: 'فشل حفظ المستخدم',
+        description: errorMsg,
         variant: 'destructive',
+        duration: 4000,
       })
     } finally {
       setIsCreating(false)

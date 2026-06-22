@@ -11,6 +11,7 @@ import { LivePreview } from '@/components/admin/live-preview'
 import { TypographyCustomizer } from '@/components/admin/typography-customizer'
 import { WidgetsManager } from '@/components/admin/widgets-manager'
 import { useToast } from '@/hooks/use-toast'
+import { batchSaveSettings } from '@/lib/api-client'
 
 interface ThemeSettings {
   primaryColor: string
@@ -52,70 +53,62 @@ export default function ThemeCustomizerPage() {
     setTypographySettings(settings)
   }
 
-  // Save theme to database
+  // Save theme to database using batch API
   const saveTheme = async () => {
     try {
       setIsSaving(true)
+      console.log('[v0] Saving theme settings...')
 
-      const response = await fetch('/api/cms/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          settings: [
-            {
-              setting_key: 'primary_color',
-              setting_value: themeSettings.primaryColor,
-              value_type: 'color',
-              category: 'colors',
-            },
-            {
-              setting_key: 'secondary_color',
-              setting_value: themeSettings.secondaryColor,
-              value_type: 'color',
-              category: 'colors',
-            },
-            {
-              setting_key: 'background_color',
-              setting_value: themeSettings.backgroundColor,
-              value_type: 'color',
-              category: 'colors',
-            },
-            {
-              setting_key: 'text_color',
-              setting_value: themeSettings.textColor,
-              value_type: 'color',
-              category: 'colors',
-            },
-            {
-              setting_key: 'header_font',
-              setting_value: typographySettings.headerFont,
-              value_type: 'text',
-              category: 'typography',
-            },
-            {
-              setting_key: 'body_font',
-              setting_value: typographySettings.bodyFont,
-              value_type: 'text',
-              category: 'typography',
-            },
-          ],
-        }),
-      })
+      // Prepare batch update with all theme and typography settings
+      const settingsToUpdate = [
+        {
+          setting_key: 'primary_color',
+          setting_value: themeSettings.primaryColor,
+        },
+        {
+          setting_key: 'secondary_color',
+          setting_value: themeSettings.secondaryColor,
+        },
+        {
+          setting_key: 'background_color',
+          setting_value: themeSettings.backgroundColor,
+        },
+        {
+          setting_key: 'text_color',
+          setting_value: themeSettings.textColor,
+        },
+        {
+          setting_key: 'header_font',
+          setting_value: typographySettings.headerFont,
+        },
+        {
+          setting_key: 'body_font',
+          setting_value: typographySettings.bodyFont,
+        },
+      ]
 
-      if (response.ok) {
+      // Call batch API
+      const response = await batchSaveSettings(settingsToUpdate)
+
+      if (response.success) {
+        console.log('[v0] Theme saved successfully:', response.data)
         toast({
           title: 'تم الحفظ بنجاح',
-          description: 'تم حفظ إعدادات المظهر والخطوط',
+          description: 'تم حفظ إعدادات المظهر والخطوط وتحديث الموقع تلقائياً',
+          duration: 3000,
         })
       } else {
-        throw new Error('Failed to save settings')
+        throw new Error(response.error || 'Failed to save settings')
       }
     } catch (error) {
       console.error('[v0] Save theme error:', error)
+      const errorMsg =
+        error instanceof Error ? error.message : 'فشل حفظ الإعدادات'
       toast({
         title: 'خطأ',
-        description: 'فشل حفظ الإعدادات',
+        description: errorMsg,
         variant: 'destructive',
+        duration: 4000,
       })
     } finally {
       setIsSaving(false)

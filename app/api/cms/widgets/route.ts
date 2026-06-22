@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { revalidateThemeSettings } from '@/lib/api-revalidate'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -86,7 +87,20 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 400 })
       }
 
-      return NextResponse.json({ data: data?.[0], updated: true }, { status: 200 })
+      // Revalidate theme settings when widgets updated
+      try {
+        await revalidateThemeSettings()
+      } catch (revalidateError) {
+        console.warn('[v0] Revalidation warning:', revalidateError)
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: data?.[0],
+        updated: true,
+        message: 'Widget updated successfully',
+        revalidated: true,
+      }, { status: 200 })
     }
 
     // Create new widget
@@ -105,7 +119,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    return NextResponse.json({ data: data?.[0], created: true }, { status: 201 })
+    // Revalidate theme settings when widgets created
+    try {
+      await revalidateThemeSettings()
+    } catch (revalidateError) {
+      console.warn('[v0] Revalidation warning:', revalidateError)
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: data?.[0],
+      created: true,
+      message: 'Widget created successfully',
+      revalidated: true,
+    }, { status: 201 })
   } catch (error) {
     console.error('[v0] POST /api/cms/widgets error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
