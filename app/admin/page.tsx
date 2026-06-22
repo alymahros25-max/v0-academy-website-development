@@ -272,104 +272,79 @@ function PackagesTab() {
         {Array.isArray(packages) && packages.map((pkg: { id?: string; type?: string; sessions?: number; price?: number; popular?: boolean } | null) => {
           if (!pkg?.id) return null
           return (
-          <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
-            {editingId === pkg.id ? (
-              <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs text-muted-foreground mb-1 block">عدد الحصص</label>
-                    <input
-                      type="number"
-                      value={(editData.sessions as number) ?? pkg.sessions}
-                      onChange={(e) => setEditData({...editData, sessions: parseInt(e.target.value)})}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
-                    />
+            <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
+              {editingId === pkg.id ? (
+                <div className="flex flex-col gap-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">عدد الحصص</label>
+                      <input
+                        type="number"
+                        value={(editData.sessions as number) ?? pkg.sessions}
+                        onChange={(e) => setEditData({...editData, sessions: parseInt(e.target.value)})}
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">السعر ($)</label>
+                      <input
+                        type="number"
+                        value={(editData.price as number) ?? pkg.price}
+                        onChange={(e) => setEditData({...editData, price: parseInt(e.target.value)})}
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-xs text-muted-foreground mb-1 block">السعر ($)</label>
-                    <input
-                      type="number"
-                      value={(editData.price as number) ?? pkg.price}
-                      onChange={(e) => setEditData({...editData, price: parseInt(e.target.value)})}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
-                    />
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs text-muted-foreground">الأكثر طلباً:</label>
+                    <button
+                      onClick={() => setEditData({...editData, popular: !(editData.popular ?? pkg.popular)})}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold ${(editData.popular ?? pkg.popular) ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"}`}
+                    >
+                      {(editData.popular ?? pkg.popular) ? "نعم" : "لا"}
+                    </button>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <label className="text-xs text-muted-foreground">الأكثر طلباً:</label>
-                  <button
-                    onClick={() => setEditData({...editData, popular: !(editData.popular ?? pkg.popular)})}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold ${(editData.popular ?? pkg.popular) ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"}`}
-                  >
-                    {(editData.popular ?? pkg.popular) ? "نعم" : "لا"}
-                  </button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => handleSave(pkg.id)} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
-                    <Check className="w-4 h-4" /> حفظ
-                  </button>
-                  <button onClick={() => setEditingId(null)} className="flex items-center gap-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">
-                    <X className="w-4 h-4" /> إلغاء
-                  </button>
-                </div>
-              </div>
-            ) : (
-          <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-100 text-blue-700">
-                    <Users className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدون اسم'}</p>
-                    <p className="text-sm text-muted-foreground">{teacher?.specialty?.ar || 'بدون تخصص'}</p>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => handleSave(pkg.id)} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
+                      <Check className="w-4 h-4" /> حفظ
+                    </button>
+                    <button onClick={() => setEditingId(null)} className="flex items-center gap-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">
+                      <X className="w-4 h-4" /> إلغاء
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => { setEditingId(teacher?.id || null); setEditData(teacher || {}) }}
-                    className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => teacher?.id && handleDelete(teacher.id)}
-                    className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )
-        })}
-      </div>
-                  <div>
-                    <p className="font-bold text-foreground">
-                      {pkg.type === "quran" ? "قرآن" : "عربي"} - {pkg.sessions} حصص
-                      {pkg.popular && <span className="ms-2 text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">الأكثر طلباً</span>}
-                    </p>
-                    <p className="text-sm text-muted-foreground">${pkg.price} شهرياً</p>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-100 text-emerald-700">
+                      <Package className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground">
+                        {pkg?.type === "quran" ? "قرآن" : "عربي"} - {pkg?.sessions} حصص
+                        {pkg?.popular && <span className="ms-2 text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">الأكثر طلباً</span>}
+                      </p>
+                      <p className="text-sm text-muted-foreground">${pkg?.price} شهرياً</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => { setEditingId(pkg.id); setEditData(pkg) }}
+                      className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => pkg.id && handleDelete(pkg.id)}
+                      className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => { setEditingId(pkg.id); setEditData(pkg) }}
-                    className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(pkg.id)}
-                    className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )
+              )}
+            </div>
+          )
         })}
       </div>
     </div>
@@ -527,26 +502,27 @@ function TeachersTab() {
         {Array.isArray(teachers) && teachers.map((teacher: { id?: string; name?: Record<string, string>; specialty?: Record<string, string>; experience?: string; active?: boolean } | null) => {
           if (!teacher?.id) return null
           return (
-          <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
+            <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدون اسم'}</p>
+                  <p className="text-sm text-muted-foreground">{teacher?.specialty?.ar || 'بدون تخصص'} - {teacher?.experience || '0'} سنة خبرة</p>
+                </div>
               </div>
-              <div>
-                <p className="font-bold text-foreground">{teacher.name.ar}</p>
-                <p className="text-sm text-muted-foreground">{teacher.specialty.ar} - {teacher.experience} سنة خبرة</p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => teacher?.id && handleDelete(teacher.id)}
+                  className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleDelete(teacher.id)}
-                className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
@@ -703,7 +679,7 @@ function SettingsTab() {
           disabled={saving}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold disabled:opacity-50"
         >
-          {saving ? "جاري الحفظ..." : saved ? "تم الحفظ" : "حفظ التغييرات"}
+          {saving ? "جاري الحفظ..." : saved ? "تم الحفظ" : "حفظ التغ��يرات"}
         </button>
       </div>
 
