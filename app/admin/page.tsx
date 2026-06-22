@@ -252,9 +252,9 @@ function PackagesTab() {
     }
   }
 
-  if (isLoading) return <LoadingState />
+  if (loading) return <LoadingState />
   if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
-  if (!packages || packages.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
+  if (!packages || !Array.isArray(packages) || packages.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
 
   return (
     <div>
@@ -269,7 +269,9 @@ function PackagesTab() {
       )}
 
       <div className="grid gap-4">
-        {packages?.map((pkg: { id: string; type: string; sessions: number; price: number; popular: boolean }) => (
+        {Array.isArray(packages) && packages.map((pkg: { id?: string; type?: string; sessions?: number; price?: number; popular?: boolean } | null) => {
+          if (!pkg?.id) return null
+          return (
           <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
             {editingId === pkg.id ? (
               <div className="flex flex-col gap-3">
@@ -312,11 +314,36 @@ function PackagesTab() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${pkg.type === "quran" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"}`}>
-                    <Package className="w-5 h-5" />
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-100 text-blue-700">
+                    <Users className="w-5 h-5" />
                   </div>
+                  <div>
+                    <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدون اسم'}</p>
+                    <p className="text-sm text-muted-foreground">{teacher?.specialty?.ar || 'بدون تخصص'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { setEditingId(teacher?.id || null); setEditData(teacher || {}) }}
+                    className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => teacher?.id && handleDelete(teacher.id)}
+                    className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+        })}
+      </div>
                   <div>
                     <p className="font-bold text-foreground">
                       {pkg.type === "quran" ? "قرآن" : "عربي"} - {pkg.sessions} حصص
@@ -342,7 +369,8 @@ function PackagesTab() {
               </div>
             )}
           </div>
-        ))}
+        )
+        })}
       </div>
     </div>
   )
@@ -421,7 +449,7 @@ function TeachersTab() {
 
   if (isLoading) return <LoadingState />
   if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
-  if (!teachers || teachers.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
+  if (!teachers || !Array.isArray(teachers) || teachers.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
 
   return (
     <div>
@@ -449,8 +477,8 @@ function TeachersTab() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">الاسم (عربي)</label>
               <input
-                value={newTeacher.name.ar}
-                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher.name, ar: e.target.value}})}
+                value={newTeacher?.name?.ar ?? ''}
+                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, ar: e.target.value}})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="الاسم بالعربية"
               />
@@ -458,8 +486,8 @@ function TeachersTab() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">الاسم (إنجليزي)</label>
               <input
-                value={newTeacher.name.en}
-                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher.name, en: e.target.value}})}
+                value={newTeacher?.name?.en ?? ''}
+                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, en: e.target.value}})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="Name in English"
               />
@@ -467,8 +495,8 @@ function TeachersTab() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">التخصص (عربي)</label>
               <input
-                value={newTeacher.specialty.ar}
-                onChange={(e) => setNewTeacher({...newTeacher, specialty: {...newTeacher.specialty, ar: e.target.value}})}
+                value={newTeacher?.specialty?.ar ?? ''}
+                onChange={(e) => setNewTeacher({...newTeacher, specialty: {...newTeacher?.specialty || {}, ar: e.target.value}})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="التخصص"
               />
@@ -477,7 +505,7 @@ function TeachersTab() {
               <label className="text-xs text-muted-foreground mb-1 block">سنوات الخبرة</label>
               <input
                 type="number"
-                value={newTeacher.experience}
+                value={newTeacher?.experience ?? ''}
                 onChange={(e) => setNewTeacher({...newTeacher, experience: e.target.value})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="10"
@@ -496,7 +524,9 @@ function TeachersTab() {
       )}
 
       <div className="grid gap-4">
-        {teachers?.map((teacher: { id: string; name: Record<string, string>; specialty: Record<string, string>; experience: string; active: boolean }) => (
+        {Array.isArray(teachers) && teachers.map((teacher: { id?: string; name?: Record<string, string>; specialty?: Record<string, string>; experience?: string; active?: boolean } | null) => {
+          if (!teacher?.id) return null
+          return (
           <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
