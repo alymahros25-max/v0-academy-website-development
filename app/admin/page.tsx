@@ -994,52 +994,124 @@ function ZapierTab() {
 
 // Phase 3: CMS Management Tab
 function CMSManagementTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">إدارة المحتوى</h2>
         <p className="text-sm text-muted-foreground">أضف وحرر محتوى الموقع بسهولة مع الترجمة التلقائية بزر واحد</p>
       </div>
-      <iframe src="/admin/cms" className="w-full h-screen border-0 rounded-lg" />
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل إدارة المحتوى...</p>
+          <a 
+            href="/admin/cms" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
 
 // Phase 3: Theme Customizer Tab
 function ThemeCustomizerTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">المظهر والمعاينة الحية</h2>
         <p className="text-sm text-muted-foreground">خصص ألوان الموقع والخطوط والأدوات مع معاينة حية فوراً</p>
       </div>
-      <iframe src="/admin/theme" className="w-full h-screen border-0 rounded-lg" />
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل مخصص المظهر...</p>
+          <a 
+            href="/admin/theme" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
 
 // Phase 3: Pages Builder Tab
 function PagesBuilderTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">منشئ الصفحات</h2>
         <p className="text-sm text-muted-foreground">أنشئ صفحات جديدة باستخدام نماذج احترافية مع دعم اللغات الثلاث</p>
       </div>
-      <iframe src="/admin/pages" className="w-full h-screen border-0 rounded-lg" />
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل منشئ الصفحات...</p>
+          <a 
+            href="/admin/pages" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
 
 // Phase 3: Users & Permissions Tab
 function UsersManagementTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">المستخدمين والصلاحيات</h2>
         <p className="text-sm text-muted-foreground">أدر المستخدمين والأدوار والصلاحيات بنظام RBAC متقدم</p>
       </div>
-      <iframe src="/admin/users" className="w-full h-screen border-0 rounded-lg" />
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل إدارة المستخدمين...</p>
+          <a 
+            href="/admin/users" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
     </div>
   )
 }
