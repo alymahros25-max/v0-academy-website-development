@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon, Palette, FileText, Lock
+  Menu, XIcon, Palette, FileText, Lock, Film
 } from "lucide-react"
 import useSWR, { mutate as globalMutate } from "swr"
+import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
     { id: "theme", label: "المظهر والمعاينة", icon: Palette },
     { id: "pages-builder", label: "منشئ الصفحات", icon: FileText },
     { id: "users", label: "المستخدمين والصلاحيات", icon: Lock },
+    { id: "classroom-videos", label: "لقطات من الحصص", icon: Film },
     
     // Legacy Features
     { id: "pages", label: "الصفحات القديمة", icon: BookOpen },
@@ -161,6 +163,7 @@ export default function AdminDashboard() {
           {activeTab === "theme" && <ThemeCustomizerTab />}
           {activeTab === "pages-builder" && <PagesBuilderTab />}
           {activeTab === "users" && <UsersManagementTab />}
+          {activeTab === "classroom-videos" && <ClassroomVideosTab />}
         </div>
       </main>
     </div>
@@ -1112,6 +1115,118 @@ function UsersManagementTab() {
           </a>
         </div>
       </div>
+    </div>
+  )
+}
+
+// Classroom Videos Management Tab
+function ClassroomVideosTab() {
+  const [showForm, setShowForm] = useState(false)
+  const { data: videos, isLoading, error } = useSWR("/api/cms/classroom-videos?published=false", fetcher, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 60000 
+  })
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">لقطات من الحصص</h2>
+          <p className="text-sm text-muted-foreground">إدارة فيديوهات الحصص والمحتوى الترويجي</p>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+        >
+          <Plus className="w-4 h-4" />
+          {showForm ? 'إغلاق النموذج' : 'إضافة فيديو جديد'}
+        </button>
+      </div>
+
+      {/* Form */}
+      {showForm && (
+        <div className="bg-card rounded-lg border border-border p-6">
+          <VideoForm onSuccess={() => {
+            setShowForm(false)
+            globalMutate("/api/cms/classroom-videos?published=false")
+          }} />
+        </div>
+      )}
+
+      {/* Videos List */}
+      <div className="bg-card rounded-lg border border-border p-6">
+        {isLoading ? (
+          <LoadingState />
+        ) : error ? (
+          <div className="text-center py-8 text-red-600">
+            <p>خطأ في تحميل الفيديوهات</p>
+          </div>
+        ) : !videos || videos.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">لم يتم إضافة أي فيديوهات حتى الآن</p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+            >
+              أضف أول فيديو الآن
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {videos.map((video: any) => (
+              <ClassroomVideoItem key={video.id} video={video} onUpdate={() => globalMutate("/api/cms/classroom-videos?published=false")} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Classroom Video Item Component
+function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => void }) {
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDelete = async () => {
+    if (!confirm('هل أنت متأكد من حذف هذا الفيديو؟')) return
+    
+    setIsDeleting(true)
+    try {
+      const response = await fetch(`/api/cms/classroom-videos?id=${video.id}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        onUpdate()
+      }
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  return (
+    <div className="flex items-start gap-4 p-4 border border-border rounded-lg">
+      {video.thumbnail_url && (
+        <img
+          src={video.thumbnail_url}
+          alt={video.title_ar}
+          className="w-20 h-20 rounded object-cover"
+        />
+      )}
+      <div className="flex-1">
+        <h3 className="font-semibold text-foreground mb-1">{video.title_ar}</h3>
+        <p className="text-sm text-muted-foreground mb-2">{video.description_ar}</p>
+        <div className="flex flex-wrap gap-2 mb-2">
+          {video.category && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">{video.category}</span>}
+          {video.teacher_name_ar && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">👨‍🏫 {video.teacher_name_ar}</span>}
+        </div>
+      </div>
+      <button
+        onClick={handleDelete}
+        disabled={isDeleting}
+        className="text-red-600 hover:text-red-700 transition disabled:opacity-50"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
     </div>
   )
 }
