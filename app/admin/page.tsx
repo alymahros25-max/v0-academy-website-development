@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon
+  Menu, XIcon, Palette, FileText, Lock
 } from "lucide-react"
 import useSWR, { mutate as globalMutate } from "swr"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -53,7 +53,15 @@ export default function AdminDashboard() {
     { id: "teachers", label: "المعلمين", icon: Users },
     { id: "reviews", label: "آراء الطلاب", icon: Star },
     { id: "messages", label: "الرسائل", icon: MessageSquare },
-    { id: "pages", label: "الصفحات", icon: BookOpen },
+    
+    // Phase 2-3 New Features
+    { id: "cms", label: "إدارة المحتوى", icon: BookOpen },
+    { id: "theme", label: "المظهر والمعاينة", icon: Palette },
+    { id: "pages-builder", label: "منشئ الصفحات", icon: FileText },
+    { id: "users", label: "المستخدمين والصلاحيات", icon: Lock },
+    
+    // Legacy Features
+    { id: "pages", label: "الصفحات القديمة", icon: BookOpen },
     { id: "zapier", label: "Zapier (مقالات)", icon: Mail },
     { id: "settings", label: "الإعدادات", icon: Settings },
     { id: "seo-guide", label: "نشر Google", icon: Mail },
@@ -147,6 +155,12 @@ export default function AdminDashboard() {
           {activeTab === "zapier" && <ZapierTab />}
           {activeTab === "settings" && <SettingsTab />}
           {activeTab === "seo-guide" && <SEOGuideTab />}
+          
+          {/* Phase 2-3 New Content Management Routes */}
+          {activeTab === "cms" && <CMSManagementTab />}
+          {activeTab === "theme" && <ThemeCustomizerTab />}
+          {activeTab === "pages-builder" && <PagesBuilderTab />}
+          {activeTab === "users" && <UsersManagementTab />}
         </div>
       </main>
     </div>
@@ -974,6 +988,58 @@ function ZapierTab() {
           <ChevronDown className="w-4 h-4" />
         </a>
       </div>
+    </div>
+  )
+}
+
+// Phase 3: CMS Management Tab
+function CMSManagementTab() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">إدارة المحتوى</h2>
+        <p className="text-sm text-muted-foreground">أضف وحرر محتوى الموقع بسهولة مع الترجمة التلقائية بزر واحد</p>
+      </div>
+      <iframe src="/admin/cms" className="w-full h-screen border-0 rounded-lg" />
+    </div>
+  )
+}
+
+// Phase 3: Theme Customizer Tab
+function ThemeCustomizerTab() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">المظهر والمعاينة الحية</h2>
+        <p className="text-sm text-muted-foreground">خصص ألوان الموقع والخطوط والأدوات مع معاينة حية فوراً</p>
+      </div>
+      <iframe src="/admin/theme" className="w-full h-screen border-0 rounded-lg" />
+    </div>
+  )
+}
+
+// Phase 3: Pages Builder Tab
+function PagesBuilderTab() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">منشئ الصفحات</h2>
+        <p className="text-sm text-muted-foreground">أنشئ صفحات جديدة باستخدام نماذج احترافية مع دعم اللغات الثلاث</p>
+      </div>
+      <iframe src="/admin/pages" className="w-full h-screen border-0 rounded-lg" />
+    </div>
+  )
+}
+
+// Phase 3: Users & Permissions Tab
+function UsersManagementTab() {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">المستخدمين والصلاحيات</h2>
+        <p className="text-sm text-muted-foreground">أدر المستخدمين والأدوار والصلاحيات بنظام RBAC متقدم</p>
+      </div>
+      <iframe src="/admin/users" className="w-full h-screen border-0 rounded-lg" />
     </div>
   )
 }
