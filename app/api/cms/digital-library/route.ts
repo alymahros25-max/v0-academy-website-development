@@ -2,10 +2,17 @@ import { createClient } from "@supabase/supabase-js"
 import { revalidateTag } from "next/cache"
 import { z } from "zod"
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Helper function to get Supabase client safely
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !key) {
+    throw new Error("Missing Supabase credentials")
+  }
+
+  return createClient(url, key)
+}
 
 // Validation schema
 const LibraryItemSchema = z.object({
@@ -47,6 +54,7 @@ const LibraryItemSchema = z.object({
 
 export async function GET(req: Request) {
   try {
+    const supabase = getSupabaseClient()
     const { searchParams } = new URL(req.url)
     const contentType = searchParams.get("type")
     const category = searchParams.get("category")
@@ -82,6 +90,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const supabase = getSupabaseClient()
     const body = await req.json()
     const validated = LibraryItemSchema.parse(body)
 
@@ -105,6 +114,7 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
+    const supabase = getSupabaseClient()
     const { searchParams } = new URL(req.url)
     const id = searchParams.get("id")
 
@@ -136,6 +146,7 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const supabase = getSupabaseClient()
     const { searchParams } = new URL(req.url)
     const id = searchParams.get("id")
 
