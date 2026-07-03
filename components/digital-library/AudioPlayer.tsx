@@ -90,13 +90,18 @@ export function AudioPlayer({
 
   const totalDuration = audioRef.current?.duration || duration || 0
 
+  // Guard: Return empty if no audio URL
+  if (!audioUrl) {
+    return null
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-4 border border-primary/20"
     >
-      <audio ref={audioRef} src={audioUrl} />
+      <audio ref={audioRef} src={audioUrl || ""} crossOrigin="anonymous" />
 
       {/* Title and Artist */}
       <div className="mb-4">

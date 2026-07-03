@@ -207,15 +207,22 @@ export default function LibraryContent() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {libraryData.quranAudio.map((qari) => (
-              <motion.div key={qari.id}>
-                <AudioPlayer
-                  audioUrl={qari.audioUrl}
-                  title={qari.title}
-                  artist={qari.qariName}
-                />
-              </motion.div>
+              qari.audioUrl && !qari.audioUrl.startsWith("https://example.com") && (
+                <motion.div key={qari.id}>
+                  <AudioPlayer
+                    audioUrl={qari.audioUrl}
+                    title={qari.title}
+                    artist={qari.qariName}
+                  />
+                </motion.div>
+              )
             ))}
           </div>
+          {!libraryData.quranAudio.some((q) => q.audioUrl && !q.audioUrl.startsWith("https://example.com")) && (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>لم تتم إضافة تلاوات قرآنية بعد</p>
+            </div>
+          )}
         </TabsContent>
 
         {/* Nasheeds Section */}
@@ -226,17 +233,24 @@ export default function LibraryContent() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {libraryData.nasheeds.map((nasheed) => (
-              <motion.div key={nasheed.id}>
-                <AudioPlayer
-                  audioUrl={nasheed.audioUrl}
-                  title={nasheed.title}
-                  artist={nasheed.author}
-                  lyrics={nasheed.lyrics}
-                  isNasheed={true}
-                />
-              </motion.div>
+              nasheed.audioUrl && !nasheed.audioUrl.startsWith("https://example.com") && (
+                <motion.div key={nasheed.id}>
+                  <AudioPlayer
+                    audioUrl={nasheed.audioUrl}
+                    title={nasheed.title}
+                    artist={nasheed.author}
+                    lyrics={nasheed.lyrics}
+                    isNasheed={true}
+                  />
+                </motion.div>
+              )
             ))}
           </div>
+          {!libraryData.nasheeds.some((n) => n.audioUrl && !n.audioUrl.startsWith("https://example.com")) && (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>لم تتم إضافة أناشيد بعد</p>
+            </div>
+          )}
         </TabsContent>
 
         {/* Tajweed Section */}
@@ -274,13 +288,11 @@ export default function LibraryContent() {
       />
 
       {/* Audio Player Modal */}
-      {selectedAudio.isOpen && (
+      {selectedAudio.isOpen && selectedAudio.url && !selectedAudio.url.startsWith("https://example.com") && (
         <div className="fixed bottom-6 right-6 z-50 max-w-md">
           <AudioPlayer
             audioUrl={selectedAudio.url || ""}
             title={selectedAudio.title || ""}
-            artist={selectedAudio.artist}
-            lyrics={selectedAudio.lyrics}
           />
         </div>
       )}
