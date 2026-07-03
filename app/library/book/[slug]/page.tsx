@@ -34,7 +34,6 @@ function getSupabase() {
 async function getBook(slug: string): Promise<LibraryItem | null> {
   try {
     const supabase = getSupabase()
-    console.log("[v0] getBook slug:", slug, "| supabase:", supabase ? "OK" : "NULL")
     if (!supabase) return null
 
     const { data, error } = await supabase
@@ -43,19 +42,18 @@ async function getBook(slug: string): Promise<LibraryItem | null> {
       .eq("slug", slug)
       .single()
 
-    console.log("[v0] getBook result:", { data: data?.title_ar, error: error?.message })
     if (error || !data) return null
     return data as LibraryItem
-  } catch (e: any) {
-    console.log("[v0] getBook exception:", e?.message)
+  } catch {
     return null
   }
 }
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
-  const book = await getBook(params.slug)
+  const { slug } = await params
+  const book = await getBook(slug)
 
   if (!book) {
     return { title: "محتوى غير موجود | أكاديمية الحافظ المتميز" }
@@ -93,8 +91,9 @@ function getContentTypeIcon(type: string) {
   }
 }
 
-export default async function BookPage({ params }: { params: { slug: string } }) {
-  const book = await getBook(params.slug)
+export default async function BookPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const book = await getBook(slug)
 
   if (!book) {
     notFound()
