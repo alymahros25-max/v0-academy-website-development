@@ -1,19 +1,7 @@
 "use client"
 
-import { useState, Suspense } from "react"
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react"
+import { X, ExternalLink, Download } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import dynamic from "next/dynamic"
-
-const PDFPage = dynamic(() => import("react-pdf").then((mod) => mod.Page), {
-  loading: () => <div className="bg-muted h-96 flex items-center justify-center">جاري تحميل الكتاب...</div>,
-  ssr: false,
-})
-
-const PDFDocument = dynamic(() => import("react-pdf").then((mod) => mod.Document), {
-  loading: () => <div className="bg-muted h-96 flex items-center justify-center">جاري تحميل الكتاب...</div>,
-  ssr: false,
-})
 
 interface PDFViewerProps {
   isOpen: boolean
@@ -23,78 +11,56 @@ interface PDFViewerProps {
 }
 
 export function PDFViewer({ isOpen, onClose, pdfUrl, title }: PDFViewerProps) {
-  const [numPages, setNumPages] = useState<number | null>(null)
-  const [pageNumber, setPageNumber] = useState(1)
-  const [scale, setScale] = useState(1)
-
-  function onDocumentLoadSuccess({ numPages: nextNumPages }: { numPages: number }) {
-    setNumPages(nextNumPages)
-  }
+  // Use Google Docs viewer as a reliable cross-origin PDF renderer
+  const googleViewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="text-right">{title}</DialogTitle>
+      <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0 gap-0">
+        <DialogHeader className="px-5 py-3 border-b border-border flex-row items-center justify-between">
+          <DialogTitle className="text-base font-bold truncate max-w-xs">{title}</DialogTitle>
+          <div className="flex items-center gap-2">
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 px-3 py-1.5 text-xs bg-muted hover:bg-muted/80 rounded-lg transition text-foreground"
+            >
+              <Download className="w-3.5 h-3.5" />
+              تحميل
+            </a>
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 px-3 py-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              فتح خارجي
+            </a>
+            <button
+              onClick={onClose}
+              className="p-1.5 hover:bg-muted rounded-lg transition text-muted-foreground"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </DialogHeader>
 
-        <div className="flex-1 overflow-auto bg-muted rounded-lg flex items-center justify-center">
-          <Suspense fallback={<div>جاري التحميل...</div>}>
-            <PDFDocument file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-              <PDFPage pageNumber={pageNumber} scale={scale} />
-            </PDFDocument>
-          </Suspense>
+        {/* PDF via Google Docs Viewer - works with any public PDF URL */}
+        <div className="flex-1 overflow-hidden bg-muted">
+          <iframe
+            src={googleViewerUrl}
+            className="w-full h-full border-0"
+            title={title}
+            loading="lazy"
+          />
         </div>
 
-        {/* Controls */}
-        <div className="flex items-center justify-between gap-4 p-4 bg-card border-t border-border rounded-b-lg">
-          {/* Navigation */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
-              disabled={pageNumber <= 1}
-              className="p-2 hover:bg-muted disabled:opacity-50 rounded-lg transition"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-muted-foreground">
-              {pageNumber} / {numPages || "..."}
-            </span>
-            <button
-              onClick={() => setPageNumber(Math.min(numPages || 1, pageNumber + 1))}
-              disabled={!numPages || pageNumber >= numPages}
-              className="p-2 hover:bg-muted disabled:opacity-50 rounded-lg transition"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Zoom Controls */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setScale(Math.max(0.5, scale - 0.1))}
-              className="p-2 hover:bg-muted rounded-lg transition"
-            >
-              <ZoomOut className="w-5 h-5" />
-            </button>
-            <span className="text-sm text-muted-foreground w-12 text-center">
-              {Math.round(scale * 100)}%
-            </span>
-            <button
-              onClick={() => setScale(Math.min(2, scale + 0.1))}
-              className="p-2 hover:bg-muted rounded-lg transition"
-            >
-              <ZoomIn className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-muted rounded-lg transition ms-auto"
-          >
-            <X className="w-5 h-5" />
-          </button>
+        <div className="px-5 py-2 border-t border-border bg-card">
+          <p className="text-xs text-muted-foreground text-center">
+            في حال لم يظهر الكتاب، اضغط على &quot;فتح خارجي&quot; لقراءته مباشرة
+          </p>
         </div>
       </DialogContent>
     </Dialog>

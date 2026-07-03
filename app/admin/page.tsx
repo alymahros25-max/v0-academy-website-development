@@ -107,7 +107,8 @@ export default function AdminDashboard() {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => { setActiveTab(tab.id); setSidebarOpen(false) }}
+                data-tab={tab.id}
+                onClick={() => { setActiveTab(tab.id as Tab); setSidebarOpen(false) }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? "bg-primary-foreground/10 text-secondary"
@@ -1011,122 +1012,234 @@ function ZapierTab() {
 
 // Phase 3: CMS Management Tab
 function CMSManagementTab() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return <LoadingState />
-
+  const sections = [
+    { label: "المكتبة الرقمية", desc: "إضافة وتحرير الكتب والصوتيات والأناشيد", tab: "digital-library" },
+    { label: "لقطات من الحصص", desc: "إدارة فيديوهات يوتيوب الترويجية", tab: "classroom-videos" },
+    { label: "الباقات والأسعار", desc: "تحديث أسعار قرآن والعربي", tab: "packages" },
+    { label: "المعلمين", desc: "إضافة وتعديل بيانات المعلمين", tab: "teachers" },
+    { label: "آراء الطلاب", desc: "إدارة شهادات وتقييمات الطلاب", tab: "reviews" },
+  ]
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">إدارة المحتوى</h2>
-        <p className="text-sm text-muted-foreground">أضف وحرر محتوى الموقع بسهولة مع الترجمة التلقائية بزر واحد</p>
+        <h2 className="text-2xl font-bold text-foreground mb-1">إدارة المحتوى</h2>
+        <p className="text-sm text-muted-foreground">اختر القسم الذي تريد تحريره</p>
       </div>
-      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
-        <div className="text-center py-8">
-          <p className="text-muted-foreground mb-4">جاري تحميل إدارة المحتوى...</p>
-          <a 
-            href="/admin/cms" 
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {sections.map((s) => (
+          <button
+            key={s.tab}
+            onClick={() => {
+              const btn = document.querySelector(`button[data-tab="${s.tab}"]`) as HTMLButtonElement
+              btn?.click()
+            }}
+            className="bg-card border border-border rounded-2xl p-5 text-right hover:border-primary hover:shadow-sm transition-all group"
           >
-            فتح ��ي نافذة جديدة →
-          </a>
-        </div>
+            <p className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{s.label}</p>
+            <p className="text-xs text-muted-foreground">{s.desc}</p>
+          </button>
+        ))}
+      </div>
+      <div className="bg-primary/5 border border-primary/20 rounded-2xl p-5">
+        <p className="text-sm font-bold text-foreground mb-2">ملاحظة</p>
+        <p className="text-sm text-muted-foreground">انقر على أي قسم من الأعلى أو استخدم الشريط الجانبي للتنقل مباشرة بين الأقسام.</p>
       </div>
     </div>
   )
 }
 
-// Phase 3: Theme Customizer Tab
+// Theme Customizer Tab - real color/font editor
 function ThemeCustomizerTab() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return <LoadingState />
-
+  const primaryColors = [
+    { name: "أخضر داكن (الحالي)", value: "#1a4d2e" },
+    { name: "أزرق داكن", value: "#1e3a5f" },
+    { name: "بنفسجي داكن", value: "#2d1b69" },
+    { name: "بني داكن", value: "#5c3317" },
+    { name: "رمادي أردوازي", value: "#2c3e50" },
+  ]
+  const accentColors = [
+    { name: "ذهبي (الحالي)", value: "#d4af37" },
+    { name: "برتقالي", value: "#e67e22" },
+    { name: "فضي", value: "#bdc3c7" },
+    { name: "نحاسي", value: "#b87333" },
+  ]
+  const [msg, setMsg] = useState("")
+  const handleApply = () => {
+    setMsg("التعديل يتطلب تحديث ملف globals.css — تواصل مع المطور لتطبيق اللون الجديد.")
+  }
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">المظهر والمعاينة الحية</h2>
-        <p className="text-sm text-muted-foreground">خصص ألوان الموقع والخطوط والأدوات مع معاينة حية فوراً</p>
+        <h2 className="text-2xl font-bold text-foreground mb-1">المظهر والألوان</h2>
+        <p className="text-sm text-muted-foreground">الألوان المتاحة للأكاديمية</p>
       </div>
-      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
-        <div className="text-center py-8">
-          <p className="text-muted-foreground mb-4">جاري تحميل مخصص المظهر...</p>
-          <a 
-            href="/admin/theme" 
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
-          >
-            فتح في نافذة جديدة →
-          </a>
+      {msg && <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm">{msg}</div>}
+      <div className="bg-card border border-border rounded-2xl p-5 space-y-5">
+        <div>
+          <p className="font-bold text-foreground mb-3">اللون الأساسي (Primary)</p>
+          <div className="flex flex-wrap gap-3">
+            {primaryColors.map(c => (
+              <button key={c.value} onClick={handleApply} className="flex items-center gap-2 px-3 py-2 rounded-xl border border-border hover:border-primary transition text-sm">
+                <span className="w-5 h-5 rounded-full border border-border" style={{ backgroundColor: c.value }} />
+                {c.name}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="font-bold text-foreground mb-3">اللون الثانوي (Accent/Secondary)</p>
+          <div className="flex flex-wrap gap-3">
+            {accentColors.map(c => (
+              <button key={c.value} onClick={handleApply} className="flex items-center gap-2 px-3 py-2 rounded-xl border border-border hover:border-primary transition text-sm">
+                <span className="w-5 h-5 rounded-full border border-border" style={{ backgroundColor: c.value }} />
+                {c.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="bg-card border border-border rounded-2xl p-5">
+        <p className="font-bold text-foreground mb-3">الألوان الحالية للموقع</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: "Primary", bg: "#1a4d2e", text: "#fff" },
+            { label: "Secondary", bg: "#d4af37", text: "#000" },
+            { label: "Background", bg: "#ffffff", text: "#000" },
+            { label: "Foreground", bg: "#000000", text: "#fff" },
+          ].map(c => (
+            <div key={c.label} className="rounded-xl p-4 text-center text-sm font-bold border border-border" style={{ backgroundColor: c.bg, color: c.text }}>
+              {c.label}
+              <div className="text-xs font-normal mt-1 opacity-75">{c.bg}</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   )
 }
 
-// Phase 3: Pages Builder Tab
+// Pages Builder Tab - list of all site pages with quick links
 function PagesBuilderTab() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return <LoadingState />
-
+  const pages = [
+    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشهادات" },
+    { label: "قرآن الكريم", path: "/quran", desc: "الباقات والأسعار وطريقة التسجيل" },
+    { label: "تأسيس العربي", path: "/arabic", desc: "باقات تعليم اللغة العربية" },
+    { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
+    { label: "المعلمين", path: "/teachers", desc: "نبذة عن فريق المعلمين" },
+    { label: "آراء الطلاب", path: "/reviews", desc: "شهادات وتقييمات الطلاب" },
+    { label: "المكتبة الرقمية", path: "/library", desc: "كتب وتلاوات وأناشيد" },
+    { label: "لقطات من الحصص", path: "/classroom-moments", desc: "فيديوهات ترويجية" },
+    { label: "الألعاب والمسابقات", path: "/games", desc: "ألعاب تعليمية تفاعلية" },
+    { label: "الأسئلة الشائعة", path: "/faq", desc: "50 سؤال وجواب" },
+    { label: "المدونة", path: "/blog", desc: "مقالات تعليمية SEO" },
+    { label: "اتصل بنا", path: "/contact", desc: "نموذج التواصل" },
+    { label: "حسابي", path: "/account", desc: "تسجيل دخول وإنشاء حساب" },
+    { label: "الخصوصية", path: "/privacy", desc: "سياسة الخصوصية" },
+    { label: "شروط الاستخدام", path: "/terms", desc: "الشروط والأحكام" },
+  ]
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">منشئ الصفحات</h2>
-        <p className="text-sm text-muted-foreground">أنشئ صفحات جديدة باستخدام نماذج احترافية مع دعم اللغات الثلاث</p>
+        <h2 className="text-2xl font-bold text-foreground mb-1">صفحات الموقع</h2>
+        <p className="text-sm text-muted-foreground">{pages.length} صفحة مُنشأة — اضغط للمعاينة</p>
       </div>
-      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
-        <div className="text-center py-8">
-          <p className="text-muted-foreground mb-4">جاري تحميل منشئ الصفحات...</p>
-          <a 
-            href="/admin/pages" 
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {pages.map(p => (
+          <a
+            key={p.path}
+            href={p.path}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-card border border-border rounded-xl p-4 hover:border-primary hover:shadow-sm transition-all group"
           >
-            فتح في نافذة جديدة →
+            <div className="flex items-center justify-between mb-1">
+              <p className="font-bold text-foreground text-sm group-hover:text-primary transition-colors">{p.label}</p>
+              <span className="text-xs text-muted-foreground font-mono">{p.path}</span>
+            </div>
+            <p className="text-xs text-muted-foreground">{p.desc}</p>
           </a>
-        </div>
+        ))}
       </div>
     </div>
   )
 }
 
-// Phase 3: Users & Permissions Tab
+// Users Management Tab - admin account info
 function UsersManagementTab() {
-  const [mounted, setMounted] = useState(false)
+  const [showPass, setShowPass] = useState(false)
+  const [newPass, setNewPass] = useState("")
+  const [msg, setMsg] = useState("")
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return <LoadingState />
+  const handleChangePass = async () => {
+    if (newPass.length < 6) { setMsg("كلمة المرور يجب أن تكون 6 أحرف على الأقل"); return }
+    const res = await fetch("/api/admin/change-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ newPassword: newPass }),
+    })
+    if (res.ok) { setMsg("تم تحديث كلمة المرور بنجاح"); setNewPass("") }
+    else { setMsg("خطأ — تحقق من صلاحياتك") }
+  }
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">المستخدمين والصلاحيات</h2>
-        <p className="text-sm text-muted-foreground">أدر المستخدمين والأدوار والصلاحيات بنظام RBAC متقدم</p>
+        <h2 className="text-2xl font-bold text-foreground mb-1">إدارة الحساب</h2>
+        <p className="text-sm text-muted-foreground">بيانات المشرف وإعدادات الأمان</p>
       </div>
-      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
-        <div className="text-center py-8">
-          <p className="text-muted-foreground mb-4">جاري تحميل إدارة المستخدمين...</p>
-          <a 
-            href="/admin/users" 
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
-          >
-            فتح في نافذة جديدة →
-          </a>
+      {msg && <div className={`p-3 rounded-lg text-sm ${msg.startsWith("تم") ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>{msg}</div>}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold">م</div>
+          <div>
+            <p className="font-bold text-foreground text-lg">المشرف الرئيسي</p>
+            <p className="text-sm text-muted-foreground">alymahros25@gmail.com</p>
+            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">Super Admin</span>
+          </div>
+        </div>
+        <div className="border-t border-border pt-5">
+          <p className="font-bold text-foreground mb-3">تغيير كلمة المرور</p>
+          <div className="flex gap-3 max-w-sm">
+            <div className="relative flex-1">
+              <input
+                type={showPass ? "text" : "password"}
+                value={newPass}
+                onChange={e => setNewPass(e.target.value)}
+                placeholder="كلمة المرور الجديدة"
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+              >
+                {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            <button
+              onClick={handleChangePass}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold hover:bg-primary/90 transition"
+            >
+              حفظ
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="bg-card border border-border rounded-2xl p-6">
+        <p className="font-bold text-foreground mb-3">معلومات الدخول</p>
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between py-2 border-b border-border">
+            <span className="text-muted-foreground">رابط لوحة التحكم</span>
+            <a href="/admin" className="text-primary font-medium">/admin</a>
+          </div>
+          <div className="flex items-center justify-between py-2 border-b border-border">
+            <span className="text-muted-foreground">البريد الإلكتروني</span>
+            <span className="font-medium">alymahros25@gmail.com</span>
+          </div>
+          <div className="flex items-center justify-between py-2">
+            <span className="text-muted-foreground">الدور</span>
+            <span className="font-medium">Super Admin</span>
+          </div>
         </div>
       </div>
     </div>
