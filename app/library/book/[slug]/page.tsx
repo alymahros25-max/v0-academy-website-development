@@ -56,12 +56,36 @@ export async function generateMetadata(
   }
 }
 
-export function generateStaticParams() {
-  return Object.keys(sampleBooks).map((slug) => ({ slug }))
-}
+export default async function BookPage({ params }: { params: { slug: string } }) {
+  // First try to fetch from database
+  let book = null
+  try {
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000"
+    
+    const response = await fetch(
+      `${baseUrl}/api/cms/digital-library?published=false`,
+      { 
+        headers: {
+          "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY || ""}`,
+        },
+        cache: "no-store"
+      }
+    )
+    
+    if (response.ok) {
+      const items = await response.json()
+      book = items.find((item: any) => item.slug === params.slug)
+    }
+  } catch (error) {
+    console.log("[v0] Database fetch failed, trying sample books")
+  }
 
-export default function BookPage({ params }: { params: { slug: string } }) {
-  const book = sampleBooks[params.slug]
+  // Fallback to sample books
+  if (!book) {
+    book = sampleBooks[params.slug]
+  }
 
   if (!book) {
     notFound()
