@@ -42,7 +42,11 @@ const initialFormData: FormData = {
   isFree: true,
 }
 
-export default function DigitalLibraryForm() {
+interface DigitalLibraryFormProps {
+  onSuccess?: () => void
+}
+
+export default function DigitalLibraryForm({ onSuccess }: DigitalLibraryFormProps) {
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -125,6 +129,7 @@ export default function DigitalLibraryForm() {
       toast.success("تم إضافة المحتوى بنجاح")
       setFormData(initialFormData)
       setErrors({})
+      onSuccess?.() // refresh parent list and close form
     } catch (error) {
       console.error("Error:", error)
       toast.error("حدث خطأ أثناء حفظ المحتوى")

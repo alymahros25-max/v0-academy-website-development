@@ -1032,7 +1032,7 @@ function CMSManagementTab() {
             href="/admin/cms" 
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
           >
-            فتح في نافذة جديدة →
+            فتح ��ي نافذة جديدة →
           </a>
         </div>
       </div>
@@ -1248,9 +1248,9 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
 // Digital Library Tab
 function DigitalLibraryTab() {
   const [showForm, setShowForm] = useState(false)
-  const { data: items, isLoading, error, mutate } = useSWR("/api/cms/digital-library", fetcher, { 
+  const { data: items, isLoading, error, mutate } = useSWR("/api/cms/digital-library?published=false", fetcher, { 
     revalidateOnFocus: false,
-    dedupingInterval: 60000 
+    dedupingInterval: 10000
   })
 
   const handleDelete = async (id: string) => {
@@ -1290,7 +1290,7 @@ function DigitalLibraryTab() {
           >
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
-          <DigitalLibraryForm />
+          <DigitalLibraryForm onSuccess={() => { setShowForm(false); mutate() }} />
         </div>
       )}
 
