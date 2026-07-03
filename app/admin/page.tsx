@@ -7,6 +7,12 @@ import {
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
   Menu, XIcon, Palette, FileText, Lock, Film, Library
 } from "lucide-react"
+import dynamic from "next/dynamic"
+
+const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
+  ssr: false,
+  loading: () => <div className="text-center py-8">جاري تحميل النموذج...</div>
+})
 import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
@@ -1242,10 +1248,23 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
 // Digital Library Tab
 function DigitalLibraryTab() {
   const [showForm, setShowForm] = useState(false)
-  const { data: items, isLoading, error } = useSWR("/api/cms/digital-library?published=false", fetcher, { 
+  const { data: items, isLoading, error, mutate } = useSWR("/api/cms/digital-library", fetcher, { 
     revalidateOnFocus: false,
     dedupingInterval: 60000 
   })
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("هل تريد حذف هذا المحتوى؟")) return
+
+    try {
+      const response = await fetch(`/api/cms/digital-library?id=${id}`, { method: "DELETE" })
+      if (response.ok) {
+        mutate()
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -1264,12 +1283,19 @@ function DigitalLibraryTab() {
       </div>
 
       {showForm && (
-        <div className="bg-card rounded-lg border border-border p-6">
-          <p className="text-muted-foreground text-center py-8">نموذج إضافة المحتوى الرقمي (سيتم تطويره)</p>
+        <div className="relative">
+          <button
+            onClick={() => setShowForm(false)}
+            className="absolute left-4 top-4 p-1 hover:bg-muted rounded-lg transition z-10"
+          >
+            <X className="w-5 h-5 text-muted-foreground" />
+          </button>
+          <DigitalLibraryForm />
         </div>
       )}
 
       <div className="bg-card rounded-lg border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">المحتوى المضاف</h3>
         {isLoading ? (
           <LoadingState />
         ) : error ? (
@@ -1289,7 +1315,7 @@ function DigitalLibraryTab() {
         ) : (
           <div className="grid gap-4">
             {items?.map((item: any) => (
-              <div key={item.id} className="flex items-start gap-4 p-4 border border-border rounded-lg">
+              <div key={item.id} className="flex items-start gap-4 p-4 border border-border rounded-lg hover:bg-muted/30 transition">
                 {item.thumbnail_url && (
                   <img
                     src={item.thumbnail_url}
@@ -1299,12 +1325,19 @@ function DigitalLibraryTab() {
                 )}
                 <div className="flex-1">
                   <h3 className="font-semibold text-foreground mb-1">{item.title_ar}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">{item.description_ar}</p>
-                  <div className="flex flex-wrap gap-2">
+                  <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description_ar}</p>
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {item.content_type && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">{item.content_type}</span>}
                     {item.category && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">{item.category}</span>}
+                    {item.is_published && <span className="text-xs bg-green-500/20 text-green-700 px-2 py-1 rounded">منشور</span>}
                   </div>
                 </div>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="p-2 hover:bg-red-500/10 rounded-lg text-red-600 transition"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             ))}
           </div>
