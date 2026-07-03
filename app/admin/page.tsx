@@ -8,15 +8,26 @@ import {
   Menu, XIcon, Palette, FileText, Lock, Film, Library
 } from "lucide-react"
 import dynamic from "next/dynamic"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { LoadingSkeleton, LoadingState } from "@/components/LoadingSkeleton"
 
 const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
   ssr: false,
-  loading: () => <div className="text-center py-8">جاري تحميل النموذج...</div>
+  loading: () => <LoadingSkeleton variant="card" count={1} />
 })
 import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fetcher = async (url: string) => {
+  try {
+    const r = await fetch(url)
+    if (!r.ok) throw new Error(`API Error: ${r.status}`)
+    return await r.json()
+  } catch (error) {
+    console.error('[v0] Fetch error:', error)
+    return null
+  }
+}
 
 type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library"
 
@@ -156,23 +167,25 @@ export default function AdminDashboard() {
 
         {/* Tab Content */}
         <div className="p-4 lg:p-6">
-          {activeTab === "dashboard" && <DashboardTab />}
-          {activeTab === "packages" && <PackagesTab />}
-          {activeTab === "teachers" && <TeachersTab />}
-          {activeTab === "reviews" && <ReviewsTab />}
-          {activeTab === "messages" && <MessagesTab />}
-          {activeTab === "pages" && <PagesTab />}
-          {activeTab === "zapier" && <ZapierTab />}
-          {activeTab === "settings" && <SettingsTab />}
-          {activeTab === "seo-guide" && <SEOGuideTab />}
-          
-          {/* Phase 2-3 New Content Management Routes */}
-          {activeTab === "cms" && <CMSManagementTab />}
-          {activeTab === "theme" && <ThemeCustomizerTab />}
-          {activeTab === "pages-builder" && <PagesBuilderTab />}
-          {activeTab === "users" && <UsersManagementTab />}
-          {activeTab === "classroom-videos" && <ClassroomVideosTab />}
-          {activeTab === "digital-library" && <DigitalLibraryTab />}
+          <ErrorBoundary>
+            {activeTab === "dashboard" && <DashboardTab />}
+            {activeTab === "packages" && <PackagesTab />}
+            {activeTab === "teachers" && <TeachersTab />}
+            {activeTab === "reviews" && <ReviewsTab />}
+            {activeTab === "messages" && <MessagesTab />}
+            {activeTab === "pages" && <PagesTab />}
+            {activeTab === "zapier" && <ZapierTab />}
+            {activeTab === "settings" && <SettingsTab />}
+            {activeTab === "seo-guide" && <SEOGuideTab />}
+            
+            {/* Phase 2-3 New Content Management Routes */}
+            {activeTab === "cms" && <CMSManagementTab />}
+            {activeTab === "theme" && <ThemeCustomizerTab />}
+            {activeTab === "pages-builder" && <PagesBuilderTab />}
+            {activeTab === "users" && <UsersManagementTab />}
+            {activeTab === "classroom-videos" && <ClassroomVideosTab />}
+            {activeTab === "digital-library" && <DigitalLibraryTab />}
+          </ErrorBoundary>
         </div>
       </main>
     </div>
@@ -181,29 +194,36 @@ export default function AdminDashboard() {
 
 // Dashboard Tab
 function DashboardTab() {
-  const { data: stats } = useSWR("/api/admin/data?type=stats", fetcher, { refreshInterval: 10000 })
+  const { data: stats, isLoading } = useSWR("/api/admin/data?type=stats", fetcher, { refreshInterval: 10000 })
 
+  // Defensive null-safety with fallback values
+  const safeStats = stats && typeof stats === 'object' ? stats : {}
   const cards = [
-    { label: "رسائل جديدة", value: stats?.unreadMessages ?? 0, icon: Mail, color: "bg-blue-500" },
-    { label: "المعلمين النشطين", value: stats?.totalTeachers ?? 0, icon: Users, color: "bg-emerald-500" },
-    { label: "آراء الطلاب", value: stats?.totalReviews ?? 0, icon: Star, color: "bg-amber-500" },
-    { label: "إجمالي الرسائل", value: stats?.totalMessages ?? 0, icon: MessageSquare, color: "bg-purple-500" },
+    { label: "رسائل جديدة", value: safeStats?.unreadMessages ?? 0, icon: Mail, color: "bg-blue-500" },
+    { label: "المعلمين النشطين", value: safeStats?.totalTeachers ?? 0, icon: Users, color: "bg-emerald-500" },
+    { label: "آراء الطلاب", value: safeStats?.totalReviews ?? 0, icon: Star, color: "bg-amber-500" },
+    { label: "إجمالي الرسائل", value: safeStats?.totalMessages ?? 0, icon: MessageSquare, color: "bg-purple-500" },
   ]
+
+  if (isLoading) return <LoadingSkeleton variant="grid" count={4} />
 
   return (
     <div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {cards.map((card, idx) => (
-          <div key={idx} className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-xl ${card.color} text-white flex items-center justify-center`}>
-              <card.icon className="w-6 h-6" />
+        {Array.isArray(cards) && cards.map((card, idx) => {
+          if (!card || typeof card.value !== 'number') return null
+          return (
+            <div key={idx} className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-xl ${card?.color || 'bg-gray-500'} text-white flex items-center justify-center`}>
+                <card.icon className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-2xl font-extrabold text-foreground">{card.value}</p>
+                <p className="text-xs text-muted-foreground">{card?.label || 'بدون تسمية'}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-extrabold text-foreground">{card.value}</p>
-              <p className="text-xs text-muted-foreground">{card.label}</p>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
       <div className="bg-card rounded-2xl border border-border p-6">
         <h2 className="font-bold text-foreground mb-3">مرحباً بك في لوحة التحكم</h2>
@@ -261,8 +281,8 @@ function PackagesTab() {
     }
   }
 
-  if (loading) return <LoadingState />
-  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (isLoading) return <LoadingSkeleton variant="card" count={3} />
+  if (error) return <div className="text-red-500 p-4 bg-red-50 rounded-lg">خطأ في تحميل البيانات</div>
   if (!packages || !Array.isArray(packages) || packages.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
 
   return (
@@ -431,8 +451,8 @@ function TeachersTab() {
     }
   }
 
-  if (isLoading) return <LoadingState />
-  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (isLoading) return <LoadingSkeleton variant="card" count={3} />
+  if (error) return <div className="text-red-500 p-4 bg-red-50 rounded-lg">خطأ في تحميل البيانات</div>
   if (!teachers || !Array.isArray(teachers) || teachers.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
 
   return (
@@ -544,41 +564,44 @@ function ReviewsTab() {
     dedupingInterval: 60000
   })
 
-  if (isLoading) return <LoadingState />
-  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
-  if (!reviews || reviews.length === 0) return <div className="p-4 text-muted-foreground">لا توجد آراء</div>
+  if (isLoading) return <LoadingSkeleton variant="card" count={3} />
+  if (error) return <div className="text-red-500 p-4 bg-red-50 rounded-lg">خطأ في تحميل البيانات</div>
+  if (!reviews || !Array.isArray(reviews) || reviews.length === 0) return <div className="p-4 text-muted-foreground">لا توجد آراء</div>
 
   return (
     <div>
       <h2 className="text-lg font-bold text-foreground mb-6">آراء الطلاب</h2>
       <div className="grid gap-4">
-        {reviews?.map((review: { id: string; name: string; rating: number; text: Record<string, string>; active: boolean; createdAt: string }) => (
+        {Array.isArray(reviews) && reviews.map((review: { id?: string; name?: string; rating?: number; text?: Record<string, string>; active?: boolean; createdAt?: string } | null) => {
+          if (!review?.id) return null
+          return (
           <div key={review.id} className={`bg-card rounded-2xl border p-5 ${review.active ? "border-border" : "border-destructive/30 opacity-60"}`}>
             <div className="flex items-start justify-between mb-3">
               <div>
-                <p className="font-bold text-foreground">{review.name}</p>
+                <p className="font-bold text-foreground">{review?.name || 'بدون اسم'}</p>
                 <div className="flex items-center gap-1 mt-1">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? "text-secondary fill-secondary" : "text-muted-foreground/30"}`} />
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < (review?.rating ?? 0) ? "text-secondary fill-secondary" : "text-muted-foreground/30"}`} />
                   ))}
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <button
-                  onClick={() => handleToggle(review.id, review.active)}
-                  className={`p-2 rounded-lg transition-colors ${review.active ? "hover:bg-muted text-primary" : "hover:bg-primary/10 text-muted-foreground"}`}
-                  title={review.active ? "إخفاء" : "إظهار"}
+                  onClick={() => review?.id && handleToggle(review.id, review.active ?? false)}
+                  className={`p-2 rounded-lg transition-colors ${review?.active ? "hover:bg-muted text-primary" : "hover:bg-primary/10 text-muted-foreground"}`}
+                  title={review?.active ? "إخفاء" : "إظهار"}
                 >
-                  {review.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  {review?.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                 </button>
-                <button onClick={() => handleDelete(review.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                <button onClick={() => review?.id && handleDelete(review.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">{review.text.ar}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{review?.text?.ar || 'بدون محتوى'}</p>
           </div>
-        ))}
+        )
+        })}
       </div>
     </div>
   )
@@ -1133,7 +1156,7 @@ function PagesBuilderTab() {
     { label: "الأسئلة الشائعة", path: "/faq", desc: "50 سؤال وجواب" },
     { label: "المدونة", path: "/blog", desc: "مقالات تعليمية SEO" },
     { label: "اتصل بنا", path: "/contact", desc: "نموذج التواصل" },
-    { label: "حسابي", path: "/account", desc: "تسجيل دخول وإنشاء حساب" },
+    { label: "حسابي", path: "/account", desc: "تسجيل دخ��ل وإنشاء حساب" },
     { label: "الخصوصية", path: "/privacy", desc: "سياسة الخصوصية" },
     { label: "شروط الاستخدام", path: "/terms", desc: "الشروط والأحكام" },
   ]
