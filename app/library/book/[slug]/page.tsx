@@ -238,7 +238,7 @@ export default async function BookPage({ params }: { params: Promise<{ slug: str
                   </a>
                 </div>
                 <iframe
-                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(book.pdf_url)}&embedded=true`}
+                  src={`https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(book.pdf_url)}`}
                   className="w-full border-0"
                   style={{ height: "80vh" }}
                   title={book.title_ar}
