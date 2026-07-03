@@ -1,168 +1,204 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { Download, Share2, ArrowRight } from "lucide-react"
+import { Download, Share2, ArrowRight, BookOpen, Headphones, Music2 } from "lucide-react"
 import Link from "next/link"
+import { createClient } from "@supabase/supabase-js"
 
 interface LibraryItem {
   id: string
-  title: string
   slug: string
-  description: string
-  content_type: string
-  file_url: string
-  cover_image: string
-  author: string
+  title_ar: string
+  title_en: string
+  description_ar: string
+  description_en: string
+  author_ar: string
+  author_en: string
+  content_type: "book" | "quran_audio" | "nasheed" | "tajweed"
+  pdf_url: string | null
+  audio_url: string | null
+  thumbnail_url: string | null
   category: string
+  page_count: number | null
+  duration_seconds: number | null
+  qari_name_ar: string | null
   is_published: boolean
-  duration_seconds?: number
-  page_count?: number
 }
 
-// Sample data for testing - يتم جلبها من Supabase في الإنتاج
-const sampleBooks: Record<string, LibraryItem> = {
-  "al-qaida-an-noraniyah": {
-    id: "1",
-    title: "القاعدة النورانية",
-    slug: "al-qaida-an-noraniyah",
-    description: "كتاب أساسي لتعليم الأطفال قراءة القرآن الكريم بالطريقة الصحيحة",
-    content_type: "pdf",
-    file_url: "https://example.com/books/al-qaida.pdf",
-    cover_image: "https://images.unsplash.com/photo-1507842217343-583f20270319?w=600&h=800",
-    author: "الشيخ محمد حقاني",
-    category: "quran",
-    is_published: true,
-    page_count: 24,
-  },
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) return null
+  return createClient(url, key)
+}
+
+async function getBook(slug: string): Promise<LibraryItem | null> {
+  try {
+    const supabase = getSupabase()
+    console.log("[v0] getBook slug:", slug, "| supabase:", supabase ? "OK" : "NULL")
+    if (!supabase) return null
+
+    const { data, error } = await supabase
+      .from("digital_library")
+      .select("*")
+      .eq("slug", slug)
+      .single()
+
+    console.log("[v0] getBook result:", { data: data?.title_ar, error: error?.message })
+    if (error || !data) return null
+    return data as LibraryItem
+  } catch (e: any) {
+    console.log("[v0] getBook exception:", e?.message)
+    return null
+  }
 }
 
 export async function generateMetadata(
   { params }: { params: { slug: string } }
 ): Promise<Metadata> {
-  const book = sampleBooks[params.slug]
+  const book = await getBook(params.slug)
 
   if (!book) {
-    return { title: "كتاب غير موجود" }
+    return { title: "محتوى غير موجود | أكاديمية الحافظ المتميز" }
   }
 
   return {
-    title: `${book.title} | أكاديمية الحافظ المتميز`,
-    description: book.description,
+    title: `${book.title_ar} | أكاديمية الحافظ المتميز`,
+    description: book.description_ar || book.title_ar,
     openGraph: {
-      title: book.title,
-      description: book.description,
+      title: book.title_ar,
+      description: book.description_ar || "",
       type: "article",
-      images: [{ url: book.cover_image }],
+      images: book.thumbnail_url ? [{ url: book.thumbnail_url }] : [],
     },
   }
 }
 
-export default async function BookPage({ params }: { params: { slug: string } }) {
-  // First try to fetch from database
-  let book = null
-  try {
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000"
-    
-    const response = await fetch(
-      `${baseUrl}/api/cms/digital-library?published=false`,
-      { 
-        headers: {
-          "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY || ""}`,
-        },
-        cache: "no-store"
-      }
-    )
-    
-    if (response.ok) {
-      const items = await response.json()
-      book = items.find((item: any) => item.slug === params.slug)
-    }
-  } catch (error) {
-    console.log("[v0] Database fetch failed, trying sample books")
+function getContentTypeLabel(type: string) {
+  switch (type) {
+    case "book": return "كتاب"
+    case "tajweed": return "متن تجويد"
+    case "quran_audio": return "تلاوة قرآنية"
+    case "nasheed": return "نشيد"
+    default: return "محتوى"
   }
+}
 
-  // Fallback to sample books
-  if (!book) {
-    book = sampleBooks[params.slug]
+function getContentTypeIcon(type: string) {
+  switch (type) {
+    case "book":
+    case "tajweed": return BookOpen
+    case "quran_audio":
+    case "nasheed": return type === "nasheed" ? Music2 : Headphones
+    default: return BookOpen
   }
+}
+
+export default async function BookPage({ params }: { params: { slug: string } }) {
+  const book = await getBook(params.slug)
 
   if (!book) {
     notFound()
   }
+
+  const isAudio = book.content_type === "quran_audio" || book.content_type === "nasheed"
+  const isPdf = book.content_type === "book" || book.content_type === "tajweed"
+  const ContentIcon = getContentTypeIcon(book.content_type)
+  const authorName = book.qari_name_ar || book.author_ar || "غير محدد"
 
   return (
     <main className="min-h-screen bg-background" dir="rtl">
       {/* Breadcrumb */}
       <nav className="bg-muted/30 py-3 px-4 sm:px-6 lg:px-8 border-b border-border">
         <div className="max-w-7xl mx-auto flex items-center gap-2 text-sm">
-          <Link href="/library" className="text-primary hover:underline">
-            المكتبة
-          </Link>
+          <Link href="/" className="text-muted-foreground hover:text-primary transition-colors">الرئيسية</Link>
           <span className="text-muted-foreground">/</span>
-          <span className="text-foreground font-semibold">{book.title}</span>
+          <Link href="/library" className="text-muted-foreground hover:text-primary transition-colors">المكتبة</Link>
+          <span className="text-muted-foreground">/</span>
+          <span className="text-foreground font-semibold truncate max-w-xs">{book.title_ar}</span>
         </div>
       </nav>
 
       {/* Content */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
+      <section className="py-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
+
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6 space-y-6">
-              {/* Cover Image */}
-              <div className="rounded-lg overflow-hidden shadow-lg border border-border">
-                <img
-                  src={book.cover_image}
-                  alt={book.title}
-                  className="w-full h-auto object-cover aspect-[3/4]"
-                />
+            <div className="sticky top-6 space-y-5">
+              {/* Cover */}
+              <div className="rounded-2xl overflow-hidden shadow-lg border border-border bg-card">
+                {book.thumbnail_url ? (
+                  <img
+                    src={book.thumbnail_url}
+                    alt={book.title_ar}
+                    className="w-full h-auto object-cover"
+                    style={{ aspectRatio: isAudio ? "1/1" : "3/4" }}
+                  />
+                ) : (
+                  <div
+                    className="w-full bg-primary/10 flex items-center justify-center"
+                    style={{ aspectRatio: isAudio ? "1/1" : "3/4" }}
+                  >
+                    <ContentIcon className="w-20 h-20 text-primary/40" />
+                  </div>
+                )}
               </div>
 
-              {/* Book Info */}
-              <div className="bg-card rounded-lg border border-border p-6 space-y-4">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1 uppercase">الفئة</p>
-                  <p className="text-sm font-semibold text-primary capitalize">{book.category}</p>
-                </div>
+              {/* Meta card */}
+              <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
+                  <ContentIcon className="w-3.5 h-3.5" />
+                  {getContentTypeLabel(book.content_type)}
+                </span>
 
                 {book.page_count && (
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">عدد الصفحات</p>
-                    <p className="text-lg font-bold text-foreground">{book.page_count}</p>
+                  <div className="flex justify-between items-center text-sm border-b border-border pb-3">
+                    <span className="text-muted-foreground">عدد الصفحات</span>
+                    <span className="font-bold text-foreground">{book.page_count}</span>
                   </div>
                 )}
 
                 {book.duration_seconds && (
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">المدة</p>
-                    <p className="text-lg font-bold text-foreground">
-                      {Math.round(book.duration_seconds / 60)} دقيقة
-                    </p>
+                  <div className="flex justify-between items-center text-sm border-b border-border pb-3">
+                    <span className="text-muted-foreground">المدة</span>
+                    <span className="font-bold text-foreground">
+                      {Math.floor(book.duration_seconds / 60)} د {book.duration_seconds % 60} ث
+                    </span>
                   </div>
                 )}
 
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">الفئة</span>
+                  <span className="font-semibold text-foreground">{book.category || "عام"}</span>
+                </div>
+
                 {/* Actions */}
-                <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                  {book.content_type === "pdf" ? (
+                <div className="pt-3 border-t border-border space-y-3">
+                  {isPdf && book.pdf_url && (
                     <a
-                      href={book.file_url}
+                      href={book.pdf_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full py-2.5 px-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition font-semibold flex items-center justify-center gap-2"
+                      className="w-full py-2.5 px-4 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition font-bold flex items-center justify-center gap-2 text-sm"
                     >
                       <Download className="w-4 h-4" />
-                      فتح الكتاب
+                      تحميل / فتح الكتاب
                     </a>
-                  ) : book.content_type === "quran_audio" || book.content_type === "nasheed" ? (
-                    <audio
-                      controls
-                      className="w-full rounded-lg bg-muted p-2"
-                      src={book.file_url}
-                    />
-                  ) : null}
+                  )}
 
-                  <button className="w-full py-2.5 px-4 border border-border text-foreground rounded-lg hover:bg-muted transition font-semibold flex items-center justify-center gap-2">
+                  {isAudio && book.audio_url && (
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground text-center">الاستماع المباشر</p>
+                      <audio
+                        controls
+                        className="w-full rounded-xl"
+                        src={book.audio_url}
+                        preload="metadata"
+                      />
+                    </div>
+                  )}
+
+                  <button className="w-full py-2.5 px-4 border border-border text-foreground rounded-xl hover:bg-muted transition font-semibold flex items-center justify-center gap-2 text-sm">
                     <Share2 className="w-4 h-4" />
                     مشاركة
                   </button>
@@ -174,49 +210,75 @@ export default async function BookPage({ params }: { params: { slug: string } })
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             <div>
-              <h1 className="text-4xl font-bold text-foreground mb-2">{book.title}</h1>
-              <p className="text-lg font-semibold text-muted-foreground">
-                تأليف: <span className="text-primary">{book.author}</span>
+              <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-3 text-balance">{book.title_ar}</h1>
+              <p className="text-base font-medium text-muted-foreground">
+                {isAudio ? "بصوت: " : "تأليف: "}
+                <span className="text-primary font-bold">{authorName}</span>
               </p>
             </div>
 
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
-              <p className="text-foreground leading-relaxed text-lg">{book.description}</p>
-            </div>
+            {book.description_ar && (
+              <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6">
+                <p className="text-foreground leading-relaxed text-base">{book.description_ar}</p>
+              </div>
+            )}
 
-            {/* Content Display */}
-            {book.content_type === "pdf" && (
-              <div className="bg-card border border-border rounded-lg p-8">
+            {/* PDF Viewer */}
+            {isPdf && book.pdf_url && (
+              <div className="bg-card border border-border rounded-2xl overflow-hidden">
+                <div className="p-4 border-b border-border flex items-center justify-between">
+                  <p className="font-bold text-foreground text-sm">معاينة الكتاب</p>
+                  <a
+                    href={book.pdf_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-primary hover:underline flex items-center gap-1"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    فتح في نافذة جديدة
+                  </a>
+                </div>
                 <iframe
-                  src={`${book.file_url}#view=FitH`}
-                  className="w-full h-screen rounded-lg"
-                  title={book.title}
+                  src={`${book.pdf_url}#toolbar=0&view=FitH`}
+                  className="w-full border-0"
+                  style={{ height: "80vh" }}
+                  title={book.title_ar}
+                  loading="lazy"
                 />
               </div>
             )}
 
-            {(book.content_type === "quran_audio" || book.content_type === "nasheed") && (
-              <div className="bg-card border border-border rounded-lg p-8 text-center space-y-6">
-                <div className="flex justify-center">
-                  <audio
-                    controls
-                    className="w-full max-w-md"
-                    src={book.file_url}
-                  />
+            {/* Audio Player (large) */}
+            {isAudio && book.audio_url && (
+              <div className="bg-card border border-border rounded-2xl p-8 text-center space-y-6">
+                <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                  <ContentIcon className="w-12 h-12 text-primary" />
                 </div>
-                <p className="text-muted-foreground">
+                <div>
+                  <p className="font-bold text-foreground text-xl mb-1">{book.title_ar}</p>
+                  <p className="text-muted-foreground text-sm">{authorName}</p>
+                </div>
+                <audio
+                  controls
+                  className="w-full max-w-lg mx-auto"
+                  src={book.audio_url}
+                  preload="metadata"
+                >
+                  متصفحك لا يدعم تشغيل الصوت
+                </audio>
+                <p className="text-xs text-muted-foreground">
                   {book.content_type === "quran_audio"
-                    ? "استمع إلى التلاوة القرآنية"
-                    : "استمع إلى الأنشودة"}
+                    ? "سورة الفاتحة — نموذج من التلاوة"
+                    : "استمع إلى الأنشودة كاملة"}
                 </p>
               </div>
             )}
 
             {/* Back Link */}
-            <div className="pt-8 border-t border-border">
+            <div className="pt-6 border-t border-border">
               <Link
                 href="/library"
-                className="inline-flex items-center gap-2 text-primary hover:underline font-semibold"
+                className="inline-flex items-center gap-2 text-primary hover:underline font-semibold text-sm"
               >
                 <ArrowRight className="w-4 h-4" />
                 العودة إلى المكتبة
