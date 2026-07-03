@@ -222,28 +222,56 @@ export default async function BookPage({ params }: { params: Promise<{ slug: str
               </div>
             )}
 
-            {/* PDF Viewer */}
+            {/* PDF Access Section */}
             {isPdf && book.pdf_url && (
               <div className="bg-card border border-border rounded-2xl overflow-hidden">
-                <div className="p-4 border-b border-border flex items-center justify-between">
-                  <p className="font-bold text-foreground text-sm">معاينة الكتاب</p>
-                  <a
-                    href={book.pdf_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-primary hover:underline flex items-center gap-1"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    فتح في نافذة جديدة
-                  </a>
+                <div className="p-5 border-b border-border">
+                  <p className="font-bold text-foreground">قراءة الكتاب</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">يفتح الكتاب مباشرة في متصفحك أو يمكنك تحميله</p>
                 </div>
-                <iframe
-                  src={`https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(book.pdf_url)}`}
-                  className="w-full border-0"
-                  style={{ height: "80vh" }}
-                  title={book.title_ar}
-                  loading="lazy"
-                />
+                <div className="p-6 flex flex-col sm:flex-row gap-4 items-center">
+                  {/* Book preview */}
+                  <div className="shrink-0 rounded-xl overflow-hidden border border-border shadow-sm w-36 h-48 bg-primary/5 flex items-center justify-center">
+                    {book.thumbnail_url ? (
+                      <img
+                        src={book.thumbnail_url}
+                        alt={book.title_ar}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <BookOpen className="w-14 h-14 text-primary/30" />
+                    )}
+                  </div>
+                  {/* Actions */}
+                  <div className="flex-1 space-y-4 text-center sm:text-right">
+                    <div>
+                      <p className="font-bold text-foreground text-lg">{book.title_ar}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{book.author_ar}</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <a
+                        href={book.pdf_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-3 px-5 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition font-bold flex items-center justify-center gap-2 text-sm"
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        اقرأ الآن
+                      </a>
+                      <a
+                        href={book.pdf_url}
+                        download
+                        className="flex-1 py-3 px-5 border border-border text-foreground rounded-xl hover:bg-muted transition font-bold flex items-center justify-center gap-2 text-sm"
+                      >
+                        <Download className="w-4 h-4" />
+                        تحميل PDF
+                      </a>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      الكتاب مجاني 100% — لا يلزم تسجيل
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 
