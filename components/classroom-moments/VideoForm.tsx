@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { Save, Trash2, RotateCcw, AlertCircle } from 'lucide-react'
 import { useApiToast } from '@/hooks/use-api-toast'
 import { extractYouTubeId, isValidYouTubeUrl } from '@/lib/youtube-utils'
-import { useTranslation } from '@/lib/useTranslation'
+import { useI18n } from '@/lib/i18n'
 
 interface Video {
   id?: number

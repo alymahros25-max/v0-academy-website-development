@@ -1,10 +1,20 @@
-import { ReactNode } from "react"
-import { Metadata } from "next"
+"use client"
 
-export const metadata: Metadata = {
-  title: "لوحة التحكم - أكاديمية الحافظ المتميز",
-  description: "نظام إدارة المحتوى والموقع",
-  robots: "noindex, nofollow",
+import { ReactNode } from "react"
+import { I18nProvider, useI18n } from "@/lib/i18n"
+
+function AdminLayoutContent({
+  children,
+}: {
+  children: ReactNode
+}) {
+  const { dir, locale } = useI18n()
+
+  return (
+    <div dir={dir} lang={locale}>
+      {children}
+    </div>
+  )
 }
 
 export default function AdminLayout({
@@ -13,8 +23,8 @@ export default function AdminLayout({
   children: ReactNode
 }) {
   return (
-    <div dir="rtl" lang="ar">
-      {children}
-    </div>
+    <I18nProvider>
+      <AdminLayoutContent>{children}</AdminLayoutContent>
+    </I18nProvider>
   )
 }
