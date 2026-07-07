@@ -32,7 +32,7 @@ const CATEGORIES = ['تجويد', 'قرآن كريم', 'لغة عربية', 'ت�
 export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { showToast } = useApiToast()
-  const { t } = useTranslation()
+  const { t } = useI18n()
   const [youtubeIdError, setYoutubeIdError] = useState<string>('')
 
   const [formData, setFormData] = useState<Video>(
