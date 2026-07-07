@@ -8,10 +8,12 @@ import {
   Menu, XIcon, Palette, FileText, Lock, Film, Library
 } from "lucide-react"
 import dynamic from "next/dynamic"
+import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
+import { AdminLoadingSkeleton } from "@/components/admin/AdminLoadingSkeleton"
 
 const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
   ssr: false,
-  loading: () => <div className="text-center py-8">جاري تحميل النموذج...</div>
+  loading: () => <AdminLoadingSkeleton />
 })
 import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
@@ -156,53 +158,91 @@ export default function AdminDashboard() {
 
         {/* Tab Content */}
         <div className="p-4 lg:p-6">
-          {activeTab === "dashboard" && <DashboardTab />}
-          {activeTab === "packages" && <PackagesTab />}
-          {activeTab === "teachers" && <TeachersTab />}
-          {activeTab === "reviews" && <ReviewsTab />}
-          {activeTab === "messages" && <MessagesTab />}
-          {activeTab === "pages" && <PagesTab />}
-          {activeTab === "zapier" && <ZapierTab />}
-          {activeTab === "settings" && <SettingsTab />}
-          {activeTab === "seo-guide" && <SEOGuideTab />}
+          <AdminErrorBoundary>
+            {activeTab === "dashboard" && <DashboardTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "packages" && <PackagesTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "teachers" && <TeachersTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "reviews" && <ReviewsTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "messages" && <MessagesTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "pages" && <PagesTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "zapier" && <ZapierTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "settings" && <SettingsTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "seo-guide" && <SEOGuideTab />}
+          </AdminErrorBoundary>
           
           {/* Phase 2-3 New Content Management Routes */}
-          {activeTab === "cms" && <CMSManagementTab />}
-          {activeTab === "theme" && <ThemeCustomizerTab />}
-          {activeTab === "pages-builder" && <PagesBuilderTab />}
-          {activeTab === "users" && <UsersManagementTab />}
-          {activeTab === "classroom-videos" && <ClassroomVideosTab />}
-          {activeTab === "digital-library" && <DigitalLibraryTab />}
+          <AdminErrorBoundary>
+            {activeTab === "cms" && <CMSManagementTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "theme" && <ThemeCustomizerTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "pages-builder" && <PagesBuilderTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "users" && <UsersManagementTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "classroom-videos" && <ClassroomVideosTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "digital-library" && <DigitalLibraryTab />}
+          </AdminErrorBoundary>
         </div>
       </main>
     </div>
   )
 }
 
-// Dashboard Tab
+// Dashboard Tab - Defensive Programming
 function DashboardTab() {
-  const { data: stats } = useSWR("/api/admin/data?type=stats", fetcher, { refreshInterval: 10000 })
+  const { data: stats, isLoading, error } = useSWR("/api/admin/data?type=stats", fetcher, { 
+    refreshInterval: 10000,
+    revalidateOnFocus: false
+  })
+
+  if (isLoading) return <AdminLoadingSkeleton />
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل الإحصائيات</div>
 
   const cards = [
-    { label: "رسائل جديدة", value: stats?.unreadMessages ?? 0, icon: Mail, color: "bg-blue-500" },
-    { label: "المعلمين النشطين", value: stats?.totalTeachers ?? 0, icon: Users, color: "bg-emerald-500" },
-    { label: "آراء الطلاب", value: stats?.totalReviews ?? 0, icon: Star, color: "bg-amber-500" },
-    { label: "إجمالي الرسائل", value: stats?.totalMessages ?? 0, icon: MessageSquare, color: "bg-purple-500" },
+    { icon: Package, label: "الباقات النشطة", value: stats?.activePackages ?? 0, color: "bg-blue-500" },
+    { icon: Users, label: "الطلاب المسجلين", value: stats?.totalStudents ?? 0, color: "bg-green-500" },
+    { icon: BookOpen, label: "الدروس المنشورة", value: stats?.publishedLessons ?? 0, color: "bg-purple-500" },
+    { icon: Star, label: "التقييم العام", value: stats?.rating ?? "N/A", color: "bg-amber-500" },
   ]
 
   return (
     <div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {cards.map((card, idx) => (
-          <div key={idx} className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-xl ${card.color} text-white flex items-center justify-center`}>
-              <card.icon className="w-6 h-6" />
+        {cards?.map((card, idx) => (
+          card ? (
+            <div key={idx} className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-xl ${card?.color ?? "bg-gray-500"} text-white flex items-center justify-center`}>
+                <card.icon className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-2xl font-extrabold text-foreground">{card?.value ?? 0}</p>
+                <p className="text-xs text-muted-foreground">{card?.label ?? "-"}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-2xl font-extrabold text-foreground">{card.value}</p>
-              <p className="text-xs text-muted-foreground">{card.label}</p>
-            </div>
-          </div>
+          ) : null
         ))}
       </div>
       <div className="bg-card rounded-2xl border border-border p-6">
@@ -261,9 +301,9 @@ function PackagesTab() {
     }
   }
 
-  if (loading) return <LoadingState />
-  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
-  if (!packages || !Array.isArray(packages) || packages.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
+  if (isLoading) return <AdminLoadingSkeleton />
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل البيانات</div>
+  if (!Array.isArray(packages) || packages?.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
 
   return (
     <div>
@@ -431,9 +471,9 @@ function TeachersTab() {
     }
   }
 
-  if (isLoading) return <LoadingState />
-  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
-  if (!teachers || !Array.isArray(teachers) || teachers.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
+  if (isLoading) return <AdminLoadingSkeleton />
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل البيانات</div>
+  if (!Array.isArray(teachers) || teachers?.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
 
   return (
     <div>
@@ -537,77 +577,114 @@ function TeachersTab() {
   )
 }
 
-// Reviews Tab
+// Reviews Tab - Defensive Programming
 function ReviewsTab() {
-  const { data: reviews, isLoading, error } = useSWR("/api/admin/data?type=reviews", fetcher, {
+  const { data: reviews, isLoading, error, mutate } = useSWR("/api/admin/data?type=reviews", fetcher, {
     revalidateOnFocus: false,
     dedupingInterval: 60000
   })
 
-  if (isLoading) return <LoadingState />
-  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
-  if (!reviews || reviews.length === 0) return <div className="p-4 text-muted-foreground">لا توجد آراء</div>
+  const handleToggle = useCallback(async (id: string, active: boolean) => {
+    try {
+      await fetch("/api/admin/data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "reviews", id, data: { active: !active } }),
+      })
+      mutate()
+    } catch (err) {
+      console.error("[v0] Toggle error:", err)
+    }
+  }, [mutate])
+
+  const handleDelete = useCallback(async (id: string) => {
+    if (!confirm("هل أنت متأكد من حذف هذا الرأي؟")) return
+    try {
+      await fetch(`/api/admin/data?type=reviews&id=${id}`, { method: "DELETE" })
+      mutate()
+    } catch (err) {
+      console.error("[v0] Delete error:", err)
+    }
+  }, [mutate])
+
+  if (isLoading) return <AdminLoadingSkeleton />
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل البيانات</div>
+  if (!Array.isArray(reviews) || reviews?.length === 0) return <div className="p-4 text-muted-foreground">لا توجد آراء</div>
 
   return (
     <div>
       <h2 className="text-lg font-bold text-foreground mb-6">آراء الطلاب</h2>
       <div className="grid gap-4">
-        {reviews?.map((review: { id: string; name: string; rating: number; text: Record<string, string>; active: boolean; createdAt: string }) => (
-          <div key={review.id} className={`bg-card rounded-2xl border p-5 ${review.active ? "border-border" : "border-destructive/30 opacity-60"}`}>
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <p className="font-bold text-foreground">{review.name}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? "text-secondary fill-secondary" : "text-muted-foreground/30"}`} />
-                  ))}
+        {reviews?.map((review: any) => (
+          review?.id ? (
+            <div key={review.id} className={`bg-card rounded-2xl border p-5 ${review?.active ? "border-border" : "border-destructive/30 opacity-60"}`}>
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <p className="font-bold text-foreground">{review?.name ?? "بدون اسم"}</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className={`w-3.5 h-3.5 ${i < (review?.rating ?? 0) ? "text-secondary fill-secondary" : "text-muted-foreground/30"}`} />
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => handleToggle(review.id, review?.active ?? false)}
+                    className={`p-2 rounded-lg transition-colors ${review?.active ? "hover:bg-muted text-primary" : "hover:bg-primary/10 text-muted-foreground"}`}
+                    title={review?.active ? "إخفاء" : "إظهار"}
+                  >
+                    {review?.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => handleDelete(review.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => handleToggle(review.id, review.active)}
-                  className={`p-2 rounded-lg transition-colors ${review.active ? "hover:bg-muted text-primary" : "hover:bg-primary/10 text-muted-foreground"}`}
-                  title={review.active ? "إخفاء" : "إظهار"}
-                >
-                  {review.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                </button>
-                <button onClick={() => handleDelete(review.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">{review?.text?.ar ?? review?.text ?? "بدون نص"}</p>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">{review.text.ar}</p>
-          </div>
+          ) : null
         ))}
       </div>
     </div>
   )
 }
 
-// Messages Tab
+// Messages Tab - Defensive Programming
 function MessagesTab() {
-  const { data: messages, isLoading } = useSWR("/api/admin/data?type=messages", fetcher)
+  const { data: messages, isLoading, error, mutate } = useSWR("/api/admin/data?type=messages", fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000
+  })
 
-  const handleRead = async (id: string) => {
-    await fetch("/api/admin/data", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "messages", id, data: { read: true } }),
-    })
-    globalMutate("/api/admin/data?type=messages")
-    globalMutate("/api/admin/data?type=stats")
-  }
+  const handleRead = useCallback(async (id: string) => {
+    try {
+      await fetch("/api/admin/data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "messages", id, data: { read: true } }),
+      })
+      mutate()
+      globalMutate("/api/admin/data?type=stats")
+    } catch (err) {
+      console.error("[v0] Read error:", err)
+    }
+  }, [mutate])
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("هل أنت متأكد؟")) return
-    await fetch(`/api/admin/data?type=messages&id=${id}`, { method: "DELETE" })
-    globalMutate("/api/admin/data?type=messages")
-    globalMutate("/api/admin/data?type=stats")
-  }
+  const handleDelete = useCallback(async (id: string) => {
+    if (!confirm("هل أنت متأكد من حذف الرسالة؟")) return
+    try {
+      await fetch(`/api/admin/data?type=messages&id=${id}`, { method: "DELETE" })
+      mutate()
+      globalMutate("/api/admin/data?type=stats")
+    } catch (err) {
+      console.error("[v0] Delete error:", err)
+    }
+  }, [mutate])
 
-  if (isLoading) return <LoadingState />
+  if (isLoading) return <AdminLoadingSkeleton />
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل البيانات</div>
 
-  if (!messages || messages.length === 0) {
+  if (!Array.isArray(messages) || messages?.length === 0) {
     return (
       <div className="text-center py-16">
         <MessageSquare className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
@@ -620,30 +697,32 @@ function MessagesTab() {
     <div>
       <h2 className="text-lg font-bold text-foreground mb-6">رسائل التواصل</h2>
       <div className="grid gap-4">
-        {messages.map((msg: { id: string; name: string; email: string; phone: string; message: string; read: boolean; createdAt: string }) => (
-          <div key={msg.id} className={`bg-card rounded-2xl border p-5 ${msg.read ? "border-border" : "border-primary/30 bg-primary/5"}`}>
-            <div className="flex items-start justify-between mb-3">
-              <div>
-                <p className="font-bold text-foreground flex items-center gap-2">
-                  {msg.name}
-                  {!msg.read && <span className="w-2 h-2 rounded-full bg-primary" />}
-                </p>
-                <p className="text-xs text-muted-foreground">{msg.email} | {msg.phone}</p>
-                <p className="text-xs text-muted-foreground">{new Date(msg.createdAt).toLocaleDateString("ar-EG")}</p>
-              </div>
-              <div className="flex items-center gap-1">
-                {!msg.read && (
-                  <button onClick={() => handleRead(msg.id)} className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="تحديد كمقروء">
-                    <Check className="w-4 h-4" />
+        {messages?.map((msg: any) => (
+          msg?.id ? (
+            <div key={msg.id} className={`bg-card rounded-2xl border p-5 ${msg?.read ? "border-border" : "border-primary/30 bg-primary/5"}`}>
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <p className="font-bold text-foreground flex items-center gap-2">
+                    {msg?.name ?? "بدون اسم"}
+                    {!msg?.read && <span className="w-2 h-2 rounded-full bg-primary" />}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{msg?.email ?? "-"} | {msg?.phone ?? "-"}</p>
+                  <p className="text-xs text-muted-foreground">{msg?.createdAt ? new Date(msg.createdAt).toLocaleDateString("ar-EG") : "-"}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  {!msg?.read && (
+                    <button onClick={() => handleRead(msg.id)} className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="تحديد كمقروء">
+                      <Check className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button onClick={() => handleDelete(msg.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
+                    <Trash2 className="w-4 h-4" />
                   </button>
-                )}
-                <button onClick={() => handleDelete(msg.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors">
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                </div>
               </div>
+              <p className="text-sm text-foreground leading-relaxed bg-muted/50 rounded-xl p-3">{msg?.message ?? "بدون محتوى"}</p>
             </div>
-            <p className="text-sm text-foreground leading-relaxed bg-muted/50 rounded-xl p-3">{msg.message}</p>
-          </div>
+          ) : null
         ))}
       </div>
     </div>
@@ -1283,12 +1362,12 @@ function ClassroomVideosTab() {
       {/* Videos List */}
       <div className="bg-card rounded-lg border border-border p-6">
         {isLoading ? (
-          <LoadingState />
+          <AdminLoadingSkeleton />
         ) : error ? (
           <div className="text-center py-8 text-red-600">
             <p>خطأ في تحميل الفيديوهات</p>
           </div>
-        ) : !videos || videos.length === 0 ? (
+        ) : !Array.isArray(videos) || videos?.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground mb-4">لم يتم إضافة أي فيديوهات حتى الآن</p>
             <button
@@ -1410,12 +1489,12 @@ function DigitalLibraryTab() {
       <div className="bg-card rounded-lg border border-border p-6">
         <h3 className="text-lg font-bold text-foreground mb-4">المحتوى المضاف</h3>
         {isLoading ? (
-          <LoadingState />
+          <AdminLoadingSkeleton />
         ) : error ? (
           <div className="text-center py-8 text-red-600">
             <p>خطأ في تحميل المحتوى</p>
           </div>
-        ) : !items || items.length === 0 ? (
+        ) : !Array.isArray(items) || items?.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground mb-4">لم يتم إضافة أي محتوى حتى الآن</p>
             <button
