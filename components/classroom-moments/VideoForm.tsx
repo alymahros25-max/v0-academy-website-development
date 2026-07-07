@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { Save, Trash2, RotateCcw } from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { Save, Trash2, RotateCcw, AlertCircle } from 'lucide-react'
 import { useApiToast } from '@/hooks/use-api-toast'
-import { batchSaveSettings } from '@/lib/api-client'
+import { extractYouTubeId, isValidYouTubeUrl } from '@/lib/youtube-utils'
+import { useTranslation } from '@/lib/useTranslation'
 
 interface Video {
   id?: number
@@ -31,6 +32,8 @@ const CATEGORIES = ['تجويد', 'قرآن كريم', 'لغة عربية', 'ت�
 export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { showToast } = useApiToast()
+  const { t } = useTranslation()
+  const [youtubeIdError, setYoutubeIdError] = useState<string>('')
 
   const [formData, setFormData] = useState<Video>(
     initialData || {
@@ -51,6 +54,15 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+
+    // Validate YouTube URL when it changes
+    if (name === 'youtube_url' && value.trim()) {
+      if (!isValidYouTubeUrl(value)) {
+        setYoutubeIdError(t('invalidYoutubeUrl'))
+      } else {
+        setYoutubeIdError('')
+      }
+    }
   }
 
   const autoTranslate = async () => {
@@ -96,16 +108,28 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
     try {
       // Validation
       if (!formData.title_ar || !formData.title_en || !formData.title_fr) {
-        showToast('يجب ملء جميع حقول العنوان', 'error')
+        showToast(t('enterValidUrl'), 'error')
         setIsLoading(false)
         return
       }
 
       if (!formData.youtube_url) {
-        showToast('يجب إدخال رابط اليوتيوب', 'error')
+        showToast(t('youtubeUrl'), 'error')
         setIsLoading(false)
         return
       }
+
+      // Validate and extract YouTube ID
+      const videoId = extractYouTubeId(formData.youtube_url)
+      if (!videoId) {
+        showToast(t('invalidYoutubeUrl'), 'error')
+        setYoutubeIdError(t('invalidYoutubeUrl'))
+        setIsLoading(false)
+        return
+      }
+
+      // Clear error if validation passes
+      setYoutubeIdError('')
 
       const endpoint = isEditing
         ? `/api/cms/classroom-videos?id=${formData.id}`
@@ -172,25 +196,36 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border border-gray-200">
-      <h2 className="text-2xl font-bold text-[#1a4d2e]">
-        {isEditing ? 'تعديل الحصة' : 'إضافة حصة جديدة'}
+    <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg border border-border">
+      <h2 className="text-2xl font-bold text-foreground">
+        {isEditing ? t('edit') + ' ' + t('classroomMoments') : t('add') + ' ' + t('classroomMoments')}
       </h2>
 
-      {/* YouTube URL */}
+      {/* YouTube URL with validation */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          رابط اليوتيوب *
+        <label className="block text-sm font-medium text-foreground mb-2">
+          {t('youtubeUrl')} *
         </label>
         <input
           type="url"
           name="youtube_url"
           value={formData.youtube_url}
           onChange={handleChange}
-          placeholder="https://www.youtube.com/watch?v=xxxxx"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+          placeholder="https://www.youtube.com/watch?v=xxxxx or youtu.be/xxxxx"
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+            youtubeIdError ? 'border-destructive' : 'border-border'
+          }`}
           required
         />
+        {youtubeIdError && (
+          <div className="flex items-center gap-2 mt-2 text-sm text-destructive">
+            <AlertCircle className="w-4 h-4" />
+            {youtubeIdError}
+          </div>
+        )}
+        <p className="text-xs text-muted-foreground mt-1">
+          {t('enterValidUrl')}
+        </p>
       </div>
 
       {/* Titles */}
@@ -243,7 +278,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            الوصف بالعربية
+            الوصف ب��لعربية
           </label>
           <textarea
             name="description_ar"
