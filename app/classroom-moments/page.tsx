@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
+import { fetchClassroomVideos } from '@/lib/classroom-videos-client'
 
 export const metadata: Metadata = {
   title: 'لقطات من الحصص - أكاديمية الحافظ المتميز',
@@ -21,20 +22,29 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-    const response = await fetch(`${baseUrl}/api/cms/classroom-videos?published=true`, {
-      next: { revalidate: 300 }, // ISR: revalidate every 5 minutes
-    })
-
-    if (!response.ok) {
-      console.error('[v0] Failed to fetch videos:', response.status)
+    // Fetch from Supabase with defensive programming
+    const videos = await fetchClassroomVideos()
+    
+    if (!Array.isArray(videos)) {
+      console.error('[v0] Videos is not an array:', videos)
       return []
     }
 
-    const result = await response.json()
-    return result.data || []
+    // Transform Supabase data to VideoData format
+    return videos
+      ?.map((video: any) => ({
+        id: video?.id ?? '',
+        title: video?.title ?? 'بدون عنوان',
+        youtubeId: video?.youtube_embed_id ?? video?.youtube_id ?? '',
+        thumbnail: video?.thumbnail_url ?? '',
+        category: video?.category ?? 'عام',
+        teacher: video?.teacher ?? '',
+        createdAt: video?.created_at ?? new Date().toISOString(),
+      }))
+      .filter((v: VideoData) => v?.youtubeId) // Only include videos with valid YouTube IDs
+      ?? []
   } catch (error) {
-    console.error('[v0] Error fetching classroom videos:', error)
+    console.error('[v0] Error fetching classroom videos from Supabase:', error)
     return []
   }
 }
