@@ -10,6 +10,7 @@ import {
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
 import { AdminLoadingSkeleton } from "@/components/admin/AdminLoadingSkeleton"
+import { useI18n } from "@/lib/i18n"
 
 const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
   ssr: false,
@@ -24,6 +25,7 @@ type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "set
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const { t } = useI18n()
   const [activeTab, setActiveTab] = useState<Tab>("dashboard")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
@@ -56,26 +58,26 @@ export default function AdminDashboard() {
     )
   }
 
-  const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
-    { id: "dashboard", label: "الرئيسية", icon: LayoutDashboard },
-    { id: "packages", label: "الباقات", icon: Package },
-    { id: "teachers", label: "المعلمين", icon: Users },
-    { id: "reviews", label: "آراء الطلاب", icon: Star },
-    { id: "messages", label: "الرسائل", icon: MessageSquare },
+  const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard }[] = [
+    { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard },
+    { id: "packages", label: t("admin.packages"), key: "admin.packages", icon: Package },
+    { id: "teachers", label: t("admin.teachers"), key: "admin.teachers", icon: Users },
+    { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star },
+    { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare },
     
     // Phase 2-3 New Features
-    { id: "cms", label: "إدارة المحتوى", icon: BookOpen },
-    { id: "theme", label: "المظهر والمعاينة", icon: Palette },
-    { id: "pages-builder", label: "منشئ الصفحات", icon: FileText },
-    { id: "users", label: "المستخدمين والصلاحيات", icon: Lock },
-    { id: "classroom-videos", label: "لقطات من الحصص", icon: Film },
-    { id: "digital-library", label: "المكتبة الرقمية", icon: Library },
+    { id: "cms", label: t("admin.cms"), key: "admin.cms", icon: BookOpen },
+    { id: "theme", label: t("admin.theme"), key: "admin.theme", icon: Palette },
+    { id: "pages-builder", label: t("admin.pagesBuilder"), key: "admin.pagesBuilder", icon: FileText },
+    { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
+    { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
+    { id: "digital-library", label: t("admin.digitalLibrary"), key: "admin.digitalLibrary", icon: Library },
     
     // Legacy Features
-    { id: "pages", label: "الصفحات القديمة", icon: BookOpen },
-    { id: "zapier", label: "Zapier (مقالات)", icon: Mail },
-    { id: "settings", label: "الإعدادات", icon: Settings },
-    { id: "seo-guide", label: "نشر Google", icon: Mail },
+    { id: "pages", label: t("admin.pages"), key: "admin.pages", icon: BookOpen },
+    { id: "zapier", label: t("admin.zapier"), key: "admin.zapier", icon: Mail },
+    { id: "settings", label: t("admin.settings"), key: "admin.settings", icon: Settings },
+    { id: "seo-guide", label: t("admin.seoGuide"), key: "admin.seoGuide", icon: Mail },
   ]
 
   return (
@@ -95,7 +97,7 @@ export default function AdminDashboard() {
                 <BookOpen className="w-5 h-5" />
               </div>
               <div>
-                <p className="font-bold text-sm">لوحة التحكم</p>
+                <p className="font-bold text-sm">{t("admin.title")}</p>
                 <p className="text-[10px] text-primary-foreground/60">الحافظ المتميز</p>
               </div>
             </div>
@@ -130,7 +132,7 @@ export default function AdminDashboard() {
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-primary-foreground/70 hover:bg-destructive/20 hover:text-destructive transition-colors w-full"
             >
               <LogOut className="w-5 h-5" />
-              تسجيل الخروج
+              {t("account.logout")}
             </button>
           </div>
         </div>
@@ -213,19 +215,20 @@ export default function AdminDashboard() {
 
 // Dashboard Tab - Defensive Programming
 function DashboardTab() {
+  const { t } = useI18n()
   const { data: stats, isLoading, error } = useSWR("/api/admin/data?type=stats", fetcher, { 
     refreshInterval: 10000,
     revalidateOnFocus: false
   })
 
   if (isLoading) return <AdminLoadingSkeleton />
-  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل الإحصائيات</div>
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">{t("admin.error")}</div>
 
   const cards = [
-    { icon: Package, label: "الباقات النشطة", value: stats?.activePackages ?? 0, color: "bg-blue-500" },
-    { icon: Users, label: "الطلاب المسجلين", value: stats?.totalStudents ?? 0, color: "bg-green-500" },
-    { icon: BookOpen, label: "الدروس المنشورة", value: stats?.publishedLessons ?? 0, color: "bg-purple-500" },
-    { icon: Star, label: "التقييم العام", value: stats?.rating ?? "N/A", color: "bg-amber-500" },
+    { icon: Package, label: t("admin.activePackages"), value: stats?.activePackages ?? 0, color: "bg-blue-500" },
+    { icon: Users, label: t("admin.registeredStudents"), value: stats?.totalStudents ?? 0, color: "bg-green-500" },
+    { icon: BookOpen, label: t("admin.publishedLessons"), value: stats?.publishedLessons ?? 0, color: "bg-purple-500" },
+    { icon: Star, label: t("admin.rating"), value: stats?.rating ?? "N/A", color: "bg-amber-500" },
   ]
 
   return (
@@ -246,7 +249,7 @@ function DashboardTab() {
         ))}
       </div>
       <div className="bg-card rounded-2xl border border-border p-6">
-        <h2 className="font-bold text-foreground mb-3">مرحباً بك في لوحة التحكم</h2>
+        <h2 className="font-bold text-foreground mb-3">{t("admin.welcomeTitle")}</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
           من هنا يمكنك إدارة جميع محتويات الموقع: الباقات والأسعار، المعلمين، آراء الطلاب، رسائل التواصل، وإعدادات الموقع العامة.
         </p>
@@ -858,7 +861,7 @@ function PagesTab() {
     { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
     { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
     { name: "المدونة", path: "/blog", description: "مقالات وإرشادات" },
-    { name: "اتصل بنا", path: "/contact", description: "نموذج التواصل" },
+    { name: "اتصل بن��", path: "/contact", description: "نموذج التواصل" },
     { name: "حسابي", path: "/account", description: "تسجيل الحساب" },
     { name: "الخصوصية", path: "/privacy", description: "سياسة الخصوصية" },
     { name: "الشروط والأحكام", path: "/terms", description: "شروط الاستخدام" },
@@ -1040,7 +1043,7 @@ function ZapierTab() {
           <div className="flex gap-4">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">4</div>
             <div>
-              <p className="font-medium text-foreground">أدخل البيانات أعلاه</p>
+              <p className="font-medium text-foreground">أدخ�� البيانات أعلاه</p>
               <p className="text-sm text-muted-foreground">URL + API Key + Body JSON</p>
             </div>
           </div>
