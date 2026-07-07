@@ -15,7 +15,8 @@ interface YouTubeModalProps {
 export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalProps) {
   const [isLoading, setIsLoading] = useState(true)
 
-  const embedUrl = getYouTubeEmbedUrl(videoId)
+  // Build embed URL with proper parameters to prevent playback errors
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&modestbranding=1&autoplay=0`
 
   return (
     <AnimatePresence>
@@ -70,13 +71,16 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
                     </div>
                   )}
 
-                  {/* YouTube iframe */}
+                  {/* YouTube iframe with full embedding permissions */}
                   <iframe
                     src={embedUrl}
                     className="absolute inset-0 w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-presentation allow-top-navigation-by-user-activation"
                     onLoad={() => setIsLoading(false)}
+                    onError={() => setIsLoading(false)}
                     title={title}
                   />
                 </div>
