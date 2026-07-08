@@ -695,7 +695,7 @@ function MessagesTab() {
     return (
       <div className="text-center py-16">
         <MessageSquare className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-        <p className="text-lg text-muted-foreground">لا توجد رسائل بعد</p>
+        <p className="text-lg text-muted-foreground">لا ��وجد رسائل بعد</p>
       </div>
     )
   }
@@ -1207,7 +1207,7 @@ function ThemeCustomizerTab() {
 // Pages Builder Tab - list of all site pages with quick links
 function PagesBuilderTab() {
   const pages = [
-    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشهادات" },
+    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشهاد��ت" },
     { label: "قرآن الكريم", path: "/quran", desc: "الباقات والأسعار وطريقة التسجيل" },
     { label: "تأسيس العربي", path: "/arabic", desc: "باقات تعليم اللغة العربية" },
     { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
@@ -1336,10 +1336,12 @@ function UsersManagementTab() {
 function ClassroomVideosTab() {
   const [showForm, setShowForm] = useState(false)
   // Fetch ALL videos (published + drafts) so the admin sees everything
-  const { data: videos, isLoading, error } = useSWR("/api/cms/classroom-videos", fetcher, { 
+  // API returns { data: [...] } so we extract the array
+  const { data: apiResponse, isLoading, error } = useSWR("/api/cms/classroom-videos", fetcher, { 
     revalidateOnFocus: true,
     dedupingInterval: 5000
   })
+  const videos = Array.isArray(apiResponse?.data) ? apiResponse.data : []
 
   return (
     <div className="space-y-6">
@@ -1448,10 +1450,12 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
 // Digital Library Tab
 function DigitalLibraryTab() {
   const [showForm, setShowForm] = useState(false)
-  const { data: items, isLoading, error, mutate } = useSWR("/api/cms/digital-library?published=false", fetcher, { 
+  // API returns { data: [...] } so we extract the array
+  const { data: apiResponse, isLoading, error, mutate } = useSWR("/api/cms/digital-library", fetcher, { 
     revalidateOnFocus: false,
     dedupingInterval: 10000
   })
+  const items = Array.isArray(apiResponse?.data) ? apiResponse.data : []
 
   const handleDelete = async (id: string) => {
     if (!confirm("هل تريد حذف هذا المحتوى؟")) return
