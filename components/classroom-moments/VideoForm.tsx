@@ -234,7 +234,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg border border-border">
       <h2 className="text-2xl font-bold text-foreground">
-        {isEditing ? t('edit') + ' ' + t('classroomMoments') : t('add') + ' ' + t('classroomMoments')}
+        {isEditing ? 'تعديل الفيديو' : 'إضافة فيديو من الحصص'}
       </h2>
 
       {/* YouTube URL with validation */}
