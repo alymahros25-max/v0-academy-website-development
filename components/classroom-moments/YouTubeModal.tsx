@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getYouTubeEmbedUrl } from '@/lib/youtube-utils'
+import { extractYouTubeId } from '@/lib/youtube-utils'
 
 interface YouTubeModalProps {
   isOpen: boolean
@@ -15,8 +15,10 @@ interface YouTubeModalProps {
 export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalProps) {
   const [isLoading, setIsLoading] = useState(true)
 
-  // Build embed URL with proper parameters to prevent playback errors
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&modestbranding=1&autoplay=0`
+  // Re-extract the ID here as a safety net: the prop might be a full URL
+  // if the data mapping changes, or it might carry ?si= tracking params.
+  const cleanId = extractYouTubeId(videoId) ?? videoId
+  const embedUrl = `https://www.youtube.com/embed/${cleanId}?rel=0&modestbranding=1`
 
   return (
     <AnimatePresence>
@@ -71,14 +73,13 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
                     </div>
                   )}
 
-                  {/* YouTube iframe with full embedding permissions */}
+                  {/* YouTube iframe — no sandbox attribute: it restricts the
+                      YouTube player API and causes playback errors in mobile browsers */}
                   <iframe
                     src={embedUrl}
                     className="absolute inset-0 w-full h-full border-0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    sandbox="allow-same-origin allow-scripts allow-popups allow-presentation allow-top-navigation-by-user-activation"
                     onLoad={() => setIsLoading(false)}
                     onError={() => setIsLoading(false)}
                     title={title}

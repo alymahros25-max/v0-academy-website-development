@@ -1,6 +1,10 @@
 import { Metadata } from 'next'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
 import { fetchClassroomVideos } from '@/lib/classroom-videos-client'
+import { extractYouTubeId } from '@/lib/youtube-utils'
+
+// Revalidate every 60 seconds so newly added videos appear without a redeploy
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'لقطات من الحصص - أكاديمية الحافظ المتميز',
@@ -22,29 +26,43 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    // Fetch from Supabase with defensive programming
     const videos = await fetchClassroomVideos()
-    
+
     if (!Array.isArray(videos)) {
-      console.error('[v0] Videos is not an array:', videos)
       return []
     }
 
-    // Transform Supabase data to VideoData format
     return videos
-      ?.map((video: any) => ({
-        id: video?.id ?? '',
-        title: video?.title ?? 'بدون عنوان',
-        youtubeId: video?.youtube_embed_id ?? video?.youtube_id ?? '',
-        thumbnail: video?.thumbnail_url ?? '',
-        category: video?.category ?? 'عام',
-        teacher: video?.teacher ?? '',
-        createdAt: video?.created_at ?? new Date().toISOString(),
-      }))
-      .filter((v: VideoData) => v?.youtubeId) // Only include videos with valid YouTube IDs
-      ?? []
+      .map((video: any): VideoData => {
+        // Always re-extract the ID from the stored URL to guard against
+        // rows that were inserted before the regex was hardened.
+        const embedId: string =
+          extractYouTubeId(video?.youtube_url ?? '') ??
+          video?.youtube_embed_id ??
+          ''
+
+        return {
+          // VideoData expects these exact field names (matches VideoGrid interface)
+          id: video?.id ?? 0,
+          title_ar: video?.title_ar ?? 'بدون عنوان',
+          title_en: video?.title_en ?? video?.title_ar ?? 'No title',
+          title_fr: video?.title_fr ?? video?.title_ar ?? 'Sans titre',
+          description_ar: video?.description_ar ?? '',
+          description_en: video?.description_en ?? '',
+          description_fr: video?.description_fr ?? '',
+          youtube_embed_id: embedId,
+          thumbnail_url: video?.thumbnail_url ?? '',
+          category: video?.category ?? '',
+          teacher_name_ar: video?.teacher_name_ar ?? '',
+          teacher_name_en: video?.teacher_name_en ?? '',
+          teacher_name_fr: video?.teacher_name_fr ?? '',
+          duration_seconds: video?.duration_seconds ?? undefined,
+          is_featured: video?.is_featured ?? false,
+        }
+      })
+      .filter((v) => v.youtube_embed_id.length === 11)
   } catch (error) {
-    console.error('[v0] Error fetching classroom videos from Supabase:', error)
+    console.error('[v0] Error fetching classroom videos:', error)
     return []
   }
 }

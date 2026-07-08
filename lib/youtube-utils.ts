@@ -4,46 +4,43 @@
  */
 
 /**
- * Extract YouTube video ID from various URL formats
- * Supports:
- * - https://www.youtube.com/watch?v=YzChqKd6TT8
- * - https://youtu.be/YzChqKd6TT8?si=A5KHoh2pZLEJ8BGn (with tracking params)
- * - https://www.youtube.com/embed/YzChqKd6TT8
- * - YzChqKd6TT8 (just the ID)
+ * Extract YouTube video ID from various URL formats.
+ * Returns exactly the 11-character video ID, stripping all tracking
+ * parameters (?si=, &feature=, etc.) before matching.
+ *
+ * Supported formats:
+ *   https://www.youtube.com/watch?v=YzChqKd6TT8
+ *   https://www.youtube.com/watch?v=YzChqKd6TT8&feature=share
+ *   https://youtu.be/YzChqKd6TT8
+ *   https://youtu.be/YzChqKd6TT8?si=A5KHoh2pZLEJ8BGn
+ *   https://www.youtube.com/embed/YzChqKd6TT8
+ *   https://www.youtube.com/shorts/YzChqKd6TT8
+ *   https://m.youtube.com/watch?v=YzChqKd6TT8
+ *   YzChqKd6TT8  (bare 11-char ID)
  */
 export function extractYouTubeId(urlOrId: string): string | null {
   if (!urlOrId || typeof urlOrId !== 'string') return null;
 
   const cleaned = urlOrId.trim();
 
-  // If it's already just an ID (11 characters alphanumeric, underscore, hyphen)
+  // Fast path: already a bare 11-character ID
   if (/^[a-zA-Z0-9_-]{11}$/.test(cleaned)) {
     return cleaned;
   }
 
-  // Extract 11-character video ID from various URL formats
-  // This regex captures exactly 11 characters preceded by / or v= and followed by ? & # / or end of string
-  const idMatch = cleaned.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[?&#/]|$)/);
-  if (idMatch && idMatch[1]) {
-    return idMatch[1];
-  }
+  // Single consolidated regex that covers every YouTube URL pattern.
+  // The ID always follows one of these tokens:
+  //   v=          watch?v=ID
+  //   /embed/     youtube.com/embed/ID
+  //   /shorts/    youtube.com/shorts/ID
+  //   youtu.be/   youtu.be/ID
+  // After the 11-char ID we accept ? & # / or end-of-string.
+  const match = cleaned.match(
+    /(?:[?&]v=|\/embed\/|\/shorts\/|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[?&#/]|$)/
+  );
 
-  // Fallback: extract any 11-character sequence that looks like a video ID
-  // This handles edge cases and malformed URLs
-  const fallbackMatch = cleaned.match(/([a-zA-Z0-9_-]{11})/);
-  if (fallbackMatch && fallbackMatch[1]) {
-    // Verify it's likely a YouTube ID (not just any 11-char string in the URL)
-    const videoId = fallbackMatch[1];
-    // Make sure it's not part of a longer alphanumeric sequence
-    const beforeIndex = cleaned.indexOf(videoId);
-    const afterIndex = beforeIndex + 11;
-    const charBefore = beforeIndex > 0 ? cleaned[beforeIndex - 1] : ' ';
-    const charAfter = afterIndex < cleaned.length ? cleaned[afterIndex] : ' ';
-    
-    // Valid separators: /, ?, &, #, space, or string boundaries
-    if (!/[a-zA-Z0-9_-]/.test(charBefore) && !/[a-zA-Z0-9_-]/.test(charAfter)) {
-      return videoId;
-    }
+  if (match?.[1]) {
+    return match[1];
   }
 
   return null;

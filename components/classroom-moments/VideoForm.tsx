@@ -137,10 +137,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
 
       const method = isEditing ? 'PATCH' : 'POST'
 
+      // Include the pre-extracted embed ID so the API never has to guess
+      const payload = { ...formData, youtube_embed_id: videoId }
+
       const response = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
 
       const result = await response.json()
@@ -151,6 +154,10 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       }
 
       showToast(isEditing ? 'تم تحديث الحصة بنجاح' : 'تمت إضافة الحصة بنجاح', 'success')
+
+      // Revalidate the public classroom-moments page so the new video
+      // appears immediately without waiting for the 60-second ISR window.
+      fetch('/api/revalidate?path=/classroom-moments').catch(() => {/* non-fatal */})
 
       // Reset form if creating new
       if (!isEditing) {
@@ -204,28 +211,48 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       {/* YouTube URL with validation */}
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
-          {t('youtubeUrl')} *
+          رابط يوتيوب *
         </label>
+        {/* Use type="text" — mobile browsers reject youtu.be URLs with type="url" */}
         <input
-          type="url"
+          type="text"
           name="youtube_url"
           value={formData.youtube_url}
           onChange={handleChange}
-          placeholder="https://www.youtube.com/watch?v=xxxxx or youtu.be/xxxxx"
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+          placeholder="https://www.youtube.com/watch?v=YzChqKd6TT8"
+          dir="ltr"
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm ${
             youtubeIdError ? 'border-destructive' : 'border-border'
           }`}
           required
         />
+
+        {/* Live ID preview — shows the extracted 11-char ID so the admin can verify */}
+        {formData.youtube_url && !youtubeIdError && (() => {
+          const previewId = extractYouTubeId(formData.youtube_url)
+          return previewId ? (
+            <p className="text-xs text-green-600 mt-1 font-mono">
+              ID: {previewId}
+            </p>
+          ) : null
+        })()}
+
         {youtubeIdError && (
           <div className="flex items-center gap-2 mt-2 text-sm text-destructive">
             <AlertCircle className="w-4 h-4" />
             {youtubeIdError}
           </div>
         )}
-        <p className="text-xs text-muted-foreground mt-1">
-          {t('enterValidUrl')}
-        </p>
+
+        {/* Helper text listing accepted formats */}
+        <div className="mt-2 p-3 bg-muted rounded-lg text-xs text-muted-foreground space-y-1">
+          <p className="font-medium text-foreground mb-1">الصيغ المقبولة:</p>
+          <p dir="ltr" className="font-mono">https://www.youtube.com/watch?v=YzChqKd6TT8</p>
+          <p dir="ltr" className="font-mono">https://youtu.be/YzChqKd6TT8</p>
+          <p dir="ltr" className="font-mono">https://youtu.be/YzChqKd6TT8?si=XXXXXX</p>
+          <p dir="ltr" className="font-mono">https://www.youtube.com/shorts/YzChqKd6TT8</p>
+          <p dir="ltr" className="font-mono">https://www.youtube.com/embed/YzChqKd6TT8</p>
+        </div>
       </div>
 
       {/* Titles */}
