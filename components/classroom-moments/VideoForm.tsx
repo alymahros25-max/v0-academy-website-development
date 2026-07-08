@@ -73,26 +73,47 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
 
     setIsLoading(true)
     try {
-      const response = await fetch('/api/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: formData.title_ar,
-          targetLangs: ['en', 'fr'],
-        }),
-      })
+      // Translate all three text fields in parallel for speed
+      const fields: Array<{ key: 'title' | 'description' | 'teacher_name'; text: string }> = [
+        { key: 'title', text: formData.title_ar },
+        { key: 'description', text: formData.description_ar },
+        { key: 'teacher_name', text: formData.teacher_name_ar },
+      ].filter(f => f.text.trim() !== '')
 
-      const data = await response.json()
+      const results = await Promise.all(
+        fields.map(({ key, text }) =>
+          fetch('/api/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text }),
+          })
+            .then(r => r.json())
+            .then(data => ({ key, data }))
+        )
+      )
 
-      if (data.translations) {
-        setFormData(prev => ({
-          ...prev,
-          title_en: data.translations.en || prev.title_en,
-          title_fr: data.translations.fr || prev.title_fr,
-          description_en: data.translations.en || prev.description_en,
-          description_fr: data.translations.fr || prev.description_fr,
-        }))
-        showToast('تمت الترجمة بنجاح', 'success')
+      const updates: Partial<typeof formData> = {}
+      for (const { key, data } of results) {
+        // translate API returns { success, data: { ar, en, fr } }
+        const translations = data?.data ?? data?.translations
+        if (!translations) continue
+        if (key === 'title') {
+          if (translations.en) updates.title_en = translations.en
+          if (translations.fr) updates.title_fr = translations.fr
+        } else if (key === 'description') {
+          if (translations.en) updates.description_en = translations.en
+          if (translations.fr) updates.description_fr = translations.fr
+        } else if (key === 'teacher_name') {
+          if (translations.en) updates.teacher_name_en = translations.en
+          if (translations.fr) updates.teacher_name_fr = translations.fr
+        }
+      }
+
+      if (Object.keys(updates).length > 0) {
+        setFormData(prev => ({ ...prev, ...updates }))
+        showToast('تمت الترجمة التلقائية لجميع الحقول بنجاح', 'success')
+      } else {
+        showToast('لم يتم إرجاع أي ترجمات', 'error')
       }
     } catch (error) {
       showToast('فشل في الترجمة التلقائية', 'error')
@@ -352,14 +373,16 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         </div>
       </div>
 
-      {/* Auto Translate Button */}
+      {/* Auto Translate Button — translates title, description, and teacher name in one click */}
       <button
         type="button"
         onClick={autoTranslate}
-        disabled={isLoading}
-        className="w-full px-4 py-2 bg-secondary text-secondary-foreground font-medium rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-colors"
+        disabled={isLoading || !formData.title_ar}
+        className="w-full px-4 py-2 bg-secondary text-secondary-foreground font-medium rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
       >
-        {isLoading ? t('classroom.translating') : '🌐 ' + t('classroom.autoTranslate')}
+        {isLoading
+          ? t('classroom.translating')
+          : 'ترجمة تلقائية شاملة من العربية (العنوان + الوصف + اسم المعلم)'}
       </button>
 
       {/* Teacher Names */}
