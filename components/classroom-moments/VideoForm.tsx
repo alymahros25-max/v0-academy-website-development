@@ -55,10 +55,10 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
 
-    // Validate YouTube URL when it changes
-    if (name === 'youtube_url' && value.trim()) {
-      if (!isValidYouTubeUrl(value)) {
-        setYoutubeIdError(t('invalidYoutubeUrl'))
+    // Validate YouTube URL in real time as the user types
+    if (name === 'youtube_url') {
+      if (value.trim() && !isValidYouTubeUrl(value)) {
+        setYoutubeIdError('رابط يوتيوب غير صحيح')
       } else {
         setYoutubeIdError('')
       }
@@ -108,13 +108,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
     try {
       // Validation
       if (!formData.title_ar || !formData.title_en || !formData.title_fr) {
-        showToast(t('enterValidUrl'), 'error')
+        showToast('يرجى إدخال العنوان بالعربية والإنجليزية والفرنسية', 'error')
         setIsLoading(false)
         return
       }
 
-      if (!formData.youtube_url) {
-        showToast(t('youtubeUrl'), 'error')
+      if (!formData.youtube_url?.trim()) {
+        showToast('يرجى إدخال رابط يوتيوب', 'error')
         setIsLoading(false)
         return
       }
@@ -122,8 +122,9 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       // Validate and extract YouTube ID
       const videoId = extractYouTubeId(formData.youtube_url)
       if (!videoId) {
-        showToast(t('invalidYoutubeUrl'), 'error')
-        setYoutubeIdError(t('invalidYoutubeUrl'))
+        const msg = 'رابط يوتيوب غير صحيح. تأكد من استخدام رابط مثل: https://youtu.be/XXXXXXXXXXX'
+        showToast(msg, 'error')
+        setYoutubeIdError(msg)
         setIsLoading(false)
         return
       }
@@ -137,8 +138,15 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
 
       const method = isEditing ? 'PATCH' : 'POST'
 
-      // Include the pre-extracted embed ID so the API never has to guess
-      const payload = { ...formData, youtube_embed_id: videoId }
+      // Explicitly publish the video and include the pre-extracted embed ID.
+      // Without is_published: true the API defaults to false, making the video
+      // invisible on the public page.
+      const payload = {
+        ...formData,
+        youtube_embed_id: videoId,
+        is_published: true,
+        is_featured: formData.id === undefined ? true : undefined, // first video defaults to featured
+      }
 
       const response = await fetch(endpoint, {
         method,

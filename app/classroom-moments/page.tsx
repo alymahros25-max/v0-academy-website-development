@@ -1,9 +1,10 @@
 import { Metadata } from 'next'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
-import { fetchClassroomVideos } from '@/lib/classroom-videos-client'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
-// Revalidate every 60 seconds so newly added videos appear without a redeploy
+// ISR: revalidate every 60 s as a safety net.
+// On-demand revalidation via the 'classroom-videos' tag fires immediately
+// whenever the admin saves/updates/deletes a video through the CMS route.
 export const revalidate = 60
 
 export const metadata: Metadata = {
@@ -26,32 +27,43 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    const videos = await fetchClassroomVideos()
+    // Call the CMS API directly from the server (avoids the client-only Supabase
+    // SDK path and ensures the Next.js fetch cache is tagged so on-demand
+    // revalidation via revalidateTag('classroom-videos') works instantly).
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(
+      `${baseUrl}/api/cms/classroom-videos?published=true&limit=50`,
+      { next: { revalidate: 60, tags: ['classroom-videos'] } }
+    )
 
-    if (!Array.isArray(videos)) {
+    if (!res.ok) {
+      console.error('[classroom-moments] CMS fetch failed:', res.status)
       return []
     }
 
-    return videos
+    const json = await res.json()
+    const rows: any[] = Array.isArray(json?.data) ? json.data : []
+
+    return rows
       .map((video: any): VideoData => {
-        // Always re-extract the ID from the stored URL to guard against
-        // rows that were inserted before the regex was hardened.
+        // Re-extract from the stored URL as a safety net for rows inserted
+        // before the regex was hardened (e.g. direct Supabase inserts).
         const embedId: string =
           extractYouTubeId(video?.youtube_url ?? '') ??
+          extractYouTubeId(video?.youtube_embed_id ?? '') ??
           video?.youtube_embed_id ??
           ''
 
         return {
-          // VideoData expects these exact field names (matches VideoGrid interface)
           id: video?.id ?? 0,
-          title_ar: video?.title_ar ?? 'بدون عنوان',
-          title_en: video?.title_en ?? video?.title_ar ?? 'No title',
-          title_fr: video?.title_fr ?? video?.title_ar ?? 'Sans titre',
+          title_ar: video?.title_ar || 'بدون عنوان',
+          title_en: video?.title_en || video?.title_ar || 'No title',
+          title_fr: video?.title_fr || video?.title_ar || 'Sans titre',
           description_ar: video?.description_ar ?? '',
           description_en: video?.description_en ?? '',
           description_fr: video?.description_fr ?? '',
           youtube_embed_id: embedId,
-          thumbnail_url: video?.thumbnail_url ?? '',
+          thumbnail_url: video?.thumbnail_url || `https://img.youtube.com/vi/${embedId}/hqdefault.jpg`,
           category: video?.category ?? '',
           teacher_name_ar: video?.teacher_name_ar ?? '',
           teacher_name_en: video?.teacher_name_en ?? '',
@@ -60,9 +72,10 @@ async function getClassroomVideos(): Promise<VideoData[]> {
           is_featured: video?.is_featured ?? false,
         }
       })
-      .filter((v) => v.youtube_embed_id.length === 11)
+      // Drop any row that didn't produce a valid 11-char ID
+      .filter((v) => /^[a-zA-Z0-9_-]{11}$/.test(v.youtube_embed_id))
   } catch (error) {
-    console.error('[v0] Error fetching classroom videos:', error)
+    console.error('[classroom-moments] getClassroomVideos error:', error)
     return []
   }
 }

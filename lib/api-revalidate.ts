@@ -93,8 +93,8 @@ export async function revalidateThemeSettings() {
  */
 export async function revalidateDynamicPages() {
   return revalidateSiteContent({
-    paths: ['/'],
-    tags: ['site-pages', 'dynamic-pages', 'page-builder'],
+    paths: ['/', '/classroom-moments'],
+    tags: ['site-pages', 'dynamic-pages', 'page-builder', 'classroom-videos'],
   })
 }
 
