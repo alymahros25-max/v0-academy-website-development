@@ -10,6 +10,7 @@ import {
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
 import { AdminLoadingSkeleton } from "@/components/admin/AdminLoadingSkeleton"
+import { OrdersTab } from "@/components/admin/OrdersTab"
 import { useI18n } from "@/lib/i18n"
 
 const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
@@ -21,7 +22,7 @@ import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -72,6 +73,7 @@ export default function AdminDashboard() {
     { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
     { id: "digital-library", label: t("admin.digitalLibrary"), key: "admin.digitalLibrary", icon: Library },
+    { id: "orders", label: "الأوامر والفواتير", key: "admin.orders", icon: BarChart3 },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2 },
     
     // SEO & Indexing
@@ -211,6 +213,7 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "digital-library" && <DigitalLibraryTab />}
+            {activeTab === "orders" && <OrdersTab />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "educational-games" && <EducationalGamesTab />}
@@ -1735,7 +1738,7 @@ function GSCDashboardTab() {
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
         <p className="text-sm text-foreground font-medium mb-2">نصيحة</p>
         <p className="text-xs text-muted-foreground">
-          استخدم علامة "طلب فهرسة" أعلاه لطلب فهرسة الصفحات الجديدة أو المحدثة في Google بشكل فوري.
+          استخدم علامة "طلب فهرسة" أعلاه ��طلب فهرسة الصفحات الجديدة أو المحدثة في Google بشكل فوري.
         </p>
       </div>
     </div>
