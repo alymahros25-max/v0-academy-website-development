@@ -9,22 +9,20 @@ const nextConfig = {
 
   // Enable experimental features for optimization
   experimental: {
-    // Enable external packages for better tree-shaking
-    optimizePackageImports: [
-      '@vercel/analytics',
-      '@supabase/supabase-js',
-      'lucide-react',
-    ],
+    // Enable external packages for better tree-shaking (disabled for Vercel compat)
+    // optimizePackageImports: [
+    //   '@vercel/analytics',
+    //   '@supabase/supabase-js',
+    //   'lucide-react',
+    // ],
   },
 
   // ============================================================
   // IMAGE OPTIMIZATION
   // ============================================================
   images: {
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year for immutable images
-    unoptimized: false,
+    // Disable format conversion to reduce build memory on Vercel
+    unoptimized: true,
   },
 
   // ============================================================
