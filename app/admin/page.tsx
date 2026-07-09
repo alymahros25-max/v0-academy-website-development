@@ -371,7 +371,7 @@ function PackagesTab() {
                     </button>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => handleSave(pkg.id)} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
+                    <button onClick={() => pkg.id && handleSave(pkg.id)} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
                       <Check className="w-4 h-4" /> حفظ
                     </button>
                     <button onClick={() => setEditingId(null)} className="flex items-center gap-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">
@@ -395,7 +395,7 @@ function PackagesTab() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => { setEditingId(pkg.id); setEditData(pkg) }}
+                      onClick={() => { pkg.id && setEditingId(pkg.id); pkg && setEditData(pkg) }}
                       className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                     >
                       <Edit3 className="w-4 h-4" />
@@ -525,7 +525,7 @@ function TeachersTab() {
               />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">الاسم (إنجليزي)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">الاسم (إ��جليزي)</label>
               <input
                 value={newTeacher?.name?.en ?? ''}
                 onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, en: e.target.value}})}

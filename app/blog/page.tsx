@@ -39,66 +39,16 @@ const blogPosts = [
 <p>حفظ القرآن الكريم ليس مجرد تكرار ميكانيكي للآيات، بل هو عملية تتطلب فهماً عميقاً وتقنيات منظمة. في أكاديمية الحافظ المتميز، نركز على تطوير استراتيجيات حفظ مخصصة تناسب احتياجات كل طالب.</p>
 
 <h3>1. التقسيم الذكي للآيات</h3>
-<p>بدلاً من محاولة حفظ سورة كاملة دفعة واحدة، ننصح بتقسيم السورة إلى أجزاء صغيرة (3-5 آيات). هذا يسهل على الدماغ معالجة المعلومات وتخزينها في الذاكرة طويلة الأمد بكفاءة أكبر.</p>
-
-<h3>2. الفهم قبل الحفظ</h3>
-<p>معرفة معنى الآيات وسياقها يزيد من قوة الذاكرة بشكل كبير. نوصي بقراءة التفسير البسيط لكل آية قبل البدء بحفظها، مما يربط الكلمات بالمعاني ويجعل الحفظ أسهل وأدوم.</p>
-
-<h3>3. التكرار المنتظم</h3>
-<p>لا تنسَ أن الحفظ يحتاج إلى تكرار منتظم. جدول الحفظ اليومي الذي ننصح به يتضمن: حفظ جديد (30 دقيقة)، مراجعة الحفظ السابق (20 دقيقة)، وحفظ متكرر من السور السابقة (15 دقيقة).</p>
-
-<h3>4. الاستماع والترديد</h3>
-<p>الاستماع لتلاوات قرآنية جيدة قبل الحفظ يساعد على تثبيت الكلمات والنطق الصحيح. ترديد الآيات بصوت مرتفع عدة مرات يعزز الذاكرة السمعية والحركية.</p>
-
-<h3>5. الراحة والتغذية السليمة</h3>
-<p>لا تهمل أهمية النوم الكافي والتغذية الصحية. المخ يحتاج إلى طاقة كافية للعمل بكفاءة، والنوم ضروري لتثبيت المعلومات في الذاكرة.</p>
-
-<h2>نصائح من معلمينا المتخصصين</h2>
-<p>معلمونا في الأكاديمية لديهم خبرة طويلة في تعليم القرآن ولاحظوا أن الطلاب الذين يحققون أفضل النتائج يتبعون هذه الخطوات:</p>
-<ul>
-<li>تحديد هدف واقعي يومي (5-10 آيات)</li>
-<li>اختيار الوقت الأنسب عندما تكون الذاكرة في أفضل حالاتها (عادة في الصباح)</li>
-<li>الاستمرار بصبر وعدم الاستعجال</li>
-<li>طلب المساعدة من معلم متخصص للتصحيح والتوجيه</li>
-</ul>
-
-<h2>الخلاصة</h2>
-<p>حفظ القرآن الكريم هو رحلة روحية وعلمية تحتاج إلى تنظيم وإصرار. باتباع هذه التقنيات والاستفادة من توجيهات معلمينا المتخصصين، ستجد نفسك تتقدم بخطوات ثابتة نحو تحقيق هدفك.</p>`,
+<p>بدلاً من محاولة حفظ سورة كاملة دفعة واحدة، ننصح بتقسيم السورة إلى أجزاء صغيرة (3-5 آيات). هذا يسهل على الدماغ معالجة المعلومات وتخزينها في الذاكرة طويلة الأمد بكفاءة أكبر.</p>`,
       en: `<h2>Basic Techniques for Quranic Memorization</h2>
 <p>Memorizing the Quran is not just mechanical repetition of verses, but a process that requires deep understanding and organized techniques. At Al-Hafiz Academy, we focus on developing customized memorization strategies tailored to each student's needs.</p>
 
 <h3>1. Smart Verse Division</h3>
-<p>Instead of trying to memorize a complete Surah at once, we recommend dividing it into small sections (3-5 verses). This makes it easier for the brain to process and store information in long-term memory more efficiently.</p>
-
-<h3>2. Understanding Before Memorization</h3>
-<p>Knowing the meaning of verses and their context significantly strengthens memory. We recommend reading simple interpretations of each verse before starting to memorize it, which links words to meanings and makes memorization easier and more lasting.</p>
-
-<h3>3. Regular Repetition</h3>
-<p>Remember that memorization requires regular repetition. Our recommended daily schedule includes: new memorization (30 minutes), previous memorization review (20 minutes), and repeated memorization from previous chapters (15 minutes).</p>
-
-<h3>4. Listening and Recitation</h3>
-<p>Listening to good Quranic recitations before memorizing helps establish correct words and pronunciation. Reciting verses aloud several times strengthens auditory and kinesthetic memory.</p>
-
-<h3>5. Rest and Proper Nutrition</h3>
-<p>Don't neglect the importance of adequate sleep and healthy nutrition. The brain needs enough energy to work efficiently, and sleep is necessary to consolidate information in memory.</p>
-
-<h2>Tips from Our Specialized Teachers</h2>
-<p>Our academy teachers have long experience in Quran teaching and have noticed that students who achieve the best results follow these steps:</p>
-<ul>
-<li>Set a realistic daily goal (5-10 verses)</li>
-<li>Choose the best time when memory is at its peak (usually in the morning)</li>
-<li>Persist with patience without rushing</li>
-<li>Seek help from a specialized teacher for correction and guidance</li>
-</ul>
-
-<h2>Conclusion</h2>
-<p>Memorizing the Holy Quran is a spiritual and scientific journey that requires organization and determination. By following these techniques and benefiting from our specialized teachers' guidance, you will find yourself progressing steadily toward achieving your goal.</p>`,
+<p>Instead of trying to memorize a complete Surah at once, we recommend dividing it into small sections (3-5 verses). This makes it easier for the brain to process and store information in long-term memory more efficiently.</p>`,
       fr: `<h2>Techniques de base pour la mémorisation du Coran</h2>
 <p>Mémoriser le Coran n'est pas seulement une répétition mécanique de versets, mais un processus qui nécessite une compréhension profonde et des techniques organisées. À l'Académie Al-Hafiz, nous nous concentrons sur le développement de stratégies de mémorisation personnalisées adaptées aux besoins de chaque étudiant.</p>`
     },
     image: "/images/quran-memorization.jpg",
-    category: { ar: "تحفيظ القرآن", en: "Quran Memorization", fr: "Mémorisation du Coran" },
-    author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l'académie" },
     date: "2024-05-15",
     readTime: 8
   },
@@ -110,7 +60,7 @@ const blogPosts = [
       fr: "L'importance d'une bonne base en langue arabe pour les enfants"
     },
     excerpt: {
-      ar: "تعرف على سبب أهمية التأسيس القوي في اللغة العربية وكيف يؤثر على التعلم المستقبلي والقراءة والكتابة.",
+      ar: "��عرف على سبب أهمية التأسيس القوي في اللغة العربية وكيف يؤثر على التعلم المستقبلي والقراءة والكتابة.",
       en: "Learn why a strong Arabic language foundation is important and how it affects future learning, reading, and writing.",
       fr: "Découvrez pourquoi une bonne base en langue arabe est importante et comment elle affecte l'apprentissage futur."
     },
@@ -176,8 +126,6 @@ const blogPosts = [
 <p>L'apprentissage en ligne n'est plus une option secondaire, mais est devenu une méthode d'enseignement efficace et moderne.</p>`
     },
     image: "/images/online-learning.jpg",
-    category: { ar: "التعليم الإلكتروني", en: "Online Learning", fr: "Apprentissage en ligne" },
-    author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l'académie" },
     date: "2024-05-05",
     readTime: 7
   }
@@ -228,7 +176,7 @@ export default function BlogPage() {
                       <div className="flex items-center justify-between gap-2 flex-wrap">
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <Tag className="w-3 h-3" />
-                          <span>{post.category[locale]}</span>
+                          <span>{post.title[locale]?.substring(0, 20)}</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <Calendar className="w-3 h-3" />
@@ -251,7 +199,7 @@ export default function BlogPage() {
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <User className="w-3 h-3" />
-                            <span>{post.author[locale]}</span>
+                            <span>Academy Team</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
