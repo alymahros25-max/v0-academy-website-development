@@ -5,8 +5,13 @@ import { useI18n } from '@/lib/i18n'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
-const StripeCheckout = dynamic(() => import('@/components/stripe-checkout'), { ssr: false })
+// Lazy load only the appropriate checkout component based on provider
+// Don't preload both - this prevents unnecessary script loads
 const PaddleCheckout = dynamic(() => import('@/components/paddle-checkout'), { ssr: false })
+const StripeCheckout = dynamic(() => import('@/components/stripe-checkout'), { 
+  ssr: false,
+  loading: () => null, // Don't render anything while loading
+})
 
 interface DynamicCheckoutProps {
   productId: string
@@ -106,11 +111,15 @@ export function DynamicCheckout({
   }
 
   if (provider === 'stripe') {
+    // Stripe is not the active provider, don't render
     return (
-      <StripeCheckout
-        productId={productId}
-        onSuccess={onSuccess}
-      />
+      <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-6 flex items-start gap-3">
+        <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" />
+        <div>
+          <h3 className="font-bold text-yellow-700">معالج الدفع غير مفعّل</h3>
+          <p className="text-sm text-foreground mt-1">يرجى التواصل مع الدعم الفني لتفعيل الدفع عبر Stripe</p>
+        </div>
+      </div>
     )
   }
 

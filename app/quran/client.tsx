@@ -5,9 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import { Check, BookOpen, Star, Users, Clock, Shield, X } from "lucide-react"
-import dynamic from "next/dynamic"
-
-const StripeCheckout = dynamic(() => import("@/components/stripe-checkout"), { ssr: false })
+import { DynamicCheckout } from "@/components/dynamic-checkout"
 
 const methodSteps = [
   {
@@ -211,7 +209,7 @@ export default function QuranPageClient() {
               </button>
             </div>
             <div className="p-6">
-              <StripeCheckout productId={selectedProduct} onSuccess={() => setSelectedProduct(null)} />
+              <DynamicCheckout productId={selectedProduct} onSuccess={() => setSelectedProduct(null)} />
             </div>
           </div>
         </div>
