@@ -1769,6 +1769,7 @@ function RequestIndexingTab() {
     setMessage('جاري إرسال طلبات الفهرسة...')
 
     try {
+      const resultsList: any[] = []
       for (const url of validUrls) {
         const res = await fetch('/api/gsc/request-indexing', {
           method: 'POST',
@@ -1776,8 +1777,9 @@ function RequestIndexingTab() {
           body: JSON.stringify({ url, type: 'URL_UPDATED' }),
         })
         const data = await res.json()
-        setResults(prev => [...prev, { url, success: res.ok, status: data }])
+        resultsList.push({ url, success: res.ok, status: data })
       }
+      setResults(resultsList)
       setMessage('تم إرسال جميع الطلبات بنجاح')
     } catch (err) {
       setMessage('حدث خطأ أثناء الإرسال')
