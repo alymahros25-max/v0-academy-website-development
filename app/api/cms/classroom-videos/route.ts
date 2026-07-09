@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       .select('*')
 
     if (videoId) {
-      query = query.eq('id', parseInt(videoId))
+      query = query.eq('id', videoId)
     }
 
     if (category) {

@@ -170,7 +170,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         ...formData,
         youtube_embed_id: videoId,
         is_published: true,
-        is_featured: formData.id === undefined ? true : undefined, // first video defaults to featured
+        is_featured: isEditing ? (formData as any).is_featured ?? false : false,
       }
 
       const response = await fetch(endpoint, {
