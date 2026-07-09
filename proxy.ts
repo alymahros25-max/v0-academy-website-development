@@ -5,6 +5,45 @@ export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // ============================================================
+  // 0. ADMIN ROUTES BYPASS - Prevent redirect loops
+  // ============================================================
+  // Completely bypass multilingual and redirect logic for all admin routes
+  if (pathname.startsWith('/admin') || pathname.startsWith('/ac')) {
+    // Allow admin routes to pass through without any redirects or locale prefixing
+    const response = NextResponse.next()
+    
+    // Still apply security headers
+    response.headers.set('X-Frame-Options', 'SAMEORIGIN')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+    response.headers.set('X-XSS-Protection', '1; mode=block')
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.set(
+      'Permissions-Policy',
+      'camera=(), microphone=(), geolocation=(self), payment=()'
+    )
+    const cspHeader =
+      "default-src 'self'; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel-analytics.com; " +
+      "style-src 'self' 'unsafe-inline' fonts.googleapis.com; " +
+      "img-src 'self' data: https:; " +
+      "font-src 'self' fonts.gstatic.com; " +
+      "connect-src 'self' *.supabase.co *.vercel-analytics.com; " +
+      "frame-ancestors 'self'; " +
+      "base-uri 'self'; " +
+      "form-action 'self'"
+    response.headers.set('Content-Security-Policy', cspHeader)
+    response.headers.set(
+      'Strict-Transport-Security',
+      'max-age=31536000; includeSubDomains; preload'
+    )
+    response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp')
+    response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
+    response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin')
+    
+    return response
+  }
+
+  // ============================================================
   // 1. LEGACY REDIRECT HANDLING (301 Permanent Redirects)
   // ============================================================
   const legacyTarget = LEGACY_ROUTES[pathname]
@@ -89,6 +128,7 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Apply to all paths except Next.js internals and static assets
+    // Admin routes are explicitly included here but handled with bypass logic
     '/((?!_next|_vercel|.*\\.(?:svg|png|jpg|jpeg|gif|webp|js|css|ico|ttf|woff|woff2)$).*)',
   ],
 }
