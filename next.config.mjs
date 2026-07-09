@@ -101,12 +101,8 @@ const nextConfig = {
   // ============================================================
   async redirects() {
     return [
-      // Ensure trailing slashes are consistent
-      {
-        source: '/admin/:path',
-        destination: '/admin/:path/',
-        permanent: false,
-      },
+      // Admin routes are handled by proxy.ts - do NOT redirect here
+      // Ensure trailing slashes are consistent for other routes only
     ]
   },
 
