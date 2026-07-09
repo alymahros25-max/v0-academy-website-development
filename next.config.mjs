@@ -18,6 +18,13 @@ const nextConfig = {
   },
 
   // ============================================================
+  // TURBOPACK CONFIGURATION (Next.js 16 default bundler)
+  // ============================================================
+  // Empty turbopack config allows custom webpack configs to work alongside Turbopack
+  // This resolves the "This build is using Turbopack, with a custom webpack configuration" warning
+  turbopack: {},
+
+  // ============================================================
   // IMAGE OPTIMIZATION
   // ============================================================
   images: {
