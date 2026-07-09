@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon, Palette, FileText, Lock, Film, Library, Gamepad2
+  Menu, XIcon, Palette, FileText, Lock, Film, Library, Gamepad2, Search, BarChart3
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
@@ -21,7 +21,7 @@ import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -73,6 +73,10 @@ export default function AdminDashboard() {
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
     { id: "digital-library", label: t("admin.digitalLibrary"), key: "admin.digitalLibrary", icon: Library },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2 },
+    
+    // SEO & Indexing
+    { id: "gsc-dashboard", label: "حالة الفهرسة", key: "gsc.dashboard", icon: BarChart3 },
+    { id: "request-indexing", label: "طلب فهرسة", key: "gsc.indexing", icon: Search },
     
     // Legacy Features
     { id: "pages", label: t("admin.pages"), key: "admin.pages", icon: BookOpen },
@@ -210,6 +214,12 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "educational-games" && <EducationalGamesTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "gsc-dashboard" && <GSCDashboardTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "request-indexing" && <RequestIndexingTab />}
           </AdminErrorBoundary>
         </div>
       </main>
@@ -564,7 +574,7 @@ function TeachersTab() {
                   <Users className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدون اسم'}</p>
+                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدو�� اسم'}</p>
                   <p className="text-sm text-muted-foreground">{teacher?.specialty?.ar || 'بدون تخصص'} - {teacher?.experience || '0'} سنة خبرة</p>
                 </div>
               </div>
@@ -695,7 +705,7 @@ function MessagesTab() {
     return (
       <div className="text-center py-16">
         <MessageSquare className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-        <p className="text-lg text-muted-foreground">لا ��وجد رسائل بعد</p>
+        <p className="text-lg text-muted-foreground">لا ����وجد رسائل بعد</p>
       </div>
     )
   }
@@ -1207,7 +1217,7 @@ function ThemeCustomizerTab() {
 // Pages Builder Tab - list of all site pages with quick links
 function PagesBuilderTab() {
   const pages = [
-    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشهاد��ت" },
+    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشه��د��ت" },
     { label: "قرآن الكريم", path: "/quran", desc: "الباقات والأسعار وطريقة التسجيل" },
     { label: "تأسيس العربي", path: "/arabic", desc: "باقات تعليم اللغة العربية" },
     { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
@@ -1634,6 +1644,220 @@ function EducationalGamesTab() {
           <span aria-hidden="true">←</span>
         </a>
       </div>
+    </div>
+  )
+}
+
+// GSC Dashboard Tab
+function GSCDashboardTab() {
+  const [stats, setStats] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<string>('')
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const res = await fetch('/api/gsc/status')
+        const data = await res.json()
+        if (data.success) {
+          setStats(data.data)
+          setLastUpdated(new Date(data.lastUpdated).toLocaleString('ar-SA'))
+        } else {
+          setError(data.error || 'خطأ في جلب البيانات')
+        }
+      } catch (err) {
+        setError('فشل الاتصال بـ Google Search Console')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchStats()
+    const interval = setInterval(fetchStats, 3600000) // Update every hour
+    return () => clearInterval(interval)
+  }, [])
+
+  if (loading) return <LoadingState />
+  if (error) return <div className="p-4 rounded-lg bg-destructive/10 text-destructive">{error}</div>
+
+  const cards = [
+    { label: 'إجمالي الصفحات', value: stats?.totalPages || 0, icon: BarChart3, color: 'bg-blue-500' },
+    { label: 'الصفحات المفهرسة', value: stats?.indexed || 0, icon: Check, color: 'bg-green-500' },
+    { label: 'الصفحات غير المفهرسة', value: stats?.notIndexed || 0, icon: X, color: 'bg-red-500' },
+    { label: 'متوسط الموضع', value: stats?.avgPosition || 'N/A', icon: Search, color: 'bg-amber-500' },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground">حالة فهرسة Google</h2>
+          <p className="text-sm text-muted-foreground mt-1">آخر تحديث: {lastUpdated}</p>
+        </div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90"
+        >
+          تحديث
+        </button>
+      </div>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {cards.map((card, idx) => (
+          <div key={idx} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">{card.label}</p>
+              <div className={`w-8 h-8 rounded-lg ${card.color} text-white flex items-center justify-center`}>
+                <card.icon className="w-4 h-4" />
+              </div>
+            </div>
+            <p className="text-2xl font-bold text-foreground">{card.value}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-6">
+        <h3 className="font-bold text-foreground mb-4">إحصائيات التفاعل</h3>
+        <div className="grid sm:grid-cols-2 gap-6">
+          <div>
+            <p className="text-sm text-muted-foreground mb-1">إجمالي النقرات</p>
+            <p className="text-3xl font-bold text-foreground">{stats?.clicks || 0}</p>
+          </div>
+          <div>
+            <p className="text-sm text-muted-foreground mb-1">إجمالي الانطباعات</p>
+            <p className="text-3xl font-bold text-foreground">{stats?.impressions || 0}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+        <p className="text-sm text-foreground font-medium mb-2">نصيحة</p>
+        <p className="text-xs text-muted-foreground">
+          استخدم علامة "طلب فهرسة" أعلاه لطلب فهرسة الصفحات الجديدة أو المحدثة في Google بشكل فوري.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// Request Indexing Tab
+function RequestIndexingTab() {
+  const [urls, setUrls] = useState<string[]>([''])
+  const [submitting, setSubmitting] = useState(false)
+  const [results, setResults] = useState<any[]>([])
+  const [message, setMessage] = useState('')
+
+  const addUrl = () => setUrls([...urls, ''])
+  const removeUrl = (idx: number) => setUrls(urls.filter((_, i) => i !== idx))
+  const updateUrl = (idx: number, value: string) => {
+    const newUrls = [...urls]
+    newUrls[idx] = value
+    setUrls(newUrls)
+  }
+
+  const submitIndexing = async () => {
+    const validUrls = urls.filter(u => u.trim())
+    if (validUrls.length === 0) {
+      setMessage('الرجاء إدخال رابط واحد على الأقل')
+      return
+    }
+
+    setSubmitting(true)
+    setResults([])
+    setMessage('جاري إرسال طلبات الفهرسة...')
+
+    try {
+      for (const url of validUrls) {
+        const res = await fetch('/api/gsc/request-indexing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, type: 'URL_UPDATED' }),
+        })
+        const data = await res.json()
+        setResults(prev => [...prev, { url, success: res.ok, status: data }])
+      }
+      setMessage('تم إرسال جميع الطلبات بنجاح')
+    } catch (err) {
+      setMessage('حدث خطأ أثناء الإرسال')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">طلب فهرسة الصفحات</h2>
+        <p className="text-sm text-muted-foreground">أدخل روابط الصفحات المراد فهرستها في Google بشكل فوري</p>
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-3">الروابط</label>
+          <div className="space-y-2">
+            {urls.map((url, idx) => (
+              <div key={idx} className="flex gap-2">
+                <input
+                  type="text"
+                  value={url}
+                  onChange={(e) => updateUrl(idx, e.target.value)}
+                  placeholder="https://quran-elhafez.com/page"
+                  className="flex-1 px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm"
+                />
+                {urls.length > 1 && (
+                  <button
+                    onClick={() => removeUrl(idx)}
+                    className="px-3 py-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={addUrl}
+            className="mt-3 flex items-center gap-2 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm hover:bg-muted/80"
+          >
+            <Plus className="w-4 h-4" />
+            إضافة رابط آخر
+          </button>
+        </div>
+
+        {message && (
+          <div className={`p-3 rounded-lg text-sm ${
+            results.some(r => r.success)
+              ? 'bg-green-500/10 text-green-600'
+              : 'bg-amber-500/10 text-amber-600'
+          }`}>
+            {message}
+          </div>
+        )}
+
+        <button
+          onClick={submitIndexing}
+          disabled={submitting || urls.every(u => !u.trim())}
+          className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50"
+        >
+          {submitting ? 'جاري الإرسال...' : 'إرسال طلبات الفهرسة'}
+        </button>
+      </div>
+
+      {results.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="font-bold text-foreground">النتائج</h3>
+          {results.map((result, idx) => (
+            <div key={idx} className={`p-4 rounded-lg border ${result.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+              <p className="text-sm font-medium text-foreground">{result.url}</p>
+              <p className={`text-xs mt-1 ${result.success ? 'text-green-600' : 'text-red-600'}`}>
+                {result.success ? 'تم الإرسال بنجاح' : 'فشل الإرسال'}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
