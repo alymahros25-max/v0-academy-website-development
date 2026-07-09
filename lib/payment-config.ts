@@ -26,15 +26,15 @@ export interface PaymentSettings {
 
 /**
  * Get the currently active payment provider configuration
- * Fetches from Supabase database
+ * Fetches from Supabase database with Paddle as fallback
  */
 export async function getActivePaymentProvider(): Promise<PaymentSettings | null> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!supabaseUrl || !supabaseKey) {
-    console.warn('[Payment Config] Missing Supabase credentials')
-    return null
+    console.warn('[Payment Config] Missing Supabase credentials, using Paddle as default')
+    return getDefaultPaddleProvider()
   }
 
   try {
@@ -47,14 +47,39 @@ export async function getActivePaymentProvider(): Promise<PaymentSettings | null
       .single()
 
     if (error) {
-      console.error('[Payment Config] Error fetching active provider:', error)
-      return null
+      console.warn('[Payment Config] No active provider configured, using Paddle as default:', error.message)
+      return getDefaultPaddleProvider()
     }
 
     return data as PaymentSettings
   } catch (error) {
-    console.error('[Payment Config] Exception fetching provider:', error)
-    return null
+    console.warn('[Payment Config] Exception fetching provider, using Paddle as default:', error)
+    return getDefaultPaddleProvider()
+  }
+}
+
+/**
+ * Default Paddle provider configuration (fallback)
+ */
+function getDefaultPaddleProvider(): PaymentSettings {
+  return {
+    id: 'default-paddle',
+    provider_name: 'paddle',
+    api_key: process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID || 'not-configured',
+    secret_key: null,
+    merchant_id: null,
+    vendor_id: process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID || 'not-configured',
+    webhook_secret: null,
+    webhook_url: null,
+    is_active: true,
+    currency: 'USD',
+    min_amount: 0.5,
+    max_amount: 99999.99,
+    support_email: null,
+    support_url: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    last_verified_at: null,
   }
 }
 
