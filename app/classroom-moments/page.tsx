@@ -1,10 +1,11 @@
 import { Metadata } from 'next'
+import { createClient } from '@supabase/supabase-js'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
-// ISR: revalidate every 60 s as a safety net.
-// On-demand revalidation via the 'classroom-videos' tag fires immediately
-// whenever the admin saves/updates/deletes a video through the CMS route.
+// Revalidate every 60 s as a safety net.
+// The admin CMS route also calls revalidateTag('classroom-videos') on every
+// save/update/delete so changes appear immediately without waiting.
 export const revalidate = 60
 
 export const metadata: Metadata = {
@@ -27,35 +28,45 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    // Call the CMS API directly from the server (avoids the client-only Supabase
-    // SDK path and ensures the Next.js fetch cache is tagged so on-demand
-    // revalidation via revalidateTag('classroom-videos') works instantly).
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
-    const res = await fetch(
-      `${baseUrl}/api/cms/classroom-videos?published=true&limit=50`,
-      { next: { revalidate: 60, tags: ['classroom-videos'] } }
-    )
+    // Query Supabase directly from the server component — this works on Vercel
+    // because SUPABASE_SERVICE_ROLE_KEY is available server-side. Using the
+    // service role key means we bypass RLS and always get published videos.
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ??
+      process.env.SUPABASE_ANON_KEY ??
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    if (!res.ok) {
-      console.error('[classroom-moments] CMS fetch failed:', res.status)
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('[classroom-moments] Supabase env vars missing')
       return []
     }
 
-    const json = await res.json()
-    const rows: any[] = Array.isArray(json?.data) ? json.data : []
+    const supabase = createClient(supabaseUrl, supabaseKey)
 
-    return rows
+    const { data: rows, error } = await supabase
+      .from('classroom_videos')
+      .select('*')
+      .eq('is_published', true)
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    if (error) {
+      console.error('[classroom-moments] Supabase fetch error:', error.message)
+      return []
+    }
+
+    return (rows ?? [])
       .map((video: any): VideoData => {
-        // Re-extract from the stored URL as a safety net for rows inserted
-        // before the regex was hardened (e.g. direct Supabase inserts).
         const embedId: string =
           extractYouTubeId(video?.youtube_url ?? '') ??
-          extractYouTubeId(video?.youtube_embed_id ?? '') ??
           video?.youtube_embed_id ??
           ''
 
         return {
-          id: video?.id ?? 0,
+          id: video?.id ?? '',
           title_ar: video?.title_ar || 'بدون عنوان',
           title_en: video?.title_en || video?.title_ar || 'No title',
           title_fr: video?.title_fr || video?.title_ar || 'Sans titre',
@@ -63,7 +74,9 @@ async function getClassroomVideos(): Promise<VideoData[]> {
           description_en: video?.description_en ?? '',
           description_fr: video?.description_fr ?? '',
           youtube_embed_id: embedId,
-          thumbnail_url: video?.thumbnail_url || `https://img.youtube.com/vi/${embedId}/hqdefault.jpg`,
+          thumbnail_url:
+            video?.thumbnail_url ||
+            `https://img.youtube.com/vi/${embedId}/hqdefault.jpg`,
           category: video?.category ?? '',
           teacher_name_ar: video?.teacher_name_ar ?? '',
           teacher_name_en: video?.teacher_name_en ?? '',
@@ -72,7 +85,7 @@ async function getClassroomVideos(): Promise<VideoData[]> {
           is_featured: video?.is_featured ?? false,
         }
       })
-      // Drop any row that didn't produce a valid 11-char ID
+      // Drop rows without a valid 11-char YouTube ID
       .filter((v) => /^[a-zA-Z0-9_-]{11}$/.test(v.youtube_embed_id))
   } catch (error) {
     console.error('[classroom-moments] getClassroomVideos error:', error)
