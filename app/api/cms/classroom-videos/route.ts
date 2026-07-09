@@ -11,7 +11,7 @@ const supabase = supabaseUrl && supabaseServiceKey
   : null
 
 interface ClassroomVideo {
-  id?: number
+  id?: string
   title_ar: string
   title_en: string
   title_fr: string
@@ -25,12 +25,9 @@ interface ClassroomVideo {
   youtube_embed_id: string
   category?: string
   thumbnail_url?: string
-  duration_seconds?: number
   is_published?: boolean
   is_featured?: boolean
   display_order?: number
-  created_by?: number
-  updated_by?: number
 }
 
 // GET: Fetch classroom videos
@@ -140,11 +137,10 @@ export async function POST(request: NextRequest) {
         youtube_url: body.youtube_url,
         youtube_embed_id: embedId,
         thumbnail_url: thumbnail,
-        category: body.category || 'general',
-        is_published: body.is_published ?? false,
+        category: body.category || 'عام',
+        is_published: body.is_published ?? true,
         is_featured: body.is_featured ?? false,
         display_order: body.display_order ?? 0,
-        created_by: body.created_by,
       })
       .select()
       .single()
@@ -193,7 +189,7 @@ export async function PATCH(request: NextRequest) {
         .from('classroom_videos')
         .select('id')
         .eq('youtube_embed_id', embedId)
-        .neq('id', parseInt(videoId))
+        .neq('id', videoId)
         .single()
 
       if (existing) {
@@ -215,7 +211,6 @@ export async function PATCH(request: NextRequest) {
       ...(body.is_published !== undefined && { is_published: body.is_published }),
       ...(body.is_featured !== undefined && { is_featured: body.is_featured }),
       ...(body.display_order !== undefined && { display_order: body.display_order }),
-      ...(body.updated_by && { updated_by: body.updated_by }),
       updated_at: new Date().toISOString(),
     }
 
@@ -229,7 +224,7 @@ export async function PATCH(request: NextRequest) {
     const { data, error } = await supabase
       .from('classroom_videos')
       .update(updateData)
-      .eq('id', parseInt(videoId))
+      .eq('id', videoId)
       .select()
       .single()
 
@@ -265,7 +260,7 @@ export async function DELETE(request: NextRequest) {
     const { error } = await supabase
       .from('classroom_videos')
       .delete()
-      .eq('id', parseInt(videoId))
+      .eq('id', videoId)
 
     if (error) {
       console.error('[v0] Delete classroom video error:', error)
