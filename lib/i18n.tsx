@@ -55,7 +55,22 @@ const translations: Translations = {
   "stats.countries": { ar: "دولة", en: "Countries", fr: "Pays" },
   "stats.sessions": { ar: "حصة شهرياً", en: "Monthly Sessions", fr: "Sessions mensuelles" },
 
-  // Pricing
+  // Pricing Hub
+  "pricing.title": { ar: "اختر برنامجك التعليمي", en: "Choose Your Learning Program", fr: "Choisissez votre programme" },
+  "pricing.subtitle": { ar: "اكتشف برامجنا التعليمية المتميزة في القرآن الكريم والتجويد وتأسيس اللغة العربية", en: "Discover our premium educational programs in Quran memorization, Tajweed, and Arabic language foundation", fr: "D\u00e9couvrez nos programmes \u00e9ducatifs premium en m\u00e9morisation du Coran et langue arabe" },
+  "pricing.quran.title": { ar: "القرآن الكريم والتجويد", en: "Quran & Tajweed", fr: "Coran & Tajweed" },
+  "pricing.quran.description": { ar: "تعلم حفظ القرآن الكريم مع أفضل المعلمين المجازين في أحكام التجويد الصحيح", en: "Learn Quran memorization with certified teachers in proper Tajweed", fr: "Apprenez la m\u00e9morisation du Coran avec des enseignants certifi\u00e9s" },
+  "pricing.quran.button": { ar: "عرض الباقات", en: "View Packages", fr: "Voir les forfaits" },
+  "pricing.arabic.title": { ar: "تأسيس اللغة العربية", en: "Arabic Language Foundation", fr: "Fondation de la langue arabe" },
+  "pricing.arabic.description": { ar: "تعلم أساسيات اللغة العربية من القراءة والكتابة إلى القواعد النحوية", en: "Master Arabic language basics from reading and writing to grammar", fr: "Ma\u00eetrisez les bases de la langue arabe" },
+  "pricing.arabic.button": { ar: "عرض الباقات", en: "View Packages", fr: "Voir les forfaits" },
+  "pricing.includes": { ar: "تشمل جميع المميزات", en: "Includes all features", fr: "Inclut toutes les fonctionnalités" },
+  "pricing.why-choose": { ar: "لماذا تختار أكاديمية الحافظ المتميز؟", en: "Why Choose Al-Hafiz Academy?", fr: "Pourquoi choisir l'acad\u00e9mie?" },
+  "pricing.trust-message": { ar: "انضم إلى آلاف الطلاب الراضين حول العالم الذين اختاروا تعليمهم من الأفضل", en: "Join thousands of satisfied students worldwide who chose excellence in education", fr: "Rejoignez des milliers d'\u00e9tudiants satisfaits \u00e0 travers le monde" },
+  "pricing.ready-start": { ar: "هل أنت مستعد لبدء رحلتك التعليمية؟", en: "Ready to Start Your Learning Journey?", fr: "Pr\u00eat \u00e0 commencer votre parcours?" },
+  "pricing.cta-message": { ar: "اختر الدورة التي تناسبك وابدأ التعلم مع أفضل المعلمين", en: "Choose the course that suits you and start learning with the best teachers", fr: "Choisissez le cours qui vous convient et commencez \u00e0 apprendre" },
+
+  // Pricing individual pages
   "pricing.quran.title": { ar: "باقات القرآن الكريم", en: "Quran Packages", fr: "Forfaits Coran" },
   "pricing.arabic.title": { ar: "باقات تأسيس العربي", en: "Arabic Language Packages", fr: "Forfaits Langue Arabe" },
   "pricing.sessions": { ar: "حصص", en: "Sessions", fr: "Sessions" },
