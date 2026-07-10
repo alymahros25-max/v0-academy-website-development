@@ -68,7 +68,7 @@ const translations: Translations = {
   "pricing.why-choose": { ar: "لماذا تختار أكاديمية الحافظ المتميز؟", en: "Why Choose Al-Hafiz Academy?", fr: "Pourquoi choisir l'acad\u00e9mie?" },
   "pricing.trust-message": { ar: "انضم إلى آلاف الطلاب الراضين حول العالم الذين اختاروا تعليمهم من الأفضل", en: "Join thousands of satisfied students worldwide who chose excellence in education", fr: "Rejoignez des milliers d'\u00e9tudiants satisfaits \u00e0 travers le monde" },
   "pricing.ready-start": { ar: "هل أنت مستعد لبدء رحلتك التعليمية؟", en: "Ready to Start Your Learning Journey?", fr: "Pr\u00eat \u00e0 commencer votre parcours?" },
-  "pricing.cta-message": { ar: "اختر الدورة التي تناسبك وابدأ التعلم مع أفضل المعلمين", en: "Choose the course that suits you and start learning with the best teachers", fr: "Choisissez le cours qui vous convient et commencez \u00e0 apprendre" },
+  "pricing.cta-message": { ar: "اختر برنامجك التعليمي الرقمي - وصول فوري بعد الدفع | 100% دورات رقمية", en: "Choose the course that suits you and start learning with the best teachers", fr: "Choisissez le cours qui vous convient et commencez \u00e0 apprendre" },
 
   // Pricing individual pages
   "pricing.quran.title": { ar: "باقات القرآن الكريم", en: "Quran Packages", fr: "Forfaits Coran" },
@@ -108,7 +108,7 @@ const translations: Translations = {
 
   // Library
   "library.title": { ar: "المكتبة الإلكترونية", en: "Digital Library", fr: "Biblioth\u00e8que num\u00e9rique" },
-  "library.desc": { ar: "مكتبة شاملة تضم أفضل الكتب والمواد التعليمية", en: "A comprehensive library with the best books and educational materials", fr: "Une biblioth\u00e8que compl\u00e8te" },
+  "library.desc": { ar: "مكتبة رقمية شاملة تضم أفضل المواد التعليمية الرقمية", en: "A comprehensive library with the best books and educational materials", fr: "Une biblioth\u00e8que compl\u00e8te" },
 
   // Games
   "games.title": { ar: "الألعاب والمسابقات التعليمية", en: "Educational Games & Quizzes", fr: "Jeux \u00e9ducatifs et quiz" },
