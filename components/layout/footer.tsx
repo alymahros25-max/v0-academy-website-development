@@ -26,6 +26,7 @@ export function Footer() {
   const legalLinks = [
     { href: "/privacy", label: t("footer.privacy") },
     { href: "/terms", label: t("footer.terms") },
+    { href: "/refund-policy", label: t("footer.refund") },
   ]
 
   return (

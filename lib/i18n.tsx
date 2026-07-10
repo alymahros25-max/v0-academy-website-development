@@ -120,6 +120,7 @@ const translations: Translations = {
   "footer.legal": { ar: "الصفحات القانونية", en: "Legal", fr: "L\u00e9gal" },
   "footer.privacy": { ar: "سياسة الخصوصية", en: "Privacy Policy", fr: "Politique de confidentialit\u00e9" },
   "footer.terms": { ar: "شروط الاستخدام", en: "Terms of Use", fr: "Conditions d'utilisation" },
+  "footer.refund": { ar: "سياسة الاسترداد", en: "Refund Policy", fr: "Politique de remboursement" },
   "footer.contact": { ar: "معلومات الاتصال", en: "Contact Info", fr: "Coordonn\u00e9es" },
 
   // Blog
