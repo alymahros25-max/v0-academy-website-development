@@ -17,8 +17,7 @@ export function Footer() {
   ]
 
   const serviceLinks = [
-    { href: "/quran", label: t("nav.quran") },
-    { href: "/arabic", label: t("nav.arabic") },
+    { href: "/pricing", label: locale === "ar" ? "الأسعار" : locale === "en" ? "Pricing" : "Tarifs" },
     { href: "/library", label: t("nav.library") },
     { href: "/games", label: t("nav.games") },
   ]
