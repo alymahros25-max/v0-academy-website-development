@@ -19,7 +19,8 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
   // Re-extract the ID here as a safety net: the prop might be a full URL
   // if the data mapping changes, or it might carry ?si= tracking params.
   const cleanId = extractYouTubeId(videoId) ?? videoId
-  const embedUrl = `https://www.youtube.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1`
+  // Use youtube-nocookie.com for better network compatibility in restricted environments
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1`
   
   // Validate video ID format
   const isValidId = /^[a-zA-Z0-9_-]{11}$/.test(cleanId)
