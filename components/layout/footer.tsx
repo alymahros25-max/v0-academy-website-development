@@ -169,7 +169,7 @@ export function Footer() {
         <div className="mt-12 pt-6 border-t border-primary-foreground/10">
           <p className="text-xs text-primary-foreground/50 leading-relaxed mb-6">
             {locale === "ar"
-              ? "أكاديمية الحافظ المتميز هي منصة تعليم إلكترونية رقمية 100%. جميع البرامج التعليمية والدورات والمكتبة الرقمية والألعاب يتم تسليمها بالكامل عبر الإنترنت من خلال فصلنا الافتراضي المتكامل والمتصفح. لا نقدم أي منتجات مادية أو خدمات غير متصلة بالإنترنت."
+              ? "منصة الحافظ المتميز هي منصة تعليم إلكترونية رقمية 100%. جميع البرامج التعليمية والدورات والمكتبة الرقمية والألعاب يتم تسليمها بالكامل عبر الإنترنت. وصول فوري - لا توجد خدمات خارج الإنترنت."
               : locale === "en"
                 ? "Al-Hafez Al-Motamayez is a 100% digital e-learning platform. All educational programs, courses, digital assets, and games are delivered entirely online via our integrated virtual classroom and browser. No physical goods or offline services are provided."
                 : "Al-Hafez Al-Motamayez est une plateforme d'apprentissage numérique à 100%. Tous les programmes éducatifs, les cours, les actifs numériques et les jeux sont livrés entièrement en ligne via notre salle de classe virtuelle intégrée. Aucun produit physique ou service hors ligne n'est fourni."}

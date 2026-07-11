@@ -89,9 +89,9 @@ export default function PricingPageClient() {
             </h2>
             <p className="text-green-800 dark:text-green-200">
               {isArabic
-                ? "جميع البرامج التعليمية رقمية بالكامل | الوصول يبدأ فوراً بعد الدفع | لا يوجد أي تأخيرات أو شحن مادي | منصة تعليم آمنة وموثوقة"
+                ? "جميع البرامج التعليمية رقمية بالكامل | الوصول يبدأ فوراً بعد الدفع | بدون أي تأخيرات | منصة تعليم رقمية آمنة وموثوقة"
                 : locale === 'en'
-                ? "All educational programs are 100% digital | Access starts immediately after payment | No delays or physical shipping | Safe and reliable learning platform"
+                ? "All educational programs are 100% digital | Access starts immediately after payment | No delays | Safe and reliable digital learning platform"
                 : "Tous les programmes sont 100% numériques | Accès immédiat après le paiement | Aucun délai ni expédition physique | Plateforme d'apprentissage sûre et fiable"}
             </p>
           </div>
