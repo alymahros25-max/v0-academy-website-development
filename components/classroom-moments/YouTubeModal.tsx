@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { X, FileVideo } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { X, FileVideo, AlertCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
@@ -15,15 +15,34 @@ interface YouTubeModalProps {
 export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+  const [loadAttempt, setLoadAttempt] = useState(0)
+  const [useNoCookie, setUseNoCookie] = useState(true)
 
   // Re-extract the ID here as a safety net: the prop might be a full URL
   // if the data mapping changes, or it might carry ?si= tracking params.
   const cleanId = extractYouTubeId(videoId) ?? videoId
-  // Use youtube-nocookie.com for better network compatibility in restricted environments
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1`
   
   // Validate video ID format
   const isValidId = /^[a-zA-Z0-9_-]{11}$/.test(cleanId)
+  
+  // Primary embed URL (youtube-nocookie.com for better network compatibility in restricted environments)
+  const primaryEmbedUrl = `https://www.youtube-nocookie.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1&controls=1&autohide=0`
+  
+  // Fallback URL (standard YouTube embed)
+  const fallbackEmbedUrl = `https://www.youtube.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1&controls=1&autohide=0`
+  
+  // Choose which URL to use based on attempt
+  const embedUrl = useNoCookie ? primaryEmbedUrl : fallbackEmbedUrl
+  
+  // Reset loading state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setIsLoading(true)
+      setHasError(false)
+      setLoadAttempt(0)
+      setUseNoCookie(true)
+    }
+  }, [isOpen])
   
   if (!isValidId) {
     console.error(`[YouTubeModal] Invalid video ID: ${cleanId}`)
@@ -84,31 +103,61 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
 
               {/* YouTube iframe with proper sandbox and error handling */}
               {!hasError && isValidId ? (
-                <iframe
-                  key={`video-${cleanId}`}
-                  src={embedUrl}
-                  className="absolute inset-0 w-full h-full border-0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                  allowFullScreen
-                  loading="lazy"
-                  onLoad={() => {
-                    setIsLoading(false)
-                    setHasError(false)
-                    console.log(`[YouTubeModal] Video loaded successfully: ${cleanId}`)
-                  }}
-                  onError={() => {
-                    setIsLoading(false)
-                    setHasError(true)
-                    console.error(`[YouTubeModal] Failed to load video: ${cleanId}`)
-                  }}
-                  title={title}
-                />
+                <>
+                  <iframe
+                    key={`video-${cleanId}-${useNoCookie ? 'nocookie' : 'standard'}`}
+                    src={embedUrl}
+                    className="absolute inset-0 w-full h-full border-0"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-presentation allow-popups-to-escape-sandbox"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                    allowFullScreen
+                    loading="lazy"
+                    onLoad={() => {
+                      setIsLoading(false)
+                      setHasError(false)
+                      console.log(`[v0] YouTube video loaded successfully: ${cleanId}`)
+                    }}
+                    onError={() => {
+                      console.warn(`[v0] iframe onError triggered for: ${cleanId}`)
+                      if (useNoCookie && loadAttempt < 1) {
+                        // Try fallback (standard YouTube)
+                        setUseNoCookie(false)
+                        setLoadAttempt(prev => prev + 1)
+                        setIsLoading(true)
+                      } else {
+                        setIsLoading(false)
+                        setHasError(true)
+                        console.error(`[v0] Failed to load video after all attempts: ${cleanId}`)
+                      }
+                    }}
+                    title={title}
+                  />
+                  
+                  {/* Timeout fallback - if not loaded after 8 seconds, try fallback */}
+                  {isLoading && (
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'none'
+                    }} id={`timeout-${cleanId}`} />
+                  )}
+                </>
               ) : (
                 <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/80">
-                  <div className="text-center">
+                  <div className="text-center px-4">
                     <FileVideo className="w-16 h-16 text-red-500 mx-auto mb-3" />
-                    <p className="text-white font-medium">فشل في تحميل الفيديو</p>
-                    <p className="text-white/60 text-sm mt-1">معرّف الفيديو غير صحيح أو الفيديو غير متاح</p>
+                    <p className="text-white font-medium mb-2">فشل في تحميل الفيديو</p>
+                    {!isValidId ? (
+                      <>
+                        <p className="text-white/60 text-sm mb-3">معرّف الفيديو غير صحيح</p>
+                        <p className="text-white/50 text-xs font-mono">{cleanId}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-white/60 text-sm mb-3">الفيديو غير متاح أو الاتصال بطيء</p>
+                        <p className="text-white/50 text-xs">يرجى المحاولة لاحقاً</p>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
