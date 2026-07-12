@@ -41,11 +41,23 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
       setHasError(false)
       setLoadAttempt(0)
       setUseNoCookie(true)
+      console.log(`[v0] YouTubeModal: Opening video modal for ID ${cleanId}`)
     }
   }, [isOpen])
   
+  useEffect(() => {
+    if (isOpen && isLoading && embedUrl) {
+      const timeout = setTimeout(() => {
+        if (isLoading) {
+          console.warn(`[v0] YouTubeModal: Timeout loading video from ${embedUrl}`)
+        }
+      }, 10000)
+      return () => clearTimeout(timeout)
+    }
+  }, [isOpen, isLoading, embedUrl])
+  
   if (!isValidId) {
-    console.error(`[YouTubeModal] Invalid video ID: ${cleanId}`)
+    console.error(`[v0] YouTubeModal: Invalid video ID format: "${cleanId}" (expected 11 alphanumeric chars)`)
   }
 
   return (
@@ -111,7 +123,7 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
                     sandbox="allow-same-origin allow-scripts allow-popups allow-presentation allow-popups-to-escape-sandbox"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                     allowFullScreen
-                    loading="lazy"
+                    loading="eager"
                     onLoad={() => {
                       setIsLoading(false)
                       setHasError(false)
