@@ -54,30 +54,6 @@ const nextConfig = {
           },
         ],
       },
-      // Content Security Policy for all pages
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com https://www.googletagmanager.com https://www.google-analytics.com cdn.jsdelivr.net",
-              "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com",
-              "img-src 'self' data: https: blob:",
-              "style-src 'self' 'unsafe-inline'",
-              "font-src 'self' data: https:",
-              "connect-src 'self' https: blob:",
-              "media-src 'self' blob:",
-              "worker-src 'self' blob:",
-              "child-src 'self' blob:",
-              "form-action 'self'",
-              "frame-ancestors 'none'",
-              "upgrade-insecure-requests",
-            ].join('; '),
-          },
-        ],
-      },
       {
         source: '/sitemap.xml',
         headers: [

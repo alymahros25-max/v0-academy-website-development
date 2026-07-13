@@ -76,28 +76,6 @@ export default function PricingPageClient() {
         </div>
       </section>
 
-      {/* Instant Access Alert - Paddle Compliance */}
-      <section className="bg-green-50 dark:bg-green-900/20 border-t border-b border-green-200 dark:border-green-800 py-6">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="text-center">
-            <h2 className="text-lg font-bold text-green-900 dark:text-green-100 mb-2">
-              {isArabic 
-                ? "✅ وصول رقمي فوري - 100% برامج تعليمية عبر الإنترنت"
-                : locale === 'en'
-                ? "✅ Instant Digital Access - 100% Online Educational Programs"
-                : "✅ Accès Numérique Instantané - 100% Programmes d'Apprentissage en Ligne"}
-            </h2>
-            <p className="text-green-800 dark:text-green-200">
-              {isArabic
-                ? "جميع البرامج التعليمية رقمية بالكامل | الوصول يبدأ فوراً بعد الدفع | بدون أي تأخيرات | منصة تعليم رقمية آمنة وموثوقة"
-                : locale === 'en'
-                ? "All educational programs are 100% digital | Access starts immediately after payment | No delays | Safe and reliable digital learning platform"
-                : "Tous les programmes sont 100% numériques | Accès immédiat après le paiement | Aucun délai ni expédition physique | Plateforme d'apprentissage sûre et fiable"}
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* Pricing Cards Section */}
       <section className="py-20 lg:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4">

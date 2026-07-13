@@ -27,7 +27,7 @@ async function CheckoutSuccessPage({ searchParams }: { searchParams: Promise<{ s
           شكراً لك!
         </h1>
         <p className="text-xl text-muted-foreground mb-2">
-          تم تأكيد اشتراكك بنجاح
+          تم استقبال طلبك بنجاح
         </p>
         <p className="text-base text-muted-foreground mb-8">
           جميع التفاصيل تم إرسالها إلى بريدك الإلكتروني
