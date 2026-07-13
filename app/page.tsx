@@ -1,49 +1,23 @@
 "use client"
 
-import dynamic from "next/dynamic"
 import { HeroSection } from "@/components/home/hero-section"
 import { AboutSection } from "@/components/home/about-section"
 import { FeaturesSection } from "@/components/home/features-section"
 import { StatsSection } from "@/components/home/stats-section"
-import { Suspense } from "react"
-
-// Heavy components loaded dynamically with SSR disabled for non-critical content
-const PricingPreview = dynamic(() => import("@/components/home/pricing-preview").then(m => ({ default: m.PricingPreview })), {
-  loading: () => <div className="min-h-96 bg-gradient-to-b from-muted/50 to-muted/25 animate-pulse" />,
-  ssr: true,
-})
-
-const TestimonialsPreview = dynamic(() => import("@/components/home/testimonials-preview").then(m => ({ default: m.TestimonialsPreview })), {
-  loading: () => <div className="min-h-80 bg-gradient-to-b from-muted/50 to-muted/25 animate-pulse" />,
-  ssr: true,
-})
-
-const CTASection = dynamic(() => import("@/components/home/cta-section").then(m => ({ default: m.CTASection })), {
-  loading: () => <div className="min-h-72 bg-gradient-to-b from-primary/5 to-primary/10 animate-pulse" />,
-  ssr: true,
-})
+import { PricingPreview } from "@/components/home/pricing-preview"
+import { TestimonialsPreview } from "@/components/home/testimonials-preview"
+import { CTASection } from "@/components/home/cta-section"
 
 export default function HomePage() {
   return (
     <>
-      {/* Above the fold - Critical */}
       <HeroSection />
       <AboutSection />
       <FeaturesSection />
       <StatsSection />
-
-      {/* Below the fold - Non-critical, loaded dynamically */}
-      <Suspense fallback={<div className="min-h-96 bg-muted animate-pulse" />}>
-        <PricingPreview />
-      </Suspense>
-
-      <Suspense fallback={<div className="min-h-80 bg-muted animate-pulse" />}>
-        <TestimonialsPreview />
-      </Suspense>
-
-      <Suspense fallback={<div className="min-h-72 bg-muted animate-pulse" />}>
-        <CTASection />
-      </Suspense>
+      <PricingPreview />
+      <TestimonialsPreview />
+      <CTASection />
     </>
   )
 }
