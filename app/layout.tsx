@@ -1,10 +1,5 @@
 import type { Metadata, Viewport } from "next"
 import { Noto_Sans_Arabic, Inter } from "next/font/google"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
-import { ErrorBoundary } from "@/components/error-boundary"
-import { generateOrganizationSchema, generateWebSiteSchema, generateCombinedSchema } from "@/lib/schema"
-import { generatePreconnectLinks } from "@/lib/prefetch-utils"
 import "./globals.css"
 import { ClientProviders } from "@/components/client-providers"
 
@@ -22,10 +17,12 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://quran-elhafez.com'),
-  title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
+  title: {
+    default: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
+    template: "%s | أكاديمية الحافظ المتميز",
+  },
   description:
-    "أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين مع معلمين مجازين",
+    "أكاديمية عالمية لتحفيظ القرآن الكريم وتعليم التجويد وتأسيس اللغة العربية اون لاين مع معلمين مجازين. حصص فردية، مرونة في المواعيد، أسعار مناسبة.",
   keywords: [
     "تحفيظ قران اون لاين",
     "تأسيس عربي",
@@ -41,19 +38,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "أكاديمية الحافظ المتميز" }],
   creator: "أكاديمية الحافظ المتميز",
-  alternates: {
-    languages: {
-      'ar': 'https://quran-elhafez.com',
-      'en': 'https://quran-elhafez.com?lang=en',
-      'fr': 'https://quran-elhafez.com?lang=fr',
-      'x-default': 'https://quran-elhafez.com',
-    },
-  },
   openGraph: {
     type: "website",
     locale: "ar_SA",
     alternateLocale: ["en_US", "fr_FR"],
-    url: "https://quran-elhafez.com",
+    url: "https://alhafiz-academy.com",
     siteName: "أكاديمية الحافظ المتميز اون لاين",
     title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
     description:
@@ -78,15 +67,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  other: {
-    // JSON-LD Schema for SEO rich snippets
-    'application/ld+json': JSON.stringify(
-      generateCombinedSchema(
-        generateOrganizationSchema(),
-        generateWebSiteSchema()
-      )
-    ),
-  },
 }
 
 export const viewport: Viewport = {
@@ -103,22 +83,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <head>
-        {/* Preconnect to critical external resources for faster loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://xtfyrskkoewanmkcfixw.supabase.co" />
-        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-        <link rel="dns-prefetch" href="https://img.youtube.com" />
-      </head>
       <body
         className={`${notoArabic.variable} ${inter.variable} font-sans antialiased`}
       >
-        <ErrorBoundary context="RootLayout">
-          <ClientProviders>{children}</ClientProviders>
-        </ErrorBoundary>
-        <Analytics />
-        <SpeedInsights />
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   )
