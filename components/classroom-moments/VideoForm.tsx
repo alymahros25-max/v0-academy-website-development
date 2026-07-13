@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { Save, Trash2, RotateCcw, AlertCircle } from 'lucide-react'
 import { useApiToast } from '@/hooks/use-api-toast'
 import { extractYouTubeId, isValidYouTubeUrl } from '@/lib/youtube-utils'
-import { useTranslation } from '@/lib/useTranslation'
+import { useI18n } from '@/lib/i18n'
 
 interface Video {
   id?: number
@@ -32,7 +32,7 @@ const CATEGORIES = ['تجويد', 'قرآن كريم', 'لغة عربية', 'ت�
 export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { showToast } = useApiToast()
-  const { t } = useTranslation()
+  const { t } = useI18n()
   const [youtubeIdError, setYoutubeIdError] = useState<string>('')
 
   const [formData, setFormData] = useState<Video>(
@@ -231,8 +231,8 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       {/* Titles */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            العنوان بالعربية *
+          <label className="block text-sm font-medium text-foreground mb-2">
+            {t('admin.titleAr')} *
           </label>
           <input
             type="text"
@@ -240,13 +240,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.title_ar}
             onChange={handleChange}
             placeholder="أدخل العنوان بالعربية"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            العنوان بالإنجليزية *
+          <label className="block text-sm font-medium text-foreground mb-2">
+            {t('admin.titleEn')} *
           </label>
           <input
             type="text"
@@ -254,13 +254,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.title_en}
             onChange={handleChange}
             placeholder="Enter title in English"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            العنوان بالفرنسية *
+          <label className="block text-sm font-medium text-foreground mb-2">
+            {t('admin.titleFr')} *
           </label>
           <input
             type="text"
@@ -268,7 +268,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.title_fr}
             onChange={handleChange}
             placeholder="Entrez le titre en français"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             required
           />
         </div>
@@ -277,8 +277,8 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       {/* Descriptions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            الوصف ب��لعربية
+          <label className="block text-sm font-medium text-foreground mb-2">
+            {t('admin.descriptionAr')}
           </label>
           <textarea
             name="description_ar"
@@ -286,12 +286,12 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             onChange={handleChange}
             placeholder="أدخل الوصف بالعربية"
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            الوصف بالإنجليزية
+          <label className="block text-sm font-medium text-foreground mb-2">
+            {t('admin.descriptionEn')}
           </label>
           <textarea
             name="description_en"
@@ -299,12 +299,12 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             onChange={handleChange}
             placeholder="Enter description in English"
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            الوصف بالفرنسية
+          <label className="block text-sm font-medium text-foreground mb-2">
+            {t('admin.descriptionFr')}
           </label>
           <textarea
             name="description_fr"
@@ -312,7 +312,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             onChange={handleChange}
             placeholder="Entrez la description en français"
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>
@@ -322,15 +322,15 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         type="button"
         onClick={autoTranslate}
         disabled={isLoading}
-        className="w-full px-4 py-2 bg-[#d4af37] text-[#1a4d2e] font-medium rounded-lg hover:bg-[#c0a030] disabled:opacity-50 transition-colors"
+        className="w-full px-4 py-2 bg-secondary text-secondary-foreground font-medium rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-colors"
       >
-        {isLoading ? 'جاري الترجمة...' : '🌐 ترجمة تلقائية من العربية'}
+        {isLoading ? t('classroom.translating') : '🌐 ' + t('classroom.autoTranslate')}
       </button>
 
       {/* Teacher Names */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             اسم المعلم بالعربية
           </label>
           <input
@@ -339,11 +339,11 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.teacher_name_ar}
             onChange={handleChange}
             placeholder="اسم المعلم"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Teacher Name (English)
           </label>
           <input
@@ -352,11 +352,11 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.teacher_name_en}
             onChange={handleChange}
             placeholder="Teacher name"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Nom de l&apos;enseignant (Français)
           </label>
           <input
@@ -365,21 +365,21 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.teacher_name_fr}
             onChange={handleChange}
             placeholder="Nom de l'enseignant"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>
 
       {/* Category */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2">
           الفئة
         </label>
         <select
           name="category"
           value={formData.category}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
+          className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
         >
           {CATEGORIES.map(cat => (
             <option key={cat} value={cat}>
@@ -394,19 +394,19 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#1a4d2e] text-white font-medium rounded-lg hover:bg-[#0f3620] disabled:opacity-50 transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/80 disabled:opacity-50 transition-colors"
         >
           <Save className="w-4 h-4" />
-          {isLoading ? 'جاري الحفظ...' : isEditing ? 'تحديث' : 'حفظ'}
+          {isLoading ? t('admin.loading') : isEditing ? t('admin.edit') : t('admin.save')}
         </button>
 
         <button
           type="button"
           onClick={handleReset}
-          className="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-muted text-muted-foreground font-medium rounded-lg hover:bg-muted/80 transition-colors flex items-center gap-2"
         >
           <RotateCcw className="w-4 h-4" />
-          إعادة تعيين
+          {t('admin.cancel')}
         </button>
       </div>
     </form>
