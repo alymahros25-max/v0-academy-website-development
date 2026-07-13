@@ -1,5 +1,4 @@
-"use client"
-
+import { Metadata } from 'next'
 import dynamic from "next/dynamic"
 import { HeroSection } from "@/components/home/hero-section"
 import { AboutSection } from "@/components/home/about-section"
@@ -7,43 +6,27 @@ import { FeaturesSection } from "@/components/home/features-section"
 import { StatsSection } from "@/components/home/stats-section"
 import { Suspense } from "react"
 
-// Heavy components loaded dynamically with SSR disabled for non-critical content
-const PricingPreview = dynamic(() => import("@/components/home/pricing-preview").then(m => ({ default: m.PricingPreview })), {
-  loading: () => <div className="min-h-96 bg-gradient-to-b from-muted/50 to-muted/25 animate-pulse" />,
-  ssr: true,
-})
+// SSG with 1-hour revalidation (ISR)
+export const revalidate = 3600
 
-const TestimonialsPreview = dynamic(() => import("@/components/home/testimonials-preview").then(m => ({ default: m.TestimonialsPreview })), {
-  loading: () => <div className="min-h-80 bg-gradient-to-b from-muted/50 to-muted/25 animate-pulse" />,
-  ssr: true,
-})
+export const metadata: Metadata = {
+  title: "أكاديمية الحافظ المتميز - تعليم القرآن الكريم والعربية أون لاين",
+  description: "أكاديمية متخصصة في تعليم القرآن الكريم وتأسيس اللغة العربية للناطقين بغيرها، بمعلمين محترفين وبرامج مميزة",
+  keywords: "تعليم القرآن، حفظ القرآن، تعليم عربي، تاجويد، معلمون",
+  openGraph: {
+    title: "أكاديمية الحافظ المتميز",
+    description: "تعليم القرآن الكريم والعربية أون لاين",
+    type: "website",
+    locale: "ar_SA",
+  },
+}
 
-const CTASection = dynamic(() => import("@/components/home/cta-section").then(m => ({ default: m.CTASection })), {
-  loading: () => <div className="min-h-72 bg-gradient-to-b from-primary/5 to-primary/10 animate-pulse" />,
+// Enable dynamic rendering for interactive sections while keeping static shell
+const HomePageClient = dynamic(() => import('./client').then(m => m.default), {
   ssr: true,
+  loading: () => <div className="min-h-screen bg-muted" />
 })
 
 export default function HomePage() {
-  return (
-    <>
-      {/* Above the fold - Critical */}
-      <HeroSection />
-      <AboutSection />
-      <FeaturesSection />
-      <StatsSection />
-
-      {/* Below the fold - Non-critical, loaded dynamically */}
-      <Suspense fallback={<div className="min-h-96 bg-muted animate-pulse" />}>
-        <PricingPreview />
-      </Suspense>
-
-      <Suspense fallback={<div className="min-h-80 bg-muted animate-pulse" />}>
-        <TestimonialsPreview />
-      </Suspense>
-
-      <Suspense fallback={<div className="min-h-72 bg-muted animate-pulse" />}>
-        <CTASection />
-      </Suspense>
-    </>
-  )
+  return <HomePageClient />
 }
