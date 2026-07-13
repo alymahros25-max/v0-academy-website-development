@@ -222,7 +222,7 @@ export default function AccountPage() {
                 disabled={loading}
                 className="w-full mt-6 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-bold transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? (locale === 'ar' ? 'جاري المعالجة...' : locale === 'fr' ? 'En cours...' : 'Processing...') : (isSignUp ? t("account.signup") : t("account.login"))}
+                {loading ? (locale === 'ar' ? 'جاري معالجة الدفع الرقمي ...' : locale === 'fr' ? 'En cours...' : 'Processing...') : (isSignUp ? t("account.signup") : t("account.login"))}
               </button>
 
               {/* Toggle Sign Up / Sign In */}

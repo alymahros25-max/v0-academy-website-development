@@ -128,8 +128,8 @@ export default function LibraryContent() {
         {/* Books Section */}
         <TabsContent value="books" className="space-y-6">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-foreground mb-2">الكتب الإسلامية والتعليمية</h2>
-            <p className="text-muted-foreground">مجموعة متنوعة من الكتب الموثوقة والمضمونة</p>
+            <h2 className="text-3xl font-bold text-foreground mb-2">المكتبة الرقمية الإسلامية والتعليمية</h2>
+            <p className="text-muted-foreground">مجموعة متنوعة من المكتبة الرقمية الموثوقة والمضمونة</p>
           </div>
           {books.length === 0 ? (
             <EmptyState message="لم تُضَف كتب حتى الآن" />
