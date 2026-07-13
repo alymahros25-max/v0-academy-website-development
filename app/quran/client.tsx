@@ -180,7 +180,7 @@ export default function QuranPageClient() {
                 </ul>
 
                 <button
-                  onClick={() => setSelectedProduct(`quran_${pkg.sessions}`)}
+                  onClick={() => setSelectedProduct(`quran-${pkg.sessions}-sessions`)}
                   className={`w-full py-3.5 rounded-xl font-bold text-center transition-all hover:-translate-y-0.5 hover:shadow-lg ${
                     pkg.popular
                       ? "bg-secondary text-secondary-foreground hover:brightness-110"

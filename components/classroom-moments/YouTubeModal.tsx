@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X } from 'lucide-react'
+import { X, FileVideo } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
@@ -14,11 +14,20 @@ interface YouTubeModalProps {
 
 export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalProps) {
   const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
 
   // Re-extract the ID here as a safety net: the prop might be a full URL
   // if the data mapping changes, or it might carry ?si= tracking params.
   const cleanId = extractYouTubeId(videoId) ?? videoId
-  const embedUrl = `https://www.youtube.com/embed/${cleanId}?rel=0&modestbranding=1`
+  // Use youtube-nocookie.com for better network compatibility in restricted environments
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1`
+  
+  // Validate video ID format
+  const isValidId = /^[a-zA-Z0-9_-]{11}$/.test(cleanId)
+  
+  if (!isValidId) {
+    console.error(`[YouTubeModal] Invalid video ID: ${cleanId}`)
+  }
 
   return (
     <AnimatePresence>
@@ -73,17 +82,36 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
                     </div>
                   )}
 
-                  {/* YouTube iframe — no sandbox attribute: it restricts the
-                      YouTube player API and causes playback errors in mobile browsers */}
-                  <iframe
-                    src={embedUrl}
-                    className="absolute inset-0 w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    onLoad={() => setIsLoading(false)}
-                    onError={() => setIsLoading(false)}
-                    title={title}
-                  />
+              {/* YouTube iframe with proper sandbox and error handling */}
+              {!hasError && isValidId ? (
+                <iframe
+                  key={`video-${cleanId}`}
+                  src={embedUrl}
+                  className="absolute inset-0 w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                  allowFullScreen
+                  loading="lazy"
+                  onLoad={() => {
+                    setIsLoading(false)
+                    setHasError(false)
+                    console.log(`[YouTubeModal] Video loaded successfully: ${cleanId}`)
+                  }}
+                  onError={() => {
+                    setIsLoading(false)
+                    setHasError(true)
+                    console.error(`[YouTubeModal] Failed to load video: ${cleanId}`)
+                  }}
+                  title={title}
+                />
+              ) : (
+                <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/80">
+                  <div className="text-center">
+                    <FileVideo className="w-16 h-16 text-red-500 mx-auto mb-3" />
+                    <p className="text-white font-medium">فشل في تحميل الفيديو</p>
+                    <p className="text-white/60 text-sm mt-1">معرّف الفيديو غير صحيح أو الفيديو غير متاح</p>
+                  </div>
+                </div>
+              )}
                 </div>
               </div>
 
