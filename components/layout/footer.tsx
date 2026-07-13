@@ -26,7 +26,6 @@ export function Footer() {
   const legalLinks = [
     { href: "/privacy", label: t("footer.privacy") },
     { href: "/terms", label: t("footer.terms") },
-    { href: "/refund-policy", label: t("footer.refund") },
   ]
 
   return (
@@ -166,32 +165,23 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Compliance Notice */}
-        <div className="mt-12 pt-6 border-t border-primary-foreground/10">
-          <p className="text-xs text-primary-foreground/50 leading-relaxed mb-6">
-            {locale === "ar"
-              ? "أكاديمية الحافظ المتميز هي منصة تعليم إلكترونية رقمية 100%. جميع البرامج التعليمية والدورات والمكتبة الرقمية والألعاب يتم تسليمها بالكامل عبر الإنترنت من خلال فصلنا الافتراضي المتكامل والمتصفح. لا نقدم أي منتجات مادية أو خدمات غير متصلة بالإنترنت."
-              : locale === "en"
-                ? "Al-Hafez Al-Motamayez is a 100% digital e-learning platform. All educational programs, courses, digital assets, and games are delivered entirely online via our integrated virtual classroom and browser. No physical goods or offline services are provided."
-                : "Al-Hafez Al-Motamayez est une plateforme d'apprentissage numérique à 100%. Tous les programmes éducatifs, les cours, les actifs numériques et les jeux sont livrés entièrement en ligne via notre salle de classe virtuelle intégrée. Aucun produit physique ou service hors ligne n'est fourni."}
+        {/* Bottom */}
+        <div className="mt-12 pt-6 border-t border-primary-foreground/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-primary-foreground/60">
+            &copy; {new Date().getFullYear()}{" "}
+            {locale === "ar" ? "أكاديمية الحافظ المتميز" : "Al-Hafiz Al-Mutamayez Academy"}.{" "}
+            {t("footer.rights")}
           </p>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-primary-foreground/10">
-            <p className="text-sm text-primary-foreground/60">
-              &copy; {new Date().getFullYear()}{" "}
-              {locale === "ar" ? "أكاديمية الحافظ المتميز" : "Al-Hafiz Al-Mutamayez Academy"}.{" "}
-              {t("footer.rights")}
-            </p>
-            <div className="flex items-center gap-4">
-              {legalLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-xs text-primary-foreground/50 hover:text-secondary transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+          <div className="flex items-center gap-4">
+            {legalLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-xs text-primary-foreground/50 hover:text-secondary transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

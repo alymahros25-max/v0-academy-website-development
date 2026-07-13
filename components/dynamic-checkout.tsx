@@ -42,28 +42,22 @@ export function DynamicCheckout({
         })
 
         if (!response.ok) {
-          // Fallback to Paddle if API fails
-          console.warn('[DynamicCheckout] Failed to fetch provider, using Paddle')
-          setProvider('paddle')
-          setLoading(false)
-          return
+          throw new Error('Failed to fetch payment provider')
         }
 
         const providers = await response.json()
         const activeProvider = providers.find((p: any) => p.is_active)
 
         if (!activeProvider) {
-          // Fallback to Paddle if no active provider configured
-          console.warn('[DynamicCheckout] No active provider in response, using Paddle')
-          setProvider('paddle')
-        } else {
-          setProvider(activeProvider.provider_name)
+          throw new Error('No active payment provider configured')
         }
+
+        setProvider(activeProvider.provider_name)
       } catch (err) {
-        // Fallback to Paddle on any error
         const errorMsg = err instanceof Error ? err.message : 'Failed to load payment provider'
-        console.warn('[Dynamic Checkout] Using Paddle as fallback:', errorMsg)
-        setProvider('paddle')
+        setError(errorMsg)
+        onError?.(errorMsg)
+        console.error('[Dynamic Checkout] Error:', err)
       } finally {
         setLoading(false)
       }
@@ -81,17 +75,7 @@ export function DynamicCheckout({
     )
   }
 
-  // Always default to Paddle if no provider selected
-  if (!provider) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">جاري التحضير...</span>
-      </div>
-    )
-  }
-
-  if (error && provider !== 'paddle') {
+  if (error) {
     return (
       <div className="bg-destructive/10 border border-destructive rounded-lg p-6 flex items-start gap-3">
         <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-1" />
