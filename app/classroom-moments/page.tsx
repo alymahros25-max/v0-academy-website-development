@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { createClient } from '@supabase/supabase-js'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
@@ -27,31 +28,30 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    // Use the internal API route which handles Supabase connection properly
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000'
-    
-    const response = await fetch(`${baseUrl}/api/classroom-videos`, {
-      next: { revalidate: 60, tags: ['classroom-videos'] },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    if (!response.ok) {
-      console.error(`[v0] classroom-moments: API returned status ${response.status}`)
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('[v0] classroom-moments: Missing Supabase public keys')
       return []
     }
 
-    const videos = await response.json()
+    const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-    if (!Array.isArray(videos)) {
-      console.error('[v0] classroom-moments: API response is not an array')
+    const { data: videos, error } = await supabase
+      .from('classroom_videos')
+      .select('*')
+      .eq('is_published', true)
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    if (error) {
+      console.error('[v0] classroom-moments: Supabase error:', error.message)
       return []
     }
 
-    return videos
+    return (videos ?? [])
       .map((video: any): VideoData => {
         const embedId: string =
           extractYouTubeId(video?.youtube_url ?? '') ??
@@ -69,7 +69,7 @@ async function getClassroomVideos(): Promise<VideoData[]> {
           youtube_embed_id: embedId,
           thumbnail_url:
             video?.thumbnail_url ||
-            `https://img.youtube.com/vi/${embedId}/hqdefault.jpg`,
+            `https://img.youtube.com/vi/${embedId}/sddefault.jpg`,
           category: video?.category ?? '',
           teacher_name_ar: video?.teacher_name_ar ?? '',
           teacher_name_en: video?.teacher_name_en ?? '',
