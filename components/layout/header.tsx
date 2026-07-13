@@ -26,8 +26,7 @@ export function Header() {
   const navLinks = [
     { href: "/", label: t("nav.home") },
     { href: "/about", label: t("nav.about") },
-    { href: "/quran", label: t("nav.quran") },
-    { href: "/arabic", label: t("nav.arabic") },
+    { href: "/pricing", label: locale === "ar" ? "الأسعار" : locale === "en" ? "Pricing" : "Tarifs" },
     { href: "/teachers", label: t("nav.teachers") },
     { href: "/reviews", label: t("nav.reviews") },
     { href: "/classroom-moments", label: locale === "ar" ? "لقطات من الحصص" : locale === "fr" ? "Moments de classe" : "Class Moments" },
