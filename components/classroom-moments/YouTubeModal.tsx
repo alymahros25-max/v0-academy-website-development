@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, FileVideo, AlertCircle } from 'lucide-react'
+import { X, FileVideo } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
@@ -14,167 +14,105 @@ interface YouTubeModalProps {
 
 export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalProps) {
   const [isLoading, setIsLoading] = useState(true)
-  const [hasError, setHasError] = useState(false)
-  const [loadAttempt, setLoadAttempt] = useState(0)
-  const [useNoCookie, setUseNoCookie] = useState(true)
 
-  // Re-extract the ID here as a safety net: the prop might be a full URL
-  // if the data mapping changes, or it might carry ?si= tracking params.
+  // استخراج الـ ID بشكل آمن وتنظيفه من أي بارامترات زيادة
   const cleanId = extractYouTubeId(videoId) ?? videoId
   
-  // Validate video ID format
+  // التحقق من أن الـ ID يتكون من 11 حرفاً (صيغة اليوتيوب الرسمية)
   const isValidId = /^[a-zA-Z0-9_-]{11}$/.test(cleanId)
   
-  // Primary embed URL (youtube-nocookie.com for better network compatibility in restricted environments)
-  const primaryEmbedUrl = `https://www.youtube-nocookie.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1&controls=1&autohide=0`
+  // رابط التضمين الرسمي والسريع والمباشر
+  const embedUrl = `https://www.youtube.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1&controls=1`
   
-  // Fallback URL (standard YouTube embed)
-  const fallbackEmbedUrl = `https://www.youtube.com/embed/${cleanId}?rel=0&modestbranding=1&playsinline=1&controls=1&autohide=0`
-  
-  // Choose which URL to use based on attempt
-  const embedUrl = useNoCookie ? primaryEmbedUrl : fallbackEmbedUrl
-  
-  // Reset loading state when modal opens
+  // إعادة تعيين حالة التحميل عند فتح المودال
   useEffect(() => {
     if (isOpen) {
       setIsLoading(true)
-      setHasError(false)
-      setLoadAttempt(0)
-      setUseNoCookie(true)
-      console.log(`[v0] YouTubeModal: Opening video modal for ID ${cleanId}`)
     }
-  }, [isOpen])
-  
-  useEffect(() => {
-    if (isOpen && isLoading && embedUrl) {
-      const timeout = setTimeout(() => {
-        if (isLoading) {
-          console.warn(`[v0] YouTubeModal: Timeout loading video from ${embedUrl}`)
-        }
-      }, 10000)
-      return () => clearTimeout(timeout)
-    }
-  }, [isOpen, isLoading, embedUrl])
-  
-  if (!isValidId) {
-    console.error(`[v0] YouTubeModal: Invalid video ID format: "${cleanId}" (expected 11 alphanumeric chars)`)
-  }
+  }, [isOpen, cleanId])
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* الخلفية المظلمة */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
             onClick={onClose}
           />
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.3, type: 'spring', bounce: 0.4 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onClick={onClose}
-          >
-            {/* Modal Content */}
+          {/* نافذة الفيديو المتمركزة */}
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-4 pointer-events-none">
             <motion.div
-              className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, type: 'spring', bounce: 0.3 }}
+              className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden pointer-events-auto"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-[#1a4d2e] to-[#2d7a4e] px-6 py-4">
-                <h2 className="text-lg font-bold text-white truncate">{title}</h2>
+              {/* الهيدر أو شريط العنوان */}
+              <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-[#1a4d2e] to-[#2d7a4e] px-4 py-3 sm:px-6">
+                <h2 className="text-sm sm:text-base font-bold text-white truncate" dir="rtl">{title}</h2>
                 <button
                   onClick={onClose}
-                  className="flex-shrink-0 text-white/80 hover:text-white transition-colors"
-                  aria-label="Close modal"
+                  className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  aria-label="إغلاق"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
-              {/* Video Container */}
-              <div className="relative w-full bg-black">
-                <div className="aspect-video relative overflow-hidden">
-                  {/* YouTube iframe with proper sandbox and error handling */}
-                  {!hasError && isValidId ? (
-                    <>
-                      <iframe
-                        key={`video-${cleanId}-${useNoCookie ? 'nocookie' : 'standard'}`}
-                        src={embedUrl}
-                        className="absolute inset-0 w-full h-full border-0"
-                        sandbox="allow-same-origin allow-scripts allow-popups allow-presentation allow-popups-to-escape-sandbox"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                        allowFullScreen
-                        loading="eager"
-                        onLoad={() => {
-                          setIsLoading(false)
-                          setHasError(false)
-                          console.log(`[v0] YouTube video loaded successfully: ${cleanId}`)
-                        }}
-                        onError={() => {
-                          console.warn(`[v0] iframe onError triggered for: ${cleanId}`)
-                          if (useNoCookie && loadAttempt < 1) {
-                            // Try fallback (standard YouTube)
-                            setUseNoCookie(false)
-                            setLoadAttempt(prev => prev + 1)
-                            setIsLoading(true)
-                          } else {
-                            setIsLoading(false)
-                            setHasError(true)
-                            console.error(`[v0] Failed to load video after all attempts: ${cleanId}`)
-                          }
-                        }}
-                        title={title}
-                      />
-                      
-                      {/* Loading overlay */}
-                      {isLoading && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
-                          <div className="flex flex-col items-center gap-3">
-                            <div className="w-10 h-10 border-4 border-[#d4af37]/30 border-t-[#d4af37] rounded-full animate-spin" />
-                            <p className="text-sm text-white/70">جاري تحميل الفيديو...</p>
-                          </div>
+              {/* حاوية الفيديو */}
+              <div className="relative w-full bg-black aspect-video">
+                {isValidId ? (
+                  <>
+                    <iframe
+                      src={embedUrl}
+                      className="absolute inset-0 w-full h-full border-0 z-10"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                      allowFullScreen
+                      loading="eager"
+                      onLoad={() => setIsLoading(false)}
+                      title={title}
+                    />
+                    
+                    {/* شاشة التحميل الذكية المؤقتة */}
+                    {isLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black z-20">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="w-10 h-10 border-4 border-[#d4af37]/35 border-t-[#d4af37] rounded-full animate-spin" />
+                          <p className="text-sm text-white/70">جاري تحميل الفيديو...</p>
                         </div>
-                      )}
-                    </>
-                  ) : (
-                <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/80">
-                  <div className="text-center px-4">
-                    <FileVideo className="w-16 h-16 text-red-500 mx-auto mb-3" />
-                    <p className="text-white font-medium mb-2">فشل في تحميل الفيديو</p>
-                    {!isValidId ? (
-                      <>
-                        <p className="text-white/60 text-sm mb-3">معرّف الفيديو غير صحيح</p>
-                        <p className="text-white/50 text-xs font-mono">{cleanId}</p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-white/60 text-sm mb-3">الفيديو غير متاح أو الاتصال بطيء</p>
-                        <p className="text-white/50 text-xs">يرجى المحاولة لاحقاً</p>
-                      </>
+                      </div>
                     )}
+                  </>
+                ) : (
+                  /* في حال كان الآيدي غير صحيح */
+                  <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-zinc-900">
+                    <div className="text-center px-4">
+                      <FileVideo className="w-14 h-14 text-red-500 mx-auto mb-3" />
+                      <p className="text-white font-medium text-sm sm:text-base mb-1">عذراً، لا يمكن تشغيل هذا الفيديو</p>
+                      <p className="text-white/50 text-xs font-mono">ID غير صالح: {cleanId}</p>
+                    </div>
                   </div>
-                </div>
-              )}
-                </div>
+                )}
               </div>
 
-              {/* Footer with info */}
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <p className="text-sm text-gray-600 text-center">
-                  اضغط خارج النافذة للإغلاق أو استخدم زر الإغلاق (X)
-                </p>
+              {/* الفوتر */}
+              <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 text-center">
+                <button 
+                  onClick={onClose}
+                  className="text-xs sm:text-sm text-gray-500 hover:text-gray-800 font-medium"
+                >
+                  إغلاق النافذة
+                </button>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
