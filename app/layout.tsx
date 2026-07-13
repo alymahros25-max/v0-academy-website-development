@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Noto_Sans_Arabic, Inter } from "next/font/google"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 import "./globals.css"
 import { ClientProviders } from "@/components/client-providers"
 
@@ -38,11 +40,19 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "أكاديمية الحافظ المتميز" }],
   creator: "أكاديمية الحافظ المتميز",
+  alternates: {
+    languages: {
+      'ar': 'https://quran-elhafez.com',
+      'en': 'https://quran-elhafez.com?lang=en',
+      'fr': 'https://quran-elhafez.com?lang=fr',
+      'x-default': 'https://quran-elhafez.com',
+    },
+  },
   openGraph: {
     type: "website",
     locale: "ar_SA",
     alternateLocale: ["en_US", "fr_FR"],
-    url: "https://alhafiz-academy.com",
+    url: "https://quran-elhafez.com",
     siteName: "أكاديمية الحافظ المتميز اون لاين",
     title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
     description:
@@ -87,6 +97,8 @@ export default function RootLayout({
         className={`${notoArabic.variable} ${inter.variable} font-sans antialiased`}
       >
         <ClientProviders>{children}</ClientProviders>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

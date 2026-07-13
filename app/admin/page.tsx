@@ -5,13 +5,20 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon
+  Menu, XIcon, Palette, FileText, Lock, Film, Library
 } from "lucide-react"
+import dynamic from "next/dynamic"
+
+const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
+  ssr: false,
+  loading: () => <div className="text-center py-8">جاري تحميل النموذج...</div>
+})
 import useSWR, { mutate as globalMutate } from "swr"
+import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -53,7 +60,20 @@ export default function AdminDashboard() {
     { id: "teachers", label: "المعلمين", icon: Users },
     { id: "reviews", label: "آراء الطلاب", icon: Star },
     { id: "messages", label: "الرسائل", icon: MessageSquare },
+    
+    // Phase 2-3 New Features
+    { id: "cms", label: "إدارة المحتوى", icon: BookOpen },
+    { id: "theme", label: "المظهر والمعاينة", icon: Palette },
+    { id: "pages-builder", label: "منشئ الصفحات", icon: FileText },
+    { id: "users", label: "المستخدمين والصلاحيات", icon: Lock },
+    { id: "classroom-videos", label: "لقطات من الحصص", icon: Film },
+    { id: "digital-library", label: "المكتبة الرقمية", icon: Library },
+    
+    // Legacy Features
+    { id: "pages", label: "الصفحات القديمة", icon: BookOpen },
+    { id: "zapier", label: "Zapier (مقالات)", icon: Mail },
     { id: "settings", label: "الإعدادات", icon: Settings },
+    { id: "seo-guide", label: "نشر Google", icon: Mail },
   ]
 
   return (
@@ -126,7 +146,7 @@ export default function AdminDashboard() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground hidden sm:inline">enamel311@gmail.com</span>
+            <span className="text-xs text-muted-foreground hidden sm:inline">alymahros25@gmail.com</span>
             <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
               م
             </div>
@@ -140,7 +160,18 @@ export default function AdminDashboard() {
           {activeTab === "teachers" && <TeachersTab />}
           {activeTab === "reviews" && <ReviewsTab />}
           {activeTab === "messages" && <MessagesTab />}
+          {activeTab === "pages" && <PagesTab />}
+          {activeTab === "zapier" && <ZapierTab />}
           {activeTab === "settings" && <SettingsTab />}
+          {activeTab === "seo-guide" && <SEOGuideTab />}
+          
+          {/* Phase 2-3 New Content Management Routes */}
+          {activeTab === "cms" && <CMSManagementTab />}
+          {activeTab === "theme" && <ThemeCustomizerTab />}
+          {activeTab === "pages-builder" && <PagesBuilderTab />}
+          {activeTab === "users" && <UsersManagementTab />}
+          {activeTab === "classroom-videos" && <ClassroomVideosTab />}
+          {activeTab === "digital-library" && <DigitalLibraryTab />}
         </div>
       </main>
     </div>
@@ -185,27 +216,53 @@ function DashboardTab() {
 
 // Packages Tab
 function PackagesTab() {
-  const { data: packages, isLoading } = useSWR("/api/admin/data?type=packages", fetcher)
+  const { data: packages, isLoading, error } = useSWR("/api/admin/data?type=packages", fetcher, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 60000 
+  })
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editData, setEditData] = useState<Record<string, unknown>>({})
+  const [message, setMessage] = useState("")
 
   const handleDelete = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذه الباقة؟")) return
-    await fetch(`/api/admin/data?type=packages&id=${id}`, { method: "DELETE" })
-    globalMutate("/api/admin/data?type=packages")
+    try {
+      const res = await fetch(`/api/admin/data?type=packages&id=${id}`, { method: "DELETE" })
+      if (res.ok) {
+        setMessage("تم حذف الباقة بنجاح")
+        globalMutate("/api/admin/data?type=packages")
+      }
+    } catch (err) {
+      console.error("Delete error:", err)
+      setMessage("خطأ في الحذف")
+    }
   }
 
   const handleSave = async (id: string) => {
-    await fetch("/api/admin/data", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "packages", id, data: editData }),
-    })
-    setEditingId(null)
-    globalMutate("/api/admin/data?type=packages")
+    try {
+      setMessage("جاري الحفظ...")
+      
+      const res = await fetch("/api/admin/data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "packages", id, data: editData }),
+      })
+      if (res.ok) {
+        setMessage("تم الحفظ بنجاح")
+        setEditingId(null)
+        globalMutate("/api/admin/data?type=packages")
+      } else {
+        setMessage("خطأ في الحفظ")
+      }
+    } catch (err) {
+      console.error("Save error:", err)
+      setMessage("خطأ في الحفظ")
+    }
   }
 
-  if (isLoading) return <LoadingState />
+  if (loading) return <LoadingState />
+  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (!packages || !Array.isArray(packages) || packages.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
 
   return (
     <div>
@@ -213,81 +270,90 @@ function PackagesTab() {
         <h2 className="text-lg font-bold text-foreground">إدارة الباقات</h2>
       </div>
 
+      {message && (
+        <div className="mb-4 p-3 rounded-lg bg-green-500/10 text-green-600 text-sm">
+          {message}
+        </div>
+      )}
+
       <div className="grid gap-4">
-        {packages?.map((pkg: { id: string; type: string; sessions: number; price: number; popular: boolean }) => (
-          <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
-            {editingId === pkg.id ? (
-              <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-xs text-muted-foreground mb-1 block">عدد الحصص</label>
-                    <input
-                      type="number"
-                      value={(editData.sessions as number) ?? pkg.sessions}
-                      onChange={(e) => setEditData({...editData, sessions: parseInt(e.target.value)})}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
-                    />
+        {Array.isArray(packages) && packages.map((pkg: { id?: string; type?: string; sessions?: number; price?: number; popular?: boolean } | null) => {
+          if (!pkg?.id) return null
+          return (
+            <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
+              {editingId === pkg.id ? (
+                <div className="flex flex-col gap-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">عدد الحصص</label>
+                      <input
+                        type="number"
+                        value={(editData.sessions as number) ?? pkg.sessions}
+                        onChange={(e) => setEditData({...editData, sessions: parseInt(e.target.value)})}
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">السعر ($)</label>
+                      <input
+                        type="number"
+                        value={(editData.price as number) ?? pkg.price}
+                        onChange={(e) => setEditData({...editData, price: parseInt(e.target.value)})}
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-xs text-muted-foreground mb-1 block">السعر ($)</label>
-                    <input
-                      type="number"
-                      value={(editData.price as number) ?? pkg.price}
-                      onChange={(e) => setEditData({...editData, price: parseInt(e.target.value)})}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
-                    />
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs text-muted-foreground">الأكثر طلباً:</label>
+                    <button
+                      onClick={() => setEditData({...editData, popular: !(editData.popular ?? pkg.popular)})}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold ${(editData.popular ?? pkg.popular) ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"}`}
+                    >
+                      {(editData.popular ?? pkg.popular) ? "نعم" : "لا"}
+                    </button>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <label className="text-xs text-muted-foreground">الأكثر طلباً:</label>
-                  <button
-                    onClick={() => setEditData({...editData, popular: !(editData.popular ?? pkg.popular)})}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold ${(editData.popular ?? pkg.popular) ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"}`}
-                  >
-                    {(editData.popular ?? pkg.popular) ? "نعم" : "لا"}
-                  </button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => handleSave(pkg.id)} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
-                    <Check className="w-4 h-4" /> حفظ
-                  </button>
-                  <button onClick={() => setEditingId(null)} className="flex items-center gap-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">
-                    <X className="w-4 h-4" /> إلغاء
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${pkg.type === "quran" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"}`}>
-                    <Package className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-foreground">
-                      {pkg.type === "quran" ? "قرآن" : "عربي"} - {pkg.sessions} حصص
-                      {pkg.popular && <span className="ms-2 text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">الأكثر طلباً</span>}
-                    </p>
-                    <p className="text-sm text-muted-foreground">${pkg.price} شهرياً</p>
+                  <div className="flex items-center gap-2">
+                    <button onClick={() => handleSave(pkg.id)} className="flex items-center gap-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">
+                      <Check className="w-4 h-4" /> حفظ
+                    </button>
+                    <button onClick={() => setEditingId(null)} className="flex items-center gap-1 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">
+                      <X className="w-4 h-4" /> إلغاء
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => { setEditingId(pkg.id); setEditData(pkg) }}
-                    className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(pkg.id)}
-                    className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-100 text-emerald-700">
+                      <Package className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground">
+                        {pkg?.type === "quran" ? "قرآن" : "عربي"} - {pkg?.sessions} حصص
+                        {pkg?.popular && <span className="ms-2 text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">الأكثر طلباً</span>}
+                      </p>
+                      <p className="text-sm text-muted-foreground">${pkg?.price} شهرياً</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => { setEditingId(pkg.id); setEditData(pkg) }}
+                      className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => pkg.id && handleDelete(pkg.id)}
+                      className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -295,29 +361,78 @@ function PackagesTab() {
 
 // Teachers Tab
 function TeachersTab() {
-  const { data: teachers, isLoading } = useSWR("/api/admin/data?type=teachers", fetcher)
+  const { data: teachers, isLoading, error } = useSWR("/api/admin/data?type=teachers", fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000
+  })
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editData, setEditData] = useState<Record<string, unknown>>({})
+  const [message, setMessage] = useState("")
   const [showForm, setShowForm] = useState(false)
-  const [newTeacher, setNewTeacher] = useState({ name: { ar: "", en: "", fr: "" }, specialty: { ar: "", en: "", fr: "" }, experience: "", image: "/images/teacher-quran.jpg", active: true })
+  const [newTeacher, setNewTeacher] = useState({
+    name: { ar: "", en: "" },
+    specialty: { ar: "", en: "" },
+    experience: ""
+  })
 
   const handleAdd = async () => {
-    if (!newTeacher.name.ar) return
-    await fetch("/api/admin/data", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "teachers", data: newTeacher }),
-    })
-    setShowForm(false)
-    setNewTeacher({ name: { ar: "", en: "", fr: "" }, specialty: { ar: "", en: "", fr: "" }, experience: "", image: "/images/teacher-quran.jpg", active: true })
-    globalMutate("/api/admin/data?type=teachers")
+    try {
+      setMessage("جاري الإضافة...")
+      const res = await fetch("/api/admin/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "teachers", data: newTeacher }),
+      })
+      if (res.ok) {
+        setMessage("تم إضافة المعلم بنجاح")
+        setShowForm(false)
+        setNewTeacher({ name: { ar: "", en: "" }, specialty: { ar: "", en: "" }, experience: "" })
+        globalMutate("/api/admin/data?type=teachers")
+      }
+    } catch (err) {
+      console.error("Add error:", err)
+      setMessage("خطأ في الإضافة")
+    }
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm("هل أنت متأكد من حذف هذا المعلم؟")) return
-    await fetch(`/api/admin/data?type=teachers&id=${id}`, { method: "DELETE" })
-    globalMutate("/api/admin/data?type=teachers")
+    if (!confirm("هل أنت متأكد من حذف المعلم؟")) return
+    try {
+      const res = await fetch(`/api/admin/data?type=teachers&id=${id}`, { method: "DELETE" })
+      if (res.ok) {
+        setMessage("تم حذف المعلم بنجاح")
+        globalMutate("/api/admin/data?type=teachers")
+      }
+    } catch (err) {
+      console.error("Delete error:", err)
+    }
+  }
+
+  const handleSave = async (id: string) => {
+    try {
+      setMessage("جاري الحفظ...")
+      
+      const res = await fetch("/api/admin/data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "teachers", id, data: editData }),
+      })
+      if (res.ok) {
+        setMessage("تم الحفظ بنجاح")
+        setEditingId(null)
+        globalMutate("/api/admin/data?type=teachers")
+      } else {
+        setMessage("خطأ في الحفظ")
+      }
+    } catch (err) {
+      console.error("Save error:", err)
+      setMessage("خطأ في الحفظ")
+    }
   }
 
   if (isLoading) return <LoadingState />
+  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (!teachers || !Array.isArray(teachers) || teachers.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
 
   return (
     <div>
@@ -332,6 +447,12 @@ function TeachersTab() {
         </button>
       </div>
 
+      {message && (
+        <div className="mb-4 p-3 rounded-lg bg-green-500/10 text-green-600 text-sm">
+          {message}
+        </div>
+      )}
+
       {showForm && (
         <div className="bg-card rounded-2xl border border-border p-5 mb-6">
           <h3 className="font-bold text-foreground mb-4">معلم جديد</h3>
@@ -339,8 +460,8 @@ function TeachersTab() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">الاسم (عربي)</label>
               <input
-                value={newTeacher.name.ar}
-                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher.name, ar: e.target.value}})}
+                value={newTeacher?.name?.ar ?? ''}
+                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, ar: e.target.value}})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="الاسم بالعربية"
               />
@@ -348,8 +469,8 @@ function TeachersTab() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">الاسم (إنجليزي)</label>
               <input
-                value={newTeacher.name.en}
-                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher.name, en: e.target.value}})}
+                value={newTeacher?.name?.en ?? ''}
+                onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, en: e.target.value}})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="Name in English"
               />
@@ -357,8 +478,8 @@ function TeachersTab() {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">التخصص (عربي)</label>
               <input
-                value={newTeacher.specialty.ar}
-                onChange={(e) => setNewTeacher({...newTeacher, specialty: {...newTeacher.specialty, ar: e.target.value}})}
+                value={newTeacher?.specialty?.ar ?? ''}
+                onChange={(e) => setNewTeacher({...newTeacher, specialty: {...newTeacher?.specialty || {}, ar: e.target.value}})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="التخصص"
               />
@@ -367,7 +488,7 @@ function TeachersTab() {
               <label className="text-xs text-muted-foreground mb-1 block">سنوات الخبرة</label>
               <input
                 type="number"
-                value={newTeacher.experience}
+                value={newTeacher?.experience ?? ''}
                 onChange={(e) => setNewTeacher({...newTeacher, experience: e.target.value})}
                 className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                 placeholder="10"
@@ -386,27 +507,30 @@ function TeachersTab() {
       )}
 
       <div className="grid gap-4">
-        {teachers?.map((teacher: { id: string; name: Record<string, string>; specialty: Record<string, string>; experience: string; active: boolean }) => (
-          <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-primary" />
+        {Array.isArray(teachers) && teachers.map((teacher: { id?: string; name?: Record<string, string>; specialty?: Record<string, string>; experience?: string; active?: boolean } | null) => {
+          if (!teacher?.id) return null
+          return (
+            <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدون اسم'}</p>
+                  <p className="text-sm text-muted-foreground">{teacher?.specialty?.ar || 'بدون تخصص'} - {teacher?.experience || '0'} سنة خبرة</p>
+                </div>
               </div>
-              <div>
-                <p className="font-bold text-foreground">{teacher.name.ar}</p>
-                <p className="text-sm text-muted-foreground">{teacher.specialty.ar} - {teacher.experience} سنة خبرة</p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => teacher?.id && handleDelete(teacher.id)}
+                  className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleDelete(teacher.id)}
-                className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
@@ -414,24 +538,14 @@ function TeachersTab() {
 
 // Reviews Tab
 function ReviewsTab() {
-  const { data: reviews, isLoading } = useSWR("/api/admin/data?type=reviews", fetcher)
-
-  const handleToggle = async (id: string, active: boolean) => {
-    await fetch("/api/admin/data", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "reviews", id, data: { active: !active } }),
-    })
-    globalMutate("/api/admin/data?type=reviews")
-  }
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("هل أنت متأكد؟")) return
-    await fetch(`/api/admin/data?type=reviews&id=${id}`, { method: "DELETE" })
-    globalMutate("/api/admin/data?type=reviews")
-  }
+  const { data: reviews, isLoading, error } = useSWR("/api/admin/data?type=reviews", fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000
+  })
 
   if (isLoading) return <LoadingState />
+  if (error) return <div className="text-red-500 p-4">خطأ في تحميل البيانات</div>
+  if (!reviews || reviews.length === 0) return <div className="p-4 text-muted-foreground">لا توجد آراء</div>
 
   return (
     <div>
@@ -573,7 +687,7 @@ function SettingsTab() {
           disabled={saving}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold disabled:opacity-50"
         >
-          {saving ? "جاري الحفظ..." : saved ? "تم الحفظ" : "حفظ التغييرات"}
+          {saving ? "جاري الحفظ..." : saved ? "تم الحفظ" : "حفظ التغ��يرات"}
         </button>
       </div>
 
@@ -651,11 +765,594 @@ function SettingsTab() {
   )
 }
 
+// Pages Tab - للتحكم في جميع صفحات الموقع
+function PagesTab() {
+  const pages = [
+    { name: "الصفحة الرئيسية", path: "/", description: "الصفحة الرئيسية للموقع" },
+    { name: "من نحن", path: "/about", description: "معلومات عن الأكاديمية" },
+    { name: "القرآن الكريم", path: "/quran", description: "باقات تحفيظ القرآن" },
+    { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
+    { name: "المعلمين", path: "/teachers", description: "قائمة المعلمين المجازين" },
+    { name: "آراء الطلاب", path: "/reviews", description: "تقييمات وآراء الطلاب" },
+    { name: "المكتبة", path: "/library", description: "المكتبة الرقمية" },
+    { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
+    { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
+    { name: "المدونة", path: "/blog", description: "مقالات وإرشادات" },
+    { name: "اتصل بنا", path: "/contact", description: "نموذج التواصل" },
+    { name: "حسابي", path: "/account", description: "تسجيل الحساب" },
+    { name: "الخصوصية", path: "/privacy", description: "سياسة الخصوصية" },
+    { name: "الشروط والأحكام", path: "/terms", description: "شروط الاستخدام" },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h2 className="text-2xl font-bold text-foreground mb-4">إدارة الصفحات</h2>
+        <p className="text-sm text-muted-foreground mb-6">اضغط على أي صفحة لفتحها وتحريرها</p>
+        
+        <div className="grid sm:grid-cols-2 gap-4">
+          {pages.map((page, idx) => (
+            <a
+              key={idx}
+              href={page.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col gap-2 p-4 rounded-xl border border-border hover:border-primary hover:bg-primary/5 transition-all cursor-pointer"
+            >
+              <p className="font-medium text-foreground flex items-center justify-between">
+                {page.name}
+                <span className="text-xs text-primary">→</span>
+              </p>
+              <p className="text-xs text-muted-foreground">{page.description}</p>
+              <p className="text-[10px] text-muted-foreground/50 font-mono">{page.path}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// SEO Guide Tab
+function SEOGuideTab() {
+  const siteUrl = "https://quran-elhafez.com"
+  
+  const steps = [
+    {
+      title: "1. التحقق من ملفات SEO الأساسية",
+      items: [
+        { label: "✓ Sitemap", desc: "متوفر على /sitemap.xml" },
+        { label: "✓ Robots.txt", desc: "متوفر على /robots.txt" },
+        { label: "✓ Meta Tags", desc: "محسّنة في جميع الصفحات" },
+      ]
+    },
+    {
+      title: "2. إنشاء Google Search Console",
+      items: [
+        { label: "الخطوة 1", desc: "اذهب إلى https://search.google.com/search-console" },
+        { label: "الخطوة 2", desc: "اختر 'Property' > 'Add property'" },
+        { label: "الخطوة 3", desc: "أدخل URL الموقع" },
+      ]
+    },
+    {
+      title: "3. إرسال Sitemap إلى Google",
+      items: [
+        { label: "الخطوة 1", desc: "في Search Console، اذهب إلى Sitemaps" },
+        { label: "الخطوة 2", desc: `أدخل: ${siteUrl}/sitemap.xml` },
+        { label: "الخطوة 3", desc: "اضغط 'Submit'" },
+      ]
+    },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-card rounded-2xl border border-border p-6 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <h2 className="text-2xl font-bold text-foreground mb-2">نشر الموقع على Google</h2>
+        <p className="text-sm text-muted-foreground">دليل شامل لتسجيل وتفهرس الموقع</p>
+      </div>
+
+      {steps.map((step, idx) => (
+        <div key={idx} className="bg-card rounded-2xl border border-border p-6">
+          <h3 className="font-bold text-lg text-foreground mb-4">{step.title}</h3>
+          <div className="space-y-3">
+            {step.items.map((item, i) => (
+              <div key={i} className="flex gap-3">
+                <div className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-foreground">{item.label}</p>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Zapier Integration Tab
+function ZapierTab() {
+  const [apiKey, setApiKey] = useState('')
+  const [showKey, setShowKey] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const apiEndpoint = 'https://quran-elhafez.com/api/zapier/publish-article'
+  const defaultApiKey = process.env.NEXT_PUBLIC_ZAPIER_API_KEY || 'your-secret-key-here'
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl border border-primary/20 p-8">
+        <h2 className="text-2xl font-bold text-foreground mb-2">ربط Zapier مع الموقع</h2>
+        <p className="text-muted-foreground">نشر المقالات تلقائياً من Google Docs، Notion، أو Airtable</p>
+      </div>
+
+      {/* API Endpoint */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">API Endpoint</h3>
+        <div className="flex items-center gap-2 p-4 bg-muted rounded-lg font-mono text-sm">
+          <span className="flex-1 text-foreground break-all">{apiEndpoint}</span>
+          <button
+            onClick={() => copyToClipboard(apiEndpoint)}
+            className="px-3 py-2 bg-primary text-primary-foreground rounded text-xs font-medium hover:opacity-90"
+          >
+            {copied ? '✓ تم' : 'نسخ'}
+          </button>
+        </div>
+      </div>
+
+      {/* API Key */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">مفتاح API</h3>
+        <div className="space-y-4">
+          <p className="text-sm text-muted-foreground">استخدم هذا المفتاح في headers الـ Zapier</p>
+          <div className="flex items-center gap-2 p-4 bg-muted rounded-lg font-mono text-sm">
+            <span className="flex-1">
+              {showKey ? 'your-secret-key-here' : '••••••••••••••••'}
+            </span>
+            <button
+              onClick={() => setShowKey(!showKey)}
+              className="p-2 text-muted-foreground hover:text-foreground"
+            >
+              {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+            <button
+              onClick={() => copyToClipboard('your-secret-key-here')}
+              className="px-3 py-2 bg-primary text-primary-foreground rounded text-xs font-medium hover:opacity-90"
+            >
+              {copied ? '✓ تم' : 'نسخ'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Instructions */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">خطوات الربط</h3>
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">1</div>
+            <div>
+              <p className="font-medium text-foreground">افتح Zapier واختر Create Zap</p>
+              <p className="text-sm text-muted-foreground">https://zapier.com/app/home</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">2</div>
+            <div>
+              <p className="font-medium text-foreground">اختر Trigger (Google Docs / Notion / Airtable)</p>
+              <p className="text-sm text-muted-foreground">الحدث الذي يشغل النشر</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">3</div>
+            <div>
+              <p className="font-medium text-foreground">اختر Action: Webhooks by Zapier</p>
+              <p className="text-sm text-muted-foreground">اختر POST من الخيارات</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">4</div>
+            <div>
+              <p className="font-medium text-foreground">أدخل البيانات أعلاه</p>
+              <p className="text-sm text-muted-foreground">URL + API Key + Body JSON</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Example Body */}
+      <div className="bg-card rounded-2xl border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">مثال JSON Body</h3>
+        <pre className="bg-muted p-4 rounded-lg text-xs overflow-auto text-foreground font-mono">
+{`{
+  "slug": "article-slug",
+  "title": {
+    "ar": "عنوان المقالة",
+    "en": "Article Title",
+    "fr": "Titre de l'article"
+  },
+  "description": {
+    "ar": "وصف المقالة",
+    "en": "Description",
+    "fr": "Description"
+  },
+  "content": {
+    "ar": "<h2>محتوى المقالة</h2>",
+    "en": "<h2>Article Content</h2>",
+    "fr": "<h2>Contenu</h2>"
+  },
+  "category": "تحفيظ القرآن",
+  "image": "https://example.com/image.jpg"
+}`}
+        </pre>
+      </div>
+
+      {/* Documentation Link */}
+      <div className="bg-card rounded-2xl border border-border p-6 text-center">
+        <a
+          href="/ZAPIER_SETUP.md"
+          target="_blank"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90"
+        >
+          📖 دليل كامل لـ Zapier
+          <ChevronDown className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  )
+}
+
+// Phase 3: CMS Management Tab
+function CMSManagementTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">إدارة المحتوى</h2>
+        <p className="text-sm text-muted-foreground">أضف وحرر محتوى الموقع بسهولة مع الترجمة التلقائية بزر واحد</p>
+      </div>
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل إدارة المحتوى...</p>
+          <a 
+            href="/admin/cms" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Phase 3: Theme Customizer Tab
+function ThemeCustomizerTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">المظهر والمعاينة الحية</h2>
+        <p className="text-sm text-muted-foreground">خصص ألوان الموقع والخطوط والأدوات مع معاينة حية فوراً</p>
+      </div>
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل مخصص المظهر...</p>
+          <a 
+            href="/admin/theme" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Phase 3: Pages Builder Tab
+function PagesBuilderTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">منشئ الصفحات</h2>
+        <p className="text-sm text-muted-foreground">أنشئ صفحات جديدة باستخدام نماذج احترافية مع دعم اللغات الثلاث</p>
+      </div>
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل منشئ الصفحات...</p>
+          <a 
+            href="/admin/pages" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Phase 3: Users & Permissions Tab
+function UsersManagementTab() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return <LoadingState />
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-2">المستخدمين والصلاحيات</h2>
+        <p className="text-sm text-muted-foreground">أدر المستخدمين والأدوار والصلاحيات بنظام RBAC متقدم</p>
+      </div>
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-border p-4 min-h-[600px]">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">جاري تحميل إدارة المستخدمين...</p>
+          <a 
+            href="/admin/users" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+          >
+            فتح في نافذة جديدة →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Classroom Videos Management Tab
+function ClassroomVideosTab() {
+  const [showForm, setShowForm] = useState(false)
+  const { data: videos, isLoading, error } = useSWR("/api/cms/classroom-videos?published=false", fetcher, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 60000 
+  })
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">لقطات من الحصص</h2>
+          <p className="text-sm text-muted-foreground">إدارة فيديوهات الحصص والمحتوى الترويجي</p>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+        >
+          <Plus className="w-4 h-4" />
+          {showForm ? 'إغلاق النموذج' : 'إضافة فيديو جديد'}
+        </button>
+      </div>
+
+      {/* Form */}
+      {showForm && (
+        <div className="bg-card rounded-lg border border-border p-6">
+          <VideoForm onSuccess={() => {
+            setShowForm(false)
+            globalMutate("/api/cms/classroom-videos?published=false")
+          }} />
+        </div>
+      )}
+
+      {/* Videos List */}
+      <div className="bg-card rounded-lg border border-border p-6">
+        {isLoading ? (
+          <LoadingState />
+        ) : error ? (
+          <div className="text-center py-8 text-red-600">
+            <p>خطأ في تحميل الفيديوهات</p>
+          </div>
+        ) : !videos || videos.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">لم يتم إضافة أي فيديوهات حتى الآن</p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+            >
+              أضف أول فيديو الآن
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {videos.map((video: any) => (
+              <ClassroomVideoItem key={video.id} video={video} onUpdate={() => globalMutate("/api/cms/classroom-videos?published=false")} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Classroom Video Item Component
+function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => void }) {
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDelete = async () => {
+    if (!confirm('هل أنت متأكد من حذف هذا الفيديو؟')) return
+    
+    setIsDeleting(true)
+    try {
+      const response = await fetch(`/api/cms/classroom-videos?id=${video.id}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        onUpdate()
+      }
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  return (
+    <div className="flex items-start gap-4 p-4 border border-border rounded-lg">
+      {video.thumbnail_url && (
+        <img
+          src={video.thumbnail_url}
+          alt={video.title_ar}
+          className="w-20 h-20 rounded object-cover"
+        />
+      )}
+      <div className="flex-1">
+        <h3 className="font-semibold text-foreground mb-1">{video.title_ar}</h3>
+        <p className="text-sm text-muted-foreground mb-2">{video.description_ar}</p>
+        <div className="flex flex-wrap gap-2 mb-2">
+          {video.category && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">{video.category}</span>}
+          {video.teacher_name_ar && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">👨‍🏫 {video.teacher_name_ar}</span>}
+        </div>
+      </div>
+      <button
+        onClick={handleDelete}
+        disabled={isDeleting}
+        className="text-red-600 hover:text-red-700 transition disabled:opacity-50"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  )
+}
+
+// Digital Library Tab
+function DigitalLibraryTab() {
+  const [showForm, setShowForm] = useState(false)
+  const { data: items, isLoading, error, mutate } = useSWR("/api/cms/digital-library", fetcher, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 60000 
+  })
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("هل تريد حذف هذا المحتوى؟")) return
+
+    try {
+      const response = await fetch(`/api/cms/digital-library?id=${id}`, { method: "DELETE" })
+      if (response.ok) {
+        mutate()
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">المكتبة الرقمية</h2>
+          <p className="text-sm text-muted-foreground">إدارة كتب، تلاوات قرآنية، أناشيد ومتون التجويد</p>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+        >
+          <Plus className="w-4 h-4" />
+          {showForm ? 'إغلاق النموذج' : 'إضافة محتوى جديد'}
+        </button>
+      </div>
+
+      {showForm && (
+        <div className="relative">
+          <button
+            onClick={() => setShowForm(false)}
+            className="absolute left-4 top-4 p-1 hover:bg-muted rounded-lg transition z-10"
+          >
+            <X className="w-5 h-5 text-muted-foreground" />
+          </button>
+          <DigitalLibraryForm />
+        </div>
+      )}
+
+      <div className="bg-card rounded-lg border border-border p-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">المحتوى المضاف</h3>
+        {isLoading ? (
+          <LoadingState />
+        ) : error ? (
+          <div className="text-center py-8 text-red-600">
+            <p>خطأ في تحميل المحتوى</p>
+          </div>
+        ) : !items || items.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">لم يتم إضافة أي محتوى حتى الآن</p>
+            <button
+              onClick={() => setShowForm(true)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
+            >
+              أضف أول محتوى الآن
+            </button>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {items?.map((item: any) => (
+              <div key={item.id} className="flex items-start gap-4 p-4 border border-border rounded-lg hover:bg-muted/30 transition">
+                {item.thumbnail_url && (
+                  <img
+                    src={item.thumbnail_url}
+                    alt={item.title_ar}
+                    className="w-20 h-20 rounded object-cover"
+                  />
+                )}
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground mb-1">{item.title_ar}</h3>
+                  <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description_ar}</p>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {item.content_type && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">{item.content_type}</span>}
+                    {item.category && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">{item.category}</span>}
+                    {item.is_published && <span className="text-xs bg-green-500/20 text-green-700 px-2 py-1 rounded">منشور</span>}
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="p-2 hover:bg-red-500/10 rounded-lg text-red-600 transition"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // Loading State
 function LoadingState() {
   return (
-    <div className="flex items-center justify-center py-16">
+    <div className="flex flex-col items-center justify-center py-16 gap-4">
       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <p className="text-sm text-muted-foreground">جاري التحميل...</p>
     </div>
   )
 }

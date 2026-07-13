@@ -1,25 +1,78 @@
-# أكاديمية الحافظ المتميز - robots.txt
+# ============================================================
+# Robots.txt لأكاديمية الحافظ المتميز
+# https://quran-elhafez.com
+# ============================================================
+
 User-agent: *
 Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
+Allow: /blog
+Allow: /quran
+Allow: /arabic
+Allow: /teachers
+Allow: /reviews
+Allow: /library
+Allow: /games
+Allow: /faq
+Allow: /contact
+Allow: /about
+
 Disallow: /admin
-Disallow: /api
-Disallow: /private
+Disallow: /admin/
+Disallow: /api/
+Disallow: /account
+Disallow: /_next/
+Disallow: /static/
+Disallow: /.well-known/
+Disallow: /خاص/
+Disallow: /.env
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /عام/
+Disallow: /dist/
+Disallow: /build/
+Disallow: /*?*
+Disallow: /*lang=
 
-# Sitemap
-Sitemap: https://alhafiz-academy.com/sitemap.xml
-
-# Crawl delay
 Crawl-delay: 1
 
-# Specific rules for Google
 User-agent: Googlebot
 Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
 Disallow: /admin
-Disallow: /api
-Disallow: /private
+Disallow: /api/
+Disallow: /_next/
 
-# Bing crawler
+User-agent: Googlebot-Image
+Allow: /
+
 User-agent: Bingbot
 Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
 Disallow: /admin
-Disallow: /api
+Disallow: /api/
+Crawl-delay: 1
+
+User-agent: YandexBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 1
+
+User-agent: MJ12bot
+User-agent: SemrushBot
+User-agent: DotBot
+User-agent: AhrefsBot
+User-agent: BLEXBot
+User-agent: PetalBot
+User-agent: GPTBot
+User-agent: ChatGPT-User
+Disallow: /
+
+Sitemap: https://quran-elhafez.com/sitemap.xml

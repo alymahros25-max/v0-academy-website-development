@@ -30,10 +30,13 @@ export function Header() {
     { href: "/arabic", label: t("nav.arabic") },
     { href: "/teachers", label: t("nav.teachers") },
     { href: "/reviews", label: t("nav.reviews") },
+    { href: "/classroom-moments", label: locale === "ar" ? "لقطات من الحصص" : locale === "fr" ? "Moments de classe" : "Class Moments" },
     { href: "/library", label: t("nav.library") },
     { href: "/games", label: t("nav.games") },
     { href: "/faq", label: t("nav.faq") },
+    { href: "/blog", label: t("nav.blog") },
     { href: "/contact", label: t("nav.contact") },
+    { href: "/account", label: t("nav.account") },
   ]
 
   return (
