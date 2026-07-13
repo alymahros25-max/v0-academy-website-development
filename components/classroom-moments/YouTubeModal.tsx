@@ -102,59 +102,50 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
 
               {/* Video Container */}
               <div className="relative w-full bg-black">
-                <div className="aspect-video relative">
-                  {/* Loading state */}
-                  {isLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="w-10 h-10 border-4 border-[#d4af37]/30 border-t-[#d4af37] rounded-full animate-spin" />
-                        <p className="text-sm text-white/70">جاري التحميل...</p>
-                      </div>
-                    </div>
-                  )}
-
-              {/* YouTube iframe with proper sandbox and error handling */}
-              {!hasError && isValidId ? (
-                <>
-                  <iframe
-                    key={`video-${cleanId}-${useNoCookie ? 'nocookie' : 'standard'}`}
-                    src={embedUrl}
-                    className="absolute inset-0 w-full h-full border-0"
-                    sandbox="allow-same-origin allow-scripts allow-popups allow-presentation allow-popups-to-escape-sandbox"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                    allowFullScreen
-                    loading="eager"
-                    onLoad={() => {
-                      setIsLoading(false)
-                      setHasError(false)
-                      console.log(`[v0] YouTube video loaded successfully: ${cleanId}`)
-                    }}
-                    onError={() => {
-                      console.warn(`[v0] iframe onError triggered for: ${cleanId}`)
-                      if (useNoCookie && loadAttempt < 1) {
-                        // Try fallback (standard YouTube)
-                        setUseNoCookie(false)
-                        setLoadAttempt(prev => prev + 1)
-                        setIsLoading(true)
-                      } else {
-                        setIsLoading(false)
-                        setHasError(true)
-                        console.error(`[v0] Failed to load video after all attempts: ${cleanId}`)
-                      }
-                    }}
-                    title={title}
-                  />
-                  
-                  {/* Timeout fallback - if not loaded after 8 seconds, try fallback */}
-                  {isLoading && (
-                    <div style={{
-                      position: 'absolute',
-                      inset: 0,
-                      display: 'none'
-                    }} id={`timeout-${cleanId}`} />
-                  )}
-                </>
-              ) : (
+                <div className="aspect-video relative overflow-hidden">
+                  {/* YouTube iframe with proper sandbox and error handling */}
+                  {!hasError && isValidId ? (
+                    <>
+                      <iframe
+                        key={`video-${cleanId}-${useNoCookie ? 'nocookie' : 'standard'}`}
+                        src={embedUrl}
+                        className="absolute inset-0 w-full h-full border-0"
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-presentation allow-popups-to-escape-sandbox"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                        allowFullScreen
+                        loading="eager"
+                        onLoad={() => {
+                          setIsLoading(false)
+                          setHasError(false)
+                          console.log(`[v0] YouTube video loaded successfully: ${cleanId}`)
+                        }}
+                        onError={() => {
+                          console.warn(`[v0] iframe onError triggered for: ${cleanId}`)
+                          if (useNoCookie && loadAttempt < 1) {
+                            // Try fallback (standard YouTube)
+                            setUseNoCookie(false)
+                            setLoadAttempt(prev => prev + 1)
+                            setIsLoading(true)
+                          } else {
+                            setIsLoading(false)
+                            setHasError(true)
+                            console.error(`[v0] Failed to load video after all attempts: ${cleanId}`)
+                          }
+                        }}
+                        title={title}
+                      />
+                      
+                      {/* Loading overlay */}
+                      {isLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
+                          <div className="flex flex-col items-center gap-3">
+                            <div className="w-10 h-10 border-4 border-[#d4af37]/30 border-t-[#d4af37] rounded-full animate-spin" />
+                            <p className="text-sm text-white/70">جاري تحميل الفيديو...</p>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
                 <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/80">
                   <div className="text-center px-4">
                     <FileVideo className="w-16 h-16 text-red-500 mx-auto mb-3" />
