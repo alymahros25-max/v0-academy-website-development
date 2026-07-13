@@ -1,12 +1,5 @@
 import { Metadata } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
-import { extractYouTubeId } from '@/lib/youtube-utils'
-
-// Revalidate every 60 s as a safety net.
-// The admin CMS route also calls revalidateTag('classroom-videos') on every
-// save/update/delete so changes appear immediately without waiting.
-export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'لقطات من الحصص - أكاديمية الحافظ المتميز',
@@ -28,67 +21,20 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    // Query Supabase directly from the server component — this works on Vercel
-    // because SUPABASE_SERVICE_ROLE_KEY is available server-side. Using the
-    // service role key means we bypass RLS and always get published videos.
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL
-    const supabaseKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY ??
-      process.env.SUPABASE_ANON_KEY ??
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/cms/classroom-videos?published=true`, {
+      next: { revalidate: 300 }, // ISR: revalidate every 5 minutes
+    })
 
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('[classroom-moments] Supabase env vars missing')
+    if (!response.ok) {
+      console.error('[v0] Failed to fetch videos:', response.status)
       return []
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    const { data: rows, error } = await supabase
-      .from('classroom_videos')
-      .select('*')
-      .eq('is_published', true)
-      .order('display_order', { ascending: true })
-      .order('created_at', { ascending: false })
-      .limit(50)
-
-    if (error) {
-      console.error('[classroom-moments] Supabase fetch error:', error.message)
-      return []
-    }
-
-    return (rows ?? [])
-      .map((video: any): VideoData => {
-        const embedId: string =
-          extractYouTubeId(video?.youtube_url ?? '') ??
-          video?.youtube_embed_id ??
-          ''
-
-        return {
-          id: video?.id ?? '',
-          title_ar: video?.title_ar || 'بدون عنوان',
-          title_en: video?.title_en || video?.title_ar || 'No title',
-          title_fr: video?.title_fr || video?.title_ar || 'Sans titre',
-          description_ar: video?.description_ar ?? '',
-          description_en: video?.description_en ?? '',
-          description_fr: video?.description_fr ?? '',
-          youtube_embed_id: embedId,
-          thumbnail_url:
-            video?.thumbnail_url ||
-            `https://img.youtube.com/vi/${embedId}/hqdefault.jpg`,
-          category: video?.category ?? '',
-          teacher_name_ar: video?.teacher_name_ar ?? '',
-          teacher_name_en: video?.teacher_name_en ?? '',
-          teacher_name_fr: video?.teacher_name_fr ?? '',
-          duration_seconds: video?.duration_seconds ?? undefined,
-          is_featured: video?.is_featured ?? false,
-        }
-      })
-      // Drop rows without a valid 11-char YouTube ID
-      .filter((v) => /^[a-zA-Z0-9_-]{11}$/.test(v.youtube_embed_id))
+    const result = await response.json()
+    return result.data || []
   } catch (error) {
-    console.error('[classroom-moments] getClassroomVideos error:', error)
+    console.error('[v0] Error fetching classroom videos:', error)
     return []
   }
 }

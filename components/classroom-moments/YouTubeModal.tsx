@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { extractYouTubeId } from '@/lib/youtube-utils'
+import { getYouTubeEmbedUrl } from '@/lib/youtube-utils'
 
 interface YouTubeModalProps {
   isOpen: boolean
@@ -15,10 +15,7 @@ interface YouTubeModalProps {
 export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalProps) {
   const [isLoading, setIsLoading] = useState(true)
 
-  // Re-extract the ID here as a safety net: the prop might be a full URL
-  // if the data mapping changes, or it might carry ?si= tracking params.
-  const cleanId = extractYouTubeId(videoId) ?? videoId
-  const embedUrl = `https://www.youtube.com/embed/${cleanId}?rel=0&modestbranding=1`
+  const embedUrl = getYouTubeEmbedUrl(videoId)
 
   return (
     <AnimatePresence>
@@ -73,15 +70,13 @@ export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalPr
                     </div>
                   )}
 
-                  {/* YouTube iframe — no sandbox attribute: it restricts the
-                      YouTube player API and causes playback errors in mobile browsers */}
+                  {/* YouTube iframe */}
                   <iframe
                     src={embedUrl}
                     className="absolute inset-0 w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                     onLoad={() => setIsLoading(false)}
-                    onError={() => setIsLoading(false)}
                     title={title}
                   />
                 </div>

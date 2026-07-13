@@ -89,7 +89,7 @@ const translations: Translations = {
 
   // Reviews
   "reviews.title": { ar: "آراء طلابنا وأولياء الأمور", en: "Student & Parent Reviews", fr: "Avis des \u00e9tudiants et parents" },
-  "reviews.desc": { ar: "ماذا يقول طلابنا وأولياء ��مورهم عن تجربتهم معنا", en: "What our students and their parents say about their experience", fr: "Ce que nos \u00e9tudiants et leurs parents disent de leur exp\u00e9rience" },
+  "reviews.desc": { ar: "ماذا يقول طلابنا وأولياء أمورهم عن تجربتهم معنا", en: "What our students and their parents say about their experience", fr: "Ce que nos \u00e9tudiants et leurs parents disent de leur exp\u00e9rience" },
 
   // Library
   "library.title": { ar: "المكتبة الإلكترونية", en: "Digital Library", fr: "Biblioth\u00e8que num\u00e9rique" },
@@ -135,7 +135,7 @@ const translations: Translations = {
   // Account
   "account.title": { ar: "حسابي", en: "My Account", fr: "Mon compte" },
   "account.login": { ar: "تسجيل الدخول", en: "Sign In", fr: "Se connecter" },
-  "account.signup": { ar: "إنشاء حس����ب", en: "Sign Up", fr: "S'inscrire" },
+  "account.signup": { ar: "إنشاء حس��ب", en: "Sign Up", fr: "S'inscrire" },
   "account.logout": { ar: "تسجيل الخروج", en: "Sign Out", fr: "Se déconnecter" },
   "account.email": { ar: "البريد الإلكتروني", en: "Email", fr: "E-mail" },
   "account.password": { ar: "كلمة المرور", en: "Password", fr: "Mot de passe" },
@@ -189,47 +189,6 @@ const translations: Translations = {
   "classroom.videoAdded": { ar: "تمت إضافة الحصة بنجاح", en: "Video added successfully", fr: "Vidéo ajoutée avec succès" },
   "classroom.videoUpdated": { ar: "تم تحديث الحصة بنجاح", en: "Video updated successfully", fr: "Vidéo mise à jour avec succès" },
   "classroom.videoDeleted": { ar: "تم حذف الحصة بنجاح", en: "Video deleted successfully", fr: "Vidéo supprimée avec succès" },
-
-  // Admin Dashboard
-  "admin.title": { ar: "لوحة التحكم", en: "Admin Dashboard", fr: "Tableau de bord administrateur" },
-  "admin.dashboard": { ar: "الرئيسية", en: "Dashboard", fr: "Tableau de bord" },
-  "admin.packages": { ar: "الباقات", en: "Packages", fr: "Forfaits" },
-  "admin.teachers": { ar: "المعلمين", en: "Teachers", fr: "Enseignants" },
-  "admin.reviews": { ar: "آراء الطلاب", en: "Reviews", fr: "Avis" },
-  "admin.messages": { ar: "الرسائل", en: "Messages", fr: "Messages" },
-  "admin.pages": { ar: "الصفحات", en: "Pages", fr: "Pages" },
-  "admin.settings": { ar: "الإعدادات", en: "Settings", fr: "Paramètres" },
-  "admin.seoGuide": { ar: "دليل نشر Google", en: "Google Publishing Guide", fr: "Guide de publication Google" },
-  "admin.cms": { ar: "إدارة المحتوى", en: "Content Management", fr: "Gestion du contenu" },
-  "admin.theme": { ar: "المظهر والمعاينة الحية", en: "Theme & Live Preview", fr: "Thème et aperçu en direct" },
-  "admin.pagesBuilder": { ar: "منشئ الصفحات", en: "Pages Builder", fr: "Constructeur de pages" },
-  "admin.users": { ar: "المستخدمين والصلاحيات", en: "Users & Permissions", fr: "Utilisateurs et autorisations" },
-  "admin.classroomVideos": { ar: "فيديوهات من الحصص", en: "Classroom Videos", fr: "Vidéos de classe" },
-  "admin.digitalLibrary": { ar: "المكتبة الرقمية", en: "Digital Library", fr: "Bibliothèque numérique" },
-  "admin.educationalGames": { ar: "الألعاب التعليمية", en: "Educational Games", fr: "Jeux éducatifs" },
-  "admin.zapier": { ar: "Zapier", en: "Zapier", fr: "Zapier" },
-  "admin.welcomeTitle": { ar: "مرحباً بك في لوحة التحكم", en: "Welcome to Admin Dashboard", fr: "Bienvenue dans le tableau de bord" },
-  "admin.activePackages": { ar: "الباقات النشطة", en: "Active Packages", fr: "Forfaits actifs" },
-  "admin.registeredStudents": { ar: "الطلاب المسجلين", en: "Registered Students", fr: "Étudiants inscrits" },
-  "admin.publishedLessons": { ar: "الدروس المنشورة", en: "Published Lessons", fr: "Leçons publiées" },
-  "admin.rating": { ar: "التقييم العام", en: "Overall Rating", fr: "Note globale" },
-  "admin.save": { ar: "حفظ", en: "Save", fr: "Enregistrer" },
-  "admin.delete": { ar: "حذف", en: "Delete", fr: "Supprimer" },
-  "admin.edit": { ar: "تعديل", en: "Edit", fr: "Modifier" },
-  "admin.cancel": { ar: "إلغاء", en: "Cancel", fr: "Annuler" },
-  "admin.add": { ar: "إضافة", en: "Add", fr: "Ajouter" },
-  "admin.loading": { ar: "جاري التحميل...", en: "Loading...", fr: "Chargement..." },
-  "admin.error": { ar: "حدث خطأ", en: "An error occurred", fr: "Une erreur s'est produite" },
-  "admin.retry": { ar: "إعادة المحاولة", en: "Retry", fr: "Réessayer" },
-  "admin.saved": { ar: "تم الحفظ بنجاح", en: "Saved successfully", fr: "Enregistré avec succès" },
-  "admin.deleted": { ar: "تم الحذف بنجاح", en: "Deleted successfully", fr: "Supprimé avec succès" },
-  "admin.noData": { ar: "لا توجد بيانات", en: "No data", fr: "Pas de données" },
-  "admin.titleAr": { ar: "العنوان (عربي)", en: "Title (Arabic)", fr: "Titre (Arabe)" },
-  "admin.titleEn": { ar: "العنوان (إنجليزي)", en: "Title (English)", fr: "Titre (Anglais)" },
-  "admin.titleFr": { ar: "العنوان (فرنسي)", en: "Title (French)", fr: "Titre (Français)" },
-  "admin.descriptionAr": { ar: "الوصف (عربي)", en: "Description (Arabic)", fr: "Description (Arabe)" },
-  "admin.descriptionEn": { ar: "الوصف (إنجليزي)", en: "Description (English)", fr: "Description (Anglais)" },
-  "admin.descriptionFr": { ar: "الوصف (فرنسي)", en: "Description (French)", fr: "Description (Français)" },
 }
 
 interface I18nContextType {

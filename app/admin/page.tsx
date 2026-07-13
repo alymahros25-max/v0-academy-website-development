@@ -5,12 +5,11 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon, Palette, FileText, Lock, Film, Library, Gamepad2, Search, BarChart3
+  Menu, XIcon, Palette, FileText, Lock, Film, Library
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
 import { AdminLoadingSkeleton } from "@/components/admin/AdminLoadingSkeleton"
-import { useI18n } from "@/lib/i18n"
 
 const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
   ssr: false,
@@ -21,11 +20,10 @@ import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library"
 
 export default function AdminDashboard() {
   const router = useRouter()
-  const { t } = useI18n()
   const [activeTab, setActiveTab] = useState<Tab>("dashboard")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
@@ -58,31 +56,26 @@ export default function AdminDashboard() {
     )
   }
 
-  const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard }[] = [
-    { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard },
-    { id: "packages", label: t("admin.packages"), key: "admin.packages", icon: Package },
-    { id: "teachers", label: t("admin.teachers"), key: "admin.teachers", icon: Users },
-    { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star },
-    { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare },
+  const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
+    { id: "dashboard", label: "الرئيسية", icon: LayoutDashboard },
+    { id: "packages", label: "الباقات", icon: Package },
+    { id: "teachers", label: "المعلمين", icon: Users },
+    { id: "reviews", label: "آراء الطلاب", icon: Star },
+    { id: "messages", label: "الرسائل", icon: MessageSquare },
     
     // Phase 2-3 New Features
-    { id: "cms", label: t("admin.cms"), key: "admin.cms", icon: BookOpen },
-    { id: "theme", label: t("admin.theme"), key: "admin.theme", icon: Palette },
-    { id: "pages-builder", label: t("admin.pagesBuilder"), key: "admin.pagesBuilder", icon: FileText },
-    { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
-    { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
-    { id: "digital-library", label: t("admin.digitalLibrary"), key: "admin.digitalLibrary", icon: Library },
-    { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2 },
-    
-    // SEO & Indexing
-    { id: "gsc-dashboard", label: "حالة الفهرسة", key: "gsc.dashboard", icon: BarChart3 },
-    { id: "request-indexing", label: "طلب فهرسة", key: "gsc.indexing", icon: Search },
+    { id: "cms", label: "إدارة المحتوى", icon: BookOpen },
+    { id: "theme", label: "المظهر والمعاينة", icon: Palette },
+    { id: "pages-builder", label: "منشئ الصفحات", icon: FileText },
+    { id: "users", label: "المستخدمين والصلاحيات", icon: Lock },
+    { id: "classroom-videos", label: "لقطات من الحصص", icon: Film },
+    { id: "digital-library", label: "المكتبة الرقمية", icon: Library },
     
     // Legacy Features
-    { id: "pages", label: t("admin.pages"), key: "admin.pages", icon: BookOpen },
-    { id: "zapier", label: t("admin.zapier"), key: "admin.zapier", icon: Mail },
-    { id: "settings", label: t("admin.settings"), key: "admin.settings", icon: Settings },
-    { id: "seo-guide", label: t("admin.seoGuide"), key: "admin.seoGuide", icon: Mail },
+    { id: "pages", label: "الصفحات القديمة", icon: BookOpen },
+    { id: "zapier", label: "Zapier (مقالات)", icon: Mail },
+    { id: "settings", label: "الإعدادات", icon: Settings },
+    { id: "seo-guide", label: "نشر Google", icon: Mail },
   ]
 
   return (
@@ -102,7 +95,7 @@ export default function AdminDashboard() {
                 <BookOpen className="w-5 h-5" />
               </div>
               <div>
-                <p className="font-bold text-sm">{t("admin.title")}</p>
+                <p className="font-bold text-sm">لوحة التحكم</p>
                 <p className="text-[10px] text-primary-foreground/60">الحافظ المتميز</p>
               </div>
             </div>
@@ -137,7 +130,7 @@ export default function AdminDashboard() {
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-primary-foreground/70 hover:bg-destructive/20 hover:text-destructive transition-colors w-full"
             >
               <LogOut className="w-5 h-5" />
-              {t("account.logout")}
+              تسجيل الخروج
             </button>
           </div>
         </div>
@@ -212,15 +205,6 @@ export default function AdminDashboard() {
           <AdminErrorBoundary>
             {activeTab === "digital-library" && <DigitalLibraryTab />}
           </AdminErrorBoundary>
-          <AdminErrorBoundary>
-            {activeTab === "educational-games" && <EducationalGamesTab />}
-          </AdminErrorBoundary>
-          <AdminErrorBoundary>
-            {activeTab === "gsc-dashboard" && <GSCDashboardTab />}
-          </AdminErrorBoundary>
-          <AdminErrorBoundary>
-            {activeTab === "request-indexing" && <RequestIndexingTab />}
-          </AdminErrorBoundary>
         </div>
       </main>
     </div>
@@ -229,20 +213,19 @@ export default function AdminDashboard() {
 
 // Dashboard Tab - Defensive Programming
 function DashboardTab() {
-  const { t } = useI18n()
   const { data: stats, isLoading, error } = useSWR("/api/admin/data?type=stats", fetcher, { 
     refreshInterval: 10000,
     revalidateOnFocus: false
   })
 
   if (isLoading) return <AdminLoadingSkeleton />
-  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">{t("admin.error")}</div>
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل الإحصائيات</div>
 
   const cards = [
-    { icon: Package, label: t("admin.activePackages"), value: stats?.activePackages ?? 0, color: "bg-blue-500" },
-    { icon: Users, label: t("admin.registeredStudents"), value: stats?.totalStudents ?? 0, color: "bg-green-500" },
-    { icon: BookOpen, label: t("admin.publishedLessons"), value: stats?.publishedLessons ?? 0, color: "bg-purple-500" },
-    { icon: Star, label: t("admin.rating"), value: stats?.rating ?? "N/A", color: "bg-amber-500" },
+    { icon: Package, label: "الباقات النشطة", value: stats?.activePackages ?? 0, color: "bg-blue-500" },
+    { icon: Users, label: "الطلاب المسجلين", value: stats?.totalStudents ?? 0, color: "bg-green-500" },
+    { icon: BookOpen, label: "الدروس المنشورة", value: stats?.publishedLessons ?? 0, color: "bg-purple-500" },
+    { icon: Star, label: "التقييم العام", value: stats?.rating ?? "N/A", color: "bg-amber-500" },
   ]
 
   return (
@@ -263,7 +246,7 @@ function DashboardTab() {
         ))}
       </div>
       <div className="bg-card rounded-2xl border border-border p-6">
-        <h2 className="font-bold text-foreground mb-3">{t("admin.welcomeTitle")}</h2>
+        <h2 className="font-bold text-foreground mb-3">مرحباً بك في لوحة التحكم</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
           من هنا يمكنك إدارة جميع محتويات الموقع: الباقات والأسعار، المعلمين، آراء الطلاب، رسائل التواصل، وإعدادات الموقع العامة.
         </p>
@@ -574,7 +557,7 @@ function TeachersTab() {
                   <Users className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدو�� اسم'}</p>
+                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدون اسم'}</p>
                   <p className="text-sm text-muted-foreground">{teacher?.specialty?.ar || 'بدون تخصص'} - {teacher?.experience || '0'} سنة خبرة</p>
                 </div>
               </div>
@@ -705,7 +688,7 @@ function MessagesTab() {
     return (
       <div className="text-center py-16">
         <MessageSquare className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-        <p className="text-lg text-muted-foreground">لا ����وجد رسائل بعد</p>
+        <p className="text-lg text-muted-foreground">لا توجد رسائل بعد</p>
       </div>
     )
   }
@@ -875,7 +858,7 @@ function PagesTab() {
     { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
     { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
     { name: "المدونة", path: "/blog", description: "مقالات وإرشادات" },
-    { name: "اتصل بن��", path: "/contact", description: "نموذج التواصل" },
+    { name: "اتصل بنا", path: "/contact", description: "نموذج التواصل" },
     { name: "حسابي", path: "/account", description: "تسجيل الحساب" },
     { name: "الخصوصية", path: "/privacy", description: "سياسة الخصوصية" },
     { name: "الشروط والأحكام", path: "/terms", description: "شروط الاستخدام" },
@@ -1057,7 +1040,7 @@ function ZapierTab() {
           <div className="flex gap-4">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">4</div>
             <div>
-              <p className="font-medium text-foreground">أدخ�� البيانات أعلاه</p>
+              <p className="font-medium text-foreground">أدخل البيانات أعلاه</p>
               <p className="text-sm text-muted-foreground">URL + API Key + Body JSON</p>
             </div>
           </div>
@@ -1217,7 +1200,7 @@ function ThemeCustomizerTab() {
 // Pages Builder Tab - list of all site pages with quick links
 function PagesBuilderTab() {
   const pages = [
-    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشه��د��ت" },
+    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشهادات" },
     { label: "قرآن الكريم", path: "/quran", desc: "الباقات والأسعار وطريقة التسجيل" },
     { label: "تأسيس العربي", path: "/arabic", desc: "باقات تعليم اللغة العربية" },
     { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
@@ -1345,19 +1328,16 @@ function UsersManagementTab() {
 // Classroom Videos Management Tab
 function ClassroomVideosTab() {
   const [showForm, setShowForm] = useState(false)
-  // Fetch ALL videos (published + drafts) so the admin sees everything
-  // API returns { data: [...] } so we extract the array
-  const { data: apiResponse, isLoading, error } = useSWR("/api/cms/classroom-videos", fetcher, { 
-    revalidateOnFocus: true,
-    dedupingInterval: 5000
+  const { data: videos, isLoading, error } = useSWR("/api/cms/classroom-videos?published=false", fetcher, { 
+    revalidateOnFocus: false,
+    dedupingInterval: 60000 
   })
-  const videos = Array.isArray(apiResponse?.data) ? apiResponse.data : []
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">فيديوهات من الحصص</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">لقطات من الحصص</h2>
           <p className="text-sm text-muted-foreground">إدارة فيديوهات الحصص والمحتوى الترويجي</p>
         </div>
         <button
@@ -1374,7 +1354,7 @@ function ClassroomVideosTab() {
         <div className="bg-card rounded-lg border border-border p-6">
           <VideoForm onSuccess={() => {
             setShowForm(false)
-            globalMutate("/api/cms/classroom-videos")
+            globalMutate("/api/cms/classroom-videos?published=false")
           }} />
         </div>
       )}
@@ -1400,7 +1380,7 @@ function ClassroomVideosTab() {
         ) : (
           <div className="space-y-4">
             {videos.map((video: any) => (
-              <ClassroomVideoItem key={video.id} video={video} onUpdate={() => globalMutate("/api/cms/classroom-videos")} />
+              <ClassroomVideoItem key={video.id} video={video} onUpdate={() => globalMutate("/api/cms/classroom-videos?published=false")} />
             ))}
           </div>
         )}
@@ -1460,12 +1440,10 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
 // Digital Library Tab
 function DigitalLibraryTab() {
   const [showForm, setShowForm] = useState(false)
-  // API returns { data: [...] } so we extract the array
-  const { data: apiResponse, isLoading, error, mutate } = useSWR("/api/cms/digital-library", fetcher, { 
+  const { data: items, isLoading, error, mutate } = useSWR("/api/cms/digital-library?published=false", fetcher, { 
     revalidateOnFocus: false,
     dedupingInterval: 10000
   })
-  const items = Array.isArray(apiResponse?.data) ? apiResponse.data : []
 
   const handleDelete = async (id: string) => {
     if (!confirm("هل تريد حذف هذا المحتوى؟")) return
@@ -1557,309 +1535,6 @@ function DigitalLibraryTab() {
           </div>
         )}
       </div>
-    </div>
-  )
-}
-
-// Educational Games Tab — links to the existing /games page and shows its contents
-function EducationalGamesTab() {
-  const games = [
-    {
-      name_ar: "لعبة مطابقة الحروف",
-      name_en: "Letter Matching Game",
-      name_fr: "Jeu d'association de lettres",
-      description_ar: "تعلم الحروف العربية من خلال مطابقتها بالصور والأصوات",
-      path: "/games#letter-matching",
-      status: "منشور",
-    },
-    {
-      name_ar: "مسابقة قرآنية",
-      name_en: "Quran Quiz",
-      name_fr: "Quiz coranique",
-      description_ar: "اختبر معلوماتك القرآنية وتنافس مع الأصدقاء",
-      path: "/games#quran-quiz",
-      status: "منشور",
-    },
-  ]
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">الألعاب التعليمية</h2>
-          <p className="text-sm text-muted-foreground">إدارة الألعاب التعليمية المتوفرة على الموقع</p>
-        </div>
-        <a
-          href="/games"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition text-sm font-medium"
-        >
-          <Gamepad2 className="w-4 h-4" />
-          عرض صفحة الألعاب
-        </a>
-      </div>
-
-      {/* Games List */}
-      <div className="grid gap-4">
-        {games.map((game, idx) => (
-          <div key={idx} className="bg-card border border-border rounded-xl p-5 flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Gamepad2 className="w-5 h-5 text-primary" />
-                <h3 className="font-bold text-foreground">{game.name_ar}</h3>
-                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{game.status}</span>
-              </div>
-              <p className="text-sm text-muted-foreground mb-3">{game.description_ar}</p>
-              <div className="flex gap-2 text-xs text-muted-foreground">
-                <span className="bg-muted px-2 py-0.5 rounded">{game.name_en}</span>
-                <span className="bg-muted px-2 py-0.5 rounded">{game.name_fr}</span>
-              </div>
-            </div>
-            <a
-              href={game.path}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0 px-3 py-1.5 border border-border rounded-lg text-sm hover:bg-muted transition"
-            >
-              عرض
-            </a>
-          </div>
-        ))}
-      </div>
-
-      {/* Info note */}
-      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
-        <p className="text-sm text-foreground font-medium mb-1">ملاحظة</p>
-        <p className="text-xs text-muted-foreground">
-          الألعاب الحالية مدمجة في الموقع. لإضافة ألعاب جديدة أو تعديل النصوص، تواصل مع فريق التطوير أو عدّل ملف الألعاب مباشرة من مستودع الكود.
-        </p>
-        <a
-          href="/games"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs text-primary mt-2 hover:underline"
-        >
-          فتح صفحة الألعاب الكاملة
-          <span aria-hidden="true">←</span>
-        </a>
-      </div>
-    </div>
-  )
-}
-
-// GSC Dashboard Tab
-function GSCDashboardTab() {
-  const [stats, setStats] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [lastUpdated, setLastUpdated] = useState<string>('')
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setLoading(true)
-        setError(null)
-        const res = await fetch('/api/gsc/status')
-        const data = await res.json()
-        if (data.success) {
-          setStats(data.data)
-          setLastUpdated(new Date(data.lastUpdated).toLocaleString('ar-SA'))
-        } else {
-          setError(data.error || 'خطأ في جلب البيانات')
-        }
-      } catch (err) {
-        setError('فشل الاتصال بـ Google Search Console')
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchStats()
-    const interval = setInterval(fetchStats, 3600000) // Update every hour
-    return () => clearInterval(interval)
-  }, [])
-
-  if (loading) return <LoadingState />
-  if (error) return <div className="p-4 rounded-lg bg-destructive/10 text-destructive">{error}</div>
-
-  const cards = [
-    { label: 'إجمالي الصفحات', value: stats?.totalPages || 0, icon: BarChart3, color: 'bg-blue-500' },
-    { label: 'الصفحات المفهرسة', value: stats?.indexed || 0, icon: Check, color: 'bg-green-500' },
-    { label: 'الصفحات غير المفهرسة', value: stats?.notIndexed || 0, icon: X, color: 'bg-red-500' },
-    { label: 'متوسط الموضع', value: stats?.avgPosition || 'N/A', icon: Search, color: 'bg-amber-500' },
-  ]
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground">حالة فهرسة Google</h2>
-          <p className="text-sm text-muted-foreground mt-1">آخر تحديث: {lastUpdated}</p>
-        </div>
-        <button
-          onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90"
-        >
-          تحديث
-        </button>
-      </div>
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {cards.map((card, idx) => (
-          <div key={idx} className="bg-card border border-border rounded-xl p-5 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">{card.label}</p>
-              <div className={`w-8 h-8 rounded-lg ${card.color} text-white flex items-center justify-center`}>
-                <card.icon className="w-4 h-4" />
-              </div>
-            </div>
-            <p className="text-2xl font-bold text-foreground">{card.value}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-card border border-border rounded-xl p-6">
-        <h3 className="font-bold text-foreground mb-4">إحصائيات التفاعل</h3>
-        <div className="grid sm:grid-cols-2 gap-6">
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">إجمالي النقرات</p>
-            <p className="text-3xl font-bold text-foreground">{stats?.clicks || 0}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">إجمالي الانطباعات</p>
-            <p className="text-3xl font-bold text-foreground">{stats?.impressions || 0}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
-        <p className="text-sm text-foreground font-medium mb-2">نصيحة</p>
-        <p className="text-xs text-muted-foreground">
-          استخدم علامة "طلب فهرسة" أعلاه لطلب فهرسة الصفحات الجديدة أو المحدثة في Google بشكل فوري.
-        </p>
-      </div>
-    </div>
-  )
-}
-
-// Request Indexing Tab
-function RequestIndexingTab() {
-  const [urls, setUrls] = useState<string[]>([''])
-  const [submitting, setSubmitting] = useState(false)
-  const [results, setResults] = useState<any[]>([])
-  const [message, setMessage] = useState('')
-
-  const addUrl = () => setUrls([...urls, ''])
-  const removeUrl = (idx: number) => setUrls(urls.filter((_, i) => i !== idx))
-  const updateUrl = (idx: number, value: string) => {
-    const newUrls = [...urls]
-    newUrls[idx] = value
-    setUrls(newUrls)
-  }
-
-  const submitIndexing = async () => {
-    const validUrls = urls.filter(u => u.trim())
-    if (validUrls.length === 0) {
-      setMessage('الرجاء إدخال رابط واحد على الأقل')
-      return
-    }
-
-    setSubmitting(true)
-    setResults([])
-    setMessage('جاري إرسال طلبات الفهرسة...')
-
-    try {
-      const resultsList: any[] = []
-      for (const url of validUrls) {
-        const res = await fetch('/api/gsc/request-indexing', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, type: 'URL_UPDATED' }),
-        })
-        const data = await res.json()
-        resultsList.push({ url, success: res.ok, status: data })
-      }
-      setResults(resultsList)
-      setMessage('تم إرسال جميع الطلبات بنجاح')
-    } catch (err) {
-      setMessage('حدث خطأ أثناء الإرسال')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">طلب فهرسة الصفحات</h2>
-        <p className="text-sm text-muted-foreground">أدخل روابط الصفحات المراد فهرستها في Google بشكل فوري</p>
-      </div>
-
-      <div className="bg-card border border-border rounded-xl p-6 space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-3">الروابط</label>
-          <div className="space-y-2">
-            {urls.map((url, idx) => (
-              <div key={idx} className="flex gap-2">
-                <input
-                  type="text"
-                  value={url}
-                  onChange={(e) => updateUrl(idx, e.target.value)}
-                  placeholder="https://quran-elhafez.com/page"
-                  className="flex-1 px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm"
-                />
-                {urls.length > 1 && (
-                  <button
-                    onClick={() => removeUrl(idx)}
-                    className="px-3 py-2 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={addUrl}
-            className="mt-3 flex items-center gap-2 px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm hover:bg-muted/80"
-          >
-            <Plus className="w-4 h-4" />
-            إضافة رابط آخر
-          </button>
-        </div>
-
-        {message && (
-          <div className={`p-3 rounded-lg text-sm ${
-            results.some(r => r.success)
-              ? 'bg-green-500/10 text-green-600'
-              : 'bg-amber-500/10 text-amber-600'
-          }`}>
-            {message}
-          </div>
-        )}
-
-        <button
-          onClick={submitIndexing}
-          disabled={submitting || urls.every(u => !u.trim())}
-          className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50"
-        >
-          {submitting ? 'جاري الإرسال...' : 'إرسال طلبات الفهرسة'}
-        </button>
-      </div>
-
-      {results.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="font-bold text-foreground">النتائج</h3>
-          {results.map((result, idx) => (
-            <div key={idx} className={`p-4 rounded-lg border ${result.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-              <p className="text-sm font-medium text-foreground">{result.url}</p>
-              <p className={`text-xs mt-1 ${result.success ? 'text-green-600' : 'text-red-600'}`}>
-                {result.success ? 'تم الإرسال بنجاح' : 'فشل الإرسال'}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   )
 }

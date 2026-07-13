@@ -4,10 +4,10 @@ import { useState, useCallback } from 'react'
 import { Save, Trash2, RotateCcw, AlertCircle } from 'lucide-react'
 import { useApiToast } from '@/hooks/use-api-toast'
 import { extractYouTubeId, isValidYouTubeUrl } from '@/lib/youtube-utils'
-import { useI18n } from '@/lib/i18n'
+import { useTranslation } from '@/lib/useTranslation'
 
 interface Video {
-  id?: string
+  id?: number
   title_ar: string
   title_en: string
   title_fr: string
@@ -31,12 +31,8 @@ const CATEGORIES = ['تجويد', 'قرآن كريم', 'لغة عربية', 'ت�
 
 export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFormProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { showSuccess, showError } = useApiToast()
-  const showToast = (msg: string, type: 'success' | 'error' | 'info') => {
-    if (type === 'success') showSuccess(msg)
-    else showError(msg)
-  }
-  const { t } = useI18n()
+  const { showToast } = useApiToast()
+  const { t } = useTranslation()
   const [youtubeIdError, setYoutubeIdError] = useState<string>('')
 
   const [formData, setFormData] = useState<Video>(
@@ -59,10 +55,10 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
 
-    // Validate YouTube URL in real time as the user types
-    if (name === 'youtube_url') {
-      if (value.trim() && !isValidYouTubeUrl(value)) {
-        setYoutubeIdError('رابط يوتيوب غير صحيح')
+    // Validate YouTube URL when it changes
+    if (name === 'youtube_url' && value.trim()) {
+      if (!isValidYouTubeUrl(value)) {
+        setYoutubeIdError(t('invalidYoutubeUrl'))
       } else {
         setYoutubeIdError('')
       }
@@ -77,47 +73,26 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
 
     setIsLoading(true)
     try {
-      // Translate all three text fields in parallel for speed
-      const fields: Array<{ key: 'title' | 'description' | 'teacher_name'; text: string }> = [
-        { key: 'title', text: formData.title_ar },
-        { key: 'description', text: formData.description_ar },
-        { key: 'teacher_name', text: formData.teacher_name_ar },
-      ].filter(f => f.text.trim() !== '')
+      const response = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: formData.title_ar,
+          targetLangs: ['en', 'fr'],
+        }),
+      })
 
-      const results = await Promise.all(
-        fields.map(({ key, text }) =>
-          fetch('/api/translate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text }),
-          })
-            .then(r => r.json())
-            .then(data => ({ key, data }))
-        )
-      )
+      const data = await response.json()
 
-      const updates: Partial<typeof formData> = {}
-      for (const { key, data } of results) {
-        // translate API returns { success, data: { ar, en, fr } }
-        const translations = data?.data ?? data?.translations
-        if (!translations) continue
-        if (key === 'title') {
-          if (translations.en) updates.title_en = translations.en
-          if (translations.fr) updates.title_fr = translations.fr
-        } else if (key === 'description') {
-          if (translations.en) updates.description_en = translations.en
-          if (translations.fr) updates.description_fr = translations.fr
-        } else if (key === 'teacher_name') {
-          if (translations.en) updates.teacher_name_en = translations.en
-          if (translations.fr) updates.teacher_name_fr = translations.fr
-        }
-      }
-
-      if (Object.keys(updates).length > 0) {
-        setFormData(prev => ({ ...prev, ...updates }))
-        showToast('تمت الترجمة التلقائية لجميع الحقول بنجاح', 'success')
-      } else {
-        showToast('لم يتم إرجاع أي ترجمات', 'error')
+      if (data.translations) {
+        setFormData(prev => ({
+          ...prev,
+          title_en: data.translations.en || prev.title_en,
+          title_fr: data.translations.fr || prev.title_fr,
+          description_en: data.translations.en || prev.description_en,
+          description_fr: data.translations.fr || prev.description_fr,
+        }))
+        showToast('تمت الترجمة بنجاح', 'success')
       }
     } catch (error) {
       showToast('فشل في الترجمة التلقائية', 'error')
@@ -133,13 +108,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
     try {
       // Validation
       if (!formData.title_ar || !formData.title_en || !formData.title_fr) {
-        showToast('يرجى إدخال العنوان بالعربية والإنجليزية والفرنسية', 'error')
+        showToast(t('enterValidUrl'), 'error')
         setIsLoading(false)
         return
       }
 
-      if (!formData.youtube_url?.trim()) {
-        showToast('يرجى إدخال رابط يوتيوب', 'error')
+      if (!formData.youtube_url) {
+        showToast(t('youtubeUrl'), 'error')
         setIsLoading(false)
         return
       }
@@ -147,9 +122,8 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       // Validate and extract YouTube ID
       const videoId = extractYouTubeId(formData.youtube_url)
       if (!videoId) {
-        const msg = 'رابط يوتيوب غير صحيح. تأكد من استخدام رابط مثل: https://youtu.be/XXXXXXXXXXX'
-        showToast(msg, 'error')
-        setYoutubeIdError(msg)
+        showToast(t('invalidYoutubeUrl'), 'error')
+        setYoutubeIdError(t('invalidYoutubeUrl'))
         setIsLoading(false)
         return
       }
@@ -163,20 +137,10 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
 
       const method = isEditing ? 'PATCH' : 'POST'
 
-      // Explicitly publish the video and include the pre-extracted embed ID.
-      // Without is_published: true the API defaults to false, making the video
-      // invisible on the public page.
-      const payload = {
-        ...formData,
-        youtube_embed_id: videoId,
-        is_published: true,
-        is_featured: isEditing ? (formData as any).is_featured ?? false : false,
-      }
-
       const response = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formData),
       })
 
       const result = await response.json()
@@ -187,10 +151,6 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       }
 
       showToast(isEditing ? 'تم تحديث الحصة بنجاح' : 'تمت إضافة الحصة بنجاح', 'success')
-
-      // Revalidate the public classroom-moments page so the new video
-      // appears immediately without waiting for the 60-second ISR window.
-      fetch('/api/revalidate?path=/classroom-moments').catch(() => {/* non-fatal */})
 
       // Reset form if creating new
       if (!isEditing) {
@@ -238,61 +198,41 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg border border-border">
       <h2 className="text-2xl font-bold text-foreground">
-        {isEditing ? 'تعديل الفيديو' : 'إضافة فيديو من الحصص'}
+        {isEditing ? t('edit') + ' ' + t('classroomMoments') : t('add') + ' ' + t('classroomMoments')}
       </h2>
 
       {/* YouTube URL with validation */}
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
-          رابط يوتيوب *
+          {t('youtubeUrl')} *
         </label>
-        {/* Use type="text" — mobile browsers reject youtu.be URLs with type="url" */}
         <input
-          type="text"
+          type="url"
           name="youtube_url"
           value={formData.youtube_url}
           onChange={handleChange}
-          placeholder="https://www.youtube.com/watch?v=YzChqKd6TT8"
-          dir="ltr"
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm ${
+          placeholder="https://www.youtube.com/watch?v=xxxxx or youtu.be/xxxxx"
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
             youtubeIdError ? 'border-destructive' : 'border-border'
           }`}
           required
         />
-
-        {/* Live ID preview — shows the extracted 11-char ID so the admin can verify */}
-        {formData.youtube_url && !youtubeIdError && (() => {
-          const previewId = extractYouTubeId(formData.youtube_url)
-          return previewId ? (
-            <p className="text-xs text-green-600 mt-1 font-mono">
-              ID: {previewId}
-            </p>
-          ) : null
-        })()}
-
         {youtubeIdError && (
           <div className="flex items-center gap-2 mt-2 text-sm text-destructive">
             <AlertCircle className="w-4 h-4" />
             {youtubeIdError}
           </div>
         )}
-
-        {/* Helper text listing accepted formats */}
-        <div className="mt-2 p-3 bg-muted rounded-lg text-xs text-muted-foreground space-y-1">
-          <p className="font-medium text-foreground mb-1">الصيغ المقبولة:</p>
-          <p dir="ltr" className="font-mono">https://www.youtube.com/watch?v=YzChqKd6TT8</p>
-          <p dir="ltr" className="font-mono">https://youtu.be/YzChqKd6TT8</p>
-          <p dir="ltr" className="font-mono">https://youtu.be/YzChqKd6TT8?si=XXXXXX</p>
-          <p dir="ltr" className="font-mono">https://www.youtube.com/shorts/YzChqKd6TT8</p>
-          <p dir="ltr" className="font-mono">https://www.youtube.com/embed/YzChqKd6TT8</p>
-        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          {t('enterValidUrl')}
+        </p>
       </div>
 
       {/* Titles */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            {t('admin.titleAr')} *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            العنوان بالعربية *
           </label>
           <input
             type="text"
@@ -300,13 +240,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.title_ar}
             onChange={handleChange}
             placeholder="أدخل العنوان بالعربية"
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
             required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            {t('admin.titleEn')} *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            العنوان بالإنجليزية *
           </label>
           <input
             type="text"
@@ -314,13 +254,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.title_en}
             onChange={handleChange}
             placeholder="Enter title in English"
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
             required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            {t('admin.titleFr')} *
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            العنوان بالفرنسية *
           </label>
           <input
             type="text"
@@ -328,7 +268,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.title_fr}
             onChange={handleChange}
             placeholder="Entrez le titre en français"
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
             required
           />
         </div>
@@ -337,8 +277,8 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       {/* Descriptions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            {t('admin.descriptionAr')}
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            الوصف ب��لعربية
           </label>
           <textarea
             name="description_ar"
@@ -346,12 +286,12 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             onChange={handleChange}
             placeholder="أدخل الوصف بالعربية"
             rows={3}
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            {t('admin.descriptionEn')}
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            الوصف بالإنجليزية
           </label>
           <textarea
             name="description_en"
@@ -359,12 +299,12 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             onChange={handleChange}
             placeholder="Enter description in English"
             rows={3}
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            {t('admin.descriptionFr')}
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            الوصف بالفرنسية
           </label>
           <textarea
             name="description_fr"
@@ -372,27 +312,25 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             onChange={handleChange}
             placeholder="Entrez la description en français"
             rows={3}
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
           />
         </div>
       </div>
 
-      {/* Auto Translate Button — translates title, description, and teacher name in one click */}
+      {/* Auto Translate Button */}
       <button
         type="button"
         onClick={autoTranslate}
-        disabled={isLoading || !formData.title_ar}
-        className="w-full px-4 py-2 bg-secondary text-secondary-foreground font-medium rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+        disabled={isLoading}
+        className="w-full px-4 py-2 bg-[#d4af37] text-[#1a4d2e] font-medium rounded-lg hover:bg-[#c0a030] disabled:opacity-50 transition-colors"
       >
-        {isLoading
-          ? t('classroom.translating')
-          : 'ترجمة تلقائية شاملة من العربية (العنوان + الوصف + اسم المعلم)'}
+        {isLoading ? 'جاري الترجمة...' : '🌐 ترجمة تلقائية من العربية'}
       </button>
 
       {/* Teacher Names */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             اسم المعلم بالعربية
           </label>
           <input
@@ -401,11 +339,11 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.teacher_name_ar}
             onChange={handleChange}
             placeholder="اسم المعلم"
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Teacher Name (English)
           </label>
           <input
@@ -414,11 +352,11 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.teacher_name_en}
             onChange={handleChange}
             placeholder="Teacher name"
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Nom de l&apos;enseignant (Français)
           </label>
           <input
@@ -427,21 +365,21 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
             value={formData.teacher_name_fr}
             onChange={handleChange}
             placeholder="Nom de l'enseignant"
-            className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
           />
         </div>
       </div>
 
       {/* Category */}
       <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           الفئة
         </label>
         <select
           name="category"
           value={formData.category}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a4d2e] focus:border-transparent"
         >
           {CATEGORIES.map(cat => (
             <option key={cat} value={cat}>
@@ -456,19 +394,19 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         <button
           type="submit"
           disabled={isLoading}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/80 disabled:opacity-50 transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#1a4d2e] text-white font-medium rounded-lg hover:bg-[#0f3620] disabled:opacity-50 transition-colors"
         >
           <Save className="w-4 h-4" />
-          {isLoading ? t('admin.loading') : isEditing ? t('admin.edit') : t('admin.save')}
+          {isLoading ? 'جاري الحفظ...' : isEditing ? 'تحديث' : 'حفظ'}
         </button>
 
         <button
           type="button"
           onClick={handleReset}
-          className="px-4 py-2 bg-muted text-muted-foreground font-medium rounded-lg hover:bg-muted/80 transition-colors flex items-center gap-2"
+          className="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors flex items-center gap-2"
         >
           <RotateCcw className="w-4 h-4" />
-          {t('admin.cancel')}
+          إعادة تعيين
         </button>
       </div>
     </form>
