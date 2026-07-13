@@ -5,8 +5,8 @@ export const generateOrganizationSchema = () => ({
   '@type': 'Organization',
   'name': 'أكاديمية الحافظ المتميز',
   'alternateName': 'Al-Hafiz Al-Mutamayez Academy',
-  'url': 'https://alhafiz-academy.com',
-  'logo': 'https://alhafiz-academy.com/images/logo.png',
+  'url': 'https://quran-elhafez.com',
+  'logo': 'https://quran-elhafez.com/images/logo.png',
   'description': 'أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين',
   'sameAs': [
     'https://www.facebook.com/alhafizacademy',
@@ -60,7 +60,7 @@ export const generateArticleSchema = (article: {
     'name': 'أكاديمية الحافظ المتميز',
     'logo': {
       '@type': 'ImageObject',
-      'url': 'https://alhafiz-academy.com/images/logo.png',
+      'url': 'https://quran-elhafez.com/images/logo.png',
     },
   },
   'mainEntityOfPage': {
@@ -126,7 +126,7 @@ export const generateLocalBusinessSchema = () => ({
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   'name': 'أكاديمية الحافظ المتميز',
-  'image': 'https://alhafiz-academy.com/images/hero-children.jpg',
+  'image': 'https://quran-elhafez.com/images/hero-children.jpg',
   'description': 'أكاديمية عالمية متخصصة في تحفيظ القرآن الكريم وتأسيس اللغة العربية',
   'telephone': '+201130127894',
   'email': 'enamel311@gmail.com',
@@ -194,7 +194,7 @@ export const generateWebPageSchema = (page: {
     'name': 'أكاديمية الحافظ المتميز',
     'logo': {
       '@type': 'ImageObject',
-      'url': 'https://alhafiz-academy.com/images/logo.png',
+      'url': 'https://quran-elhafez.com/images/logo.png',
     },
   },
 })

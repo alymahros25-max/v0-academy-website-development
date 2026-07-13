@@ -1,27 +1,210 @@
 import { MetadataRoute } from 'next'
+import fs from 'fs'
+import path from 'path'
+import { createClient } from '@supabase/supabase-js'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://alhafiz-academy.com'
-  
-  const staticPages = [
-    '',
-    '/about',
-    '/quran',
-    '/arabic',
+const BASE_URL = 'https://quran-elhafez.com'
+const LANGUAGES = ['ar', 'en', 'fr'] as const
+type Language = (typeof LANGUAGES)[number]
+
+/**
+ * Get dynamic blog articles from Supabase.
+ * Falls back to file system if Supabase is unavailable.
+ */
+async function getDynamicBlogArticles(): Promise<string[]> {
+  try {
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_ANON_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Supabase env vars missing')
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    const { data: articles, error } = await supabase
+      .from('blog_articles')
+      .select('slug, created_at')
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .limit(100)
+
+    if (error) throw error
+
+    return (articles || []).map((a) => a.slug)
+  } catch (error) {
+    console.warn('[sitemap] Failed to fetch from Supabase:', error)
+    return getBlogArticlesFromFilesystem()
+  }
+}
+
+/**
+ * Get blog articles from filesystem as fallback.
+ */
+function getBlogArticlesFromFilesystem(): string[] {
+  try {
+    const zapierFile = path.join(process.cwd(), 'data', 'zapier-articles.json')
+    if (fs.existsSync(zapierFile)) {
+      const data = JSON.parse(fs.readFileSync(zapierFile, 'utf-8'))
+      return Object.keys(data)
+    }
+  } catch (error) {
+    console.log('[sitemap] Using default blog articles')
+  }
+
+  return [
+    'quran-memorization-techniques',
+    'arabic-foundation-importance',
+    'online-learning-benefits',
+  ]
+}
+
+// Helper: Get language prefix for URL
+const getLanguagePrefix = (lang: Language): string => {
+  return lang === 'ar' ? '' : `/${lang}`
+}
+
+// Helper: Generate localized URLs with xhtml:link alternates
+const generateLocalizedUrl = (
+  route: string,
+  priority: number,
+  changefreq: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' = 'weekly'
+): MetadataRoute.Sitemap => {
+  const urls: MetadataRoute.Sitemap = []
+
+  LANGUAGES.forEach((lang) => {
+    const langPrefix = getLanguagePrefix(lang)
+    const urlPath = route === '/' ? langPrefix : `${langPrefix}${route}`
+    const fullUrl = `${BASE_URL}${urlPath === '' ? '/' : urlPath}`
+
+    urls.push({
+      url: fullUrl,
+      lastModified: new Date().toISOString().split('T')[0],
+      changeFrequency: changefreq,
+      priority: priority,
+      alternates: {
+        languages: {
+          ar: `${BASE_URL}${route === '/' ? '' : route}`,
+          en: `${BASE_URL}/en${route === '/' ? '' : route}`,
+          fr: `${BASE_URL}/fr${route === '/' ? '' : route}`,
+          'x-default': `${BASE_URL}${route === '/' ? '' : route}`,
+        },
+      },
+    })
+  })
+
+  return urls
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const sitemap: MetadataRoute.Sitemap = []
+
+  // ============================================================
+  // TIER 1: HOMEPAGE (Priority 1.0, daily)
+  // ============================================================
+  sitemap.push(...generateLocalizedUrl('/', 1.0, 'daily'))
+
+  // ============================================================
+  // TIER 2: CORE PAGES (Priority 0.9, weekly)
+  // Main offerings: Quran, Arabic, About
+  // ============================================================
+  const corePages = ['/quran', '/arabic', '/about'] as const
+  corePages.forEach((route) => {
+    sitemap.push(...generateLocalizedUrl(route, 0.9, 'weekly'))
+  })
+
+  // ============================================================
+  // TIER 3: SECONDARY PAGES (Priority 0.7, weekly)
+  // Content and engagement pages
+  // ============================================================
+  const secondaryPages = [
     '/teachers',
     '/reviews',
     '/library',
     '/games',
     '/faq',
+    '/blog',
     '/contact',
-    '/privacy',
-    '/terms',
-  ]
+  ] as const
+  secondaryPages.forEach((route) => {
+    sitemap.push(...generateLocalizedUrl(route, 0.7, 'weekly'))
+  })
 
-  return staticPages.map((page) => ({
-    url: `${baseUrl}${page}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: page === '' ? 1 : 0.8,
-  }))
+  // ============================================================
+  // TIER 4: LIBRARY BOOKS (Priority 0.8, weekly)
+  // Digital library content pages
+  // ============================================================
+  const bookSlugs = [
+    'al-qaida-an-noraniyah',
+    'tajweed-rules',
+  ]
+  LANGUAGES.forEach((lang) => {
+    bookSlugs.forEach((slug) => {
+      const langPrefix = getLanguagePrefix(lang)
+      const urlPath = `/library/${slug}`
+      const fullUrl = `${BASE_URL}${langPrefix}${urlPath}`
+      sitemap.push({
+        url: fullUrl,
+        lastModified: new Date().toISOString().split('T')[0],
+        changeFrequency: 'monthly',
+        priority: 0.8,
+        alternates: {
+          languages: {
+            ar: `${BASE_URL}${urlPath}`,
+            en: `${BASE_URL}/en${urlPath}`,
+            fr: `${BASE_URL}/fr${urlPath}`,
+            'x-default': `${BASE_URL}${urlPath}`,
+          },
+        },
+      })
+    })
+  })
+
+  // ============================================================
+  // TIER 5: CLASSROOM MOMENTS (Priority 0.75, weekly)
+  // User-generated and featured content
+  // ============================================================
+  sitemap.push(...generateLocalizedUrl('/classroom-moments', 0.75, 'weekly'))
+
+  // ============================================================
+  // TIER 6: BLOG ARTICLES (Priority 0.6, monthly)
+  // Individual articles with language variants
+  // ============================================================
+  const blogArticles = await getDynamicBlogArticles()
+  blogArticles.forEach((slug) => {
+    LANGUAGES.forEach((lang) => {
+      const langPrefix = getLanguagePrefix(lang)
+      const fullUrl = `${BASE_URL}${langPrefix}/blog/${slug}`
+
+      sitemap.push({
+        url: fullUrl,
+        lastModified: new Date().toISOString().split('T')[0],
+        changeFrequency: 'monthly',
+        priority: 0.6,
+        alternates: {
+          languages: {
+            ar: `${BASE_URL}/blog/${slug}`,
+            en: `${BASE_URL}/en/blog/${slug}`,
+            fr: `${BASE_URL}/fr/blog/${slug}`,
+            'x-default': `${BASE_URL}/blog/${slug}`,
+          },
+        },
+      })
+    })
+  })
+
+  // ============================================================
+  // TIER 5: LEGAL/UTILITY PAGES (Priority 0.3, monthly)
+  // Privacy and terms of service
+  // ============================================================
+  const legalPages = ['/privacy', '/terms'] as const
+  legalPages.forEach((route) => {
+    sitemap.push(...generateLocalizedUrl(route, 0.3, 'monthly'))
+  })
+
+  return sitemap
 }
