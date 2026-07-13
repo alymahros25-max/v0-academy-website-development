@@ -7,7 +7,7 @@ import { extractYouTubeId, isValidYouTubeUrl } from '@/lib/youtube-utils'
 import { useI18n } from '@/lib/i18n'
 
 interface Video {
-  id?: number
+  id?: string
   title_ar: string
   title_en: string
   title_fr: string
@@ -31,7 +31,11 @@ const CATEGORIES = ['تجويد', 'قرآن كريم', 'لغة عربية', 'ت�
 
 export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFormProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { showToast } = useApiToast()
+  const { showSuccess, showError } = useApiToast()
+  const showToast = (msg: string, type: 'success' | 'error' | 'info') => {
+    if (type === 'success') showSuccess(msg)
+    else showError(msg)
+  }
   const { t } = useI18n()
   const [youtubeIdError, setYoutubeIdError] = useState<string>('')
 
@@ -166,7 +170,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         ...formData,
         youtube_embed_id: videoId,
         is_published: true,
-        is_featured: formData.id === undefined ? true : undefined, // first video defaults to featured
+        is_featured: isEditing ? (formData as any).is_featured ?? false : false,
       }
 
       const response = await fetch(endpoint, {

@@ -1,10 +1,67 @@
 import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
+import { createClient } from '@supabase/supabase-js'
 
 const BASE_URL = 'https://quran-elhafez.com'
 const LANGUAGES = ['ar', 'en', 'fr'] as const
 type Language = (typeof LANGUAGES)[number]
+
+/**
+ * Get dynamic blog articles from Supabase.
+ * Falls back to file system if Supabase is unavailable.
+ */
+async function getDynamicBlogArticles(): Promise<string[]> {
+  try {
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_ANON_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Supabase env vars missing')
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    const { data: articles, error } = await supabase
+      .from('blog_articles')
+      .select('slug, created_at')
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .limit(100)
+
+    if (error) throw error
+
+    return (articles || []).map((a) => a.slug)
+  } catch (error) {
+    console.warn('[sitemap] Failed to fetch from Supabase:', error)
+    return getBlogArticlesFromFilesystem()
+  }
+}
+
+/**
+ * Get blog articles from filesystem as fallback.
+ */
+function getBlogArticlesFromFilesystem(): string[] {
+  try {
+    const zapierFile = path.join(process.cwd(), 'data', 'zapier-articles.json')
+    if (fs.existsSync(zapierFile)) {
+      const data = JSON.parse(fs.readFileSync(zapierFile, 'utf-8'))
+      return Object.keys(data)
+    }
+  } catch (error) {
+    console.log('[sitemap] Using default blog articles')
+  }
+
+  return [
+    'quran-memorization-techniques',
+    'arabic-foundation-importance',
+    'online-learning-benefits',
+  ]
+}
 
 // Helper: Get language prefix for URL
 const getLanguagePrefix = (lang: Language): string => {
@@ -43,26 +100,7 @@ const generateLocalizedUrl = (
   return urls
 }
 
-// Helper: Get blog articles from Zapier storage or use defaults
-function getBlogArticles(): string[] {
-  try {
-    const zapierFile = path.join(process.cwd(), 'data', 'zapier-articles.json')
-    if (fs.existsSync(zapierFile)) {
-      const data = JSON.parse(fs.readFileSync(zapierFile, 'utf-8'))
-      return Object.keys(data)
-    }
-  } catch (error) {
-    console.log('[v0] Using default blog articles for sitemap')
-  }
-
-  return [
-    'quran-memorization-techniques',
-    'arabic-foundation-importance',
-    'online-learning-benefits',
-  ]
-}
-
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemap: MetadataRoute.Sitemap = []
 
   // ============================================================
@@ -136,7 +174,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // TIER 6: BLOG ARTICLES (Priority 0.6, monthly)
   // Individual articles with language variants
   // ============================================================
-  const blogArticles = getBlogArticles()
+  const blogArticles = await getDynamicBlogArticles()
   blogArticles.forEach((slug) => {
     LANGUAGES.forEach((lang) => {
       const langPrefix = getLanguagePrefix(lang)
