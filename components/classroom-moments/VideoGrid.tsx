@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { VideoCard } from './VideoCard'
 
 export interface VideoData {
-  id: number
+  id: string
   title_ar: string
   title_en: string
   title_fr: string

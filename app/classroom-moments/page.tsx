@@ -28,24 +28,17 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    // Query Supabase directly from the server component — this works on Vercel
-    // because SUPABASE_SERVICE_ROLE_KEY is available server-side. Using the
-    // service role key means we bypass RLS and always get published videos.
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL
-    const supabaseKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY ??
-      process.env.SUPABASE_ANON_KEY ??
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('[classroom-moments] Supabase env vars missing')
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('[v0] classroom-moments: Missing Supabase public keys')
       return []
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-    const { data: rows, error } = await supabase
+    const { data: videos, error } = await supabase
       .from('classroom_videos')
       .select('*')
       .eq('is_published', true)
@@ -54,11 +47,11 @@ async function getClassroomVideos(): Promise<VideoData[]> {
       .limit(50)
 
     if (error) {
-      console.error('[classroom-moments] Supabase fetch error:', error.message)
+      console.error('[v0] classroom-moments: Supabase error:', error.message)
       return []
     }
 
-    return (rows ?? [])
+    return (videos ?? [])
       .map((video: any): VideoData => {
         const embedId: string =
           extractYouTubeId(video?.youtube_url ?? '') ??
@@ -76,7 +69,7 @@ async function getClassroomVideos(): Promise<VideoData[]> {
           youtube_embed_id: embedId,
           thumbnail_url:
             video?.thumbnail_url ||
-            `https://img.youtube.com/vi/${embedId}/hqdefault.jpg`,
+            `https://img.youtube.com/vi/${embedId}/sddefault.jpg`,
           category: video?.category ?? '',
           teacher_name_ar: video?.teacher_name_ar ?? '',
           teacher_name_en: video?.teacher_name_en ?? '',
@@ -88,7 +81,7 @@ async function getClassroomVideos(): Promise<VideoData[]> {
       // Drop rows without a valid 11-char YouTube ID
       .filter((v) => /^[a-zA-Z0-9_-]{11}$/.test(v.youtube_embed_id))
   } catch (error) {
-    console.error('[classroom-moments] getClassroomVideos error:', error)
+    console.error('[v0] classroom-moments: getClassroomVideos error:', error)
     return []
   }
 }

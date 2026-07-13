@@ -7,7 +7,7 @@ import { Play } from 'lucide-react'
 import { YouTubeModal } from './YouTubeModal'
 
 interface VideoCardProps {
-  id: number
+  id: string
   title: string
   description?: string
   thumbnailUrl: string
