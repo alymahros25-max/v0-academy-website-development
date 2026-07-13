@@ -20,13 +20,13 @@ const translations: Translations = {
   "nav.blog": { ar: "المدونة", en: "Blog", fr: "Blog" },
   "nav.contact": { ar: "اتصل بنا", en: "Contact Us", fr: "Contactez-nous" },
   "nav.account": { ar: "حسابي", en: "My Account", fr: "Mon compte" },
-  "nav.subscribe": { ar: "ابدأ الآن", en: "Get Started", fr: "Commencer" },
+  "nav.subscribe": { ar: "اشترك الآن", en: "Subscribe Now", fr: "Abonnez-vous" },
 
   // Hero
   "hero.title": { ar: "أكاديمية الحافظ المتميز", en: "Al-Hafiz Al-Mutamayez Academy", fr: "Acad\u00e9mie Al-Hafiz Al-Mutamayez" },
   "hero.subtitle": { ar: "أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين", en: "A Global Online Academy for Quran Memorization & Arabic Language Foundation", fr: "Acad\u00e9mie mondiale en ligne pour la m\u00e9morisation du Coran et l'enseignement de la langue arabe" },
-  "hero.cta": { ar: "احجز حصتك الأولى مجاناً", en: "Book Your First Free Lesson", fr: "Réservez votre première leçon gratuite" },
-  "hero.cta2": { ar: "اطلع على البرامج", en: "Explore Programs", fr: "Découvrez les programmes" },
+  "hero.cta": { ar: "ابدأ رحلتك الآن", en: "Start Your Journey Now", fr: "Commencez votre parcours" },
+  "hero.cta2": { ar: "تعرف على باقاتنا", en: "View Our Plans", fr: "Voir nos offres" },
 
   // About section
   "about.badge": { ar: "من نحن", en: "About Us", fr: "A propos" },
@@ -55,28 +55,13 @@ const translations: Translations = {
   "stats.countries": { ar: "دولة", en: "Countries", fr: "Pays" },
   "stats.sessions": { ar: "حصة شهرياً", en: "Monthly Sessions", fr: "Sessions mensuelles" },
 
-  // Pricing Hub
-  "pricing.title": { ar: "اختر برنامجك التعليمي", en: "Choose Your Learning Program", fr: "Choisissez votre programme" },
-  "pricing.subtitle": { ar: "اكتشف برامجنا التعليمية المتميزة في القرآن الكريم والتجويد وتأسيس اللغة العربية", en: "Discover our premium educational programs in Quran memorization, Tajweed, and Arabic language foundation", fr: "D\u00e9couvrez nos programmes \u00e9ducatifs premium en m\u00e9morisation du Coran et langue arabe" },
-  "pricing.quran.title": { ar: "القرآن الكريم والتجويد", en: "Quran & Tajweed", fr: "Coran & Tajweed" },
-  "pricing.quran.description": { ar: "تعلم حفظ القرآن الكريم مع أفضل المعلمين المجازين في أحكام التجويد الصحيح", en: "Learn Quran memorization with certified teachers in proper Tajweed", fr: "Apprenez la m\u00e9morisation du Coran avec des enseignants certifi\u00e9s" },
-  "pricing.quran.button": { ar: "ابدأ مع القرآن", en: "Start Quran Program", fr: "Commencer le Coran" },
-  "pricing.arabic.title": { ar: "تأسيس اللغة العربية", en: "Arabic Language Foundation", fr: "Fondation de la langue arabe" },
-  "pricing.arabic.description": { ar: "تعلم أساسيات اللغة العربية من القراءة والكتابة إلى القواعس النحوية", en: "Master Arabic language basics from reading and writing to grammar", fr: "Ma\u00eetrisez les bases de la langue arabe" },
-  "pricing.arabic.button": { ar: "ابدأ مع العربية", en: "Start Arabic Program", fr: "Commencer l'arabe" },
-  "pricing.includes": { ar: "تشمل جميع المميزات", en: "Includes all features", fr: "Inclut toutes les fonctionnalités" },
-  "pricing.why-choose": { ar: "لماذا تختار أكاديمية الحافظ المتميز؟", en: "Why Choose Al-Hafiz Academy?", fr: "Pourquoi choisir l'acad\u00e9mie?" },
-  "pricing.trust-message": { ar: "انضم إلى آلاف الطلاب الراضين حول العالم الذين اختاروا تعليمهم من الأفضل", en: "Join thousands of satisfied students worldwide who chose excellence in education", fr: "Rejoignez des milliers d'\u00e9tudiants satisfaits \u00e0 travers le monde" },
-  "pricing.ready-start": { ar: "هل أنت مستعد لبدء رحلتك التعليمية؟", en: "Ready to Start Your Learning Journey?", fr: "Pr\u00eat \u00e0 commencer votre parcours?" },
-  "pricing.cta-message": { ar: "اختر برنامجك التعليمي الرقمي - وصول فوري بعد الدفع | 100% دورات رقمية", en: "Choose your digital educational program - Instant access after payment | 100% online courses", fr: "Choisissez votre programme éducatif numérique - Accès immédiat après le paiement | 100% cours en ligne" },
-
-  // Pricing individual pages
+  // Pricing
   "pricing.quran.title": { ar: "باقات القرآن الكريم", en: "Quran Packages", fr: "Forfaits Coran" },
   "pricing.arabic.title": { ar: "باقات تأسيس العربي", en: "Arabic Language Packages", fr: "Forfaits Langue Arabe" },
   "pricing.sessions": { ar: "حصص", en: "Sessions", fr: "Sessions" },
   "pricing.session": { ar: "حصة", en: "Sessions", fr: "Sessions" },
   "pricing.duration": { ar: "30 دقيقة/حصة", en: "30 min/session", fr: "30 min/session" },
-  "pricing.subscribe": { ar: "ابدأ الاشتراك", en: "Start Subscription", fr: "Commencer l'abonnement" },
+  "pricing.subscribe": { ar: "اشترك الآن", en: "Subscribe Now", fr: "Abonnez-vous" },
   "pricing.popular": { ar: "الأكثر طلباً", en: "Most Popular", fr: "Le plus populaire" },
   "pricing.month": { ar: "شهرياً", en: "/month", fr: "/mois" },
   "pricing.features.flexibility": { ar: "مرونة في اختيار الوقت", en: "Flexible scheduling", fr: "Horaires flexibles" },
@@ -108,7 +93,7 @@ const translations: Translations = {
 
   // Library
   "library.title": { ar: "المكتبة الإلكترونية", en: "Digital Library", fr: "Biblioth\u00e8que num\u00e9rique" },
-  "library.desc": { ar: "مكتبة رقمية شاملة تضم أفضل المواد التعليمية الرقمية", en: "A comprehensive library with the best books and educational materials", fr: "Une biblioth\u00e8que compl\u00e8te" },
+  "library.desc": { ar: "مكتبة شاملة تضم أفضل الكتب والمواد التعليمية", en: "A comprehensive library with the best books and educational materials", fr: "Une biblioth\u00e8que compl\u00e8te" },
 
   // Games
   "games.title": { ar: "الألعاب والمسابقات التعليمية", en: "Educational Games & Quizzes", fr: "Jeux \u00e9ducatifs et quiz" },
@@ -125,7 +110,7 @@ const translations: Translations = {
   "contact.email": { ar: "البريد الإلكتروني", en: "Email", fr: "E-mail" },
   "contact.phone": { ar: "رقم الهاتف", en: "Phone", fr: "T\u00e9l\u00e9phone" },
   "contact.message": { ar: "الرسالة", en: "Message", fr: "Message" },
-  "contact.send": { ar: "أرسل الرسالة", en: "Send Message", fr: "Envoyer le message" },
+  "contact.send": { ar: "إرسال الرسالة", en: "Send Message", fr: "Envoyer" },
   "contact.success": { ar: "تم إرسال رسالتك بنجاح!", en: "Your message has been sent successfully!", fr: "Votre message a \u00e9t\u00e9 envoy\u00e9 avec succ\u00e8s!" },
 
   // Footer
@@ -135,7 +120,6 @@ const translations: Translations = {
   "footer.legal": { ar: "الصفحات القانونية", en: "Legal", fr: "L\u00e9gal" },
   "footer.privacy": { ar: "سياسة الخصوصية", en: "Privacy Policy", fr: "Politique de confidentialit\u00e9" },
   "footer.terms": { ar: "شروط الاستخدام", en: "Terms of Use", fr: "Conditions d'utilisation" },
-  "footer.refund": { ar: "سياسة الاسترداد", en: "Refund Policy", fr: "Politique de remboursement" },
   "footer.contact": { ar: "معلومات الاتصال", en: "Contact Info", fr: "Coordonn\u00e9es" },
 
   // Blog
@@ -146,7 +130,7 @@ const translations: Translations = {
   "blog.author": { ar: "الكاتب", en: "Author", fr: "Auteur" },
   "blog.category": { ar: "الفئة", en: "Category", fr: "Catégorie" },
   "blog.relatedArticles": { ar: "مقالات ذات صلة", en: "Related Articles", fr: "Articles connexes" },
-  "blog.backToBlog": { ar: "العودة إلى المدونة", en: "Back to Blog", fr: "Revenir au blog" },
+  "blog.backToBlog": { ar: "العودة للمدونة", en: "Back to Blog", fr: "Retour au blog" },
 
   // Account
   "account.title": { ar: "حسابي", en: "My Account", fr: "Mon compte" },
@@ -163,20 +147,20 @@ const translations: Translations = {
   "account.myOrders": { ar: "طلباتي", en: "My Orders", fr: "Mes commandes" },
 
   // Common
-  "common.readMore": { ar: "اقرأ المزيد", en: "Read More", fr: "Lire la suite" },
+  "common.readMore": { ar: "اقرأ المزيد", en: "Read More", fr: "En savoir plus" },
   "common.download": { ar: "تحميل", en: "Download", fr: "Télécharger" },
-  "common.read": { ar: "اقرأ", en: "Read", fr: "Lire" },
-  "common.play": { ar: "ابدأ اللعبة", en: "Start Game", fr: "Commencer le jeu" },
+  "common.read": { ar: "قراءة", en: "Read", fr: "Lire" },
+  "common.play": { ar: "العب الآن", en: "Play Now", fr: "Jouer" },
   "common.score": { ar: "النتيجة", en: "Score", fr: "Score" },
   "common.next": { ar: "التالي", en: "Next", fr: "Suivant" },
-  "common.tryAgain": { ar: "حاول مرة أخرى", en: "Try Again", fr: "Essayer à nouveau" },
-  "common.correct": { ar: "صحيح! ✓", en: "Correct! ✓", fr: "Correct! ✓" },
-  "common.wrong": { ar: "خطأ ✗", en: "Incorrect ✗", fr: "Incorrect ✗" },
+  "common.tryAgain": { ar: "حاول مرة أخرى", en: "Try Again", fr: "Réessayer" },
+  "common.correct": { ar: "إجابة صحيحة!", en: "Correct!", fr: "Correct!" },
+  "common.wrong": { ar: "إجابة خاطئة!", en: "Wrong!", fr: "Incorrect!" },
   "common.save": { ar: "حفظ", en: "Save", fr: "Enregistrer" },
   "common.cancel": { ar: "إلغاء", en: "Cancel", fr: "Annuler" },
   "common.delete": { ar: "حذف", en: "Delete", fr: "Supprimer" },
-  "common.edit": { ar: "تحرير", en: "Edit", fr: "Modifier" },
-  "common.add": { ar: "إضافة جديد", en: "Add New", fr: "Ajouter" },
+  "common.edit": { ar: "تعديل", en: "Edit", fr: "Modifier" },
+  "common.add": { ar: "إضافة", en: "Add", fr: "Ajouter" },
   "common.loading": { ar: "جاري التحميل...", en: "Loading...", fr: "Chargement..." },
   "common.error": { ar: "حدث خطأ", en: "An error occurred", fr: "Une erreur s'est produite" },
   "common.success": { ar: "تم بنجاح", en: "Success", fr: "Succès" },
@@ -189,8 +173,8 @@ const translations: Translations = {
   "classroom.videoCount": { ar: "حصة متاحة", en: "sessions available", fr: "sessions disponibles" },
   "classroom.featured": { ar: "محتوى حصري", en: "Exclusive Content", fr: "Contenu exclusif" },
   "classroom.responsive": { ar: "متوافق مع جميع الأجهزة", en: "Compatible with all devices", fr: "Compatible avec tous les appareils" },
-  "classroom.viewAll": { ar: "شاهد كل الحصص", en: "Watch All Sessions", fr: "Regarder toutes les sessions" },
-  "classroom.watchNow": { ar: "ابدأ المشاهدة", en: "Start Watching", fr: "Commencer à regarder" },
+  "classroom.viewAll": { ar: "عرض جميع الحصص", en: "View All Sessions", fr: "Voir toutes les sessions" },
+  "classroom.watchNow": { ar: "شاهد الآن", en: "Watch Now", fr: "Regarder maintenant" },
   "classroom.videoTitle": { ar: "عنوان الفيديو", en: "Video Title", fr: "Titre de la vidéo" },
   "classroom.youtubeUrl": { ar: "رابط الفيديو", en: "YouTube URL", fr: "URL YouTube" },
   "classroom.description": { ar: "وصف الفيديو", en: "Video Description", fr: "Description de la vidéo" },

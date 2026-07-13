@@ -11,7 +11,6 @@ import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
 import { AdminLoadingSkeleton } from "@/components/admin/AdminLoadingSkeleton"
 import { OrdersTab } from "@/components/admin/OrdersTab"
-import { PaymentSettingsTab } from "@/components/admin/PaymentSettingsTab"
 import { useI18n } from "@/lib/i18n"
 
 const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
@@ -23,7 +22,7 @@ import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -80,7 +79,6 @@ export default function AdminDashboard() {
     // SEO & Indexing
     { id: "gsc-dashboard", label: "حالة الفهرسة", key: "gsc.dashboard", icon: BarChart3 },
     { id: "request-indexing", label: "طلب فهرسة", key: "gsc.indexing", icon: Search },
-    { id: "payment-settings", label: "إعدادات الدفع", key: "admin.paymentSettings", icon: BarChart3 },
     
     // Legacy Features
     { id: "pages", label: t("admin.pages"), key: "admin.pages", icon: BookOpen },
@@ -225,9 +223,6 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "request-indexing" && <RequestIndexingTab />}
-          </AdminErrorBoundary>
-          <AdminErrorBoundary>
-            {activeTab === "payment-settings" && <PaymentSettingsTab />}
           </AdminErrorBoundary>
         </div>
       </main>
