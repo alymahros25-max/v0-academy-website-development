@@ -1,6 +1,11 @@
 import { Metadata } from 'next'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
-import { fetchClassroomVideos } from '@/lib/classroom-videos-client'
+import { extractYouTubeId } from '@/lib/youtube-utils'
+
+// ISR: revalidate every 60 s as a safety net.
+// On-demand revalidation via the 'classroom-videos' tag fires immediately
+// whenever the admin saves/updates/deletes a video through the CMS route.
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'لقطات من الحصص - أكاديمية الحافظ المتميز',
@@ -22,29 +27,55 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    // Fetch from Supabase with defensive programming
-    const videos = await fetchClassroomVideos()
-    
-    if (!Array.isArray(videos)) {
-      console.error('[v0] Videos is not an array:', videos)
+    // Call the CMS API directly from the server (avoids the client-only Supabase
+    // SDK path and ensures the Next.js fetch cache is tagged so on-demand
+    // revalidation via revalidateTag('classroom-videos') works instantly).
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(
+      `${baseUrl}/api/cms/classroom-videos?published=true&limit=50`,
+      { next: { revalidate: 60, tags: ['classroom-videos'] } }
+    )
+
+    if (!res.ok) {
+      console.error('[classroom-moments] CMS fetch failed:', res.status)
       return []
     }
 
-    // Transform Supabase data to VideoData format
-    return videos
-      ?.map((video: any) => ({
-        id: video?.id ?? '',
-        title: video?.title ?? 'بدون عنوان',
-        youtubeId: video?.youtube_embed_id ?? video?.youtube_id ?? '',
-        thumbnail: video?.thumbnail_url ?? '',
-        category: video?.category ?? 'عام',
-        teacher: video?.teacher ?? '',
-        createdAt: video?.created_at ?? new Date().toISOString(),
-      }))
-      .filter((v: VideoData) => v?.youtubeId) // Only include videos with valid YouTube IDs
-      ?? []
+    const json = await res.json()
+    const rows: any[] = Array.isArray(json?.data) ? json.data : []
+
+    return rows
+      .map((video: any): VideoData => {
+        // Re-extract from the stored URL as a safety net for rows inserted
+        // before the regex was hardened (e.g. direct Supabase inserts).
+        const embedId: string =
+          extractYouTubeId(video?.youtube_url ?? '') ??
+          extractYouTubeId(video?.youtube_embed_id ?? '') ??
+          video?.youtube_embed_id ??
+          ''
+
+        return {
+          id: video?.id ?? 0,
+          title_ar: video?.title_ar || 'بدون عنوان',
+          title_en: video?.title_en || video?.title_ar || 'No title',
+          title_fr: video?.title_fr || video?.title_ar || 'Sans titre',
+          description_ar: video?.description_ar ?? '',
+          description_en: video?.description_en ?? '',
+          description_fr: video?.description_fr ?? '',
+          youtube_embed_id: embedId,
+          thumbnail_url: video?.thumbnail_url || `https://img.youtube.com/vi/${embedId}/hqdefault.jpg`,
+          category: video?.category ?? '',
+          teacher_name_ar: video?.teacher_name_ar ?? '',
+          teacher_name_en: video?.teacher_name_en ?? '',
+          teacher_name_fr: video?.teacher_name_fr ?? '',
+          duration_seconds: video?.duration_seconds ?? undefined,
+          is_featured: video?.is_featured ?? false,
+        }
+      })
+      // Drop any row that didn't produce a valid 11-char ID
+      .filter((v) => /^[a-zA-Z0-9_-]{11}$/.test(v.youtube_embed_id))
   } catch (error) {
-    console.error('[v0] Error fetching classroom videos from Supabase:', error)
+    console.error('[classroom-moments] getClassroomVideos error:', error)
     return []
   }
 }

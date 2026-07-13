@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon, Palette, FileText, Lock, Film, Library
+  Menu, XIcon, Palette, FileText, Lock, Film, Library, Gamepad2
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
@@ -21,7 +21,7 @@ import { VideoForm } from "@/components/classroom-moments/VideoForm"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -72,6 +72,7 @@ export default function AdminDashboard() {
     { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
     { id: "digital-library", label: t("admin.digitalLibrary"), key: "admin.digitalLibrary", icon: Library },
+    { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2 },
     
     // Legacy Features
     { id: "pages", label: t("admin.pages"), key: "admin.pages", icon: BookOpen },
@@ -206,6 +207,9 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "digital-library" && <DigitalLibraryTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "educational-games" && <EducationalGamesTab />}
           </AdminErrorBoundary>
         </div>
       </main>
@@ -1331,16 +1335,17 @@ function UsersManagementTab() {
 // Classroom Videos Management Tab
 function ClassroomVideosTab() {
   const [showForm, setShowForm] = useState(false)
-  const { data: videos, isLoading, error } = useSWR("/api/cms/classroom-videos?published=false", fetcher, { 
-    revalidateOnFocus: false,
-    dedupingInterval: 60000 
+  // Fetch ALL videos (published + drafts) so the admin sees everything
+  const { data: videos, isLoading, error } = useSWR("/api/cms/classroom-videos", fetcher, { 
+    revalidateOnFocus: true,
+    dedupingInterval: 5000
   })
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">لقطات من الحصص</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">فيديوهات من الحصص</h2>
           <p className="text-sm text-muted-foreground">إدارة فيديوهات الحصص والمحتوى الترويجي</p>
         </div>
         <button
@@ -1357,7 +1362,7 @@ function ClassroomVideosTab() {
         <div className="bg-card rounded-lg border border-border p-6">
           <VideoForm onSuccess={() => {
             setShowForm(false)
-            globalMutate("/api/cms/classroom-videos?published=false")
+            globalMutate("/api/cms/classroom-videos")
           }} />
         </div>
       )}
@@ -1383,7 +1388,7 @@ function ClassroomVideosTab() {
         ) : (
           <div className="space-y-4">
             {videos.map((video: any) => (
-              <ClassroomVideoItem key={video.id} video={video} onUpdate={() => globalMutate("/api/cms/classroom-videos?published=false")} />
+              <ClassroomVideoItem key={video.id} video={video} onUpdate={() => globalMutate("/api/cms/classroom-videos")} />
             ))}
           </div>
         )}
@@ -1537,6 +1542,93 @@ function DigitalLibraryTab() {
             ))}
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+// Educational Games Tab — links to the existing /games page and shows its contents
+function EducationalGamesTab() {
+  const games = [
+    {
+      name_ar: "لعبة مطابقة الحروف",
+      name_en: "Letter Matching Game",
+      name_fr: "Jeu d'association de lettres",
+      description_ar: "تعلم الحروف العربية من خلال مطابقتها بالصور والأصوات",
+      path: "/games#letter-matching",
+      status: "منشور",
+    },
+    {
+      name_ar: "مسابقة قرآنية",
+      name_en: "Quran Quiz",
+      name_fr: "Quiz coranique",
+      description_ar: "اختبر معلوماتك القرآنية وتنافس مع الأصدقاء",
+      path: "/games#quran-quiz",
+      status: "منشور",
+    },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">الألعاب التعليمية</h2>
+          <p className="text-sm text-muted-foreground">إدارة الألعاب التعليمية المتوفرة على الموقع</p>
+        </div>
+        <a
+          href="/games"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition text-sm font-medium"
+        >
+          <Gamepad2 className="w-4 h-4" />
+          عرض صفحة الألعاب
+        </a>
+      </div>
+
+      {/* Games List */}
+      <div className="grid gap-4">
+        {games.map((game, idx) => (
+          <div key={idx} className="bg-card border border-border rounded-xl p-5 flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <Gamepad2 className="w-5 h-5 text-primary" />
+                <h3 className="font-bold text-foreground">{game.name_ar}</h3>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{game.status}</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">{game.description_ar}</p>
+              <div className="flex gap-2 text-xs text-muted-foreground">
+                <span className="bg-muted px-2 py-0.5 rounded">{game.name_en}</span>
+                <span className="bg-muted px-2 py-0.5 rounded">{game.name_fr}</span>
+              </div>
+            </div>
+            <a
+              href={game.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 px-3 py-1.5 border border-border rounded-lg text-sm hover:bg-muted transition"
+            >
+              عرض
+            </a>
+          </div>
+        ))}
+      </div>
+
+      {/* Info note */}
+      <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
+        <p className="text-sm text-foreground font-medium mb-1">ملاحظة</p>
+        <p className="text-xs text-muted-foreground">
+          الألعاب الحالية مدمجة في الموقع. لإضافة ألعاب جديدة أو تعديل النصوص، تواصل مع فريق التطوير أو عدّل ملف الألعاب مباشرة من مستودع الكود.
+        </p>
+        <a
+          href="/games"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-xs text-primary mt-2 hover:underline"
+        >
+          فتح صفحة الألعاب الكاملة
+          <span aria-hidden="true">←</span>
+        </a>
       </div>
     </div>
   )

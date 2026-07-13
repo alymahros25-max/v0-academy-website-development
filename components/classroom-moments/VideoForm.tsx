@@ -55,10 +55,10 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
 
-    // Validate YouTube URL when it changes
-    if (name === 'youtube_url' && value.trim()) {
-      if (!isValidYouTubeUrl(value)) {
-        setYoutubeIdError(t('invalidYoutubeUrl'))
+    // Validate YouTube URL in real time as the user types
+    if (name === 'youtube_url') {
+      if (value.trim() && !isValidYouTubeUrl(value)) {
+        setYoutubeIdError('رابط يوتيوب غير صحيح')
       } else {
         setYoutubeIdError('')
       }
@@ -73,26 +73,47 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
 
     setIsLoading(true)
     try {
-      const response = await fetch('/api/translate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: formData.title_ar,
-          targetLangs: ['en', 'fr'],
-        }),
-      })
+      // Translate all three text fields in parallel for speed
+      const fields: Array<{ key: 'title' | 'description' | 'teacher_name'; text: string }> = [
+        { key: 'title', text: formData.title_ar },
+        { key: 'description', text: formData.description_ar },
+        { key: 'teacher_name', text: formData.teacher_name_ar },
+      ].filter(f => f.text.trim() !== '')
 
-      const data = await response.json()
+      const results = await Promise.all(
+        fields.map(({ key, text }) =>
+          fetch('/api/translate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text }),
+          })
+            .then(r => r.json())
+            .then(data => ({ key, data }))
+        )
+      )
 
-      if (data.translations) {
-        setFormData(prev => ({
-          ...prev,
-          title_en: data.translations.en || prev.title_en,
-          title_fr: data.translations.fr || prev.title_fr,
-          description_en: data.translations.en || prev.description_en,
-          description_fr: data.translations.fr || prev.description_fr,
-        }))
-        showToast('تمت الترجمة بنجاح', 'success')
+      const updates: Partial<typeof formData> = {}
+      for (const { key, data } of results) {
+        // translate API returns { success, data: { ar, en, fr } }
+        const translations = data?.data ?? data?.translations
+        if (!translations) continue
+        if (key === 'title') {
+          if (translations.en) updates.title_en = translations.en
+          if (translations.fr) updates.title_fr = translations.fr
+        } else if (key === 'description') {
+          if (translations.en) updates.description_en = translations.en
+          if (translations.fr) updates.description_fr = translations.fr
+        } else if (key === 'teacher_name') {
+          if (translations.en) updates.teacher_name_en = translations.en
+          if (translations.fr) updates.teacher_name_fr = translations.fr
+        }
+      }
+
+      if (Object.keys(updates).length > 0) {
+        setFormData(prev => ({ ...prev, ...updates }))
+        showToast('تمت الترجمة التلقائية لجميع الحقول بنجاح', 'success')
+      } else {
+        showToast('لم يتم إرجاع أي ترجمات', 'error')
       }
     } catch (error) {
       showToast('فشل في الترجمة التلقائية', 'error')
@@ -108,13 +129,13 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
     try {
       // Validation
       if (!formData.title_ar || !formData.title_en || !formData.title_fr) {
-        showToast(t('enterValidUrl'), 'error')
+        showToast('يرجى إدخال العنوان بالعربية والإنجليزية والفرنسية', 'error')
         setIsLoading(false)
         return
       }
 
-      if (!formData.youtube_url) {
-        showToast(t('youtubeUrl'), 'error')
+      if (!formData.youtube_url?.trim()) {
+        showToast('يرجى إدخال رابط يوتيوب', 'error')
         setIsLoading(false)
         return
       }
@@ -122,8 +143,9 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       // Validate and extract YouTube ID
       const videoId = extractYouTubeId(formData.youtube_url)
       if (!videoId) {
-        showToast(t('invalidYoutubeUrl'), 'error')
-        setYoutubeIdError(t('invalidYoutubeUrl'))
+        const msg = 'رابط يوتيوب غير صحيح. تأكد من استخدام رابط مثل: https://youtu.be/XXXXXXXXXXX'
+        showToast(msg, 'error')
+        setYoutubeIdError(msg)
         setIsLoading(false)
         return
       }
@@ -137,10 +159,20 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
 
       const method = isEditing ? 'PATCH' : 'POST'
 
+      // Explicitly publish the video and include the pre-extracted embed ID.
+      // Without is_published: true the API defaults to false, making the video
+      // invisible on the public page.
+      const payload = {
+        ...formData,
+        youtube_embed_id: videoId,
+        is_published: true,
+        is_featured: formData.id === undefined ? true : undefined, // first video defaults to featured
+      }
+
       const response = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
 
       const result = await response.json()
@@ -151,6 +183,10 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
       }
 
       showToast(isEditing ? 'تم تحديث الحصة بنجاح' : 'تمت إضافة الحصة بنجاح', 'success')
+
+      // Revalidate the public classroom-moments page so the new video
+      // appears immediately without waiting for the 60-second ISR window.
+      fetch('/api/revalidate?path=/classroom-moments').catch(() => {/* non-fatal */})
 
       // Reset form if creating new
       if (!isEditing) {
@@ -198,34 +234,54 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg border border-border">
       <h2 className="text-2xl font-bold text-foreground">
-        {isEditing ? t('edit') + ' ' + t('classroomMoments') : t('add') + ' ' + t('classroomMoments')}
+        {isEditing ? 'تعديل الفيديو' : 'إضافة فيديو من الحصص'}
       </h2>
 
       {/* YouTube URL with validation */}
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
-          {t('youtubeUrl')} *
+          رابط يوتيوب *
         </label>
+        {/* Use type="text" — mobile browsers reject youtu.be URLs with type="url" */}
         <input
-          type="url"
+          type="text"
           name="youtube_url"
           value={formData.youtube_url}
           onChange={handleChange}
-          placeholder="https://www.youtube.com/watch?v=xxxxx or youtu.be/xxxxx"
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+          placeholder="https://www.youtube.com/watch?v=YzChqKd6TT8"
+          dir="ltr"
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent font-mono text-sm ${
             youtubeIdError ? 'border-destructive' : 'border-border'
           }`}
           required
         />
+
+        {/* Live ID preview — shows the extracted 11-char ID so the admin can verify */}
+        {formData.youtube_url && !youtubeIdError && (() => {
+          const previewId = extractYouTubeId(formData.youtube_url)
+          return previewId ? (
+            <p className="text-xs text-green-600 mt-1 font-mono">
+              ID: {previewId}
+            </p>
+          ) : null
+        })()}
+
         {youtubeIdError && (
           <div className="flex items-center gap-2 mt-2 text-sm text-destructive">
             <AlertCircle className="w-4 h-4" />
             {youtubeIdError}
           </div>
         )}
-        <p className="text-xs text-muted-foreground mt-1">
-          {t('enterValidUrl')}
-        </p>
+
+        {/* Helper text listing accepted formats */}
+        <div className="mt-2 p-3 bg-muted rounded-lg text-xs text-muted-foreground space-y-1">
+          <p className="font-medium text-foreground mb-1">الصيغ المقبولة:</p>
+          <p dir="ltr" className="font-mono">https://www.youtube.com/watch?v=YzChqKd6TT8</p>
+          <p dir="ltr" className="font-mono">https://youtu.be/YzChqKd6TT8</p>
+          <p dir="ltr" className="font-mono">https://youtu.be/YzChqKd6TT8?si=XXXXXX</p>
+          <p dir="ltr" className="font-mono">https://www.youtube.com/shorts/YzChqKd6TT8</p>
+          <p dir="ltr" className="font-mono">https://www.youtube.com/embed/YzChqKd6TT8</p>
+        </div>
       </div>
 
       {/* Titles */}
@@ -317,14 +373,16 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         </div>
       </div>
 
-      {/* Auto Translate Button */}
+      {/* Auto Translate Button — translates title, description, and teacher name in one click */}
       <button
         type="button"
         onClick={autoTranslate}
-        disabled={isLoading}
-        className="w-full px-4 py-2 bg-secondary text-secondary-foreground font-medium rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-colors"
+        disabled={isLoading || !formData.title_ar}
+        className="w-full px-4 py-2 bg-secondary text-secondary-foreground font-medium rounded-lg hover:bg-secondary/80 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
       >
-        {isLoading ? t('classroom.translating') : '🌐 ' + t('classroom.autoTranslate')}
+        {isLoading
+          ? t('classroom.translating')
+          : 'ترجمة تلقائية شاملة من العربية (العنوان + الوصف + اسم المعلم)'}
       </button>
 
       {/* Teacher Names */}
