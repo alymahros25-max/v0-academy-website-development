@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
@@ -28,37 +27,31 @@ export const metadata: Metadata = {
 
 async function getClassroomVideos(): Promise<VideoData[]> {
   try {
-    // Query Supabase directly from the server component — this works on Vercel
-    // because SUPABASE_SERVICE_ROLE_KEY is available server-side. Using the
-    // service role key means we bypass RLS and always get published videos.
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL
-    const supabaseKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY ??
-      process.env.SUPABASE_ANON_KEY ??
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    // Use the internal API route which handles Supabase connection properly
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000'
+    
+    const response = await fetch(`${baseUrl}/api/classroom-videos`, {
+      next: { revalidate: 60, tags: ['classroom-videos'] },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('[classroom-moments] Supabase env vars missing')
+    if (!response.ok) {
+      console.error(`[v0] classroom-moments: API returned status ${response.status}`)
       return []
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const videos = await response.json()
 
-    const { data: rows, error } = await supabase
-      .from('classroom_videos')
-      .select('*')
-      .eq('is_published', true)
-      .order('display_order', { ascending: true })
-      .order('created_at', { ascending: false })
-      .limit(50)
-
-    if (error) {
-      console.error('[classroom-moments] Supabase fetch error:', error.message)
+    if (!Array.isArray(videos)) {
+      console.error('[v0] classroom-moments: API response is not an array')
       return []
     }
 
-    return (rows ?? [])
+    return videos
       .map((video: any): VideoData => {
         const embedId: string =
           extractYouTubeId(video?.youtube_url ?? '') ??
@@ -88,7 +81,7 @@ async function getClassroomVideos(): Promise<VideoData[]> {
       // Drop rows without a valid 11-char YouTube ID
       .filter((v) => /^[a-zA-Z0-9_-]{11}$/.test(v.youtube_embed_id))
   } catch (error) {
-    console.error('[classroom-moments] getClassroomVideos error:', error)
+    console.error('[v0] classroom-moments: getClassroomVideos error:', error)
     return []
   }
 }
