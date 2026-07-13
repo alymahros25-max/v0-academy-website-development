@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { LEGACY_ROUTES, getLocalizedPath } from '@/lib/routing-config'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // ============================================================
