@@ -155,7 +155,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="font-bold text-foreground">{locale === "ar" ? "واتساب" : "WhatsApp"}</p>
-                    <a href="https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">{locale === "ar" ? "تواصل الآن" : "Contact Now"}</a>
+                    <a href="https://bit.ly/4aJfOl6" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">{locale === "ar" ? "تواصل الآن" : "Contact Now"}</a>
                   </div>
                 </div>
               </div>

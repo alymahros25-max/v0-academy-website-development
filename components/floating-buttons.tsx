@@ -18,7 +18,7 @@ export function FloatingButtons() {
       >
         {/* WhatsApp */}
         <a
-          href="https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران"
+          href="https://bit.ly/4aJfOl6"
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-2"

@@ -35,7 +35,7 @@ export function WidgetsManager({ onWidgetUpdate }: WidgetsManagerProps) {
   const { toast } = useToast()
   const [whatsappConfig, setWhatsappConfig] = useState<WhatsAppConfig>({
     position: 'right',
-    phone: 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
+    phone: 'https://bit.ly/4aJfOl6',
     size: 'large',
     color: '#1a4d2e',
     showLabel: true,

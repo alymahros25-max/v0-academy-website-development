@@ -18,7 +18,7 @@ export const generateOrganizationSchema = () => ({
     'contactType': 'Customer Service',
     'email': 'enamel311@gmail.com',
     'areaServed': 'Worldwide',
-    'url': 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
+    'url': 'https://bit.ly/4aJfOl6',
   },
 })
 
@@ -140,7 +140,7 @@ export const generateLocalBusinessSchema = () => ({
   ],
   'contactPoint': {
     '@type': 'ContactPoint',
-    'url': 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
+    'url': 'https://bit.ly/4aJfOl6',
   },
 })
 
