@@ -15,10 +15,10 @@ export const generateOrganizationSchema = () => ({
   ],
   'contactPoint': {
     '@type': 'ContactPoint',
-    'telephone': '+201130127894',
     'contactType': 'Customer Service',
     'email': 'enamel311@gmail.com',
     'areaServed': 'Worldwide',
+    'url': 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
   },
 })
 
@@ -128,7 +128,6 @@ export const generateLocalBusinessSchema = () => ({
   'name': 'أكاديمية الحافظ المتميز',
   'image': 'https://quran-elhafez.com/images/hero-children.jpg',
   'description': 'أكاديمية عالمية متخصصة في تحفيظ القرآن الكريم وتأسيس اللغة العربية',
-  'telephone': '+201130127894',
   'email': 'enamel311@gmail.com',
   'areaServed': {
     '@type': 'Country',
@@ -139,6 +138,10 @@ export const generateLocalBusinessSchema = () => ({
     'https://www.facebook.com/alhafizacademy',
     'https://www.instagram.com/alhafizacademy',
   ],
+  'contactPoint': {
+    '@type': 'ContactPoint',
+    'url': 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
+  },
 })
 
 export const generateProductSchema = (product: {

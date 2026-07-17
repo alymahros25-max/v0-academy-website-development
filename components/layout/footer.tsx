@@ -59,7 +59,7 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3">
               <a
-                href="https://wa.me/201130127894"
+                href="https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 flex items-center justify-center rounded-lg bg-primary-foreground/10 hover:bg-secondary hover:text-secondary-foreground transition-colors"
@@ -151,8 +151,8 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2 text-sm text-primary-foreground/70">
                 <Phone className="w-4 h-4 text-secondary shrink-0" />
-                <a href="https://wa.me/201130127894" className="hover:text-secondary transition-colors">
-                  +20 113 012 7894
+                <a href="https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">
+                  {locale === "ar" ? "تواصل عبر WhatsApp" : "Contact via WhatsApp"}
                 </a>
               </li>
               <li className="flex items-start gap-2 text-sm text-primary-foreground/70">

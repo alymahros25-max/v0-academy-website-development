@@ -32,13 +32,12 @@ export function generateOrganizationSchema(): SchemaContext {
     sameAs: [
       'https://www.facebook.com/quran-elhafez',
       'https://www.youtube.com/@quran-elhafez',
-      'https://wa.me/201130127894',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
       email: 'enamel311@gmail.com',
-      telephone: '+201130127894',
+      url: 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
     },
     address: {
       '@type': 'PostalAddress',
@@ -192,8 +191,8 @@ export function generateLocalBusinessSchema(): SchemaContext {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
-      telephone: '+201130127894',
       email: 'enamel311@gmail.com',
+      url: 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
     },
     sameAs: [
       'https://www.facebook.com/quran-elhafez',

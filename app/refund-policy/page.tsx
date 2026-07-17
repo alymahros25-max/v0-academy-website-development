@@ -75,7 +75,7 @@ export default async function RefundPolicyPage() {
 
 للأسئلة والاستفسارات:
 - البريد: enamel311@gmail.com
-- واتساب: +20 113 012 7894
+- واتساب: تواصل عبر الزر أسفل الصفحة
 - تليجرام: @academy_quraan`,
       updated_at: new Date().toISOString(),
     }
@@ -136,7 +136,7 @@ export default async function RefundPolicyPage() {
             <p className="text-sm text-muted-foreground mt-1">كيف نحافظ على بيانات</p>
           </Link>
           <a
-            href="https://wa.me/201130127894"
+            href="https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران"
             target="_blank"
             rel="noopener noreferrer"
             className="p-4 rounded-lg border hover:border-primary transition-all hover:bg-primary/5"
