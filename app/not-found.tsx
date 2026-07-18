@@ -49,7 +49,7 @@ export default function NotFound() {
           </p>
           <p className="text-sm text-muted-foreground mt-2">
             تواصل معنا عبر
-            <a href="https://wa.me/201130127894" className="text-primary hover:underline mx-1">
+            <a href="https://bit.ly/4aJfOl6" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline mx-1">
               واتساب
             </a>
             أو

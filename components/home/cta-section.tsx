@@ -35,7 +35,7 @@ export function CTASection() {
             <Arrow className="w-5 h-5" />
           </Link>
           <a
-            href="https://wa.me/201130127894"
+            href="https://bit.ly/4aJfOl6"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-4 bg-primary-foreground/10 text-primary-foreground rounded-xl font-bold text-lg border border-primary-foreground/20 transition-all hover:bg-primary-foreground/20 hover:-translate-y-0.5"
