@@ -1,0 +1,78 @@
+# ============================================================
+# Robots.txt لأكاديمية الحافظ المتميز
+# https://quran-elhafez.com
+# ============================================================
+
+User-agent: *
+Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
+Allow: /blog
+Allow: /quran
+Allow: /arabic
+Allow: /teachers
+Allow: /reviews
+Allow: /library
+Allow: /games
+Allow: /faq
+Allow: /contact
+Allow: /about
+
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /account
+Disallow: /_next/
+Disallow: /static/
+Disallow: /.well-known/
+Disallow: /خاص/
+Disallow: /.env
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /عام/
+Disallow: /dist/
+Disallow: /build/
+Disallow: /*?*
+Disallow: /*lang=
+
+Crawl-delay: 1
+
+User-agent: Googlebot
+Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
+Disallow: /admin
+Disallow: /api/
+Disallow: /_next/
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Allow: /ar/
+Allow: /en/
+Allow: /fr/
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 1
+
+User-agent: YandexBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 1
+
+User-agent: MJ12bot
+User-agent: SemrushBot
+User-agent: DotBot
+User-agent: AhrefsBot
+User-agent: BLEXBot
+User-agent: PetalBot
+User-agent: GPTBot
+User-agent: ChatGPT-User
+Disallow: /
+
+Sitemap: https://quran-elhafez.com/sitemap.xml
