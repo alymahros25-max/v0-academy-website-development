@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next"
+import Script from "next/script"
 import { Noto_Sans_Arabic, Inter } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
@@ -110,6 +111,28 @@ export default function RootLayout({
         <link rel="preconnect" href="https://xtfyrskkoewanmkcfixw.supabase.co" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         <link rel="dns-prefetch" href="https://img.youtube.com" />
+        
+        {/* Google Analytics 4 - GA4 Tracking */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-94X5S3J229"
+          async
+        />
+        <Script
+          id="ga4-config"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-94X5S3J229', {
+                page_path: window.location.pathname,
+                page_title: document.title,
+              });
+            `,
+          }}
+        />
       </head>
       <body
         className={`${notoArabic.variable} ${inter.variable} font-sans antialiased`}
