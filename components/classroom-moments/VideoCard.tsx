@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Play } from 'lucide-react'
-import { YouTubeModal } from './YouTubeModal'
+import { VideoPlayer } from '@/components/VideoPlayer'
 
 interface VideoCardProps {
   id: string
@@ -120,8 +120,8 @@ export function VideoCard({
         </div>
       </motion.div>
 
-      {/* Modal */}
-      <YouTubeModal
+      {/* Video Player - Protected Component */}
+      <VideoPlayer
         isOpen={isOpen}
         videoId={videoId}
         title={title}
