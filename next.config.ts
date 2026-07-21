@@ -62,9 +62,23 @@ const nextConfig: NextConfig = {
             value: 'strict-origin-when-cross-origin',
           },
           // Content Security Policy
+          // IMPORTANT: frame-src MUST include YouTube domains for the video player to work.
+          // Do NOT remove youtube.com or youtube-nocookie.com from frame-src.
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.vercel-insights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.vercel-insights.com https://*.vercel-analytics.com;",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.vercel-insights.com https://www.googletagmanager.com https://*.google-analytics.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "img-src 'self' data: https: blob:",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://*.vercel-insights.com https://*.vercel-analytics.com https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com",
+              // LOCKED: These two frame-src entries keep the YouTube video player working.
+              // Do NOT remove or modify them during future updates.
+              "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+              "worker-src blob:",
+              "media-src 'self' https:",
+            ].join('; '),
           },
           // Permissions Policy (formerly Feature Policy)
           {

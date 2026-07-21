@@ -23,11 +23,14 @@ export function proxy(request: NextRequest) {
     )
     const cspHeader =
       "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel-analytics.com; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel-analytics.com https://www.googletagmanager.com; " +
       "style-src 'self' 'unsafe-inline' fonts.googleapis.com; " +
       "img-src 'self' data: https:; " +
       "font-src 'self' fonts.gstatic.com; " +
-      "connect-src 'self' *.supabase.co *.vercel-analytics.com; " +
+      "connect-src 'self' *.supabase.co wss://*.supabase.co *.vercel-analytics.com; " +
+      // LOCKED: frame-src must include YouTube to allow the video player iframe to load.
+      // Do NOT remove youtube.com or youtube-nocookie.com during future updates.
+      "frame-src https://www.youtube.com https://www.youtube-nocookie.com; " +
       "frame-ancestors 'self'; " +
       "base-uri 'self'; " +
       "form-action 'self'"
@@ -97,13 +100,16 @@ export function proxy(request: NextRequest) {
   )
 
   // Content Security Policy (CSP)
+  // LOCKED: frame-src must include YouTube to allow the video player iframe to load.
+  // Do NOT remove youtube.com or youtube-nocookie.com during future updates.
   const cspHeader =
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel-analytics.com; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel-analytics.com https://www.googletagmanager.com; " +
     "style-src 'self' 'unsafe-inline' fonts.googleapis.com; " +
     "img-src 'self' data: https:; " +
     "font-src 'self' fonts.gstatic.com; " +
-    "connect-src 'self' *.supabase.co *.vercel-analytics.com; " +
+    "connect-src 'self' *.supabase.co wss://*.supabase.co *.vercel-analytics.com; " +
+    "frame-src https://www.youtube.com https://www.youtube-nocookie.com; " +
     "frame-ancestors 'self'; " +
     "base-uri 'self'; " +
     "form-action 'self'"
@@ -117,7 +123,8 @@ export function proxy(request: NextRequest) {
   )
 
   // Cross-Origin Policies
-  response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp')
+  // NOTE: Cross-Origin-Embedder-Policy is intentionally omitted here because
+  // 'require-corp' blocks YouTube iframes from loading. It is only set on admin routes.
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
   response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin')
 
