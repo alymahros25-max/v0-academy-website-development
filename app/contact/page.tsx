@@ -3,11 +3,13 @@
 import { useState } from "react"
 import { useI18n } from "@/lib/i18n"
 import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react"
+import { WhatsAppDialog } from "@/components/whatsapp-dialog"
 
 export default function ContactPage() {
   const { t, locale } = useI18n()
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -149,15 +151,18 @@ export default function ContactPage() {
               </div>
 
               <div className="bg-card rounded-2xl p-6 shadow-sm border border-border">
-                <div className="flex items-center gap-4 mb-3">
+                <button
+                  onClick={() => setWhatsappDialogOpen(true)}
+                  className="w-full flex items-center gap-4 mb-3 hover:opacity-80 transition-opacity text-left"
+                >
                   <div className="w-12 h-12 rounded-xl bg-[#25D366]/10 flex items-center justify-center">
                     <Phone className="w-6 h-6 text-[#25D366]" />
                   </div>
                   <div>
                     <p className="font-bold text-foreground">{locale === "ar" ? "واتساب" : "WhatsApp"}</p>
-                    <a href="https://bit.ly/4aJfOl6" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">{locale === "ar" ? "تواصل الآن" : "Contact Now"}</a>
+                    <p className="text-sm text-primary hover:underline">{locale === "ar" ? "تواصل الآن" : "Contact Now"}</p>
                   </div>
-                </div>
+                </button>
               </div>
 
               <div className="bg-card rounded-2xl p-6 shadow-sm border border-border">
@@ -189,6 +194,12 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      {/* WhatsApp Dialog */}
+      <WhatsAppDialog
+        open={whatsappDialogOpen}
+        onOpenChange={setWhatsappDialogOpen}
+      />
     </>
   )
 }

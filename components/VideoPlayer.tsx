@@ -1,18 +1,28 @@
 'use client'
 
+/**
+ * CRITICAL COMPONENT - DO NOT MODIFY
+ * 
+ * This component is LOCKED and should only be imported, never refactored or rewritten.
+ * It contains stable, production-tested video player logic.
+ * 
+ * Any modifications needed should be made through props/configuration only.
+ * If bugs are found, contact the original developer instead of editing.
+ */
+
 import { useState, useEffect, useRef } from 'react'
 import { X, FileVideo } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { extractYouTubeId } from '@/lib/youtube-utils'
 
-interface YouTubeModalProps {
+interface VideoPlayerProps {
   isOpen: boolean
   videoId: string
   title: string
   onClose: () => void
 }
 
-export function YouTubeModal({ isOpen, videoId, title, onClose }: YouTubeModalProps) {
+export function VideoPlayer({ isOpen, videoId, title, onClose }: VideoPlayerProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
