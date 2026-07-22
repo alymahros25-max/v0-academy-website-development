@@ -20,10 +20,11 @@ const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibra
 })
 import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
+import { BlogManager } from "@/components/admin/BlogManager"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -72,6 +73,7 @@ export default function AdminDashboard() {
     { id: "theme", label: t("admin.theme"), key: "admin.theme", icon: Palette },
     { id: "pages-builder", label: t("admin.pagesBuilder"), key: "admin.pagesBuilder", icon: FileText },
     { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
+    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
     { id: "digital-library", label: t("admin.digitalLibrary"), key: "admin.digitalLibrary", icon: Library },
     { id: "orders", label: "الأوامر والفواتير", key: "admin.orders", icon: BarChart3 },
@@ -209,6 +211,9 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "users" && <UsersManagementTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "blog" && <BlogManager />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "classroom-videos" && <ClassroomVideosTab />}
