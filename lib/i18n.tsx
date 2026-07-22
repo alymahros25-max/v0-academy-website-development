@@ -246,6 +246,17 @@ const translations: Translations = {
   "admin.descriptionAr": { ar: "الوصف (عربي)", en: "Description (Arabic)", fr: "Description (Arabe)" },
   "admin.descriptionEn": { ar: "الوصف (إنجليزي)", en: "Description (English)", fr: "Description (Anglais)" },
   "admin.descriptionFr": { ar: "الوصف (فرنسي)", en: "Description (French)", fr: "Description (Français)" },
+
+  // Admin Blog Management
+  "admin.blog": { ar: "إدارة المدونة", en: "Blog Management", fr: "Gestion du blog" },
+  "admin.blog.add": { ar: "مقال جديد", en: "New Post", fr: "Nouvel article" },
+  "admin.blog.edit": { ar: "تعديل المقال", en: "Edit Post", fr: "Modifier l'article" },
+  "admin.blog.delete": { ar: "حذف المقال", en: "Delete Post", fr: "Supprimer l'article" },
+  "admin.blog.publish": { ar: "نشر", en: "Publish", fr: "Publier" },
+  "admin.blog.unpublish": { ar: "إخفاء", en: "Unpublish", fr: "Dépublier" },
+  "admin.blog.draft": { ar: "مسودة", en: "Draft", fr: "Brouillon" },
+  "admin.blog.published": { ar: "منشور", en: "Published", fr: "Publié" },
+  "admin.blog.autoFill": { ar: "ملء تلقائي", en: "Auto-fill", fr: "Remplissage auto" },
 }
 
 interface I18nContextType {
