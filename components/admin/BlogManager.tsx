@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import useSWR, { mutate as globalMutate } from "swr"
-import { Plus, Edit3, Trash2, Eye, EyeOff, Check, X, ChevronDown, ChevronUp, Wand2 } from "lucide-react"
+import { Plus, Edit3, Trash2, Eye, EyeOff, Check, X, ChevronDown, ChevronUp, Wand2, Loader2 } from "lucide-react"
 import type { BlogPost } from "@/components/BlogSection"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
