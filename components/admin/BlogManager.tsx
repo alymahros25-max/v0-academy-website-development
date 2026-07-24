@@ -9,12 +9,22 @@ const fetcher = (url: string) => fetch(url).then(r => r.json())
 
 const BLOG_API = "/api/blog?all=true"
 
-// Lightweight client-side auto-translate helper (no external API needed)
-function autoTranslate(arText: string, targetLang: "en" | "fr"): string {
-  if (!arText?.trim()) return ""
-  // Return the Arabic text as a placeholder — the admin can refine it.
-  // This prevents empty fields without requiring paid translation APIs.
-  return arText.trim()
+// Free client-side translation via Google Translate unofficial endpoint (no API key needed)
+async function autoTranslate(text: string, targetLang: "en" | "fr"): Promise<string> {
+  if (!text?.trim()) return ""
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`
+    const res = await fetch(url)
+    if (!res.ok) return text
+    const data = await res.json()
+    // Response shape: [ [ ["translated", "original", ...], ... ], ... ]
+    const translated = data?.[0]
+      ?.map((chunk: [string]) => chunk?.[0] ?? "")
+      .join("") ?? ""
+    return translated.trim() || text
+  } catch {
+    return text
+  }
 }
 
 interface FormData {
@@ -54,6 +64,7 @@ export function BlogManager() {
   const [form, setForm] = useState<FormData>(emptyForm())
   const [activeLang, setActiveLang] = useState<Lang>("ar")
   const [saving, setSaving] = useState(false)
+  const [translating, setTranslating] = useState(false)
   const [message, setMessage] = useState<{ text: string; ok: boolean } | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -86,19 +97,41 @@ export function BlogManager() {
     setMode("edit")
   }
 
-  const handleAutoFill = () => {
-    setForm(f => ({
-      ...f,
-      title_en: f.title_en || autoTranslate(f.title_ar, "en"),
-      title_fr: f.title_fr || autoTranslate(f.title_ar, "fr"),
-      excerpt_en: f.excerpt_en || autoTranslate(f.excerpt_ar, "en"),
-      excerpt_fr: f.excerpt_fr || autoTranslate(f.excerpt_ar, "fr"),
-      content_en: f.content_en || autoTranslate(f.content_ar, "en"),
-      content_fr: f.content_fr || autoTranslate(f.content_ar, "fr"),
-      category_en: f.category_en || autoTranslate(f.category_ar, "en"),
-      category_fr: f.category_fr || autoTranslate(f.category_ar, "fr"),
-    }))
-    showMsg("تم ملء الحقول الفارغة تلقائياً — يمكنك تعديلها", true)
+  const handleAutoTranslate = async () => {
+    if (!form.title_ar.trim()) {
+      showMsg("أدخل العنوان بالعربية أولاً", false)
+      return
+    }
+    setTranslating(true)
+    try {
+      const [
+        title_en, title_fr,
+        excerpt_en, excerpt_fr,
+        content_en, content_fr,
+        category_en, category_fr,
+      ] = await Promise.all([
+        autoTranslate(form.title_ar, "en"),
+        autoTranslate(form.title_ar, "fr"),
+        autoTranslate(form.excerpt_ar, "en"),
+        autoTranslate(form.excerpt_ar, "fr"),
+        autoTranslate(form.content_ar, "en"),
+        autoTranslate(form.content_ar, "fr"),
+        autoTranslate(form.category_ar, "en"),
+        autoTranslate(form.category_ar, "fr"),
+      ])
+      setForm(f => ({
+        ...f,
+        title_en, title_fr,
+        excerpt_en, excerpt_fr,
+        content_en, content_fr,
+        category_en, category_fr,
+      }))
+      showMsg("تمت الترجمة التلقائية — يمكنك مراجعة وتعديل النصوص")
+    } catch {
+      showMsg("حدث خطأ أثناء الترجمة، حاول مرة أخرى", false)
+    } finally {
+      setTranslating(false)
+    }
   }
 
   const handleSave = async () => {
@@ -183,11 +216,16 @@ export function BlogManager() {
           </h2>
           <div className="flex items-center gap-2">
             <button
-              onClick={handleAutoFill}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-sm hover:bg-muted transition-colors"
+              onClick={handleAutoTranslate}
+              disabled={translating}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-sm hover:bg-muted transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <Wand2 className="w-4 h-4" />
-              ملء تلقائي
+              {translating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Wand2 className="w-4 h-4" />
+              )}
+              {translating ? "جاري الترجمة..." : "ترجمة تلقائية ✨"}
             </button>
             <button
               onClick={() => setMode("list")}
