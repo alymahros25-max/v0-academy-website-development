@@ -9,19 +9,18 @@ const fetcher = (url: string) => fetch(url).then(r => r.json())
 
 const BLOG_API = "/api/blog?all=true"
 
-// Free client-side translation via Google Translate unofficial endpoint (no API key needed)
+// Calls the server-side /api/translate proxy to avoid browser CORS issues.
 async function autoTranslate(text: string, targetLang: "en" | "fr"): Promise<string> {
   if (!text?.trim()) return ""
   try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`
-    const res = await fetch(url)
+    const res = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, targetLang }),
+    })
     if (!res.ok) return text
-    const data = await res.json()
-    // Response shape: [ [ ["translated", "original", ...], ... ], ... ]
-    const translated = data?.[0]
-      ?.map((chunk: [string]) => chunk?.[0] ?? "")
-      .join("") ?? ""
-    return translated.trim() || text
+    const data = (await res.json()) as { translated?: string }
+    return data.translated?.trim() || text
   } catch {
     return text
   }
