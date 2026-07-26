@@ -5,6 +5,9 @@ import { Gamepad2, Trophy, Brain, Star, Filter, X } from "lucide-react"
 import { useState } from "react"
 import { LetterMatchGame } from "@/components/games/letter-match-game"
 import { QuranQuizGame } from "@/components/games/quran-quiz-game"
+import { WordBuilderGame } from "@/components/games/word-builder-game"
+import { TajweedRulesGame } from "@/components/games/tajweed-rules-game"
+import { QuranOrderGame } from "@/components/games/quran-order-game"
 import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
@@ -19,7 +22,11 @@ export default function GamesPage() {
   
   const renderGame = (gameId: string) => {
     if (gameId === "letter-match-1") return <LetterMatchGame />
+    if (gameId === "word-builder-1") return <WordBuilderGame />
     if (gameId === "quran-quiz-1") return <QuranQuizGame />
+    if (gameId === "quran-order-1") return <QuranOrderGame />
+    if (gameId === "tajweed-rules-1") return <TajweedRulesGame />
+    if (gameId === "tajweed-rules-2") return <TajweedRulesGame />
     // Placeholder for other games - to be implemented
     return (
       <div className="text-center py-20">
@@ -171,7 +178,7 @@ export default function GamesPage() {
 
       {/* Active Game */}
       {activeGame !== "none" && (
-        <section className="py-12 bg-background">
+        <section className="py-12 bg-background min-h-screen">
           <div className="mx-auto max-w-4xl px-4">
             <button
               onClick={() => setActiveGame("none")}
@@ -181,8 +188,7 @@ export default function GamesPage() {
               {locale === "ar" ? "العودة لقائمة الألعاب" : locale === "en" ? "Back to Games" : "Retour aux jeux"}
             </button>
 
-            {activeGame === "letters" && <LetterMatchGame />}
-            {activeGame === "quiz" && <QuranQuizGame />}
+            {renderGame(activeGame)}
           </div>
         </section>
       )}
