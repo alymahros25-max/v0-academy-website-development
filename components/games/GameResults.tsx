@@ -110,6 +110,32 @@ export function GameResults({
         </div>
       )}
 
+      {/* Leaderboard Preview */}
+      <div className="bg-gradient-to-br from-purple-50 to-purple-50/50 dark:from-purple-950/20 dark:to-purple-950/10 border border-purple-200 dark:border-purple-900/30 rounded-2xl p-6 mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Trophy className="w-5 h-5 text-purple-600" />
+          <h3 className="text-lg font-extrabold text-purple-900 dark:text-purple-100">
+            {locale === "ar" ? "لوحة الصدارة" : locale === "en" ? "Leaderboard" : "Classement"}
+          </h3>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between p-3 bg-white dark:bg-background rounded-lg border-2 border-purple-300">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-sm">1</div>
+              <div>
+                <div className="font-bold text-foreground">
+                  {locale === "ar" ? "أنت" : "You"}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {locale === "ar" ? "الآن" : "Now"}
+                </div>
+              </div>
+            </div>
+            <div className="text-2xl font-extrabold text-purple-600">{score}</div>
+          </div>
+        </div>
+      </div>
+
       {/* Action Buttons */}
       <div className="flex gap-4">
         <button

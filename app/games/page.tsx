@@ -8,6 +8,7 @@ import { QuranQuizGame } from "@/components/games/quran-quiz-game"
 import { WordBuilderGame } from "@/components/games/word-builder-game"
 import { TajweedRulesGame } from "@/components/games/tajweed-rules-game"
 import { QuranOrderGame } from "@/components/games/quran-order-game"
+import { CompanionsQuizGame } from "@/components/games/companions-quiz-game"
 import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
@@ -27,11 +28,12 @@ export default function GamesPage() {
     if (gameId === "quran-order-1") return <QuranOrderGame />
     if (gameId === "tajweed-rules-1") return <TajweedRulesGame />
     if (gameId === "tajweed-rules-2") return <TajweedRulesGame />
+    if (gameId === "companions-quiz-1") return <CompanionsQuizGame />
     // Placeholder for other games - to be implemented
     return (
       <div className="text-center py-20">
         <Gamepad2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-        <p className="text-muted-foreground">قريباً - هذه اللعبة قيد الإنشاء</p>
+        <p className="text-muted-foreground">{locale === "ar" ? "قريباً - هذه اللعبة قيد الإنشاء" : "Coming Soon"}</p>
       </div>
     )
   }
