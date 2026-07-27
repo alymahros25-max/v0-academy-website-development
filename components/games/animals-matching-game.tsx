@@ -2,9 +2,16 @@
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { calculateStars, earnBadges } from '@/lib/games-engine'
+import { audioSystem } from '@/lib/audio-system'
 import { GameResults } from './GameResults'
 
-const animals = [{name: 'أسد', emoji: '🦁'}, {name: 'نسر', emoji: '🦅'}, {name: 'ضب', emoji: '🦎'}, {name: 'أرنب', emoji: '🐰'}, {name: 'ذئب', emoji: '🐺'}]
+const animals = [
+  { name: 'أسد', emoji: '🦁' },
+  { name: 'نسر', emoji: '🦅' },
+  { name: 'ضب', emoji: '🦎' },
+  { name: 'أرنب', emoji: '🐰' },
+  { name: 'ذئب', emoji: '🐺' },
+]
 
 export function AnimalsMatchingGame() {
   const { locale } = useI18n()
@@ -13,38 +20,120 @@ export function AnimalsMatchingGame() {
   const [correct, setCorrect] = useState(0)
   const [done, setDone] = useState(false)
   const [timer, setTimer] = useState(0)
-  
+  const [selected, setSelected] = useState<string | null>(null)
+  const [shuffled, setShuffled] = useState<typeof animals>([])
+
   useEffect(() => {
-    const t = setInterval(() => setTimer(t => t + 1), 1000)
-    return () => clearInterval(t)
+    setShuffled([...animals].sort(() => Math.random() - 0.5))
+  }, [idx])
+
+  useEffect(() => {
+    if (done) return
+    const interval = setInterval(() => setTimer(t => t + 1), 1000)
+    return () => clearInterval(interval)
   }, [done])
 
-  const handleAns = (name: string) => {
+  const handleAnswer = (name: string) => {
+    setSelected(name)
     if (name === animals[idx].name) {
+      audioSystem.playCorrect()
       setScore(s => s + 100)
       setCorrect(c => c + 1)
+    } else {
+      audioSystem.playError()
     }
-    if (idx < animals.length - 1) setIdx(idx + 1)
-    else setDone(true)
+
+    setTimeout(() => {
+      if (idx < animals.length - 1) {
+        setIdx(idx + 1)
+        setSelected(null)
+      } else {
+        setDone(true)
+      }
+    }, 500)
   }
 
   if (done) {
-    const stars = calculateStars((correct / animals.length) * 100)
-    const badges = earnBadges({totalPoints: score, correctAnswers: correct, incorrectAnswers: animals.length - correct, timeSpent: timer, combo: 1, stars})
-    return <GameResults score={score} stars={stars} timeSpent={timer} correctAnswers={correct} totalQuestions={animals.length} accuracy={(correct/animals.length)*100} earnedBadges={badges} onRestart={() => {setIdx(0); setScore(0); setCorrect(0); setDone(false); setTimer(0)}} onBack={() => {}} />
+    const accuracy = (correct / animals.length) * 100
+    const stars = calculateStars(accuracy)
+    const badges = earnBadges({
+      totalPoints: score,
+      correctAnswers: correct,
+      incorrectAnswers: animals.length - correct,
+      timeSpent: timer,
+      combo: 1,
+      stars,
+    })
+    return (
+      <GameResults
+        score={score}
+        stars={stars}
+        timeSpent={timer}
+        correctAnswers={correct}
+        totalQuestions={animals.length}
+        accuracy={accuracy}
+        earnedBadges={badges}
+        onRestart={() => {
+          setIdx(0)
+          setScore(0)
+          setCorrect(0)
+          setDone(false)
+          setTimer(0)
+          setSelected(null)
+        }}
+        onBack={() => {}}
+      />
+    )
   }
 
-  const shuffled = [...animals].sort(() => Math.random() - 0.5)
+  const currentAnimal = animals[idx]
+
   return (
-    <div className="w-full max-w-2xl mx-auto bg-gradient-to-b from-green-50 to-transparent dark:from-green-950/20 rounded-3xl p-8">
-      <div className="flex justify-between mb-8"><div><div className="text-3xl font-bold text-primary">{score}</div></div><div><div className="text-2xl font-bold">{idx+1}/{animals.length}</div></div></div>
-      <div className="bg-white dark:bg-background rounded-2xl p-8 mb-8 text-center">
-        <div className="text-7xl mb-6">{animals[idx].emoji}</div>
-        <div className="space-y-2">
-          {shuffled.map((a, i) => (
-            <button key={i} onClick={() => handleAns(a.name)} className="w-full p-3 bg-muted hover:bg-primary/10 rounded-lg font-bold">{a.name}</button>
-          ))}
+    <div className="w-full max-w-2xl mx-auto">
+      <div className="flex items-center justify-between mb-8">
+        <div className="text-center">
+          <div className="text-3xl font-extrabold text-primary">{score}</div>
+          <div className="text-xs text-muted-foreground">{locale === 'ar' ? 'النقاط' : 'Points'}</div>
         </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold">{idx + 1}/{animals.length}</div>
+          <div className="text-xs text-muted-foreground">{locale === 'ar' ? 'السؤال' : 'Question'}</div>
+        </div>
+        <div className="text-center">
+          <div className="text-3xl font-extrabold text-emerald-600">{timer}s</div>
+          <div className="text-xs text-muted-foreground">{locale === 'ar' ? 'الوقت' : 'Time'}</div>
+        </div>
+      </div>
+
+      <div className="h-2 bg-muted rounded-full overflow-hidden mb-8">
+        <div
+          className="h-full bg-primary transition-all"
+          style={{ width: `${((idx + 1) / animals.length) * 100}%` }}
+        />
+      </div>
+
+      <div className="bg-white dark:bg-background rounded-2xl border-4 border-white p-12 mb-8 text-center shadow-lg">
+        <div className="text-8xl mb-4">{currentAnimal.emoji}</div>
+        <div className="text-xl font-bold text-foreground">{locale === 'ar' ? 'ما هو اسم هذا الحيوان؟' : 'What is this animal called?'}</div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        {shuffled.map((animal, i) => (
+          <button
+            key={i}
+            onClick={() => handleAnswer(animal.name)}
+            disabled={selected !== null}
+            className={`py-4 px-3 rounded-xl font-bold text-sm transition-all ${
+              selected === animal.name
+                ? animal.name === currentAnimal.name
+                  ? 'bg-emerald-500 text-white scale-105'
+                  : 'bg-red-500 text-white scale-95'
+                : 'bg-primary/10 text-primary hover:bg-primary/20 active:scale-95'
+            } disabled:opacity-50`}
+          >
+            {animal.name}
+          </button>
+        ))}
       </div>
     </div>
   )

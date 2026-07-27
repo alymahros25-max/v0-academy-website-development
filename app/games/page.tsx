@@ -1,8 +1,9 @@
 "use client"
 
 import { useI18n } from "@/lib/i18n"
-import { Gamepad2, Trophy, Brain, Star, Filter, X } from "lucide-react"
-import { useState } from "react"
+import { Gamepad2, Trophy, Brain, Star, Filter, X, Volume2, VolumeX } from "lucide-react"
+import { useState, useEffect } from "react"
+import { audioSystem } from "@/lib/audio-system"
 import { LetterMatchGame } from "@/components/games/letter-match-game"
 import { QuranQuizGame } from "@/components/games/quran-quiz-game"
 import { WordBuilderGame } from "@/components/games/word-builder-game"
@@ -29,6 +30,35 @@ export default function GamesPage() {
   const { t, locale } = useI18n()
   const [activeGame, setActiveGame] = useState<string | "none">("none")
   const [selectedCategory, setSelectedCategory] = useState<string | "all">("all")
+  const [isMuted, setIsMuted] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Scroll restoration on mount and when returning from game
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    setMounted(true)
+  }, [])
+
+  // Reset scroll when exiting a game
+  useEffect(() => {
+    if (activeGame === "none" && mounted) {
+      window.scrollTo(0, 0)
+    }
+  }, [activeGame, mounted])
+
+  // Initialize audio state
+  useEffect(() => {
+    setIsMuted(audioSystem.isMuted())
+  }, [])
+
+  const toggleAudio = () => {
+    const newState = !isMuted
+    setIsMuted(newState)
+    audioSystem.setMuted(newState)
+    if (!newState) {
+      audioSystem.playClick()
+    }
+  }
   
   const categories = getCategories()
   const filteredGames = selectedCategory === "all" 
@@ -97,6 +127,19 @@ export default function GamesPage() {
       {/* Hero */}
       <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-primary overflow-hidden">
         <div className="absolute inset-0 islamic-pattern opacity-20" />
+        <div className="absolute top-4 right-4 z-20">
+          <button
+            onClick={toggleAudio}
+            className="p-3 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground transition-all"
+            aria-label={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? (
+              <VolumeX className="w-5 h-5" />
+            ) : (
+              <Volume2 className="w-5 h-5" />
+            )}
+          </button>
+        </div>
         <div className="relative z-10 mx-auto max-w-7xl px-4 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/20 text-secondary text-sm font-bold mb-4 border border-secondary/30">
             {t("nav.games")}
@@ -160,8 +203,11 @@ export default function GamesPage() {
               {filteredGames.map((game) => (
                 <button
                   key={game.id}
-                  onClick={() => setActiveGame(game.id)}
-                  className="group text-start bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300"
+                  onClick={() => {
+                    audioSystem.playClick()
+                    setActiveGame(game.id)
+                  }}
+                  className="group text-start bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 active:scale-95"
                 >
                   {/* Card Header */}
                   <div className={`relative h-32 bg-gradient-to-br ${game.color} flex items-center justify-center`}>
