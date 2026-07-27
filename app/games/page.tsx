@@ -1,41 +1,96 @@
 "use client"
 
 import { useI18n } from "@/lib/i18n"
-import { Gamepad2, Trophy, Brain, Star } from "lucide-react"
+import { Gamepad2, Trophy, Brain, Star, Filter, X } from "lucide-react"
 import { useState } from "react"
 import { LetterMatchGame } from "@/components/games/letter-match-game"
 import { QuranQuizGame } from "@/components/games/quran-quiz-game"
+import { WordBuilderGame } from "@/components/games/word-builder-game"
+import { TajweedRulesGame } from "@/components/games/tajweed-rules-game"
+import { QuranOrderGame } from "@/components/games/quran-order-game"
+import { CompanionsQuizGame } from "@/components/games/companions-quiz-game"
+import { TajweedTanweenGame } from "@/components/games/tajweed-tanween-game"
+import { MemorizationCardsGame } from "@/components/games/memorization-cards-game"
+import { ShapesMatchingGame } from "@/components/games/shapes-matching-game"
+import { ColorsQuizGame } from "@/components/games/colors-quiz-game"
+import { AnimalsMatchingGame } from "@/components/games/animals-matching-game"
+import { QuranAnimalsGame } from "@/components/games/quran-animals-game"
+import { BattlesTimelineGame } from "@/components/games/battles-timeline-game"
+import { SiraEventsGame } from "@/components/games/sira-events-game"
+import { CompanionsTimelineGame } from "@/components/games/companions-timeline-game"
+import { CompanionsDedsGame } from "@/components/games/companions-deeds-game"
+import { LetterSoundGame } from "@/components/games/letter-sound-game"
+import { WordMeaningGame } from "@/components/games/word-meaning-game"
+import { VerseGuessingGame } from "@/components/games/verse-guessing-game"
+import { TajweedLamGame } from "@/components/games/tajweed-lam-game"
+import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
   const { t, locale } = useI18n()
-  const [activeGame, setActiveGame] = useState<"none" | "letters" | "quiz">("none")
+  const [activeGame, setActiveGame] = useState<string | "none">("none")
+  const [selectedCategory, setSelectedCategory] = useState<string | "all">("all")
+  
+  const categories = getCategories()
+  const filteredGames = selectedCategory === "all" 
+    ? GAMES_CATALOG 
+    : GAMES_CATALOG.filter(g => g.category === selectedCategory)
+  
+  const renderGame = (gameId: string) => {
+    const games: Record<string, React.ReactNode> = {
+      "letter-match-1": <LetterMatchGame />,
+      "word-builder-1": <WordBuilderGame />,
+      "quran-quiz-1": <QuranQuizGame />,
+      "quran-order-1": <QuranOrderGame />,
+      "tajweed-rules-1": <TajweedRulesGame />,
+      "tajweed-rules-2": <TajweedTanweenGame />,
+      "tajweed-rules-3": <TajweedLamGame />,
+      "companions-quiz-1": <CompanionsQuizGame />,
+      "memorization-cards-1": <MemorizationCardsGame />,
+      "shapes-colors-1": <ShapesMatchingGame />,
+      "shapes-colors-2": <ColorsQuizGame />,
+      "animals-quran-1": <AnimalsMatchingGame />,
+      "animals-quran-2": <QuranAnimalsGame />,
+      "battles-sira-1": <BattlesTimelineGame />,
+      "battles-sira-2": <SiraEventsGame />,
+      "battles-sira-3": <CompanionsTimelineGame />,
+      "companions-2": <CompanionsDedsGame />,
+      "companions-3": <LetterSoundGame />,
+      "companions-4": <WordMeaningGame />,
+      "quran-memory-1": <VerseGuessingGame />,
+    }
+    return games[gameId] || (
+      <div className="text-center py-20">
+        <Gamepad2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+        <p className="text-muted-foreground">{locale === "ar" ? "قريباً - هذه اللعبة قيد الإنشاء" : "Coming Soon"}</p>
+      </div>
+    )
+  }
 
-  const gameCards = [
-    {
-      id: "letters" as const,
-      icon: Brain,
-      title: { ar: "لعبة مطابقة الحروف", en: "Letter Matching Game", fr: "Jeu de correspondance des lettres" },
-      desc: {
-        ar: "اختبر معرفتك بالحروف العربية وأشكالها المختلفة في لعبة تفاعلية ممتعة",
-        en: "Test your knowledge of Arabic letters and their forms in a fun interactive game",
-        fr: "Testez vos connaissances des lettres arabes dans un jeu interactif",
-      },
-      color: "from-emerald-500 to-emerald-700",
-      players: "2,400+",
-    },
-    {
-      id: "quiz" as const,
-      icon: Trophy,
-      title: { ar: "مسابقة قرآنية", en: "Quran Quiz", fr: "Quiz coranique" },
-      desc: {
-        ar: "اختبر حفظك ومعلوماتك عن القرآن الكريم في مسابقة شيقة بها أسئلة متنوعة",
-        en: "Test your Quran memorization and knowledge in an exciting quiz with various questions",
-        fr: "Testez votre memorisation du Coran dans un quiz passionnant",
-      },
-      color: "from-amber-500 to-amber-700",
-      players: "3,100+",
-    },
-  ]
+  // Map icon emojis
+  const getIconComponent = (icon: string) => {
+    const icons: Record<string, React.ReactNode> = {
+      "🔤": <span className="text-5xl">🔤</span>,
+      "✍️": <span className="text-5xl">✍️</span>,
+      "💭": <span className="text-5xl">💭</span>,
+      "📖": <span className="text-5xl">📖</span>,
+      "🎵": <span className="text-5xl">🎵</span>,
+      "⚡": <span className="text-5xl">⚡</span>,
+      "📜": <span className="text-5xl">📜</span>,
+      "🤔": <span className="text-5xl">🤔</span>,
+      "✨": <span className="text-5xl">✨</span>,
+      "🔷": <span className="text-5xl">🔷</span>,
+      "🎨": <span className="text-5xl">🎨</span>,
+      "🐪": <span className="text-5xl">🐪</span>,
+      "🦁": <span className="text-5xl">🦁</span>,
+      "⚔️": <span className="text-5xl">⚔️</span>,
+      "⏳": <span className="text-5xl">⏳</span>,
+      "👥": <span className="text-5xl">👥</span>,
+      "❓": <span className="text-5xl">❓</span>,
+      "📅": <span className="text-5xl">📅</span>,
+      "🕊️": <span className="text-5xl">🕊️</span>,
+    }
+    return icons[icon] || <Brain className="w-16 h-16" />
+  }
 
   return (
     <>
@@ -63,62 +118,97 @@ export default function GamesPage() {
       {/* Game Selection */}
       {activeGame === "none" && (
         <section className="py-20 bg-background">
-          <div className="mx-auto max-w-4xl px-4">
+          <div className="mx-auto max-w-6xl px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-extrabold text-foreground mb-3 text-balance">
                 {locale === "ar" ? "اختر لعبتك" : locale === "en" ? "Choose Your Game" : "Choisissez votre jeu"}
               </h2>
-              <p className="text-muted-foreground">
-                {locale === "ar" ? "ألعاب تعليمية تفاعلية للأطفال والكبار" : locale === "en" ? "Interactive educational games for children and adults" : "Jeux educatifs interactifs pour enfants et adultes"}
+              <p className="text-muted-foreground mb-6">
+                {locale === "ar" ? "20 لعبة تعليمية تفاعلية للأطفال" : locale === "en" ? "20 Interactive educational games for kids" : "20 jeux éducatifs interactifs"}
               </p>
+              
+              {/* Category Filter */}
+              <div className="flex flex-wrap justify-center gap-2 mb-8">
+                <button
+                  onClick={() => setSelectedCategory("all")}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                    selectedCategory === "all"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted-foreground/20"
+                  }`}
+                >
+                  {locale === "ar" ? "الكل" : "All"}
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                      selectedCategory === cat
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:bg-muted-foreground/20"
+                    }`}
+                  >
+                    {getCategoryName(cat, locale)}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {gameCards.map((game) => (
+            {/* Games Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredGames.map((game) => (
                 <button
                   key={game.id}
                   onClick={() => setActiveGame(game.id)}
-                  className="group text-start bg-card rounded-3xl border border-border overflow-hidden shadow-sm hover:shadow-2xl hover:border-primary/30 hover:-translate-y-2 transition-all duration-300"
+                  className="group text-start bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300"
                 >
                   {/* Card Header */}
-                  <div className={`relative h-40 bg-gradient-to-br ${game.color} flex items-center justify-center`}>
+                  <div className={`relative h-32 bg-gradient-to-br ${game.color} flex items-center justify-center`}>
                     <div className="absolute inset-0 islamic-pattern opacity-20" />
-                    <game.icon className="relative w-16 h-16 text-white/90 group-hover:scale-110 transition-transform" />
+                    <div className="relative group-hover:scale-110 transition-transform">
+                      {getIconComponent(game.icon)}
+                    </div>
                   </div>
 
                   {/* Card Body */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                      {game.title[locale]}
+                  <div className="p-4">
+                    <h3 className="font-bold text-foreground mb-1 line-clamp-2 group-hover:text-primary transition-colors">
+                      {locale === "ar" ? game.titleAr : locale === "en" ? game.titleEn : game.titleFr}
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                      {game.desc[locale]}
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-3 line-clamp-2">
+                      {locale === "ar" ? game.descriptionAr : locale === "en" ? game.descriptionEn : game.descriptionFr}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                        <Gamepad2 className="w-4 h-4" />
-                        <span>{game.players} {locale === "ar" ? "لاعب" : "players"}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star key={s} className="w-3.5 h-3.5 text-secondary fill-secondary" />
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground">{game.playersCount}</span>
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3].map((s) => (
+                          <Star key={s} className="w-3 h-3 text-secondary fill-secondary" />
                         ))}
                       </div>
                     </div>
-                    <div className="mt-4 py-2.5 bg-primary/10 text-primary rounded-xl text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="mt-3 py-2 bg-primary/10 text-primary rounded-lg text-center font-bold text-xs group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       {t("common.play")}
                     </div>
                   </div>
                 </button>
               ))}
             </div>
+            
+            {filteredGames.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">
+                  {locale === "ar" ? "لا توجد ألعاب في هذه الفئة" : "No games in this category"}
+                </p>
+              </div>
+            )}
           </div>
         </section>
       )}
 
       {/* Active Game */}
       {activeGame !== "none" && (
-        <section className="py-12 bg-background">
+        <section className="py-12 bg-background min-h-screen">
           <div className="mx-auto max-w-4xl px-4">
             <button
               onClick={() => setActiveGame("none")}
@@ -128,8 +218,7 @@ export default function GamesPage() {
               {locale === "ar" ? "العودة لقائمة الألعاب" : locale === "en" ? "Back to Games" : "Retour aux jeux"}
             </button>
 
-            {activeGame === "letters" && <LetterMatchGame />}
-            {activeGame === "quiz" && <QuranQuizGame />}
+            {renderGame(activeGame)}
           </div>
         </section>
       )}
