@@ -9,6 +9,20 @@ import { WordBuilderGame } from "@/components/games/word-builder-game"
 import { TajweedRulesGame } from "@/components/games/tajweed-rules-game"
 import { QuranOrderGame } from "@/components/games/quran-order-game"
 import { CompanionsQuizGame } from "@/components/games/companions-quiz-game"
+import { TajweedTanweenGame } from "@/components/games/tajweed-tanween-game"
+import { MemorizationCardsGame } from "@/components/games/memorization-cards-game"
+import { ShapesMatchingGame } from "@/components/games/shapes-matching-game"
+import { ColorsQuizGame } from "@/components/games/colors-quiz-game"
+import { AnimalsMatchingGame } from "@/components/games/animals-matching-game"
+import { QuranAnimalsGame } from "@/components/games/quran-animals-game"
+import { BattlesTimelineGame } from "@/components/games/battles-timeline-game"
+import { SiraEventsGame } from "@/components/games/sira-events-game"
+import { CompanionsTimelineGame } from "@/components/games/companions-timeline-game"
+import { CompanionsDedsGame } from "@/components/games/companions-deeds-game"
+import { LetterSoundGame } from "@/components/games/letter-sound-game"
+import { WordMeaningGame } from "@/components/games/word-meaning-game"
+import { VerseGuessingGame } from "@/components/games/verse-guessing-game"
+import { TajweedLamGame } from "@/components/games/tajweed-lam-game"
 import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
@@ -22,15 +36,29 @@ export default function GamesPage() {
     : GAMES_CATALOG.filter(g => g.category === selectedCategory)
   
   const renderGame = (gameId: string) => {
-    if (gameId === "letter-match-1") return <LetterMatchGame />
-    if (gameId === "word-builder-1") return <WordBuilderGame />
-    if (gameId === "quran-quiz-1") return <QuranQuizGame />
-    if (gameId === "quran-order-1") return <QuranOrderGame />
-    if (gameId === "tajweed-rules-1") return <TajweedRulesGame />
-    if (gameId === "tajweed-rules-2") return <TajweedRulesGame />
-    if (gameId === "companions-quiz-1") return <CompanionsQuizGame />
-    // Placeholder for other games - to be implemented
-    return (
+    const games: Record<string, React.ReactNode> = {
+      "letter-match-1": <LetterMatchGame />,
+      "word-builder-1": <WordBuilderGame />,
+      "quran-quiz-1": <QuranQuizGame />,
+      "quran-order-1": <QuranOrderGame />,
+      "tajweed-rules-1": <TajweedRulesGame />,
+      "tajweed-rules-2": <TajweedTanweenGame />,
+      "tajweed-rules-3": <TajweedLamGame />,
+      "companions-quiz-1": <CompanionsQuizGame />,
+      "memorization-cards-1": <MemorizationCardsGame />,
+      "shapes-colors-1": <ShapesMatchingGame />,
+      "shapes-colors-2": <ColorsQuizGame />,
+      "animals-quran-1": <AnimalsMatchingGame />,
+      "animals-quran-2": <QuranAnimalsGame />,
+      "battles-sira-1": <BattlesTimelineGame />,
+      "battles-sira-2": <SiraEventsGame />,
+      "battles-sira-3": <CompanionsTimelineGame />,
+      "companions-2": <CompanionsDedsGame />,
+      "companions-3": <LetterSoundGame />,
+      "companions-4": <WordMeaningGame />,
+      "quran-memory-1": <VerseGuessingGame />,
+    }
+    return games[gameId] || (
       <div className="text-center py-20">
         <Gamepad2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
         <p className="text-muted-foreground">{locale === "ar" ? "قريباً - هذه اللعبة قيد الإنشاء" : "Coming Soon"}</p>
