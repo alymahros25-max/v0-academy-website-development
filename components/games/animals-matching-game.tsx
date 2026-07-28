@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { calculateStars, earnBadges } from '@/lib/games-engine'
 import { audioSystem } from '@/lib/audio-system'
@@ -21,12 +21,11 @@ export function AnimalsMatchingGame() {
   const [done, setDone] = useState(false)
   const [timer, setTimer] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
-  const [options, setOptions] = useState<typeof animals>([])
 
-  useEffect(() => {
-    // Set options only once on mount
-    setOptions([...animals].sort(() => Math.random() - 0.5))
-  }, [])
+  // Shuffle options ONLY when current question changes using useMemo
+  const currentOptions = useMemo(() => {
+    return [...animals].sort(() => Math.random() - 0.5)
+  }, [idx])
 
   useEffect(() => {
     if (done) return
@@ -119,7 +118,7 @@ export function AnimalsMatchingGame() {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        {options.map((animal) => (
+        {currentOptions.map((animal) => (
           <button
             key={animal.name}
             onClick={() => handleAnswer(animal.name)}

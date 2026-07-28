@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { calculateStars, earnBadges } from '@/lib/games-engine'
 import { audioSystem } from '@/lib/audio-system'
@@ -26,10 +26,9 @@ export function UniversalQuizGame({ title, titleAr, questions, gradient }: Unive
   const [done, setDone] = useState(false)
   const [timer, setTimer] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
-  const [shuffled, setShuffled] = useState<string[]>([])
 
-  useEffect(() => {
-    setShuffled([...questions[idx].options].sort(() => Math.random() - 0.5))
+  const shuffled = useMemo(() => {
+    return [...questions[idx].options].sort(() => Math.random() - 0.5)
   }, [idx, questions])
 
   useEffect(() => {

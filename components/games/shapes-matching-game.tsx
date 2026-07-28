@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { calculateStars, earnBadges } from '@/lib/games-engine'
 import { audioSystem } from '@/lib/audio-system'
@@ -22,10 +22,9 @@ export function ShapesMatchingGame() {
   const [timer, setTimer] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
   const [isRunning, setIsRunning] = useState(true)
-  const [shuffled, setShuffled] = useState<typeof shapes>([])
 
-  useEffect(() => {
-    setShuffled([...shapes].sort(() => Math.random() - 0.5))
+  const shuffled = useMemo(() => {
+    return [...shapes].sort(() => Math.random() - 0.5)
   }, [idx])
 
   useEffect(() => {
