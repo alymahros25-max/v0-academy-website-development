@@ -21,11 +21,12 @@ export function AnimalsMatchingGame() {
   const [done, setDone] = useState(false)
   const [timer, setTimer] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
-  const [shuffled, setShuffled] = useState<typeof animals>([])
+  const [options, setOptions] = useState<typeof animals>([])
 
   useEffect(() => {
-    setShuffled([...animals].sort(() => Math.random() - 0.5))
-  }, [idx])
+    // Set options only once on mount
+    setOptions([...animals].sort(() => Math.random() - 0.5))
+  }, [])
 
   useEffect(() => {
     if (done) return
@@ -118,9 +119,9 @@ export function AnimalsMatchingGame() {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        {shuffled.map((animal, i) => (
+        {options.map((animal) => (
           <button
-            key={i}
+            key={animal.name}
             onClick={() => handleAnswer(animal.name)}
             disabled={selected !== null}
             className={`py-4 px-3 rounded-xl font-bold text-sm transition-all ${

@@ -24,6 +24,10 @@ import { LetterSoundGame } from "@/components/games/letter-sound-game"
 import { WordMeaningGame } from "@/components/games/word-meaning-game"
 import { VerseGuessingGame } from "@/components/games/verse-guessing-game"
 import { TajweedLamGame } from "@/components/games/tajweed-lam-game"
+import { WordCompleteGame } from "@/components/games/word-complete-game"
+import { CompanionsPeriodsGame } from "@/components/games/companions-periods-game"
+import { CompanionsMartyrGame } from "@/components/games/companions-martyrs-game"
+import { SurahGuessGame } from "@/components/games/surah-guess-game"
 import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
@@ -69,12 +73,16 @@ export default function GamesPage() {
     const games: Record<string, React.ReactNode> = {
       "letter-match-1": <LetterMatchGame />,
       "word-builder-1": <WordBuilderGame />,
+      "word-complete-1": <WordCompleteGame />,
       "quran-quiz-1": <QuranQuizGame />,
       "quran-order-1": <QuranOrderGame />,
+      "surah-guess-1": <SurahGuessGame />,
       "tajweed-rules-1": <TajweedRulesGame />,
       "tajweed-rules-2": <TajweedTanweenGame />,
       "tajweed-rules-3": <TajweedLamGame />,
       "companions-quiz-1": <CompanionsQuizGame />,
+      "companions-periods-1": <CompanionsPeriodsGame />,
+      "companions-martyrs-1": <CompanionsMartyrGame />,
       "memorization-cards-1": <MemorizationCardsGame />,
       "shapes-colors-1": <ShapesMatchingGame />,
       "shapes-colors-2": <ColorsQuizGame />,
@@ -83,9 +91,9 @@ export default function GamesPage() {
       "battles-sira-1": <BattlesTimelineGame />,
       "battles-sira-2": <SiraEventsGame />,
       "battles-sira-3": <CompanionsTimelineGame />,
-      "companions-2": <CompanionsDedsGame />,
-      "companions-3": <LetterSoundGame />,
-      "companions-4": <WordMeaningGame />,
+      "companions-deeds-1": <CompanionsDedsGame />,
+      "letter-sound-1": <LetterSoundGame />,
+      "word-meaning-1": <WordMeaningGame />,
       "quran-memory-1": <VerseGuessingGame />,
     }
     return games[gameId] || (
