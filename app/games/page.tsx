@@ -28,6 +28,8 @@ import { WordCompleteGame } from "@/components/games/word-complete-game"
 import { CompanionsPeriodsGame } from "@/components/games/companions-periods-game"
 import { CompanionsMartyrGame } from "@/components/games/companions-martyrs-game"
 import { SurahGuessGame } from "@/components/games/surah-guess-game"
+import { CompanionsCardsGame } from "@/components/games/companions-cards-game"
+import { VerseMatchingGame } from "@/components/games/verse-matching-game"
 import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
@@ -92,9 +94,11 @@ export default function GamesPage() {
       "battles-sira-2": <SiraEventsGame />,
       "battles-sira-3": <CompanionsTimelineGame />,
       "companions-deeds-1": <CompanionsDedsGame />,
+      "companions-cards-1": <CompanionsCardsGame />,
       "letter-sound-1": <LetterSoundGame />,
       "word-meaning-1": <WordMeaningGame />,
       "quran-memory-1": <VerseGuessingGame />,
+      "verse-match-1": <VerseMatchingGame />,
     }
     return games[gameId] || (
       <div className="text-center py-20">
