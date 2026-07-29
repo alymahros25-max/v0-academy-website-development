@@ -1,7 +1,8 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { calculateStars, earnBadges } from '@/lib/games-engine'
+import { audioSystem } from '@/lib/audio-system'
 import { GameResults } from './GameResults'
 
 const letters = [{letter: 'ا', sound: 'ألف'}, {letter: 'ب', sound: 'باء'}, {letter: 'ت', sound: 'تاء'}, {letter: 'ث', sound: 'ثاء'}, {letter: 'ج', sound: 'جيم'}]
@@ -13,12 +14,34 @@ export function LetterSoundGame() {
   const [correct, setCorrect] = useState(0)
   const [done, setDone] = useState(false)
   const [timer, setTimer] = useState(0)
+  const [selected, setSelected] = useState<string | null>(null)
   
   useEffect(() => { const t = setInterval(() => setTimer(t => t + 1), 1000); return () => clearInterval(t) }, [done])
 
+  const shuffled = useMemo(() => {
+    return [...letters].sort(() => Math.random() - 0.5)
+  }, [idx])
+
   const handleAns = (sound: string) => {
-    if (sound === letters[idx].sound) { setScore(s => s + 100); setCorrect(c => c + 1) }
-    if (idx < letters.length - 1) setIdx(idx + 1); else setDone(true)
+    if (selected) return
+    setSelected(sound)
+    
+    if (sound === letters[idx].sound) { 
+      audioSystem.playCorrect()
+      setScore(s => s + 100)
+      setCorrect(c => c + 1)
+    } else {
+      audioSystem.playError()
+    }
+    
+    setTimeout(() => {
+      if (idx < letters.length - 1) {
+        setIdx(idx + 1)
+        setSelected(null)
+      } else {
+        setDone(true)
+      }
+    }, 500)
   }
 
   if (done) {
@@ -26,8 +49,6 @@ export function LetterSoundGame() {
     const badges = earnBadges({totalPoints: score, correctAnswers: correct, incorrectAnswers: letters.length - correct, timeSpent: timer, combo: 1, stars})
     return <GameResults score={score} stars={stars} timeSpent={timer} correctAnswers={correct} totalQuestions={letters.length} accuracy={(correct/letters.length)*100} earnedBadges={badges} onRestart={() => {setIdx(0); setScore(0); setCorrect(0); setDone(false); setTimer(0)}} onBack={() => {}} />
   }
-
-  const shuffled = [...letters].sort(() => Math.random() - 0.5)
   return (
     <div className="w-full max-w-2xl mx-auto bg-gradient-to-b from-lime-50 to-transparent dark:from-lime-950/20 rounded-3xl p-8">
       <div className="flex justify-between mb-8"><div><div className="text-3xl font-bold text-primary">{score}</div></div><div><div className="text-2xl font-bold">{idx+1}/{letters.length}</div></div></div>
