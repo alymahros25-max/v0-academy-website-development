@@ -42,14 +42,16 @@ export default function GamesPage() {
 
   // Scroll restoration on mount and when returning from game
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     setMounted(true)
   }, [])
 
   // Reset scroll when exiting a game
   useEffect(() => {
     if (activeGame === "none" && mounted) {
-      window.scrollTo(0, 0)
+      setTimeout(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      }, 0)
     }
   }, [activeGame, mounted])
 
