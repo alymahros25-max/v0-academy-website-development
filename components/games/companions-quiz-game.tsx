@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useI18n } from '@/lib/i18n'
+import { calculateStars, earnBadges } from '@/lib/games-engine'
 import { GameResults } from './GameResults'
 
 const COMPANIONS = [
@@ -39,6 +40,14 @@ export function CompanionsQuizGame() {
   const [gameOver, setGameOver] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
   const [answered, setAnswered] = useState(false)
+  const [timer, setTimer] = useState(0)
+  const [correctCount, setCorrectCount] = useState(0)
+
+  useEffect(() => {
+    if (gameOver) return
+    const interval = setInterval(() => setTimer(t => t + 1), 1000)
+    return () => clearInterval(interval)
+  }, [gameOver])
 
   const handleAnswer = (answer: string) => {
     if (answered) return
@@ -47,6 +56,7 @@ export function CompanionsQuizGame() {
 
     if (answer === COMPANIONS[currentQuestion].name) {
       setScore((s) => s + 12)
+      setCorrectCount((c) => c + 1)
     }
 
     setTimeout(() => {
@@ -61,18 +71,36 @@ export function CompanionsQuizGame() {
   }
 
   if (gameOver) {
+    const accuracy = (correctCount / COMPANIONS.length) * 100
+    const stars = calculateStars(accuracy)
+    const badges = earnBadges({
+      totalPoints: score,
+      correctAnswers: correctCount,
+      incorrectAnswers: COMPANIONS.length - correctCount,
+      timeSpent: timer,
+      combo: 1,
+      stars,
+    })
+
     return (
       <GameResults
-        gameId="companions-quiz-1"
         score={score}
-        maxScore={COMPANIONS.length * 12}
+        stars={stars}
+        timeSpent={timer}
+        correctAnswers={correctCount}
+        totalQuestions={COMPANIONS.length}
+        accuracy={accuracy}
+        earnedBadges={badges}
         onRestart={() => {
           setCurrentQuestion(0)
           setScore(0)
           setGameOver(false)
           setSelected(null)
           setAnswered(false)
+          setTimer(0)
+          setCorrectCount(0)
         }}
+        onBack={() => {}}
       />
     )
   }

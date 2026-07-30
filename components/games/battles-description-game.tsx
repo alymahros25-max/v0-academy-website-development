@@ -5,40 +5,40 @@ import { calculateStars, earnBadges } from '@/lib/games-engine'
 import { audioSystem } from '@/lib/audio-system'
 import { GameResults } from './GameResults'
 
-const ISLAMIC_BATTLES = [
+const BATTLES_DESCRIPTIONS = [
   {
     id: 1,
-    question: "في أي سنة هجرية وقعت غزوة بدر الكبرى؟",
-    correctAnswer: "السنة 2 هـ",
-    options: ["السنة 2 هـ", "السنة 3 هـ", "السنة 5 هـ", "السنة 8 هـ"]
+    question: "ما هي أول معركة فاصلة ينتصر فيها المسلمون وسُميت بـ (يوم الفرقان)؟",
+    correctAnswer: "غزوة بدر",
+    options: ["غزوة بدر", "غزوة أحد", "غزوة حنين", "غزوة خيبر"]
   },
   {
     id: 2,
-    question: "في أي سنة هجرية وقعت غزوة أحد؟",
-    correctAnswer: "السنة 3 هـ",
-    options: ["السنة 3 هـ", "السنة 2 هـ", "السنة 4 هـ", "السنة 6 هـ"]
+    question: "في أي غزوة حفر المسلمون خندقاً لحماية المدينة باقتراح من سلمان الفارسي؟",
+    correctAnswer: "غزوة الخندق (الأحزاب)",
+    options: ["غزوة الخندق (الأحزاب)", "غزوة بدر", "غزوة تبوك", "غزوة مؤتة"]
   },
   {
     id: 3,
-    question: "في أي سنة هجرية وقعت غزوة الخندق (الأحزاب)؟",
-    correctAnswer: "السنة 5 هـ",
-    options: ["السنة 5 هـ", "السنة 3 هـ", "السنة 7 هـ", "السنة 9 هـ"]
+    question: "ما هي الغزوة التي وقعت عند جبل أحد وشهدت ثبات النبي وموقف الرماة؟",
+    correctAnswer: "غزوة أحد",
+    options: ["غزوة أحد", "غزوة بدر", "غزوة خيبر", "غزوة تبوك"]
   },
   {
     id: 4,
-    question: "في أي سنة هجرية كان فتح مكة؟",
-    correctAnswer: "السنة 8 هـ",
-    options: ["السنة 8 هـ", "السنة 6 هـ", "السنة 5 هـ", "السنة 10 هـ"]
+    question: "ما هي الغزوة التي سُميت بغزوة (العُسرة) وخرج فيها المسلمون في حر شديد؟",
+    correctAnswer: "غزوة تبوك",
+    options: ["غزوة تبوك", "غزوة الخندق", "غزوة بدر", "غزوة حنين"]
   },
   {
     id: 5,
-    question: "في أي سنة هجرية وقعت غزوة تبوك؟",
-    correctAnswer: "السنة 9 هـ",
-    options: ["السنة 9 هـ", "السنة 7 هـ", "السنة 8 هـ", "السنة 11 هـ"]
+    question: "ما هي الغزوة التي فتح فيها المسلمون حصون اليهود وقاد فيها علي بن أبي طالب الراية؟",
+    correctAnswer: "غزوة خيبر",
+    options: ["غزوة خيبر", "غزوة أحد", "غزوة بدر", "غزوة مؤتة"]
   }
 ]
 
-export function BattlesTimelineGame() {
+export function BattlesDescriptionGame() {
   const { locale } = useI18n()
   const [idx, setIdx] = useState(0)
   const [score, setScore] = useState(0)
@@ -50,14 +50,14 @@ export function BattlesTimelineGame() {
   useEffect(() => { const t = setInterval(() => setTimer(t => t + 1), 1000); return () => clearInterval(t) }, [done])
 
   const shuffledOptions = useMemo(() => {
-    return [...ISLAMIC_BATTLES[idx].options].sort(() => Math.random() - 0.5)
+    return [...BATTLES_DESCRIPTIONS[idx].options].sort(() => Math.random() - 0.5)
   }, [idx])
 
   const handleAns = (answer: string) => {
     if (selected) return
     setSelected(answer)
     
-    if (answer === ISLAMIC_BATTLES[idx].correctAnswer) { 
+    if (answer === BATTLES_DESCRIPTIONS[idx].correctAnswer) { 
       audioSystem.playCorrect()
       setScore(s => s + 100)
       setCorrect(c => c + 1)
@@ -66,7 +66,7 @@ export function BattlesTimelineGame() {
     }
     
     setTimeout(() => {
-      if (idx < ISLAMIC_BATTLES.length - 1) {
+      if (idx < BATTLES_DESCRIPTIONS.length - 1) {
         setIdx(idx + 1)
         setSelected(null)
       } else {
@@ -76,10 +76,11 @@ export function BattlesTimelineGame() {
   }
 
   if (done) {
-    const stars = calculateStars((correct / ISLAMIC_BATTLES.length) * 100)
-    const badges = earnBadges({totalPoints: score, correctAnswers: correct, incorrectAnswers: ISLAMIC_BATTLES.length - correct, timeSpent: timer, combo: 1, stars})
-    return <GameResults score={score} stars={stars} timeSpent={timer} correctAnswers={correct} totalQuestions={ISLAMIC_BATTLES.length} accuracy={(correct/ISLAMIC_BATTLES.length)*100} earnedBadges={badges} onRestart={() => {setIdx(0); setScore(0); setCorrect(0); setDone(false); setTimer(0)}} onBack={() => {}} />
+    const stars = calculateStars((correct / BATTLES_DESCRIPTIONS.length) * 100)
+    const badges = earnBadges({totalPoints: score, correctAnswers: correct, incorrectAnswers: BATTLES_DESCRIPTIONS.length - correct, timeSpent: timer, combo: 1, stars})
+    return <GameResults score={score} stars={stars} timeSpent={timer} correctAnswers={correct} totalQuestions={BATTLES_DESCRIPTIONS.length} accuracy={(correct/BATTLES_DESCRIPTIONS.length)*100} earnedBadges={badges} onRestart={() => {setIdx(0); setScore(0); setCorrect(0); setDone(false); setTimer(0)}} onBack={() => {}} />
   }
+
   return (
     <div className="w-full max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-8">
@@ -88,7 +89,7 @@ export function BattlesTimelineGame() {
           <div className="text-xs text-muted-foreground">{locale === 'ar' ? 'النقاط' : 'Points'}</div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold">{idx + 1}/{ISLAMIC_BATTLES.length}</div>
+          <div className="text-2xl font-bold">{idx + 1}/{BATTLES_DESCRIPTIONS.length}</div>
           <div className="text-xs text-muted-foreground">{locale === 'ar' ? 'السؤال' : 'Q'}</div>
         </div>
         <div className="text-center">
@@ -100,12 +101,12 @@ export function BattlesTimelineGame() {
       <div className="h-2 bg-muted rounded-full overflow-hidden mb-8">
         <div
           className="h-full bg-primary transition-all"
-          style={{ width: `${((idx + 1) / ISLAMIC_BATTLES.length) * 100}%` }}
+          style={{ width: `${((idx + 1) / BATTLES_DESCRIPTIONS.length) * 100}%` }}
         />
       </div>
 
       <div className="bg-white dark:bg-background rounded-2xl border-4 border-white p-8 mb-8 shadow-lg">
-        <p className="text-center text-lg font-bold mb-6 text-foreground">{ISLAMIC_BATTLES[idx].question}</p>
+        <p className="text-center text-lg font-bold mb-6 text-foreground">{BATTLES_DESCRIPTIONS[idx].question}</p>
         <div className="grid grid-cols-2 gap-3">
           {shuffledOptions.map((option) => (
             <button 
@@ -114,7 +115,7 @@ export function BattlesTimelineGame() {
               disabled={selected !== null}
               className={`py-4 px-3 rounded-xl font-bold text-sm transition-all ${
                 selected === option
-                  ? option === ISLAMIC_BATTLES[idx].correctAnswer
+                  ? option === BATTLES_DESCRIPTIONS[idx].correctAnswer
                     ? 'bg-emerald-500 text-white scale-105'
                     : 'bg-red-500 text-white scale-95'
                   : 'bg-primary/10 text-primary hover:bg-primary/20 active:scale-95'

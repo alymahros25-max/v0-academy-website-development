@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { calculateStars, earnBadges } from "@/lib/games-engine"
 import { GameResults } from "./GameResults"
 
@@ -26,13 +26,12 @@ export function QuranOrderGame() {
   const [gameComplete, setGameComplete] = useState(false)
   const [timer, setTimer] = useState(0)
   const [selectedOrder, setSelectedOrder] = useState<number[]>([])
-  const [shuffledIndices, setShuffledIndices] = useState<number[]>([])
   const [combo, setCombo] = useState(0)
 
   const currentQuestion = verseQuestions[currentQ]
 
-  useEffect(() => {
-    setShuffledIndices(shuffleArray([0, 1, 2, 3]))
+  const shuffledIndices = useMemo(() => {
+    return shuffleArray([0, 1, 2, 3])
   }, [currentQ])
 
   useEffect(() => {

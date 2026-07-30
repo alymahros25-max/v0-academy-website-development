@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { calculateStars, earnBadges } from '@/lib/games-engine'
+import { audioSystem } from '@/lib/audio-system'
 import { GameResults } from './GameResults'
 
 const cards = ['قل هو الله أحد', 'بسم الله الرحمن الرحيم', 'الحمد لله رب العالمين', 'لا إله إلا الله', 'سبحان الله وبحمده']
@@ -16,12 +17,15 @@ export function MemorizationCardsGame() {
   const [timer, setTimer] = useState(0)
   const [complete, setComplete] = useState(false)
 
+  const shuffledPairs = useMemo(() => {
+    return [...cards, ...cards].sort(() => Math.random() - 0.5).map((v, i) => ({id: i, text: v, revealed: false, matched: false}))
+  }, [])
+
   useEffect(() => {
-    const shuffled = [...cards, ...cards].sort(() => Math.random() - 0.5).map((v, i) => ({id: i, text: v, revealed: false, matched: false}))
-    setPairs(shuffled as any)
+    setPairs(shuffledPairs as any)
     const t = setInterval(() => setTimer(t => t + 1), 1000)
     return () => clearInterval(t)
-  }, [complete === null])
+  }, [shuffledPairs])
 
   useEffect(() => {
     if (matched === cards.length) setComplete(true)
@@ -30,13 +34,17 @@ export function MemorizationCardsGame() {
   const handleClick = (idx: number) => {
     if (!first) {
       setFirst(idx)
+      audioSystem.playClick()
     } else {
       const p = [...pairs]
       if (p[idx].text === p[first].text) {
+        audioSystem.playCorrect()
         p[idx].matched = true
         p[first].matched = true
         setScore(s => s + 100)
         setMatched(m => m + 1)
+      } else {
+        audioSystem.playError()
       }
       setFirst(null)
     }

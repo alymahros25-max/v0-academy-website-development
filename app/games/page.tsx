@@ -1,8 +1,9 @@
 "use client"
 
 import { useI18n } from "@/lib/i18n"
-import { Gamepad2, Trophy, Brain, Star, Filter, X } from "lucide-react"
-import { useState } from "react"
+import { Gamepad2, Trophy, Brain, Star, Filter, X, Volume2, VolumeX } from "lucide-react"
+import { useState, useEffect } from "react"
+import { audioSystem } from "@/lib/audio-system"
 import { LetterMatchGame } from "@/components/games/letter-match-game"
 import { QuranQuizGame } from "@/components/games/quran-quiz-game"
 import { WordBuilderGame } from "@/components/games/word-builder-game"
@@ -23,12 +24,48 @@ import { LetterSoundGame } from "@/components/games/letter-sound-game"
 import { WordMeaningGame } from "@/components/games/word-meaning-game"
 import { VerseGuessingGame } from "@/components/games/verse-guessing-game"
 import { TajweedLamGame } from "@/components/games/tajweed-lam-game"
+import { WordCompleteGame } from "@/components/games/word-complete-game"
+import { CompanionsPeriodsGame } from "@/components/games/companions-periods-game"
+import { CompanionsMartyrGame } from "@/components/games/companions-martyrs-game"
+import { SurahGuessGame } from "@/components/games/surah-guess-game"
+import { CompanionsCardsGame } from "@/components/games/companions-cards-game"
+import { VerseMatchingGame } from "@/components/games/verse-matching-game"
+import { BattlesDescriptionGame } from "@/components/games/battles-description-game"
 import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
   const { t, locale } = useI18n()
   const [activeGame, setActiveGame] = useState<string | "none">("none")
   const [selectedCategory, setSelectedCategory] = useState<string | "all">("all")
+  const [isMuted, setIsMuted] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Scroll restoration on mount and when returning from game
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    setMounted(true)
+  }, [])
+
+  // Reset scroll when exiting a game
+  useEffect(() => {
+    if (activeGame === "none" && mounted) {
+      window.scrollTo(0, 0)
+    }
+  }, [activeGame, mounted])
+
+  // Initialize audio state
+  useEffect(() => {
+    setIsMuted(audioSystem.isMuted())
+  }, [])
+
+  const toggleAudio = () => {
+    const newState = !isMuted
+    setIsMuted(newState)
+    audioSystem.setMuted(newState)
+    if (!newState) {
+      audioSystem.playClick()
+    }
+  }
   
   const categories = getCategories()
   const filteredGames = selectedCategory === "all" 
@@ -39,12 +76,16 @@ export default function GamesPage() {
     const games: Record<string, React.ReactNode> = {
       "letter-match-1": <LetterMatchGame />,
       "word-builder-1": <WordBuilderGame />,
+      "word-complete-1": <WordCompleteGame />,
       "quran-quiz-1": <QuranQuizGame />,
       "quran-order-1": <QuranOrderGame />,
+      "surah-guess-1": <SurahGuessGame />,
       "tajweed-rules-1": <TajweedRulesGame />,
       "tajweed-rules-2": <TajweedTanweenGame />,
       "tajweed-rules-3": <TajweedLamGame />,
       "companions-quiz-1": <CompanionsQuizGame />,
+      "companions-periods-1": <CompanionsPeriodsGame />,
+      "companions-martyrs-1": <CompanionsMartyrGame />,
       "memorization-cards-1": <MemorizationCardsGame />,
       "shapes-colors-1": <ShapesMatchingGame />,
       "shapes-colors-2": <ColorsQuizGame />,
@@ -52,11 +93,16 @@ export default function GamesPage() {
       "animals-quran-2": <QuranAnimalsGame />,
       "battles-sira-1": <BattlesTimelineGame />,
       "battles-sira-2": <SiraEventsGame />,
+      "battles-sirah-1": <BattlesTimelineGame />,
+      "battles-sirah-2": <BattlesDescriptionGame />,
+      "sirah-timeline-1": <SiraEventsGame />,
       "battles-sira-3": <CompanionsTimelineGame />,
-      "companions-2": <CompanionsDedsGame />,
-      "companions-3": <LetterSoundGame />,
-      "companions-4": <WordMeaningGame />,
+      "companions-deeds-1": <CompanionsDedsGame />,
+      "companions-cards-1": <CompanionsCardsGame />,
+      "letter-sound-1": <LetterSoundGame />,
+      "word-meaning-1": <WordMeaningGame />,
       "quran-memory-1": <VerseGuessingGame />,
+      "verse-match-1": <VerseMatchingGame />,
     }
     return games[gameId] || (
       <div className="text-center py-20">
@@ -97,6 +143,19 @@ export default function GamesPage() {
       {/* Hero */}
       <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-primary overflow-hidden">
         <div className="absolute inset-0 islamic-pattern opacity-20" />
+        <div className="absolute top-4 right-4 z-20">
+          <button
+            onClick={toggleAudio}
+            className="p-3 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground transition-all"
+            aria-label={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? (
+              <VolumeX className="w-5 h-5" />
+            ) : (
+              <Volume2 className="w-5 h-5" />
+            )}
+          </button>
+        </div>
         <div className="relative z-10 mx-auto max-w-7xl px-4 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/20 text-secondary text-sm font-bold mb-4 border border-secondary/30">
             {t("nav.games")}
@@ -160,8 +219,11 @@ export default function GamesPage() {
               {filteredGames.map((game) => (
                 <button
                   key={game.id}
-                  onClick={() => setActiveGame(game.id)}
-                  className="group text-start bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300"
+                  onClick={() => {
+                    audioSystem.playClick()
+                    setActiveGame(game.id)
+                  }}
+                  className="group text-start bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 active:scale-95"
                 >
                   {/* Card Header */}
                   <div className={`relative h-32 bg-gradient-to-br ${game.color} flex items-center justify-center`}>
