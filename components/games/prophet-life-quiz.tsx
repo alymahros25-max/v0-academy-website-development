@@ -1,66 +1,88 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useMemo } from "react"
 import { useI18n } from "@/lib/i18n"
 import { Trophy, RotateCcw, CheckCircle2, XCircle, ChevronLeft, Star, Sparkles, Lightbulb } from "lucide-react"
 
 interface Question {
-  question: Record<string, string>
-  options: Record<string, string[]>
-  correctIndex: number
+  id: number
+  question: string
+  options: string[]
+  correctAnswer: number
+  explanation: string
 }
 
-const questions: Question[] = [
+const PROPHET_LIFE_QUIZ: Question[] = [
   {
-    question: { ar: "كم عدد سور القرآن الكريم؟", en: "How many Surahs are in the Quran?", fr: "Combien de sourates dans le Coran?" },
-    options: { ar: ["110 سورة", "114 سورة", "120 سورة", "112 سورة"], en: ["110", "114", "120", "112"], fr: ["110", "114", "120", "112"] },
-    correctIndex: 1,
+    id: 1,
+    question: "ما هو النسب الكامل للنبي صلى الله عليه وسلم حتى عدنان؟",
+    options: ["محمد بن عبد الله بن عبد المطلب بن هاشم بن عبد مناف", "محمد بن عبد المطلب بن هاشم بن قصي بن كلاب", "محمد بن عبد الله بن هاشم بن عبد المطلب بن قصي", "محمد بن عبد الله بن عبد المطلب بن قصي بن هاشم"],
+    correctAnswer: 0,
+    explanation: "ينتهي نسب النبي صلى الله عليه وسلم الشريف إلى عدنان من ولد إسماعيل بن إبراهيم عليهما السلام، وهاشم هو الذي يعود إليه نسب القرشيين التكريمي."
   },
   {
-    question: { ar: "ما هي أطول سورة في القرآن؟", en: "What is the longest Surah in the Quran?", fr: "Quelle est la plus longue sourate?" },
-    options: { ar: ["آل عمران", "البقرة", "النساء", "المائدة"], en: ["Al-Imran", "Al-Baqarah", "An-Nisa", "Al-Ma'idah"], fr: ["Al-Imran", "Al-Baqarah", "An-Nisa", "Al-Ma'idah"] },
-    correctIndex: 1,
+    id: 2,
+    question: "من هي المرضعة التي أرضعت النبي صلى الله عليه وسلم في بادية بني سعد؟",
+    options: ["ثويبة مولاة أبي لهب", "حليمة السعدية", "أم أيمن", "شفاء أم عبد الرحمن"],
+    correctAnswer: 1,
+    explanation: "كان من عادة عرب مكة إرسال أبنائهم للبادية لنقاء هوائها وفصاحة لسان أهلها، وقد حلّت البركة على بيت حليمة السعدية ورضيعها منذ قدوم النبي."
   },
   {
-    question: { ar: "ما هي أقصر سورة في القرآن؟", en: "What is the shortest Surah?", fr: "Quelle est la plus courte sourate?" },
-    options: { ar: ["الإخلاص", "الفلق", "الكوثر", "الناس"], en: ["Al-Ikhlas", "Al-Falaq", "Al-Kawthar", "An-Nas"], fr: ["Al-Ikhlas", "Al-Falaq", "Al-Kawthar", "An-Nas"] },
-    correctIndex: 2,
+    id: 3,
+    question: "كم كان عمر النبي صلى الله عليه وسلم عندما توفيت أمه آمنة بنت وهب؟",
+    options: ["4 سنوات", "6 سنوات", "8 سنوات", "10 سنوات"],
+    correctAnswer: 1,
+    explanation: "توفيت أمه آمنة في طريق عودتها من المدينة (الأبواء)، فكفله بعد ذلك جده عبد المطلب وحاطه برعايته وعطفه."
   },
   {
-    question: { ar: "كم عدد أجزاء القرآن الكريم؟", en: "How many Juz are in the Quran?", fr: "Combien de Juz dans le Coran?" },
-    options: { ar: ["25 جزء", "28 جزء", "30 جزء", "32 جزء"], en: ["25", "28", "30", "32"], fr: ["25", "28", "30", "32"] },
-    correctIndex: 2,
+    id: 4,
+    question: "من هي آخر زوجات النبي صلى الله عليه وسلم وفاةً؟",
+    options: ["عائشة بنت أبي بكر", "أم سلمة (هند بنت أبي أمية)", "سودة بنت زمعة", "ميمونة بنت الحارث"],
+    correctAnswer: 1,
+    explanation: "توفيت أم المؤمنين أم سلمة رضي الله عنها سنة 61 هجرية، وكانت من أرجح النساء عقلاً ورأياً وتجلت حكَمْتها في صلح الحديبية."
   },
   {
-    question: { ar: "ما اسم السورة التي تسمى قلب القرآن؟", en: "Which Surah is called the heart of the Quran?", fr: "Quelle sourate est le coeur du Coran?" },
-    options: { ar: ["الرحمن", "يس", "الملك", "الواقعة"], en: ["Ar-Rahman", "Yaseen", "Al-Mulk", "Al-Waqi'ah"], fr: ["Ar-Rahman", "Yaseen", "Al-Mulk", "Al-Waqi'ah"] },
-    correctIndex: 1,
+    id: 5,
+    question: "كم عدد أبناء وبنات النبي صلى الله عليه وسلم جميعاً ومن هي أم معظمهم؟",
+    options: ["6 أبناء - أمهم عائشة", "7 أبناء - أمهم خديجة (عدا إبراهيم)", "5 أبناء - أمهم مارية القبطية", "8 أبناء - أمهم سودة بنت زمعة"],
+    correctAnswer: 1,
+    explanation: "رزق النبي بـ 3 ذكور (القاسم، عبد الله، إبراهيم) و 4 إناث (زينب، رقية، أم كلثوم، فاطمة)، وكلهم من خديجة رضي الله عنها باستثناء إبراهيم من مارية القبطية."
   },
   {
-    question: { ar: "في أي سورة وردت آية الكرسي؟", en: "In which Surah is Ayat Al-Kursi?", fr: "Dans quelle sourate se trouve Ayat Al-Kursi?" },
-    options: { ar: ["آل عمران", "النساء", "البقرة", "المائدة"], en: ["Al-Imran", "An-Nisa", "Al-Baqarah", "Al-Ma'idah"], fr: ["Al-Imran", "An-Nisa", "Al-Baqarah", "Al-Ma'idah"] },
-    correctIndex: 2,
+    id: 6,
+    question: "من هي ابنته التي لقبت بـ 'أم أبيها' و 'سيدة نساء أهل الجنة'؟",
+    options: ["رقية رضي الله عنها", "زينب رضي الله عنها", "فاطمة الزهراء رضي الله عنها", "أم كلثوم رضي الله عنها"],
+    correctAnswer: 2,
+    explanation: "لقبت فاطمة بـ 'أم أبيها' لشدة عنايتها ورعايتها بأبيها النبي صلى الله عليه وسلم بعد وفاة أمها خديجة."
   },
   {
-    question: { ar: "كم مرة ذُكر اسم النبي محمد في القرآن؟", en: "How many times is Prophet Muhammad mentioned?", fr: "Combien de fois le Prophete Muhammad est mentionne?" },
-    options: { ar: ["3 مرات", "4 مرات", "5 مرات", "6 مرات"], en: ["3", "4", "5", "6"], fr: ["3", "4", "5", "6"] },
-    correctIndex: 1,
+    id: 7,
+    question: "من هي زوجة النبي صلى الله عليه وسلم التي كانت تسمى 'أُم المساكين' لشدة كرمها؟",
+    options: ["زينب بنت خزيمة", "زينب بنت جحش", "جويرية بنت الحارث", "صفية بنت حيي"],
+    correctAnswer: 0,
+    explanation: "سميت زينب بنت خزيمة بـ 'أم المساكين' في الجاهلية والإسلام لكثرة إطعامها للمساكين وصدقتها عليهم، ولم تلبث عند النبي إلا أشهراً قليلة حتى توفيت."
   },
   {
-    question: { ar: "ما هي السورة التي لا تبدأ بالبسملة؟", en: "Which Surah does not start with Bismillah?", fr: "Quelle sourate ne commence pas par Bismillah?" },
-    options: { ar: ["الفاتحة", "البقرة", "التوبة", "يوسف"], en: ["Al-Fatiha", "Al-Baqarah", "At-Tawbah", "Yusuf"], fr: ["Al-Fatiha", "Al-Baqarah", "At-Tawbah", "Yusuf"] },
-    correctIndex: 2,
+    id: 8,
+    question: "ما هو الحلف الذي شهده النبي صلى الله عليه وسلم قبل البعثة وقال عنه 'لو دُعيت به في الإسلام لأجبت'؟",
+    options: ["حلف الفضول", "حلف المطيبين", "حلف الأحابيش", "حلف العقبة"],
+    correctAnswer: 0,
+    explanation: "حلف الفضول كان معاهدة لنصرة المظلوم في مكة وأخذ الحق له مهما كان ضعيفاً، وهو دليل على القيم الأخلاقية العالية قبل الإسلام."
   },
   {
-    question: { ar: "كم عدد السجدات في القرآن الكريم؟", en: "How many prostrations (Sujud) are in the Quran?", fr: "Combien de prosternations dans le Coran?" },
-    options: { ar: ["12 سجدة", "13 سجدة", "14 سجدة", "15 سجدة"], en: ["12", "13", "14", "15"], fr: ["12", "13", "14", "15"] },
-    correctIndex: 3,
+    id: 9,
+    question: "من هو ابن النبي صلى الله عليه وسلم الذي كانت أمه مارية القبطية؟",
+    options: ["القاسم", "عبد الله", "إبراهيم", "الطاهر"],
+    correctAnswer: 2,
+    explanation: "ولد إبراهيم بالمدينة المنورة وتوفي صغيراً، وبكى عليه النبي وقال: 'إن العين تدمع والقلب يحزن ولا نقول إلا ما يرضي ربنا'."
   },
   {
-    question: { ar: "ما هي السورة الملقبة بعروس القرآن؟", en: "Which Surah is called the Bride of the Quran?", fr: "Quelle sourate est la Mariee du Coran?" },
-    options: { ar: ["الرحمن", "يس", "الكهف", "مريم"], en: ["Ar-Rahman", "Yaseen", "Al-Kahf", "Maryam"], fr: ["Ar-Rahman", "Yaseen", "Al-Kahf", "Maryam"] },
-    correctIndex: 0,
-  },
+    id: 10,
+    question: "كم كان سن النبي صلى الله عليه وسلم عندما نزل عليه الوحي لأول مرة في غار حراء؟",
+    options: ["35 سنة", "40 سنة", "43 سنة", "45 سنة"],
+    correctAnswer: 1,
+    explanation: "نزل جبريل عليه السلام بأول آيات سورة العلق (اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ) وكان عمر النبي حينها أربعين سنة."
+  }
 ]
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -72,9 +94,9 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled
 }
 
-export function QuranQuizGame() {
+export function ProphetLifeQuiz() {
   const { locale } = useI18n()
-  const [shuffledQuestions, setShuffledQuestions] = useState(() => shuffleArray(questions))
+  const [shuffledQuestions] = useState(() => shuffleArray(PROPHET_LIFE_QUIZ))
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [score, setScore] = useState(0)
@@ -88,7 +110,7 @@ export function QuranQuizGame() {
     if (answered) return
     setSelectedAnswer(index)
     setAnswered(true)
-    if (index === currentQuestion.correctIndex) {
+    if (index === currentQuestion.correctAnswer) {
       setScore((prev) => prev + 10)
     }
   }
@@ -103,14 +125,13 @@ export function QuranQuizGame() {
     }
   }
 
-  const restartGame = useCallback(() => {
-    setShuffledQuestions(shuffleArray(questions))
+  const restartGame = () => {
     setCurrentIndex(0)
     setSelectedAnswer(null)
     setScore(0)
     setAnswered(false)
     setGameOver(false)
-  }, [])
+  }
 
   const getStars = () => {
     const percentage = (score / (totalQuestions * 10)) * 100
@@ -127,10 +148,10 @@ export function QuranQuizGame() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div>
           <h2 className="text-2xl font-bold text-foreground">
-            {locale === "ar" ? "مسابقة قرآنية" : locale === "en" ? "Quran Quiz" : "Quiz coranique"}
+            {locale === "ar" ? "حياة النبي" : locale === "en" ? "Prophet's Life" : "Vie du Prophète"}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            {locale === "ar" ? "اختبر معلوماتك القرآنية" : locale === "en" ? "Test your Quranic knowledge" : "Testez vos connaissances coraniques"}
+            {locale === "ar" ? "تعلم عن نسبه وزوجاته وأولاده" : "Learn about his lineage, wives, and children"}
           </p>
         </div>
         <button
@@ -169,21 +190,21 @@ export function QuranQuizGame() {
                 <Sparkles className="w-5 h-5 text-primary" />
               </div>
               <h3 className="text-lg font-bold text-foreground leading-relaxed">
-                {currentQuestion.question[locale]}
+                {currentQuestion.question}
               </h3>
             </div>
           </div>
 
           {/* Options */}
           <div className="flex flex-col gap-3 mb-6">
-            {currentQuestion.options[locale].map((option, idx) => {
+            {currentQuestion.options.map((option, idx) => {
               let optionStyle = "bg-muted/50 border-border text-foreground hover:bg-primary/10 hover:border-primary/30"
 
               if (answered) {
-                if (idx === currentQuestion.correctIndex) {
-                  optionStyle = "bg-emerald-50 border-emerald-500 text-emerald-800"
-                } else if (idx === selectedAnswer && idx !== currentQuestion.correctIndex) {
-                  optionStyle = "bg-red-50 border-red-500 text-red-800"
+                if (idx === currentQuestion.correctAnswer) {
+                  optionStyle = "bg-emerald-50 border-emerald-500 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-700 dark:text-emerald-100"
+                } else if (idx === selectedAnswer && idx !== currentQuestion.correctAnswer) {
+                  optionStyle = "bg-red-50 border-red-500 text-red-800 dark:bg-red-950 dark:border-red-700 dark:text-red-100"
                 } else {
                   optionStyle = "bg-muted/30 border-border text-muted-foreground opacity-60"
                 }
@@ -197,13 +218,13 @@ export function QuranQuizGame() {
                   className={`flex items-center gap-3 p-4 rounded-xl border-2 text-start transition-all ${optionStyle} ${!answered ? "cursor-pointer" : "cursor-default"}`}
                 >
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold ${
-                    answered && idx === currentQuestion.correctIndex
+                    answered && idx === currentQuestion.correctAnswer
                       ? "bg-emerald-500 text-white"
                       : answered && idx === selectedAnswer
                         ? "bg-red-500 text-white"
                         : "bg-card text-foreground border border-border"
                   }`}>
-                    {answered && idx === currentQuestion.correctIndex ? (
+                    {answered && idx === currentQuestion.correctAnswer ? (
                       <CheckCircle2 className="w-5 h-5" />
                     ) : answered && idx === selectedAnswer ? (
                       <XCircle className="w-5 h-5" />
@@ -223,16 +244,10 @@ export function QuranQuizGame() {
               <Lightbulb className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-blue-900 dark:text-blue-100 text-sm mb-1">
-                  {locale === "ar" ? "معلومة مفيدة:" : "Helpful Info:"}
+                  {locale === "ar" ? "معلومة مهمة:" : "Important Info:"}
                 </p>
                 <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
-                  {selectedAnswer === currentQuestion.correctIndex
-                    ? (locale === "ar" 
-                        ? "إجابتك صحيحة! استمر في هذا المستوى الممتاز من التعلم والمعرفة بالقرآن الكريم."
-                        : "Your answer is correct! Keep up this excellent level of Quranic knowledge.")
-                    : (locale === "ar"
-                        ? `الإجابة الصحيحة هي: ${currentQuestion.options[locale][currentQuestion.correctIndex]}. حاول التركيز على هذه المعلومة للمرة القادمة.`
-                        : `The correct answer is: ${currentQuestion.options[locale][currentQuestion.correctIndex]}. Try to remember this for next time.`)}
+                  {currentQuestion.explanation}
                 </p>
               </div>
             </div>
@@ -241,8 +256,8 @@ export function QuranQuizGame() {
           {/* Feedback + Next */}
           {answered && (
             <div className="flex items-center justify-between">
-              <p className={`font-bold ${selectedAnswer === currentQuestion.correctIndex ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
-                {selectedAnswer === currentQuestion.correctIndex
+              <p className={`font-bold ${selectedAnswer === currentQuestion.correctAnswer ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+                {selectedAnswer === currentQuestion.correctAnswer
                   ? (locale === "ar" ? "إجابة صحيحة!" : "Correct!")
                   : (locale === "ar" ? "إجابة خاطئة!" : "Wrong!")}
               </p>
@@ -265,7 +280,7 @@ export function QuranQuizGame() {
             <Trophy className="w-10 h-10 text-secondary" />
           </div>
           <h3 className="text-3xl font-extrabold text-foreground mb-2">
-            {locale === "ar" ? "انتهت المسابقة!" : locale === "en" ? "Quiz Complete!" : "Quiz termine!"}
+            {locale === "ar" ? "انتهت المسابقة!" : "Quiz Complete!"}
           </h3>
           <p className="text-xl text-muted-foreground mb-4">
             {locale === "ar"
