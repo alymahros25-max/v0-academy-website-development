@@ -30,6 +30,7 @@ import { CompanionsMartyrGame } from "@/components/games/companions-martyrs-game
 import { SurahGuessGame } from "@/components/games/surah-guess-game"
 import { CompanionsCardsGame } from "@/components/games/companions-cards-game"
 import { VerseMatchingGame } from "@/components/games/verse-matching-game"
+import { BattlesDescriptionGame } from "@/components/games/battles-description-game"
 import { GAMES_CATALOG, getCategories, getCategoryName, type Game } from "@/lib/games-data"
 
 export default function GamesPage() {
@@ -92,6 +93,9 @@ export default function GamesPage() {
       "animals-quran-2": <QuranAnimalsGame />,
       "battles-sira-1": <BattlesTimelineGame />,
       "battles-sira-2": <SiraEventsGame />,
+      "battles-sirah-1": <BattlesTimelineGame />,
+      "battles-sirah-2": <BattlesDescriptionGame />,
+      "sirah-timeline-1": <SiraEventsGame />,
       "battles-sira-3": <CompanionsTimelineGame />,
       "companions-deeds-1": <CompanionsDedsGame />,
       "companions-cards-1": <CompanionsCardsGame />,
