@@ -25,8 +25,8 @@ import { WordMeaningGame } from "@/components/games/word-meaning-game"
 import { VerseGuessingGame } from "@/components/games/verse-guessing-game"
 import { TajweedLamGame } from "@/components/games/tajweed-lam-game"
 import { WordCompleteGame } from "@/components/games/word-complete-game"
-import { CompanionsPeriodsGame } from "@/components/games/companions-periods-game"
-import { CompanionsMartyrGame } from "@/components/games/companions-martyrs-game"
+import { ProphetLifeQuiz } from "@/components/games/prophet-life-quiz"
+import { SahabahVirtuesQuiz } from "@/components/games/sahabah-virtues-quiz"
 import { SurahGuessGame } from "@/components/games/surah-guess-game"
 import { CompanionsCardsGame } from "@/components/games/companions-cards-game"
 import { VerseMatchingGame } from "@/components/games/verse-matching-game"
@@ -84,8 +84,8 @@ export default function GamesPage() {
       "tajweed-rules-2": <TajweedTanweenGame />,
       "tajweed-rules-3": <TajweedLamGame />,
       "companions-quiz-1": <CompanionsQuizGame />,
-      "companions-periods-1": <CompanionsPeriodsGame />,
-      "companions-martyrs-1": <CompanionsMartyrGame />,
+      "prophet-life-1": <ProphetLifeQuiz />,
+      "sahabah-virtues-1": <SahabahVirtuesQuiz />,
       "memorization-cards-1": <MemorizationCardsGame />,
       "shapes-colors-1": <ShapesMatchingGame />,
       "shapes-colors-2": <ColorsQuizGame />,
