@@ -16,6 +16,36 @@ export interface Game {
 }
 
 export const GAMES_CATALOG: Game[] = [
+  // حياة النبي والصحابة (2 games - NEW)
+  {
+    id: "prophet-life-1",
+    titleAr: "حياة النبي ونسبه وأزواجه",
+    titleEn: "Life of the Prophet",
+    titleFr: "La vie du Prophète",
+    descriptionAr: "اختبر معرفتك بحياة النبي محمد ونسبه وزوجاته وأولاده",
+    descriptionEn: "Test your knowledge of Prophet Muhammad's life, lineage, wives, and children",
+    descriptionFr: "Testez vos connaissances sur la vie du Prophète Muhammad",
+    category: "sira",
+    difficulty: "medium",
+    icon: "📖",
+    color: "from-amber-500 to-amber-700",
+    playersCount: "2,100+",
+  },
+  {
+    id: "sahabah-virtues-1",
+    titleAr: "مناقب ومواقف الصحابة",
+    titleEn: "Virtues & Stories of Companions",
+    titleFr: "Vertus des compagnons",
+    descriptionAr: "تعرف على مناقب الصحابة الكرام وفضائلهم وتضحياتهم",
+    descriptionEn: "Learn about the virtues and achievements of the noble Companions",
+    descriptionFr: "Découvrez les vertus des compagnons nobles",
+    category: "companions",
+    difficulty: "medium",
+    icon: "⭐",
+    color: "from-yellow-500 to-yellow-700",
+    playersCount: "1,950+",
+  },
+
   // الحروف والكلمات (3 games)
   {
     id: "letter-match-1",
@@ -280,34 +310,6 @@ export const GAMES_CATALOG: Game[] = [
     icon: "❓",
     color: "from-violet-500 to-violet-700",
     playersCount: "1,100+",
-  },
-  {
-    id: "companions-periods-1",
-    titleAr: "فترات الصحابة",
-    titleEn: "Companions Periods",
-    titleFr: "Périodes des compagnons",
-    descriptionAr: "صنف الصحابة حسب فترة إسلامهم",
-    descriptionEn: "Classify companions by conversion period",
-    descriptionFr: "Classifiez les compagnons par période",
-    category: "companions",
-    difficulty: "hard",
-    icon: "📅",
-    color: "from-fuchsia-500 to-fuchsia-700",
-    playersCount: "700+",
-  },
-  {
-    id: "companions-martyrs-1",
-    titleAr: "شهداء الإسلام",
-    titleEn: "Martyrs of Islam",
-    titleFr: "Martyrs de l'Islam",
-    descriptionAr: "اختر الصحابي الذي استشهد في المعركة",
-    descriptionEn: "Choose companion who martyred in battles",
-    descriptionFr: "Choisissez le compagnon mort au combat",
-    category: "companions",
-    difficulty: "medium",
-    icon: "🕊️",
-    color: "from-sky-500 to-sky-700",
-    playersCount: "950+",
   },
 ]
 
