@@ -86,6 +86,9 @@ export function Header() {
           <div className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}
+              aria-label={locale === "ar" ? "تغيير اللغة" : locale === "en" ? "Change language" : "Changer la langue"}
+              aria-expanded={langOpen}
+              aria-haspopup="menu"
               className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm transition-colors ${
                 scrolled
                   ? "text-foreground hover:bg-primary/10"
