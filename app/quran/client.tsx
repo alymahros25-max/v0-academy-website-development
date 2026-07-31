@@ -69,10 +69,14 @@ export default function QuranPageClient() {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <Image
                   src="/images/teacher-quran.jpg"
-                  alt="Quran teacher"
+                  alt="Quran teacher teaching students"
                   width={600}
                   height={400}
                   className="w-full h-auto object-cover"
+                  quality={85}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                  priority={false}
+                  loading="lazy"
                 />
               </div>
             </div>

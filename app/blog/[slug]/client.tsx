@@ -70,7 +70,9 @@ export default function BlogArticleClient({ slug, blogPosts }: { slug: string; b
               alt={post.title[locale]}
               fill
               className="object-cover"
-              priority
+              priority={true}
+              quality={85}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
             />
           </div>
 

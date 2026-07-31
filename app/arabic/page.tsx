@@ -66,10 +66,14 @@ export default function ArabicPage() {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <Image
                   src="/images/arabic-learning.jpg"
-                  alt="Arabic learning"
+                  alt="Arabic learning class"
                   width={600}
                   height={400}
                   className="w-full h-auto object-cover"
+                  quality={85}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                  priority={false}
+                  loading="lazy"
                 />
               </div>
             </div>
