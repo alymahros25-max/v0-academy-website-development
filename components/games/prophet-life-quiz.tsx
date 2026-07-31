@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, memo, useCallback } from "react"
 import { useI18n } from "@/lib/i18n"
 import { Trophy, RotateCcw, CheckCircle2, XCircle, ChevronLeft, Star, Sparkles, Lightbulb } from "lucide-react"
 
@@ -94,7 +94,7 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled
 }
 
-export function ProphetLifeQuiz() {
+export const ProphetLifeQuiz = memo(function ProphetLifeQuiz() {
   const { locale } = useI18n()
   const [shuffledQuestions] = useState(() => shuffleArray(PROPHET_LIFE_QUIZ))
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -106,16 +106,15 @@ export function ProphetLifeQuiz() {
   const currentQuestion = shuffledQuestions[currentIndex]
   const totalQuestions = shuffledQuestions.length
 
-  const handleAnswer = (index: number) => {
-    if (answered) return
+  const handleAnswer = useCallback((index: number) => {
     setSelectedAnswer(index)
     setAnswered(true)
-    if (index === currentQuestion.correctAnswer) {
+    if (index === shuffledQuestions[currentIndex].correctAnswer) {
       setScore((prev) => prev + 10)
     }
-  }
+  }, [currentIndex, shuffledQuestions])
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentIndex + 1 >= totalQuestions) {
       setGameOver(true)
     } else {
@@ -123,7 +122,7 @@ export function ProphetLifeQuiz() {
       setSelectedAnswer(null)
       setAnswered(false)
     }
-  }
+  }, [currentIndex, totalQuestions])
 
   const restartGame = () => {
     setCurrentIndex(0)
@@ -312,4 +311,4 @@ export function ProphetLifeQuiz() {
       )}
     </div>
   )
-}
+})
