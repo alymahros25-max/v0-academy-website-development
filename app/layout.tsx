@@ -13,13 +13,15 @@ const notoArabic = Noto_Sans_Arabic({
   subsets: ["arabic"],
   variable: "--font-arabic",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700"],
+  preload: true,
 })
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
 })
 
 export const metadata: Metadata = {
@@ -105,16 +107,17 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        {/* Preconnect to critical external resources for faster loading */}
+        {/* Critical resource preloading for faster FCP/LCP */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://xtfyrskkoewanmkcfixw.supabase.co" />
-        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://img.youtube.com" />
         
-        {/* Google Analytics 4 - GA4 Tracking */}
+        {/* Defer Google Analytics to improve FCP/LCP */}
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-94X5S3J229"
           async
         />
