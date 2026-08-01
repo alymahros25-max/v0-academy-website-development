@@ -171,7 +171,8 @@ export function generateBreadcrumbSchema(breadcrumbs: Array<{
 }
 
 /**
- * Generate LocalBusiness schema for academy info.
+ * Generate EducationalOrganization schema for academy with geo-targeting.
+ * Includes comprehensive areaServed for Gulf region and Western diaspora.
  */
 export function generateLocalBusinessSchema(): SchemaContext {
   return {
@@ -179,16 +180,55 @@ export function generateLocalBusinessSchema(): SchemaContext {
     '@type': 'EducationalOrganization',
     name: SITE_NAME,
     url: BASE_URL,
+    description:
+      'أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين',
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
       email: 'enamel311@gmail.com',
       url: 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
+      availableLanguage: ['ar', 'en', 'fr'],
     },
     sameAs: [
       'https://www.facebook.com/quran-elhafez',
       'https://www.youtube.com/@quran-elhafez',
     ],
+    // Geo-targeting: service areas for Gulf region (primary) and Western diaspora
+    areaServed: [
+      // Gulf Region (Primary Focus)
+      { '@type': 'Country', name: 'Saudi Arabia' },
+      { '@type': 'Country', name: 'United Arab Emirates' },
+      { '@type': 'Country', name: 'Kuwait' },
+      { '@type': 'Country', name: 'Qatar' },
+      { '@type': 'Country', name: 'Bahrain' },
+      { '@type': 'Country', name: 'Oman' },
+      // Western Diaspora (Secondary Focus)
+      { '@type': 'Country', name: 'United States' },
+      { '@type': 'Country', name: 'United Kingdom' },
+      { '@type': 'Country', name: 'France' },
+      { '@type': 'Country', name: 'Germany' },
+      { '@type': 'Country', name: 'Italy' },
+    ],
+    // Languages supported
+    knowsLanguage: [
+      { '@type': 'Language', name: 'Arabic', alternateName: 'العربية' },
+      { '@type': 'Language', name: 'English', alternateName: 'الإنجليزية' },
+      { '@type': 'Language', name: 'French', alternateName: 'الفرنسية' },
+    ],
+    // Educational focus
+    teaches: [
+      'Quranic Memorization',
+      'Islamic Studies',
+      'Arabic Language Foundation',
+      'Tajweed',
+    ],
+    foundingDate: '2024',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${BASE_URL}/logo.png`,
+      width: 256,
+      height: 256,
+    },
     // Add review aggregate if available
     aggregateRating: {
       '@type': 'AggregateRating',
