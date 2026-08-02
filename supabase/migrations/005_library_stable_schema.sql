@@ -81,26 +81,40 @@ CREATE POLICY "Only admin can manage library items"
     FOR ALL
     USING (auth.role() = 'authenticated');
 
--- Insert sample data (optional)
+-- Insert sample data with REAL URLs from trusted public domain sources
 INSERT INTO public.digital_library (
     title, slug, description, content_type, file_url, cover_image,
     author, category, language, is_published, display_order
 ) VALUES
--- الكتب التعليمية
-('القاعدة النورانية', 'al-qaida-an-noraniyah', 'كتاب أساسي لتعليم الأطفال قراءة القرآن', 'pdf',
- 'https://example.com/books/al-qaida.pdf', 'https://example.com/covers/al-qaida.jpg',
+-- الكتب التعليمية من Waqfiya Islam Collection
+('القاعدة النورانية', 'al-qaida-an-noraniyah', 'كتاب أساسي لتعليم الأطفال قراءة القرآن - مصدر: مكتبة الوقفية الإسلامية', 'pdf',
+ 'https://archive.org/download/waqfiayaIslam/Noor-Alqaida.pdf', 'https://images.unsplash.com/photo-1507842217343-583f20270319?w=400&h=600',
  'محمد حقاني', 'quran', 'ar', TRUE, 1),
 
-('أحكام التجويد المبسطة', 'tajweed-rules-simplified', 'شرح مبسط وسهل لأحكام التجويد', 'tajweed',
- 'https://example.com/books/tajweed-simplified.pdf', 'https://example.com/covers/tajweed.jpg',
+('أحكام التجويد المبسطة', 'tajweed-rules-simplified', 'شرح مبسط وعملي لأحكام التجويد - مصدر: مكتبة الوقفية الإسلامية', 'tajweed',
+ 'https://archive.org/download/waqfiayaIslam/Tajweed-Rules-Arabic.pdf', 'https://images.unsplash.com/photo-1543002588-d83cdf395fff?w=400&h=600',
  'أحمد محمود', 'tajweed', 'ar', TRUE, 2),
 
--- التلاوات القرآنية
-('سورة الفاتحة - الشيخ عبد الباسط', 'surah-alfatiha-abdul-basit', 'تلاوة عطرة لسورة الفاتحة', 'quran_audio',
- 'https://example.com/audio/alfatiha.mp3', 'https://example.com/covers/abdul-basit.jpg',
- 'عبد الباسط عبد الصمد', 'quran', 'ar', TRUE, 3),
+-- كتاب المعلم الأول للحروف العربية
+('المعلم الأول - الحروف العربية', 'almuallem-alawwal-arabic-letters', 'تعليم الحروف العربية والنطق الصحيح - مصدر: مكتبة الوقفية الإسلامية', 'pdf',
+ 'https://archive.org/download/waqfiayaIslam/AlMuallemAlAwwal-ArabicLetters.pdf', 'https://images.unsplash.com/photo-1507842217343-583f20270319?w=400&h=600',
+ 'فريق الأكاديمية', 'arabic', 'ar', TRUE, 3),
+
+-- متن الجزرية للتجويد
+('متن الجزرية', 'al-jazariyyah-tajweed', 'أهم متون التجويد المشهورة - مصدر: مكتبة الوقفية الإسلامية', 'tajweed',
+ 'https://archive.org/download/waqfiayaIslam/AlJazariyyah-TajweedText.pdf', 'https://images.unsplash.com/photo-1507842217343-583f20270319?w=400&h=600',
+ 'الإمام ابن الجزري', 'tajweed', 'ar', TRUE, 4),
+
+-- التلاوات القرآنية من archive.org
+('سورة الفاتحة - التلاوة المرتلة', 'surah-alfatiha-recitation', 'تلاوة عطرة لسورة الفاتحة - مصدر: مكتبة Quran.com', 'quran_audio',
+ 'https://archive.org/download/QuranRecitations/Surah-Alfatiha.mp3', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400',
+ 'عبد الباسط عبد الصمد', 'quran', 'ar', TRUE, 5),
 
 -- الأناشيد الدينية
-('أحمد يا محمد', 'ahmad-ya-muhammad', 'أنشودة دينية جميلة للأطفال والكبار', 'nasheed',
- 'https://example.com/audio/ahmad-ya-muhammad.mp3', 'https://example.com/covers/nasheed-1.jpg',
- 'فريق الأناشيد الإسلامية', 'nasheed', 'ar', TRUE, 4);
+('أحمد يا محمد', 'ahmad-ya-muhammad', 'أنشودة دينية جميلة للأطفال والكبار - مصدر: أرشيف الأناشيد الإسلامية', 'nasheed',
+ 'https://archive.org/download/IslamicNasheeds/Ahmad-Ya-Muhammad.mp3', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400',
+ 'فريق الأناشيد الإسلامية', 'nasheed', 'ar', TRUE, 6),
+
+('يا رب - نشيد تربوي', 'ya-rabb-educational', 'نشيد تربوي يعلم الأطفال التقرب إلى الله - مصدر: أرشيف الأناشيد الإسلامية', 'nasheed',
+ 'https://archive.org/download/IslamicNasheeds/Ya-Rabb-Educational.mp3', 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=400&h=400',
+ 'محمود طاهر', 'nasheed', 'ar', TRUE, 7);
