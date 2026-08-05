@@ -14,9 +14,10 @@ import { updateLegalPage } from '@/lib/legal-service'
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
     const { title, content } = body
 
@@ -27,7 +28,7 @@ export async function PUT(
       )
     }
 
-    const updated = await updateLegalPage(params.id, {
+    const updated = await updateLegalPage(id, {
       title,
       content,
     })

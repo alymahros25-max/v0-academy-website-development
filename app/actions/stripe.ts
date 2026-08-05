@@ -17,7 +17,7 @@ export async function startCheckoutSession(productId: string, locale: string = '
 
   // Create Checkout Sessions from body params.
   const session = await stripe.checkout.sessions.create({
-    ui_mode: 'embedded',
+    ui_mode: 'embedded_page',
     redirect_on_completion: 'never',
     line_items: [
       {
