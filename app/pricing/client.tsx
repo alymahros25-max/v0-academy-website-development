@@ -130,6 +130,9 @@ export default function PricingPageClient() {
                         width={500}
                         height={300}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        quality={80}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
+                        loading="lazy"
                       />
                       {/* Icon Badge */}
                       <div className="absolute top-6 right-6 lg:right-8 p-4 bg-secondary rounded-full shadow-lg group-hover:scale-110 transition-transform duration-500">

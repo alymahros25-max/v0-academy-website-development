@@ -30,7 +30,6 @@ export function Header() {
     { href: "/teachers", label: t("nav.teachers") },
     { href: "/reviews", label: t("nav.reviews") },
     { href: "/classroom-moments", label: locale === "ar" ? "لقطات من الحصص" : locale === "fr" ? "Moments de classe" : "Class Moments" },
-    { href: "/library", label: t("nav.library") },
     { href: "/games", label: t("nav.games") },
     { href: "/faq", label: t("nav.faq") },
     { href: "/blog", label: t("nav.blog") },
@@ -86,6 +85,9 @@ export function Header() {
           <div className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}
+              aria-label={locale === "ar" ? "تغيير اللغة" : locale === "en" ? "Change language" : "Changer la langue"}
+              aria-expanded={langOpen}
+              aria-haspopup="menu"
               className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm transition-colors ${
                 scrolled
                   ? "text-foreground hover:bg-primary/10"
