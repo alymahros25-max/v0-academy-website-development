@@ -25,7 +25,7 @@ export const GAMES_CATALOG: Game[] = [
     descriptionAr: "اختبر معرفتك بحياة النبي محمد ونسبه وزوجاته وأولاده",
     descriptionEn: "Test your knowledge of Prophet Muhammad's life, lineage, wives, and children",
     descriptionFr: "Testez vos connaissances sur la vie du Prophète Muhammad",
-    category: "sira",
+    category: "sirah",
     difficulty: "medium",
     icon: "📖",
     color: "from-amber-500 to-amber-700",
