@@ -10,7 +10,7 @@ import { useI18n } from '@/lib/i18n'
 
 import { startCheckoutSession } from '@/app/actions/stripe'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '')
 
 interface CheckoutProps {
   productId: string

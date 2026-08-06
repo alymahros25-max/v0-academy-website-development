@@ -17,7 +17,7 @@ import { Globe, Check } from 'lucide-react'
  */
 
 export function LanguageSwitcherExample() {
-  const { locale, switchLocale } = useI18n()
+  const { locale, setLocale } = useI18n()
 
   const languages = [
     { 
@@ -50,7 +50,7 @@ export function LanguageSwitcherExample() {
         {languages.map((lang) => (
           <button
             key={lang.code}
-            onClick={() => switchLocale(lang.code as 'ar' | 'en' | 'fr')}
+            onClick={() => setLocale(lang.code as 'ar' | 'en' | 'fr')}
             className={`
               px-4 py-2 rounded-lg font-medium transition-all duration-300
               flex items-center gap-2 text-sm
@@ -79,7 +79,7 @@ export function LanguageSwitcherExample() {
  * Compact Version - Perfect for Header
  */
 export function LanguageSwitcherCompact() {
-  const { locale, switchLocale } = useI18n()
+  const { locale, setLocale } = useI18n()
 
   const languages = [
     { code: 'ar', name: 'AR' },
@@ -92,7 +92,7 @@ export function LanguageSwitcherCompact() {
       {languages.map((lang) => (
         <button
           key={lang.code}
-          onClick={() => switchLocale(lang.code as 'ar' | 'en' | 'fr')}
+          onClick={() => setLocale(lang.code as 'ar' | 'en' | 'fr')}
           className={`
             px-2 py-1 rounded transition-all text-xs font-bold
             ${
@@ -114,7 +114,7 @@ export function LanguageSwitcherCompact() {
  * Dropdown Version - Perfect for Mobile
  */
 export function LanguageSwitcherDropdown() {
-  const { locale, switchLocale } = useI18n()
+  const { locale, setLocale } = useI18n()
 
   const languages = [
     { code: 'ar', name: 'العربية', flag: '🇸🇦' },
@@ -136,7 +136,7 @@ export function LanguageSwitcherDropdown() {
         {languages.map((lang) => (
           <button
             key={lang.code}
-            onClick={() => switchLocale(lang.code as 'ar' | 'en' | 'fr')}
+            onClick={() => setLocale(lang.code as 'ar' | 'en' | 'fr')}
             className={`
               block w-full px-4 py-2 text-left hover:bg-muted transition
               ${locale === lang.code ? 'bg-primary text-white font-bold' : 'text-foreground'}
