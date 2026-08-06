@@ -24,6 +24,9 @@ export default function Checkout({ productId, onSuccess, onCancel }: CheckoutPro
   const startCheckoutSessionForProduct = useCallback(
     async () => {
       const clientSecret = await startCheckoutSession(productId, locale)
+      if (!clientSecret) {
+        throw new Error('Unable to create Stripe checkout session')
+      }
       return clientSecret
     },
     [productId, locale],
@@ -34,7 +37,7 @@ export default function Checkout({ productId, onSuccess, onCancel }: CheckoutPro
       <EmbeddedCheckoutProvider
         stripe={stripePromise}
         options={{ 
-          clientSecret: startCheckoutSessionForProduct,
+          fetchClientSecret: startCheckoutSessionForProduct,
           onComplete: onSuccess,
         }}
       >
