@@ -23,7 +23,7 @@ const QuranAnimalsGame = dynamic(() => import("@/components/games/quran-animals-
 const BattlesTimelineGame = dynamic(() => import("@/components/games/battles-timeline-game").then(m => ({ default: m.BattlesTimelineGame })))
 const SiraEventsGame = dynamic(() => import("@/components/games/sira-events-game").then(m => ({ default: m.SiraEventsGame })))
 const CompanionsTimelineGame = dynamic(() => import("@/components/games/companions-timeline-game").then(m => ({ default: m.CompanionsTimelineGame })))
-const CompanionsDeedsGame = dynamic(() => import("@/components/games/companions-deeds-game").then(m => ({ default: m.CompanionsDeedsGame })))
+const CompanionsDeedsGame = dynamic(() => import("@/components/games/companions-deeds-game").then(m => ({ default: m.CompanionsDedsGame })))
 const LetterSoundGame = dynamic(() => import("@/components/games/letter-sound-game").then(m => ({ default: m.LetterSoundGame })))
 const WordMeaningGame = dynamic(() => import("@/components/games/word-meaning-game").then(m => ({ default: m.WordMeaningGame })))
 const VerseGuessingGame = dynamic(() => import("@/components/games/verse-guessing-game").then(m => ({ default: m.VerseGuessingGame })))

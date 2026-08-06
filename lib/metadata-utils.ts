@@ -17,7 +17,7 @@ export const defaultMetadata: Metadata = {
   },
 }
 
-export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'library' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms'): Metadata {
+export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'library' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms' | 'checkout-success' | 'pricing'): Metadata {
   const baseUrl = 'https://quran-elhafez.com'
   const pageRoutes: Record<string, string> = {
     quran: '/quran',
@@ -31,6 +31,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     contact: '/contact',
     privacy: '/privacy',
     terms: '/terms',
+    'checkout-success': '/checkout-success',
+    pricing: '/pricing',
   }
 
   const getAlternates = (route: string) => ({

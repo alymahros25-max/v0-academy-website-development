@@ -4,6 +4,12 @@ import path from 'path'
 
 const ARTICLES_FILE = path.join(process.cwd(), 'data', 'zapier-articles.json')
 
+type LocalizedText = {
+  ar: string
+  en: string
+  fr: string
+}
+
 // قراءة المقالات المحفوظة
 async function readArticles() {
   try {
@@ -55,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     // معالجة البيانات - دعم صيغ متعددة
-    const processField = (field: any, defaultObj = {}) => {
+    const processField = (field: any, defaultObj: LocalizedText = { ar: '', en: '', fr: '' }): LocalizedText => {
       if (typeof field === 'string') {
         return { ar: field, en: field, fr: field }
       }
