@@ -127,6 +127,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      )
+    }
+
     // Upsert setting
     const { data, error } = await supabase
       .from('site_settings')
@@ -204,6 +211,13 @@ export async function PATCH(request: NextRequest) {
       )
     }
 
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      )
+    }
+
     // Prepare data for batch update
     const updates = body.map((item) => ({
       ...item,
@@ -268,6 +282,13 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: 'Setting key is required' },
         { status: 400 }
+      )
+    }
+
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
       )
     }
 

@@ -135,9 +135,12 @@ export default function ThemeCustomizerPage() {
     })
   }
 
-  const combinedSettings = {
+  const combinedSettings: Record<string, string> = {
     ...themeSettings,
-    ...typographySettings,
+    headerFont: typographySettings.headerFont,
+    bodyFont: typographySettings.bodyFont,
+    h1Size: String(typographySettings.h1Size),
+    bodySize: String(typographySettings.bodySize),
   }
 
   return (

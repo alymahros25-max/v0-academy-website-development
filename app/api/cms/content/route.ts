@@ -130,6 +130,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      )
+    }
+
     // Upsert content (insert or update if exists)
     const { data, error } = await supabase
       .from('site_content')
@@ -199,6 +206,13 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: 'Content key is required' },
         { status: 400 }
+      )
+    }
+
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
       )
     }
 
