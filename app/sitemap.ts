@@ -27,9 +27,9 @@ async function getDynamicBlogArticles(): Promise<string[]> {
     const supabase = createClient(supabaseUrl, supabaseKey)
 
     const { data: articles, error } = await supabase
-      .from('blog_articles')
+      .from('blog_posts')
       .select('slug, created_at')
-      .eq('published', true)
+      .eq('is_published', true)
       .order('created_at', { ascending: false })
       .limit(100)
 
@@ -128,6 +128,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/faq',
     '/blog',
     '/contact',
+    '/library',
+    '/pricing',
+    '/refund-policy',
   ] as const
   secondaryPages.forEach((route) => {
     sitemap.push(...generateLocalizedUrl(route, 0.7, 'weekly'))
