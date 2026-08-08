@@ -12,6 +12,7 @@ export function Footer() {
     { href: "/about", label: t("nav.about") },
     { href: "/teachers", label: t("nav.teachers") },
     { href: "/reviews", label: t("nav.reviews") },
+    { href: "/library", label: t("nav.library") },
     { href: "/faq", label: t("nav.faq") },
     { href: "/contact", label: t("nav.contact") },
   ]
@@ -19,6 +20,7 @@ export function Footer() {
   const serviceLinks = [
     { href: "/pricing", label: locale === "ar" ? "الأسعار" : locale === "en" ? "Pricing" : "Tarifs" },
     { href: "/games", label: t("nav.games") },
+    { href: "/library", label: t("nav.library") },
   ]
 
   const legalLinks = [
