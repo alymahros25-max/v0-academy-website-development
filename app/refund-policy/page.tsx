@@ -77,6 +77,7 @@ export default async function RefundPolicyPage() {
 - البريد: enamel311@gmail.com
 - واتساب: تواصل عبر الزر أسفل الصفحة
 - تليجرام: @academy_quraan`,
+      created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
   }

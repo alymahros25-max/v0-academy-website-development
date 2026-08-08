@@ -12,8 +12,8 @@ async function gtxTranslate(text: string, targetLang: "en" | "fr"): Promise<stri
     `?client=gtx&sl=ar&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`
   const res = await fetch(url)
   if (!res.ok) return text
-  const data = (await res.json()) as [string[]][][][]
-  const translated = (data?.[0] as [string][])
+  const data = (await res.json()) as Array<Array<[string, string]>>
+  const translated = data?.[0]
     ?.map((chunk) => chunk?.[0] ?? "")
     .join("")
   return translated.trim() || text

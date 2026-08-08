@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
   try {
 
     const auth = await getAuthClient()
-    const searchconsole = google.webmasters({ version: 'v3', auth })
+    const searchconsole = google.webmasters({ version: 'v3', auth: auth as any })
     const siteUrl = 'sc-domain:quran-elhafez.com'
 
     // Get indexing status

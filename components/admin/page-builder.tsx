@@ -56,7 +56,7 @@ export function PageBuilder({ onPageSaved }: PageBuilderProps) {
   })
 
   // Fetch existing pages
-  const { data: pages, mutate: mutatePage } = useSWR<any>('/api/cms/pages', async (url) => {
+  const { data: pages, mutate: mutatePage } = useSWR<any>('/api/cms/pages', async (url: string) => {
     const res = await fetch(url)
     if (!res.ok) throw new Error('Failed to fetch pages')
     return res.json()

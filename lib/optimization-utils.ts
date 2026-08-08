@@ -221,7 +221,7 @@ export const monitorWebVitals = () => {
     const entries = list.getEntries()
     const lastEntry = entries[entries.length - 1]
     if (process.env.NODE_ENV === 'development') {
-      console.log('[Web Vitals] LCP:', lastEntry.renderTime || lastEntry.loadTime)
+      console.log('[Web Vitals] LCP:', (lastEntry as PerformancePaintTiming).startTime)
     }
   })
   

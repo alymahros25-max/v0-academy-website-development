@@ -23,6 +23,7 @@ export interface Badge {
 }
 
 export interface GameResult {
+  playerName?: string
   gameId: string
   score: number
   stars: number

@@ -82,7 +82,7 @@ export function VideoForm({ initialData, onSuccess, isEditing = false }: VideoFo
         { key: 'title', text: formData.title_ar },
         { key: 'description', text: formData.description_ar },
         { key: 'teacher_name', text: formData.teacher_name_ar },
-      ].filter(f => f.text.trim() !== '')
+      ].filter((f): f is { key: 'title' | 'description' | 'teacher_name'; text: string } => f.text.trim() !== '')
 
       const results = await Promise.all(
         fields.map(({ key, text }) =>

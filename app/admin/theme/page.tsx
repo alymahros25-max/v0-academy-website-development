@@ -301,7 +301,7 @@ export default function ThemeCustomizerPage() {
         <div className="lg:col-span-2">
           <LivePreview
             previewType={previewType}
-            themeOverrides={combinedSettings}
+            themeOverrides={Object.fromEntries(Object.entries(combinedSettings).map(([key, value]) => [key, String(value)]))}
             onRefresh={() => {}}
           />
         </div>
