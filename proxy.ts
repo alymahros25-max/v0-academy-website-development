@@ -70,12 +70,9 @@ export function proxy(request: NextRequest) {
 
   // ============================================================
   // 2. MULTILINGUAL ROUTING CONSISTENCY
-  // Ensure language prefixes are handled consistently
+  // Do not redirect /en or /fr here: Next.js trailing-slash normalization
+  // can send the request back through this proxy and create a redirect loop.
   // ============================================================
-  if (pathname === '/en' || pathname === '/fr') {
-    // Redirect language root to home
-    return NextResponse.redirect(new URL(pathname === '/en' ? '/en/' : '/fr/', request.url))
-  }
 
   // ============================================================
   // 3. SECURITY HEADERS
