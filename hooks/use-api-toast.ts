@@ -77,7 +77,7 @@ export function useApiToast(options: UseApiToastOptions = {}) {
         showSuccess(customOptions?.success)
         return result
       } catch (error) {
-        showError(customOptions?.error || error)
+        showError(customOptions?.error || (error instanceof Error ? error : String(error)))
         return null
       }
     },

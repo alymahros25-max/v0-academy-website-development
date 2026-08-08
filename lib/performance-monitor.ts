@@ -37,7 +37,7 @@ export function measureLCP(callback: (lcp: number) => void) {
     const entries = list.getEntries()
     if (entries.length > 0) {
       const lastEntry = entries[entries.length - 1]
-      callback(lastEntry.renderTime || lastEntry.loadTime)
+      callback((lastEntry as PerformancePaintTiming).startTime)
     }
   })
 

@@ -68,7 +68,7 @@ export const createLazyGame = <P extends object>(
   displayName: string
 ) => {
   const LazyComponent = lazy(() => Promise.resolve({ default: Component }))
-  LazyComponent.displayName = `Lazy${displayName}`
+  ;(LazyComponent as React.ComponentType<P>).displayName = `Lazy${displayName}`
 
   return LazyComponent as React.ComponentType<P>
 }

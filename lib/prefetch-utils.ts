@@ -33,7 +33,6 @@ export function getPrefetchStrategy(pathname: string): 'render' | 'viewport' | n
 
   // Routes that should only be prefetched when in viewport
   const viewportPrefetch = [
-    '/library',
     '/games',
     '/faq',
     '/teachers',
@@ -84,8 +83,8 @@ export function generatePrefetchHints(currentPath: string): string[] {
   // Prefetch next likely pages based on current location
   const prefetchMap: Record<string, string[]> = {
     '/': ['/quran', '/arabic', '/about'],
-    '/quran': ['/arabic', '/library', '/teachers'],
-    '/arabic': ['/quran', '/library', '/teachers'],
+  '/quran': ['/arabic', '/teachers'],
+  '/arabic': ['/quran', '/teachers'],
     '/blog': ['/blog/', '/contact'],
     '/account': ['/'],
   }

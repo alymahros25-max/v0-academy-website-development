@@ -141,7 +141,7 @@ export default function ThemeCustomizerPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="min-w-0 space-y-6 p-4 sm:p-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">مخصص المظهر والخطوط</h1>
@@ -301,7 +301,7 @@ export default function ThemeCustomizerPage() {
         <div className="lg:col-span-2">
           <LivePreview
             previewType={previewType}
-            themeOverrides={combinedSettings}
+            themeOverrides={Object.fromEntries(Object.entries(combinedSettings).map(([key, value]) => [key, String(value)]))}
             onRefresh={() => {}}
           />
         </div>

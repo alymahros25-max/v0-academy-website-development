@@ -192,7 +192,7 @@ export const createLazyImageObserver = (threshold = 0.1) => {
           img.src = img.dataset.src
           img.removeAttribute('data-src')
         }
-        observer.unobserve(entry.target)
+        observer?.unobserve(entry.target)
       }
     })
   }, { threshold })

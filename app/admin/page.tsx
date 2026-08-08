@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon, Palette, FileText, Lock, Film, Library, Gamepad2, Search, BarChart3
+  Menu, XIcon, Palette, FileText, Lock, Film, Gamepad2, Search, BarChart3
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
@@ -16,10 +16,11 @@ import { useI18n } from "@/lib/i18n"
 import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
 import { BlogManager } from "@/components/admin/BlogManager"
+import { LibraryManager } from "@/components/admin/LibraryManager"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -56,33 +57,21 @@ export default function AdminDashboard() {
     )
   }
 
-  const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard }[] = [
-    { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard },
-    { id: "packages", label: t("admin.packages"), key: "admin.packages", icon: Package },
-    { id: "teachers", label: t("admin.teachers"), key: "admin.teachers", icon: Users },
-    { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star },
-    { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare },
-    
-    // Phase 2-3 New Features
-    { id: "cms", label: t("admin.cms"), key: "admin.cms", icon: BookOpen },
-    { id: "theme", label: t("admin.theme"), key: "admin.theme", icon: Palette },
-    { id: "pages-builder", label: t("admin.pagesBuilder"), key: "admin.pagesBuilder", icon: FileText },
-    { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
-    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen },
-    { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
-    { id: "orders", label: "الأوامر والفواتير", key: "admin.orders", icon: BarChart3 },
-    { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2 },
-    
-    // SEO & Indexing
-    { id: "gsc-dashboard", label: "حالة الفهرسة", key: "gsc.dashboard", icon: BarChart3 },
-    { id: "request-indexing", label: "طلب فهرسة", key: "gsc.indexing", icon: Search },
-    { id: "payment-settings", label: "إعدادات الدفع", key: "admin.paymentSettings", icon: BarChart3 },
-    
-    // Legacy Features
-    { id: "pages", label: t("admin.pages"), key: "admin.pages", icon: BookOpen },
-    { id: "zapier", label: t("admin.zapier"), key: "admin.zapier", icon: Mail },
-    { id: "settings", label: t("admin.settings"), key: "admin.settings", icon: Settings },
-    { id: "seo-guide", label: t("admin.seoGuide"), key: "admin.seoGuide", icon: Mail },
+  const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard; group: string }[] = [
+    { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard, group: "الرئيسية" },
+    { id: "packages", label: t("admin.packages"), key: "admin.packages", icon: Package, group: "محتوى الموقع" },
+    { id: "teachers", label: t("admin.teachers"), key: "admin.teachers", icon: Users, group: "محتوى الموقع" },
+    { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star, group: "محتوى الموقع" },
+    { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare, group: "محتوى الموقع" },
+    { id: "cms", label: "صفحات الموقع والمحتوى", key: "admin.cms", icon: BookOpen, group: "محتوى الموقع" },
+    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى الموقع" },
+    { id: "library", label: "المكتبة الرقمية", key: "admin.library", icon: BookOpen, group: "محتوى الموقع" },
+    { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film, group: "الخدمات التعليمية" },
+    { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2, group: "الخدمات التعليمية" },
+    { id: "pages-builder", label: t("admin.pagesBuilder"), key: "admin.pagesBuilder", icon: FileText, group: "أدوات الإدارة" },
+    { id: "theme", label: "المظهر والمعاينة الحية", key: "admin.theme", icon: Palette, group: "أدوات الإدارة" },
+    { id: "users", label: "المستخدمون والصلاحيات", key: "admin.users", icon: Lock, group: "أدوات الإدارة" },
+    { id: "settings", label: "إعدادات لوحة التحكم", key: "admin.settings", icon: Settings, group: "أدوات الإدارة" },
   ]
 
   return (
@@ -113,20 +102,24 @@ export default function AdminDashboard() {
 
           {/* Nav */}
           <nav className="flex-1 p-3 flex flex-col gap-1">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                data-tab={tab.id}
-                onClick={() => { setActiveTab(tab.id as Tab); setSidebarOpen(false) }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                  activeTab === tab.id
-                    ? "bg-primary-foreground/10 text-secondary"
-                    : "text-primary-foreground/70 hover:bg-primary-foreground/5 hover:text-primary-foreground"
-                }`}
-              >
-                <tab.icon className="w-5 h-5" />
-                {tab.label}
-              </button>
+            {tabs.map((tab, index) => (
+              <React.Fragment key={tab.id}>
+                {(index === 0 || tabs[index - 1].group !== tab.group) && (
+                  <p className="px-4 pt-4 pb-1 text-[10px] font-semibold tracking-wide text-primary-foreground/45">{tab.group}</p>
+                )}
+                <button
+                  data-tab={tab.id}
+                  onClick={() => { setActiveTab(tab.id as Tab); setSidebarOpen(false) }}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                    activeTab === tab.id
+                      ? "bg-primary-foreground/10 text-secondary"
+                      : "text-primary-foreground/70 hover:bg-primary-foreground/5 hover:text-primary-foreground"
+                  }`}
+                >
+                  <tab.icon className="w-5 h-5" />
+                  {tab.label}
+                </button>
+              </React.Fragment>
             ))}
           </nav>
 
@@ -144,7 +137,7 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 min-h-screen">
+      <main className="min-w-0 flex-1 min-h-screen overflow-x-hidden">
         {/* Top bar */}
         <header className="sticky top-0 z-30 bg-card/95 backdrop-blur-md border-b border-border px-4 lg:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -208,6 +201,9 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "blog" && <BlogManager />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "library" && <LibraryManager />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "classroom-videos" && <ClassroomVideosTab />}
@@ -522,7 +518,7 @@ function TeachersTab() {
           <h3 className="font-bold text-foreground mb-4">معلم جديد</h3>
           <div className="grid sm:grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">الاسم (عربي)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">الاسم (عر��ي)</label>
               <input
                 value={newTeacher?.name?.ar ?? ''}
                 onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, ar: e.target.value}})}
@@ -877,7 +873,6 @@ function PagesTab() {
     { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
     { name: "المعلمين", path: "/teachers", description: "قائمة المعلمين المجازين" },
     { name: "آراء الطلاب", path: "/reviews", description: "تقييمات وآراء الطلاب" },
-    { name: "المكتبة", path: "/library", description: "المكتبة الرقمية" },
     { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
     { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
     { name: "المدونة", path: "/blog", description: "مقالات وإرشادات" },
@@ -1115,7 +1110,6 @@ function ZapierTab() {
 // Phase 3: CMS Management Tab
 function CMSManagementTab() {
   const sections = [
-    { label: "المكتبة الرقمية", desc: "إضافة وتحرير الكتب والصوتيات والأناشيد", tab: "digital-library" },
     { label: "لقطات من الحصص", desc: "إدارة فيديوهات يوتيوب الترويجية", tab: "classroom-videos" },
     { label: "الباقات والأسعار", desc: "تحديث أسعار قرآن والعربي", tab: "packages" },
     { label: "المعلمين", desc: "إضافة وتعديل بيانات المعلمين", tab: "teachers" },
@@ -1229,8 +1223,7 @@ function PagesBuilderTab() {
     { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
     { label: "المعلمين", path: "/teachers", desc: "نبذة عن فريق المعلمين" },
     { label: "آراء الطلاب", path: "/reviews", desc: "شهادات وتقييمات الطلاب" },
-    { label: "المكتبة الرقمية", path: "/library", desc: "كتب وتلاوات وأناشيد" },
-    { label: "لقطات من الحصص", path: "/classroom-moments", desc: "فيديوهات ترويجية" },
+      { label: "لقطات من الحصص", path: "/classroom-moments", desc: "فيديوهات ترويجية" },
     { label: "الألعاب والمسابقات", path: "/games", desc: "ألعاب تعليمية تفاعلية" },
     { label: "الأسئلة الشائعة", path: "/faq", desc: "50 سؤال وجواب" },
     { label: "المدونة", path: "/blog", desc: "مقالات تعليمية SEO" },
@@ -1462,9 +1455,6 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
     </div>
   )
 }
-
-// Digital Library Tab
-
 
 // Educational Games Tab — links to the existing /games page and shows its contents
 function EducationalGamesTab() {

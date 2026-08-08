@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     }
 
     // بيانات المقالة الكاملة
-    const article = {
+    const article: any = {
       slug: body.slug.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
       title: processField(body.title),
       description: processField(body.description),

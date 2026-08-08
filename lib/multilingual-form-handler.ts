@@ -82,6 +82,8 @@ export async function saveClassroomVideoToSupabase(
       ...(videoData.title_fr && { title_fr: sanitizeFormInput(videoData.title_fr) }),
     }
 
+    if (!supabase) throw new Error('Supabase is not configured')
+
     let result
     if (isEditing && videoId) {
       // Update existing video

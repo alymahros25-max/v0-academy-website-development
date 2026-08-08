@@ -1,4 +1,3 @@
-import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
@@ -17,7 +16,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.text()
-  const signature = headers().get('stripe-signature')
+  const signature = request.headers.get('stripe-signature')
 
   if (!signature) {
     console.error('[Stripe Webhook] Missing signature')

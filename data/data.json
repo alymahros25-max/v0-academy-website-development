@@ -141,31 +141,5 @@
       "approved": true
     }
   ],
-  "contactMessages": [],
-  "libraryBooks": [
-    {
-      "id": "book_1",
-      "title_ar": "تفسير الجلالين",
-      "title_en": "Tafsir Al-Jalalayn",
-      "title_fr": "Tafsir Al-Jalalayn",
-      "description_ar": "تفسير مختصر وسهل للقرآن الكريم",
-      "description_en": "A concise and easy interpretation of the Quran",
-      "description_fr": "Une interprétation concise et facile du Coran",
-      "category": "quran",
-      "image": "/images/library.jpg",
-      "downloadUrl": "#"
-    },
-    {
-      "id": "book_2",
-      "title_ar": "تعليم اللغة العربية للأطفال",
-      "title_en": "Teaching Arabic to Children",
-      "title_fr": "Enseigner l'arabe aux enfants",
-      "description_ar": "كتاب متخصص في تعليم العربية للأطفال",
-      "description_en": "A specialized book for teaching Arabic to children",
-      "description_fr": "Un livre spécialisé pour enseigner l'arabe aux enfants",
-      "category": "arabic",
-      "image": "/images/library.jpg",
-      "downloadUrl": "#"
-    }
-  ]
+  "contactMessages": []
 }

@@ -33,7 +33,7 @@ export class ApiError extends Error {
  */
 export async function apiCall<T = unknown>(
   endpoint: string,
-  options: RequestInit & {
+  options: Omit<RequestInit, 'body'> & {
     method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
     body?: unknown
     timeout?: number

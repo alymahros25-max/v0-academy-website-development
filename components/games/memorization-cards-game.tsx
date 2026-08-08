@@ -10,7 +10,7 @@ const cards = ['قل هو الله أحد', 'بسم الله الرحمن الر
 
 export function MemorizationCardsGame() {
   const { locale } = useI18n()
-  const [pairs, setPairs] = useState<{id: number, revealed: boolean, matched: boolean}[]>([])
+  const [pairs, setPairs] = useState<{id: number, text: string, revealed: boolean, matched: boolean}[]>([])
   const [first, setFirst] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [matched, setMatched] = useState(0)

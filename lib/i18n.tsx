@@ -71,8 +71,8 @@ const translations: Translations = {
   "pricing.cta-message": { ar: "اختر برنامجك التعليمي الرقمي - وصول فوري بعد الدفع | 100% دورات رقمية", en: "Choose your digital educational program - Instant access after payment | 100% online courses", fr: "Choisissez votre programme éducatif numérique - Accès immédiat après le paiement | 100% cours en ligne" },
 
   // Pricing individual pages
-  "pricing.quran.title": { ar: "باقات القرآن الكريم", en: "Quran Packages", fr: "Forfaits Coran" },
-  "pricing.arabic.title": { ar: "باقات تأسيس العربي", en: "Arabic Language Packages", fr: "Forfaits Langue Arabe" },
+  "pricing.quran.packagesTitle": { ar: "باقات القرآن الكريم", en: "Quran Packages", fr: "Forfaits Coran" },
+  "pricing.arabic.packagesTitle": { ar: "باقات تأسيس العربي", en: "Arabic Language Packages", fr: "Forfaits Langue Arabe" },
   "pricing.sessions": { ar: "حصص", en: "Sessions", fr: "Sessions" },
   "pricing.session": { ar: "حصة", en: "Sessions", fr: "Sessions" },
   "pricing.duration": { ar: "30 دقيقة/حصة", en: "30 min/session", fr: "30 min/session" },

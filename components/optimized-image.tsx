@@ -65,7 +65,7 @@ export function PictureImage({
   src: string
   alt: string
   width?: number
-  height?: height
+  height?: number
   className?: string
   context?: ImageContext
   priority?: boolean
