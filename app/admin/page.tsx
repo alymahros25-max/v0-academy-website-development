@@ -16,10 +16,11 @@ import { useI18n } from "@/lib/i18n"
 import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
 import { BlogManager } from "@/components/admin/BlogManager"
+import { LibraryManager } from "@/components/admin/LibraryManager"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -69,6 +70,7 @@ export default function AdminDashboard() {
     { id: "pages-builder", label: t("admin.pagesBuilder"), key: "admin.pagesBuilder", icon: FileText },
     { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
     { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen },
+    { id: "library", label: "المكتبة الرقمية", key: "admin.library", icon: BookOpen },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
     { id: "orders", label: "الأوامر والفواتير", key: "admin.orders", icon: BarChart3 },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2 },
@@ -208,6 +210,9 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "blog" && <BlogManager />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "library" && <LibraryManager />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "classroom-videos" && <ClassroomVideosTab />}
