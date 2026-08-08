@@ -30,7 +30,8 @@ export function proxy(request: NextRequest) {
       "connect-src 'self' *.supabase.co wss://*.supabase.co *.vercel-analytics.com; " +
       // LOCKED: frame-src must include YouTube to allow the video player iframe to load.
       // Do NOT remove youtube.com or youtube-nocookie.com during future updates.
-      "frame-src https://www.youtube.com https://www.youtube-nocookie.com; " +
+      "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://drive.google.com https://docs.google.com; " +
+      "child-src https://drive.google.com https://docs.google.com; " +
       "frame-ancestors 'self'; " +
       "base-uri 'self'; " +
       "form-action 'self'"
@@ -109,7 +110,8 @@ export function proxy(request: NextRequest) {
     "img-src 'self' data: https:; " +
     "font-src 'self' fonts.gstatic.com; " +
     "connect-src 'self' *.supabase.co wss://*.supabase.co *.vercel-analytics.com; " +
-    "frame-src https://www.youtube.com https://www.youtube-nocookie.com; " +
+    "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://drive.google.com https://docs.google.com; " +
+      "child-src https://drive.google.com https://docs.google.com; " +
     "frame-ancestors 'self'; " +
     "base-uri 'self'; " +
     "form-action 'self'"

@@ -29,6 +29,7 @@ export function drivePreviewUrl(url: string, fileType: string) {
   const id = match?.[0]
   if (!id) return url
   if (fileType === "pdf" || fileType === "image") return `https://drive.google.com/file/d/${id}/preview`
+  if (url.includes("docs.google.com/presentation")) return `https://docs.google.com/presentation/d/${id}/embed?start=false&loop=false&delayms=3000`
   return `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(url)}`
 }
 
