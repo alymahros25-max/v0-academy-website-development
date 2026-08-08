@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from 'next/server'
 // Allowed paths to revalidate — prevents abuse
 const ALLOWED_PATHS = [
   '/classroom-moments',
-  '/library',
   '/games',
   '/',
 ]
@@ -28,7 +27,7 @@ export async function GET(req: NextRequest) {
 
   try {
     if (tag) {
-      revalidateTag(tag)
+      revalidateTag(tag, 'max')
       return NextResponse.json({ revalidated: true, tag })
     }
 

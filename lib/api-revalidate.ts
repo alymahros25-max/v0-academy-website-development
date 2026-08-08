@@ -26,7 +26,6 @@ export async function revalidateSiteContent(options: RevalidationOptions = {}) {
       '/about',
       '/teachers',
       '/reviews',
-      '/library',
       '/games',
       '/faq',
       '/blog',
@@ -57,7 +56,7 @@ export async function revalidateSiteContent(options: RevalidationOptions = {}) {
     // Revalidate all tags
     for (const tag of tagsToRevalidate) {
       try {
-        revalidateTag(tag)
+        revalidateTag(tag, 'max')
         console.log('[v0] Revalidated tag:', tag)
       } catch (error) {
         console.error('[v0] Failed to revalidate tag:', tag, error)
@@ -113,7 +112,7 @@ export async function revalidateUsers() {
  */
 export async function revalidateContentChanges() {
   return revalidateSiteContent({
-    paths: ['/', '/blog', '/library'],
+    paths: ['/', '/blog'],
     tags: ['site-content', 'blog-posts', 'content'],
   })
 }
@@ -131,7 +130,6 @@ export async function revalidateFullSite() {
       '/about',
       '/teachers',
       '/reviews',
-      '/library',
       '/games',
       '/faq',
       '/blog',

@@ -17,7 +17,7 @@ export const defaultMetadata: Metadata = {
   },
 }
 
-export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'library' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms'): Metadata {
+export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms'): Metadata {
   const baseUrl = 'https://quran-elhafez.com'
   const pageRoutes: Record<string, string> = {
     quran: '/quran',
@@ -25,7 +25,6 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     about: '/about',
     teachers: '/teachers',
     reviews: '/reviews',
-    library: '/library',
     games: '/games',
     faq: '/faq',
     contact: '/contact',
@@ -101,18 +100,6 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'آراء وتقييمات الطلاب وأولياء الأمور',
         type: 'website',
         url: 'https://quran-elhafez.com/reviews',
-      },
-    },
-    library: {
-      title: 'المكتبة الرقمية | أكاديمية الحافظ المتميز',
-      description: 'مكتبة رقمية تحتوي على كتب وموارد تعليمية لتحفيظ القرآن وتأسيس اللغة العربية',
-      keywords: ['مكتبة', 'كتب', 'موارد تعليمية', 'PDF'],
-      alternates: getAlternates(pageRoutes.library),
-      openGraph: {
-        title: 'المكتبة الرقمية',
-        description: 'موارد تعليمية وكتب رقمية',
-        type: 'website',
-        url: 'https://quran-elhafez.com/library',
       },
     },
     games: {

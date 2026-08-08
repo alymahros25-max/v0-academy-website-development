@@ -13,8 +13,6 @@ export const ROUTES = {
   REVIEWS: '/reviews',
 
   // Content
-  LIBRARY: '/library',
-  LIBRARY_BOOK: (slug: string) => `/library/book/${slug}`,
   GAMES: '/games',
   FAQ: '/faq',
   CLASSROOM_MOMENTS: '/classroom-moments',
@@ -52,8 +50,6 @@ export const LEGACY_ROUTES: Record<string, string> = {
   '/about-us': '/about',
   '/our-teachers': '/teachers',
   '/testimonials': '/reviews',
-  '/library-old': '/library',
-  '/book': '/library',
   '/moments': '/classroom-moments',
   '/videos': '/classroom-moments',
   '/contact-us': '/contact',

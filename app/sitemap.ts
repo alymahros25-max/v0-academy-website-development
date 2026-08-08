@@ -124,7 +124,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const secondaryPages = [
     '/teachers',
     '/reviews',
-    '/library',
     '/games',
     '/faq',
     '/blog',
@@ -132,36 +131,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ] as const
   secondaryPages.forEach((route) => {
     sitemap.push(...generateLocalizedUrl(route, 0.7, 'weekly'))
-  })
-
-  // ============================================================
-  // TIER 4: LIBRARY BOOKS (Priority 0.8, weekly)
-  // Digital library content pages
-  // ============================================================
-  const bookSlugs = [
-    'al-qaida-an-noraniyah',
-    'tajweed-rules',
-  ]
-  LANGUAGES.forEach((lang) => {
-    bookSlugs.forEach((slug) => {
-      const langPrefix = getLanguagePrefix(lang)
-      const urlPath = `/library/${slug}`
-      const fullUrl = `${BASE_URL}${langPrefix}${urlPath}`
-      sitemap.push({
-        url: fullUrl,
-        lastModified: new Date().toISOString().split('T')[0],
-        changeFrequency: 'monthly',
-        priority: 0.8,
-        alternates: {
-          languages: {
-            ar: `${BASE_URL}${urlPath}`,
-            en: `${BASE_URL}/en${urlPath}`,
-            fr: `${BASE_URL}/fr${urlPath}`,
-            'x-default': `${BASE_URL}${urlPath}`,
-          },
-        },
-      })
-    })
   })
 
   // ============================================================

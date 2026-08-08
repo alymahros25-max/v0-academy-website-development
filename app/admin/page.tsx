@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon, Palette, FileText, Lock, Film, Library, Gamepad2, Search, BarChart3
+  Menu, XIcon, Palette, FileText, Lock, Film, Gamepad2, Search, BarChart3
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
@@ -522,7 +522,7 @@ function TeachersTab() {
           <h3 className="font-bold text-foreground mb-4">معلم جديد</h3>
           <div className="grid sm:grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">الاسم (عربي)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">الاسم (عر��ي)</label>
               <input
                 value={newTeacher?.name?.ar ?? ''}
                 onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, ar: e.target.value}})}
@@ -877,7 +877,6 @@ function PagesTab() {
     { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
     { name: "المعلمين", path: "/teachers", description: "قائمة المعلمين المجازين" },
     { name: "آراء الطلاب", path: "/reviews", description: "تقييمات وآراء الطلاب" },
-    { name: "المكتبة", path: "/library", description: "المكتبة الرقمية" },
     { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
     { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
     { name: "المدونة", path: "/blog", description: "مقالات وإرشادات" },
@@ -1115,7 +1114,6 @@ function ZapierTab() {
 // Phase 3: CMS Management Tab
 function CMSManagementTab() {
   const sections = [
-    { label: "المكتبة الرقمية", desc: "إضافة وتحرير الكتب والصوتيات والأناشيد", tab: "digital-library" },
     { label: "لقطات من الحصص", desc: "إدارة فيديوهات يوتيوب الترويجية", tab: "classroom-videos" },
     { label: "الباقات والأسعار", desc: "تحديث أسعار قرآن والعربي", tab: "packages" },
     { label: "المعلمين", desc: "إضافة وتعديل بيانات المعلمين", tab: "teachers" },
@@ -1229,8 +1227,7 @@ function PagesBuilderTab() {
     { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
     { label: "المعلمين", path: "/teachers", desc: "نبذة عن فريق المعلمين" },
     { label: "آراء الطلاب", path: "/reviews", desc: "شهادات وتقييمات الطلاب" },
-    { label: "المكتبة الرقمية", path: "/library", desc: "كتب وتلاوات وأناشيد" },
-    { label: "لقطات من الحصص", path: "/classroom-moments", desc: "فيديوهات ترويجية" },
+      { label: "لقطات من الحصص", path: "/classroom-moments", desc: "فيديوهات ترويجية" },
     { label: "الألعاب والمسابقات", path: "/games", desc: "ألعاب تعليمية تفاعلية" },
     { label: "الأسئلة الشائعة", path: "/faq", desc: "50 سؤال وجواب" },
     { label: "المدونة", path: "/blog", desc: "مقالات تعليمية SEO" },
@@ -1462,9 +1459,6 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
     </div>
   )
 }
-
-// Digital Library Tab
-
 
 // Educational Games Tab — links to the existing /games page and shows its contents
 function EducationalGamesTab() {

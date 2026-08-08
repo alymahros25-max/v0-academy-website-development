@@ -105,7 +105,6 @@ export const MAIN_SITEMAP_URLS = [
   '/blog',
   '/games',
   '/classroom-moments',
-  '/library',
   '/contact',
   '/faq',
   '/reviews',
