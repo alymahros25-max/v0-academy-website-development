@@ -9,6 +9,7 @@ export type LibraryDocument = {
   description_ar: string | null
   description_en: string | null
   description_fr: string | null
+  surahs_ar: string | null
   author_ar: string | null
   author_en: string | null
   author_fr: string | null
