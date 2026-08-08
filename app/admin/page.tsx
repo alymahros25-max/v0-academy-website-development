@@ -13,18 +13,13 @@ import { AdminLoadingSkeleton } from "@/components/admin/AdminLoadingSkeleton"
 import { OrdersTab } from "@/components/admin/OrdersTab"
 import { PaymentSettingsTab } from "@/components/admin/PaymentSettingsTab"
 import { useI18n } from "@/lib/i18n"
-
-const DigitalLibraryForm = dynamic(() => import("@/components/admin/DigitalLibraryForm"), {
-  ssr: false,
-  loading: () => <AdminLoadingSkeleton />
-})
 import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
 import { BlogManager } from "@/components/admin/BlogManager"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "digital-library" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog"
+type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -75,7 +70,6 @@ export default function AdminDashboard() {
     { id: "users", label: t("admin.users"), key: "admin.users", icon: Lock },
     { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film },
-    { id: "digital-library", label: t("admin.digitalLibrary"), key: "admin.digitalLibrary", icon: Library },
     { id: "orders", label: "الأوامر والفواتير", key: "admin.orders", icon: BarChart3 },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2 },
     
@@ -219,7 +213,6 @@ export default function AdminDashboard() {
             {activeTab === "classroom-videos" && <ClassroomVideosTab />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
-            {activeTab === "digital-library" && <DigitalLibraryTab />}
             {activeTab === "orders" && <OrdersTab />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
@@ -1471,108 +1464,7 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
 }
 
 // Digital Library Tab
-function DigitalLibraryTab() {
-  const [showForm, setShowForm] = useState(false)
-  // API returns { data: [...] } so we extract the array
-  const { data: apiResponse, isLoading, error, mutate } = useSWR("/api/cms/digital-library", fetcher, { 
-    revalidateOnFocus: false,
-    dedupingInterval: 10000
-  })
-  const items = Array.isArray(apiResponse?.data) ? apiResponse.data : []
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("هل تريد حذف هذا المحتوى؟")) return
-
-    try {
-      const response = await fetch(`/api/cms/digital-library?id=${id}`, { method: "DELETE" })
-      if (response.ok) {
-        mutate()
-      }
-    } catch (error) {
-      console.error("Error:", error)
-    }
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">المكتبة الرقمية</h2>
-          <p className="text-sm text-muted-foreground">إدارة كتب، تلاوات قرآنية، أناشيد ومتون التجويد</p>
-        </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
-        >
-          <Plus className="w-4 h-4" />
-          {showForm ? 'إغلاق النموذج' : 'إضافة محتوى جديد'}
-        </button>
-      </div>
-
-      {showForm && (
-        <div className="relative">
-          <button
-            onClick={() => setShowForm(false)}
-            className="absolute left-4 top-4 p-1 hover:bg-muted rounded-lg transition z-10"
-          >
-            <X className="w-5 h-5 text-muted-foreground" />
-          </button>
-          <DigitalLibraryForm onSuccess={() => { setShowForm(false); mutate() }} />
-        </div>
-      )}
-
-      <div className="bg-card rounded-lg border border-border p-6">
-        <h3 className="text-lg font-bold text-foreground mb-4">المحتوى المضاف</h3>
-        {isLoading ? (
-          <AdminLoadingSkeleton />
-        ) : error ? (
-          <div className="text-center py-8 text-red-600">
-            <p>خطأ في تحميل المحتوى</p>
-          </div>
-        ) : !Array.isArray(items) || items?.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">لم يتم إضافة أي محتوى حتى الآن</p>
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
-            >
-              أضف أول محتوى الآن
-            </button>
-          </div>
-        ) : (
-          <div className="grid gap-4">
-            {items?.map((item: any) => (
-              <div key={item.id} className="flex items-start gap-4 p-4 border border-border rounded-lg hover:bg-muted/30 transition">
-                {item.thumbnail_url && (
-                  <img
-                    src={item.thumbnail_url}
-                    alt={item.title_ar}
-                    className="w-20 h-20 rounded object-cover"
-                  />
-                )}
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground mb-1">{item.title_ar}</h3>
-                  <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{item.description_ar}</p>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {item.content_type && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">{item.content_type}</span>}
-                    {item.category && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">{item.category}</span>}
-                    {item.is_published && <span className="text-xs bg-green-500/20 text-green-700 px-2 py-1 rounded">منشور</span>}
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="p-2 hover:bg-red-500/10 rounded-lg text-red-600 transition"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
 
 // Educational Games Tab — links to the existing /games page and shows its contents
 function EducationalGamesTab() {

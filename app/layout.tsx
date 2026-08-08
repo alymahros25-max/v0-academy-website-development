@@ -13,13 +13,15 @@ const notoArabic = Noto_Sans_Arabic({
   subsets: ["arabic"],
   variable: "--font-arabic",
   display: "swap",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700"],
+  preload: true,
 })
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
 })
 
 export const metadata: Metadata = {
@@ -43,22 +45,46 @@ export const metadata: Metadata = {
   authors: [{ name: "أكاديمية الحافظ المتميز" }],
   creator: "أكاديمية الحافظ المتميز",
   alternates: {
+    // hreflang for multi-regional + multi-language targeting
+    // Gulf & MENA regions (Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman)
     languages: {
       'ar': 'https://quran-elhafez.com',
-      'en': 'https://quran-elhafez.com?lang=en',
-      'fr': 'https://quran-elhafez.com?lang=fr',
+      'ar-SA': 'https://quran-elhafez.com/ar-sa', // Saudi Arabia
+      'ar-AE': 'https://quran-elhafez.com/ar-ae', // United Arab Emirates
+      'ar-KW': 'https://quran-elhafez.com/ar-kw', // Kuwait
+      'ar-QA': 'https://quran-elhafez.com/ar-qa', // Qatar
+      'ar-BH': 'https://quran-elhafez.com/ar-bh', // Bahrain
+      'ar-OM': 'https://quran-elhafez.com/ar-om', // Oman
+      // Western diaspora & European countries
+      'ar-US': 'https://quran-elhafez.com/ar-us', // USA
+      'ar-GB': 'https://quran-elhafez.com/ar-gb', // United Kingdom
+      'ar-FR': 'https://quran-elhafez.com/ar-fr', // France
+      'ar-DE': 'https://quran-elhafez.com/ar-de', // Germany
+      'ar-IT': 'https://quran-elhafez.com/ar-it', // Italy
+      // English versions
+      'en': 'https://quran-elhafez.com/en',
+      'en-US': 'https://quran-elhafez.com/en-us',
+      'en-GB': 'https://quran-elhafez.com/en-gb',
+      // French
+      'fr': 'https://quran-elhafez.com/fr',
+      'fr-FR': 'https://quran-elhafez.com/fr-fr',
+      // Default
       'x-default': 'https://quran-elhafez.com',
     },
   },
   openGraph: {
     type: "website",
     locale: "ar_SA",
-    alternateLocale: ["en_US", "fr_FR"],
+    alternateLocale: [
+      "ar_AE", "ar_KW", "ar_QA", "ar_BH", "ar_OM", // Gulf regions
+      "ar_US", "ar_GB", "ar_FR", "ar_DE", "ar_IT", // Western diaspora
+      "en_US", "en_GB", "fr_FR", // Western languages
+    ],
     url: "https://quran-elhafez.com",
     siteName: "أكاديمية الحافظ المتميز اون لاين",
     title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
     description:
-      "أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين مع معلمين مجازين",
+      "أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين مع معلمين مجازين. متاحة لدول الخليج والجاليات العربية في أمريكا وأوروبا",
     images: [{ url: "/images/hero-children.jpg", width: 1200, height: 630 }],
   },
   twitter: {
@@ -80,6 +106,14 @@ export const metadata: Metadata = {
     },
   },
   other: {
+    // Geographical targeting meta tags for Gulf region primary focus
+    'geo.region': 'SA', // Saudi Arabia as primary
+    'geo.position': '24.7136; 46.6753', // Riyadh coordinates (Gulf region center)
+    'ICBM': '24.7136, 46.6753', // ICBM format for geographic position
+    
+    // Additional service regions for diaspora targeting
+    'serviceable-regions': 'SA,AE,KW,QA,BH,OM,US,GB,FR,DE,IT',
+    
     // JSON-LD Schema for SEO rich snippets
     'application/ld+json': JSON.stringify(
       generateCombinedSchema(
@@ -105,16 +139,17 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        {/* Preconnect to critical external resources for faster loading */}
+        {/* Critical resource preloading for faster FCP/LCP */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://xtfyrskkoewanmkcfixw.supabase.co" />
-        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://img.youtube.com" />
         
-        {/* Google Analytics 4 - GA4 Tracking */}
+        {/* Defer Google Analytics to improve FCP/LCP */}
         <Script
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://www.googletagmanager.com/gtag/js?id=G-94X5S3J229"
           async
         />

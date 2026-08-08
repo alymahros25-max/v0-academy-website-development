@@ -105,7 +105,7 @@ export const BADGES: Badge[] = [
     descEn: "Master Arabic letter games",
     descFr: "Maîtrisez les jeux de lettres",
     icon: "🔤",
-    condition: (stats) => stats.correctAnswers === stats.correctAnswers + stats.incorrectAnswers,
+    condition: (stats) => stats.incorrectAnswers === 0 && stats.correctAnswers >= 5,
   },
   {
     id: "sirah_hero",

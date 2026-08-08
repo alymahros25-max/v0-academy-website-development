@@ -1,7 +1,7 @@
 "use client"
 
 import { useI18n } from "@/lib/i18n"
-import { Star, Trophy, Award, RotateCcw } from "lucide-react"
+import { Star, Trophy, Award, RotateCcw, ArrowLeft } from "lucide-react"
 import { BADGES } from "@/lib/games-engine"
 
 interface GameResultsProps {
@@ -147,8 +147,9 @@ export function GameResults({
         </button>
         <button
           onClick={onBack}
-          className="flex-1 py-3 px-6 rounded-xl font-bold text-primary border-2 border-primary hover:bg-primary/5 transition-colors"
+          className="flex-1 py-3 px-6 rounded-xl font-bold text-primary border-2 border-primary hover:bg-primary/5 transition-colors flex items-center justify-center gap-2"
         >
+          <ArrowLeft className="w-5 h-5 rtl:rotate-180" />
           {locale === "ar" ? "العودة" : locale === "en" ? "Back" : "Retour"}
         </button>
       </div>

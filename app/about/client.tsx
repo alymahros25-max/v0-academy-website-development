@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 import { Target, Eye, Heart, Award, Users, Globe } from 'lucide-react'
+import { imageContextConfig } from '@/lib/image-optimization'
 
 export default function AboutPageClient() {
   const { t, locale } = useI18n()
@@ -59,7 +60,17 @@ export default function AboutPageClient() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <div className="rounded-3xl overflow-hidden shadow-2xl">
-                <Image src="/images/about-academy.jpg" alt="Academy" width={600} height={450} className="w-full h-auto object-cover" />
+                <Image 
+                  src="/images/about-academy.jpg" 
+                  alt="Academy about section" 
+                  width={600} 
+                  height={450} 
+                  className="w-full h-auto object-cover" 
+                  quality={85}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                  priority={false}
+                  loading="lazy"
+                />
               </div>
               <div className="absolute -z-10 -top-6 -start-6 w-full h-full rounded-3xl border-2 border-secondary/30" />
             </div>
