@@ -207,9 +207,9 @@ export function BlogManager() {
   // FORM view
   if (mode === "create" || mode === "edit") {
     return (
-      <div>
+      <div className="min-w-0 w-full overflow-x-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+<div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <h2 className="text-lg font-bold text-foreground">
             {mode === "create" ? "إضافة مقال جديد" : "تعديل المقال"}
           </h2>
@@ -274,7 +274,7 @@ export function BlogManager() {
 
           {/* Language tabs */}
           <div>
-            <div className="flex items-center gap-1 mb-4 border-b border-border pb-1">
+            <div className="flex flex-wrap items-center gap-1 mb-4 border-b border-border pb-1">
               {langTabs.map(l => (
                 <button key={l.id}
                   onClick={() => setActiveLang(l.id)}

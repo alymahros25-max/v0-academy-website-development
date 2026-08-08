@@ -11,7 +11,7 @@ export default function UsersAndPermissionsPage() {
   const [usersUpdated, setUsersUpdated] = useState(false)
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="min-w-0 space-y-6 p-4 sm:p-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold flex gap-2">
