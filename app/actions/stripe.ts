@@ -17,8 +17,7 @@ export async function startCheckoutSession(productId: string, locale: string = '
 
   // Create Checkout Sessions from body params.
   const session = await stripe.checkout.sessions.create({
-    ui_mode: 'embedded',
-    redirect_on_completion: 'never',
+    mode: 'payment',
     line_items: [
       {
         price_data: {
@@ -32,7 +31,6 @@ export async function startCheckoutSession(productId: string, locale: string = '
         quantity: 1,
       },
     ],
-    mode: 'payment',
     metadata: {
       productId: product.id,
       category: product.category,

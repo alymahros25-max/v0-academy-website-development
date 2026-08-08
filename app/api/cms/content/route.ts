@@ -10,6 +10,11 @@ const supabase = supabaseUrl && supabaseServiceKey
   ? createClient(supabaseUrl, supabaseServiceKey)
   : null
 
+function requireSupabase() {
+  if (!supabase) throw new Error('Supabase is not configured')
+  return supabase
+}
+
 /**
  * GET: Fetch site content with optional filtering
  * Query params:
@@ -31,7 +36,7 @@ export async function GET(request: NextRequest) {
     const section = searchParams.get('section')
     const locale = searchParams.get('locale') // 'ar', 'en', 'fr', or 'all'
 
-    let query = supabase
+    let query = requireSupabase()
       .from('site_content')
       .select('*')
       .eq('is_active', true)
@@ -131,7 +136,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Upsert content (insert or update if exists)
-    const { data, error } = await supabase
+    const { data, error } = await requireSupabase()
       .from('site_content')
       .upsert(
         {
@@ -202,7 +207,7 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    const { error } = await supabase
+    const { error } = await requireSupabase()
       .from('site_content')
       .delete()
       .eq('key', key)

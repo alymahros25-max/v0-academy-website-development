@@ -9,6 +9,11 @@ const supabase = supabaseUrl && supabaseServiceKey
   ? createClient(supabaseUrl, supabaseServiceKey)
   : null
 
+function requireSupabase() {
+  if (!supabase) throw new Error('Supabase is not configured')
+  return supabase
+}
+
 /**
  * GET: Fetch site settings
  * Query params:
@@ -28,7 +33,7 @@ export async function GET(request: NextRequest) {
     const key = searchParams.get('key')
     const category = searchParams.get('category')
 
-    let query = supabase
+    let query = requireSupabase()
       .from('site_settings')
       .select('*')
 
@@ -128,7 +133,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Upsert setting
-    const { data, error } = await supabase
+    const { data, error } = await requireSupabase()
       .from('site_settings')
       .upsert(
         {
@@ -210,7 +215,7 @@ export async function PATCH(request: NextRequest) {
       updated_at: new Date().toISOString(),
     }))
 
-    const { data, error } = await supabase
+    const { data, error } = await requireSupabase()
       .from('site_settings')
       .upsert(updates, { onConflict: 'setting_key' })
       .select()
@@ -271,7 +276,7 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    const { error } = await supabase
+    const { error } = await requireSupabase()
       .from('site_settings')
       .delete()
       .eq('setting_key', key)

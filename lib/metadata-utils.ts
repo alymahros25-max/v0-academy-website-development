@@ -17,7 +17,7 @@ export const defaultMetadata: Metadata = {
   },
 }
 
-export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms'): Metadata {
+export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms' | 'pricing' | 'checkout-success'): Metadata {
   const baseUrl = 'https://quran-elhafez.com'
   const pageRoutes: Record<string, string> = {
     quran: '/quran',
@@ -30,6 +30,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     contact: '/contact',
     privacy: '/privacy',
     terms: '/terms',
+    pricing: '/pricing',
+    'checkout-success': '/checkout-success',
   }
 
   const getAlternates = (route: string) => ({
@@ -42,6 +44,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
   })
 
   const metadataMap: Record<string, Metadata> = {
+    pricing: { title: 'الباقات والأسعار | أكاديمية الحافظ المتميز', description: 'اختر الباقة التعليمية المناسبة لك.' },
+    'checkout-success': { title: 'تم الدفع بنجاح | أكاديمية الحافظ المتميز', description: 'شكراً لإتمام عملية الدفع.' },
     quran: {
       title: 'تحفيظ القرآن الكريم اون لاين | أكاديمية الحافظ المتميز',
       description: 'حلقات تحفيظ قران اون لاين مع معلمين مجازين. تجويد وحفظ مع مرونة في المواعيد وأسعار مناسبة',
