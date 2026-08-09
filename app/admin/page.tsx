@@ -82,7 +82,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 right-0 z-50 w-64 bg-primary text-primary-foreground transition-transform duration-300 lg:relative lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}`}>
+      <aside aria-label="قائمة لوحة التحكم" className={`fixed inset-y-0 right-0 z-50 w-64 bg-primary text-primary-foreground transition-transform duration-300 lg:relative lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}`}>
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-between p-5 border-b border-primary-foreground/10">
@@ -95,13 +95,13 @@ export default function AdminDashboard() {
                 <p className="text-[10px] text-primary-foreground/60">الحافظ المتميز</p>
               </div>
             </div>
-            <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-primary-foreground/60">
+            <button type="button" aria-label="إغلاق قائمة لوحة التحكم" onClick={() => setSidebarOpen(false)} className="lg:hidden text-primary-foreground/60">
               <XIcon className="w-5 h-5" />
             </button>
           </div>
 
           {/* Nav */}
-          <nav className="flex-1 p-3 flex flex-col gap-1">
+          <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3 flex flex-col gap-1 [scrollbar-width:thin] [scrollbar-color:hsl(var(--primary-foreground)/.35)_transparent]">
             {tabs.map((tab, index) => (
               <React.Fragment key={tab.id}>
                 {(index === 0 || tabs[index - 1].group !== tab.group) && (
@@ -141,7 +141,7 @@ export default function AdminDashboard() {
         {/* Top bar */}
         <header className="sticky top-0 z-30 bg-card/95 backdrop-blur-md border-b border-border px-4 lg:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-muted">
+            <button type="button" aria-label="فتح قائمة لوحة التحكم" onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 rounded-lg hover:bg-muted">
               <Menu className="w-5 h-5" />
             </button>
             <h1 className="text-lg font-bold text-foreground">
