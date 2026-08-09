@@ -51,7 +51,7 @@ export function Footer() {
                 </span>
               </div>
             </Link>
-            <p className="text-primary-foreground/70 text-sm leading-relaxed mb-4">
+            <p className="text-primary-foreground/90 text-sm leading-relaxed mb-4">
               {locale === "ar"
                 ? "نقدم خدمات تحفيظ القرآن الكريم واللغة العربية أونلاين للطلاب في دول الخليج العربي (السعودية، الإمارات، الكويت، قطر، البحرين، عمان) والجاليات العربية في أمريكا، بريطانيا، فرنسا، ألمانيا، وإيطاليا."
                 : locale === "en"
@@ -99,7 +99,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-primary-foreground/70 hover:text-secondary transition-colors"
+                    className="text-sm text-primary-foreground/90 hover:text-secondary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -116,7 +116,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-primary-foreground/70 hover:text-secondary transition-colors"
+                    className="text-sm text-primary-foreground/90 hover:text-secondary transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -129,7 +129,7 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-primary-foreground/70 hover:text-secondary transition-colors"
+                        className="text-sm text-primary-foreground/90 hover:text-secondary transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -144,19 +144,19 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-secondary mb-4">{t("footer.contact")}</h3>
             <ul className="flex flex-col gap-3">
-              <li className="flex items-center gap-2 text-sm text-primary-foreground/70">
+              <li className="flex items-center gap-2 text-sm text-primary-foreground/90">
                 <Mail className="w-4 h-4 text-secondary shrink-0" />
                 <a href="mailto:enamel311@gmail.com" className="hover:text-secondary transition-colors">
                   enamel311@gmail.com
                 </a>
               </li>
-              <li className="flex items-center gap-2 text-sm text-primary-foreground/70">
+              <li className="flex items-center gap-2 text-sm text-primary-foreground/90">
                 <Phone className="w-4 h-4 text-secondary shrink-0" />
                 <a href="https://bit.ly/4aJfOl6" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">
                   {locale === "ar" ? "تواصل عبر WhatsApp" : "Contact via WhatsApp"}
                 </a>
               </li>
-              <li className="flex items-start gap-2 text-sm text-primary-foreground/70">
+              <li className="flex items-start gap-2 text-sm text-primary-foreground/90">
                 <MapPin className="w-4 h-4 text-secondary shrink-0 mt-0.5" />
                 <span>
                   {locale === "ar" ? "أكاديمية اون لاين - تعليم عن بعد" : "Online Academy - Distance Learning"}
@@ -168,7 +168,7 @@ export function Footer() {
 
         {/* Compliance Notice */}
         <div className="mt-12 pt-6 border-t border-primary-foreground/10">
-          <p className="text-xs text-primary-foreground/50 leading-relaxed mb-6">
+          <p className="text-xs text-primary-foreground/90 leading-relaxed mb-6">
             {locale === "ar"
               ? "منصة الحافظ المتميز هي منصة تعليم إلكترونية رقمية 100%. جميع البرامج التعليمية والدورات والمكتبة الرقمية والألعاب يتم تسليمها بالكامل عبر الإنترنت. وصول فوري - لا توجد خدمات خارج الإنترنت."
               : locale === "en"
@@ -186,7 +186,7 @@ export function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-primary-foreground/50 hover:text-secondary transition-colors"
+                  className="text-xs text-primary-foreground/90 hover:text-secondary transition-colors"
                 >
                   {link.label}
                 </Link>

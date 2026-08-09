@@ -102,6 +102,9 @@ export function HeroSection() {
                   src="/images/teacher-quran.jpg"
                   alt="Quran teacher"
                   fill
+                  sizes="(min-width: 1024px) 320px, 0px"
+                  quality={80}
+                  priority
                   className="object-cover"
                 />
               </div>

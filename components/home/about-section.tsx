@@ -38,6 +38,8 @@ export function AboutSection() {
                 alt="About the academy"
                 width={600}
                 height={450}
+                sizes="(max-width: 1023px) 100vw, 50vw"
+                quality={78}
                 className="w-full h-auto object-cover"
               />
             </div>
