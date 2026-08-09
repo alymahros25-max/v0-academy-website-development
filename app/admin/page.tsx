@@ -283,6 +283,27 @@ function PackagesTab() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editData, setEditData] = useState<Record<string, unknown>>({})
   const [message, setMessage] = useState("")
+  const [showForm, setShowForm] = useState(false)
+  const [newPackage, setNewPackage] = useState({ type: "quran", sessions: 4, price: 15, duration: 30, popular: false, features: "" })
+
+  const handleCreate = async () => {
+    try {
+      setMessage("جاري إضافة الباقة...")
+      const res = await fetch("/api/admin/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "packages", data: newPackage }),
+      })
+      if (!res.ok) throw new Error("create failed")
+      setMessage("تمت إضافة الباقة بنجاح")
+      setShowForm(false)
+      setNewPackage({ type: "quran", sessions: 4, price: 15, duration: 30, popular: false, features: "" })
+      globalMutate("/api/admin/data?type=packages")
+    } catch (err) {
+      console.error("Create package error:", err)
+      setMessage("تعذر إضافة الباقة")
+    }
+  }
 
   const handleDelete = async (id: string) => {
     if (!confirm("هل أنت متأكد من حذف هذه الباقة؟")) return
@@ -322,22 +343,45 @@ function PackagesTab() {
 
   if (isLoading) return <AdminLoadingSkeleton />
   if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل البيانات</div>
-  if (!Array.isArray(packages) || packages?.length === 0) return <div className="p-4 text-muted-foreground">لا توجد باقات</div>
+  const packageRows = Array.isArray(packages) ? packages : []
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-bold text-foreground">إدارة الباقات</h2>
+        <button type="button" onClick={() => setShowForm((value) => !value)} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold">
+          <Plus className="w-4 h-4" /> إضافة باقة
+        </button>
       </div>
 
       {message && (
-        <div className="mb-4 p-3 rounded-lg bg-green-500/10 text-green-600 text-sm">
-          {message}
+        <div className="mb-4 p-3 rounded-lg bg-primary/10 text-primary text-sm" role="status">{message}</div>
+      )}
+
+      {showForm && (
+        <div className="mb-6 bg-card rounded-2xl border border-border p-5 space-y-4">
+          <h3 className="font-bold text-foreground">باقة جديدة</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <select aria-label="نوع الباقة" value={newPackage.type} onChange={(e) => setNewPackage({ ...newPackage, type: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm">
+              <option value="quran">قرآن كريم</option><option value="arabic">لغة عربية</option>
+            </select>
+            <input aria-label="عدد الحصص" type="number" min="1" value={newPackage.sessions} onChange={(e) => setNewPackage({ ...newPackage, sessions: Number(e.target.value) })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" />
+            <input aria-label="السعر" type="number" min="0" value={newPackage.price} onChange={(e) => setNewPackage({ ...newPackage, price: Number(e.target.value) })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" />
+            <input aria-label="مدة الحصة بالدقائق" type="number" min="1" value={newPackage.duration} onChange={(e) => setNewPackage({ ...newPackage, duration: Number(e.target.value) })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" />
+          </div>
+          <input aria-label="مميزات الباقة" placeholder="المميزات مفصولة بفواصل" value={newPackage.features} onChange={(e) => setNewPackage({ ...newPackage, features: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" />
+          <label className="flex items-center gap-2 text-sm text-foreground"><input type="checkbox" checked={newPackage.popular} onChange={(e) => setNewPackage({ ...newPackage, popular: e.target.checked })} /> الباقة الأكثر شمولاً</label>
+          <div className="flex gap-2"><button type="button" onClick={handleCreate} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">حفظ الباقة</button><button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">إلغاء</button></div>
+          <div className="max-w-sm rounded-2xl border-2 border-secondary bg-background p-5 shadow-sm" aria-label="معاينة الباقة">
+            <p className="text-xs text-muted-foreground">معاينة مباشرة</p><p className="mt-2 font-bold text-foreground">{newPackage.type === "quran" ? "قرآن كريم" : "لغة عربية"} — {newPackage.sessions} حصص</p><p className="text-2xl font-extrabold text-primary">${newPackage.price}</p><p className="text-sm text-muted-foreground">{newPackage.features || "أضف مميزات الباقة"}</p>
+          </div>
         </div>
       )}
 
+
       <div className="grid gap-4">
-        {Array.isArray(packages) && packages.map((pkg: { id?: string; type?: string; sessions?: number; price?: number; popular?: boolean } | null) => {
+        {packageRows.length === 0 && <p className="p-4 text-muted-foreground">لا توجد باقات حالياً. استخدم زر إضافة باقة.</p>}
+        {packageRows.map((pkg: { id?: string; type?: string; sessions?: number; price?: number; popular?: boolean } | null) => {
           if (!pkg?.id) return null
           return (
             <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
@@ -513,6 +557,19 @@ function TeachersTab() {
         </div>
       )}
 
+      {editingId && (
+        <div className="bg-card rounded-2xl border border-primary/30 p-5 mb-6 space-y-4">
+          <h3 className="font-bold text-foreground">تعديل بيانات المعلم</h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <input aria-label="اسم المعلم بالعربية" value={String((editData.name as Record<string, string> | undefined)?.ar ?? "")} onChange={(e) => setEditData({ ...editData, name: { ...((editData.name as Record<string, string>) || {}), ar: e.target.value } })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="الاسم بالعربية" />
+            <input aria-label="تخصص المعلم بالعربية" value={String((editData.specialty as Record<string, string> | undefined)?.ar ?? "")} onChange={(e) => setEditData({ ...editData, specialty: { ...((editData.specialty as Record<string, string>) || {}), ar: e.target.value } })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="التخصص" />
+            <input aria-label="سنوات الخبرة" value={String(editData.experience ?? "")} onChange={(e) => setEditData({ ...editData, experience: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="سنوات الخبرة" />
+            <input aria-label="رابط صورة المعلم" value={String(editData.image ?? "")} onChange={(e) => setEditData({ ...editData, image: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="رابط الصورة" />
+          </div>
+          <div className="flex gap-2"><button type="button" onClick={() => editingId && handleSave(editingId)} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">حفظ التعديل</button><button type="button" onClick={() => setEditingId(null)} className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">إلغاء</button></div>
+        </div>
+      )}
+
       {showForm && (
         <div className="bg-card rounded-2xl border border-border p-5 mb-6">
           <h3 className="font-bold text-foreground mb-4">معلم جديد</h3>
@@ -581,6 +638,14 @@ function TeachersTab() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  aria-label="تعديل بيانات المعلم"
+                  onClick={() => { if (teacher?.id) { setEditingId(teacher.id); setEditData(teacher as Record<string, unknown>) } }}
+                  className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Edit3 className="w-4 h-4" />
+                </button>
                 <button
                   onClick={() => teacher?.id && handleDelete(teacher.id)}
                   className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
