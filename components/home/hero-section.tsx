@@ -104,7 +104,7 @@ export function HeroSection() {
                   fill
                   sizes="(min-width: 1024px) 320px, 0px"
                   quality={80}
-                  priority
+                  loading="lazy"
                   className="object-cover"
                 />
               </div>
