@@ -19,7 +19,7 @@ export function HeroSection() {
           fill
           className="object-cover"
           sizes="100vw"
-          quality={75}
+          quality={85}
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/75 to-primary/90" />
@@ -102,6 +102,9 @@ export function HeroSection() {
                   src="/images/teacher-quran.jpg"
                   alt="Quran teacher"
                   fill
+                  sizes="(min-width: 1024px) 320px, 0px"
+                  quality={80}
+                  loading="lazy"
                   className="object-cover"
                 />
               </div>

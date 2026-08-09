@@ -36,10 +36,11 @@ export function AboutSection() {
               <Image
                 src="/images/about-academy.jpg"
                 alt="About the academy"
-                width={380}
-                height={380}
-                sizes="(max-width: 640px) 380px, 50vw"
-                className="w-full aspect-square object-cover"
+                width={600}
+                height={450}
+                sizes="(max-width: 1023px) 100vw, 50vw"
+                quality={78}
+                className="w-full h-auto object-cover"
               />
             </div>
             {/* Decorative elements */}
