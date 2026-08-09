@@ -12,12 +12,12 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 bg-primary/90">
         <Image
           src="/images/hero-children.jpg"
           alt="Children learning Quran"
           fill
-          className="object-cover"
+          className="object-contain md:object-cover object-center"
           sizes="100vw"
           quality={85}
           priority
