@@ -11,7 +11,7 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image Container */}
       <div className="absolute inset-0 bg-primary/90">
         <Image
           src="/images/hero-children.jpg"
@@ -21,7 +21,9 @@ export function HeroSection() {
           sizes="100vw"
           quality={85}
           priority
+          fetchpriority="high"
         />
+        {/* Overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/75 to-primary/90" />
         <div className="absolute inset-0 islamic-pattern opacity-30" />
       </div>
