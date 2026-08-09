@@ -5,7 +5,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { generateOrganizationSchema, generateWebSiteSchema, generateCombinedSchema } from "@/lib/schema"
-import { generatePreconnectLinks } from "@/lib/prefetch-utils"
 import "./globals.css"
 import { ClientProviders } from "@/components/client-providers"
 
@@ -45,30 +44,12 @@ export const metadata: Metadata = {
   authors: [{ name: "أكاديمية الحافظ المتميز" }],
   creator: "أكاديمية الحافظ المتميز",
   alternates: {
-    // hreflang for multi-regional + multi-language targeting
-    // Gulf & MENA regions (Saudi Arabia, UAE, Kuwait, Qatar, Bahrain, Oman)
+    // Only advertise language URLs that the application actually serves.
+    // Regional relevance comes from truthful content and structured data, not cloaking.
     languages: {
       'ar': 'https://quran-elhafez.com',
-      'ar-SA': 'https://quran-elhafez.com/ar-sa', // Saudi Arabia
-      'ar-AE': 'https://quran-elhafez.com/ar-ae', // United Arab Emirates
-      'ar-KW': 'https://quran-elhafez.com/ar-kw', // Kuwait
-      'ar-QA': 'https://quran-elhafez.com/ar-qa', // Qatar
-      'ar-BH': 'https://quran-elhafez.com/ar-bh', // Bahrain
-      'ar-OM': 'https://quran-elhafez.com/ar-om', // Oman
-      // Western diaspora & European countries
-      'ar-US': 'https://quran-elhafez.com/ar-us', // USA
-      'ar-GB': 'https://quran-elhafez.com/ar-gb', // United Kingdom
-      'ar-FR': 'https://quran-elhafez.com/ar-fr', // France
-      'ar-DE': 'https://quran-elhafez.com/ar-de', // Germany
-      'ar-IT': 'https://quran-elhafez.com/ar-it', // Italy
-      // English versions
-      'en': 'https://quran-elhafez.com/en',
-      'en-US': 'https://quran-elhafez.com/en-us',
-      'en-GB': 'https://quran-elhafez.com/en-gb',
-      // French
-      'fr': 'https://quran-elhafez.com/fr',
-      'fr-FR': 'https://quran-elhafez.com/fr-fr',
-      // Default
+      'en': 'https://quran-elhafez.com?lang=en',
+      'fr': 'https://quran-elhafez.com?lang=fr',
       'x-default': 'https://quran-elhafez.com',
     },
   },
@@ -140,12 +121,8 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         {/* Critical resource preloading for faster FCP/LCP */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://xtfyrskkoewanmkcfixw.supabase.co" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://img.youtube.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         
         {/* Defer Google Analytics to improve FCP/LCP */}
         <Script
