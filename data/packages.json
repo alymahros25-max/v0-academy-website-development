@@ -4,7 +4,7 @@
     "type": "quran",
     "sessions": 4,
     "price": 15,
-    "popular": false,
+    "popular": true,
     "features": {
       "ar": [
         "مرونة في اختيار الوقت",
