@@ -103,7 +103,7 @@ export default function AdminDashboard() {
     { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star, group: "محتوى الموقع" },
     { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare, group: "محتوى الموقع" },
     { id: "cms", label: "صفحات الموقع والمحتوى", key: "admin.cms", icon: BookOpen, group: "محتوى الموقع" },
-    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى الموقع" },
+    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى ا��موقع" },
     { id: "library", label: "المكتبة الرقمية", key: "admin.library", icon: BookOpen, group: "محتوى الموقع" },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film, group: "الخدمات التعليمية" },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2, group: "الخدمات التعليمية" },
@@ -332,9 +332,17 @@ function PackagesTab() {
       const res = await fetch("/api/admin/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "packages", data: newPackage }),
+        body: JSON.stringify({ type: "packages", data: {
+          type: newPackage.type,
+          sessions: newPackage.sessions,
+          price: newPackage.price,
+          popular: newPackage.popular,
+          active: true,
+          features: { ar: newPackage.features.split(",").map((item) => item.trim()).filter(Boolean) },
+        } }),
       })
-      if (!res.ok) throw new Error("create failed")
+      const result = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(result.error || "تعذر إضافة الباقة")
       setMessage("تمت إضافة الباقة بنجاح")
       setShowForm(false)
       setNewPackage({ type: "quran", sessions: 4, price: 15, duration: 30, popular: false, features: "" })
@@ -366,18 +374,20 @@ function PackagesTab() {
       const res = await fetch("/api/admin/data", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "packages", id, data: editData }),
+        body: JSON.stringify({ type: "packages", id, data: {
+          ...editData,
+          active: editData.active ?? true,
+          features: editData.features ?? { ar: [] },
+        } }),
       })
-      if (res.ok) {
-        setMessage("تم الحفظ بنجاح")
-        setEditingId(null)
-        globalMutate("/api/admin/data?type=packages")
-      } else {
-        setMessage("خطأ في الحفظ")
-      }
+      const result = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(result.error || "تعذر حفظ الباقة")
+      setMessage("تم الحفظ بنجاح")
+      setEditingId(null)
+      globalMutate("/api/admin/data?type=packages")
     } catch (err) {
-      console.error("Save error:", err)
-      setMessage("خطأ في الحفظ")
+      console.error("[v0] Package save error:", err)
+      setMessage(err instanceof Error ? err.message : "خطأ في الحفظ")
     }
   }
 
@@ -604,7 +614,7 @@ function TeachersTab() {
             <input aria-label="اسم المعلم بالعربية" value={String((editData.name as Record<string, string> | undefined)?.ar ?? "")} onChange={(e) => setEditData({ ...editData, name: { ...((editData.name as Record<string, string>) || {}), ar: e.target.value } })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="الاسم بالعربية" />
             <input aria-label="تخصص المعلم بالعربية" value={String((editData.specialty as Record<string, string> | undefined)?.ar ?? "")} onChange={(e) => setEditData({ ...editData, specialty: { ...((editData.specialty as Record<string, string>) || {}), ar: e.target.value } })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="التخصص" />
             <input aria-label="سنوات الخبرة" value={String(editData.experience ?? "")} onChange={(e) => setEditData({ ...editData, experience: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="سنوات الخبرة" />
-            <input aria-label="رابط صورة المعلم" value={String(editData.image ?? "")} onChange={(e) => setEditData({ ...editData, image: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="رابط الصورة" />
+            <input aria-label="رابط صورة المعلم" value={String(editData.image ?? "")} onChange={(e) => setEditData({ ...editData, image: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="رابط الصو��ة" />
           </div>
           <div className="flex gap-2"><button type="button" onClick={() => editingId && handleSave(editingId)} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">حفظ التعديل</button><button type="button" onClick={() => setEditingId(null)} className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">إلغاء</button></div>
         </div>
@@ -972,7 +982,7 @@ function SettingsTab() {
 // Pages Tab - للتحكم في ��ميع صفحات الموقع
 function PagesTab() {
   const pages = [
-    { name: "الصفحة الرئيسية", path: "/", description: "الصفحة الرئيسية للموقع" },
+    { name: "الصفحة الرئيسية", path: "/", description: "الصفحة الرئ��سية للموقع" },
     { name: "من ن��ن", path: "/about", description: "معلومات عن الأكاديمية" },
     { name: "القرآن الكريم", path: "/quran", description: "باقات تحفيظ القرآن" },
     { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
@@ -1371,7 +1381,7 @@ function UsersManagementTab() {
   const [msg, setMsg] = useState("")
 
   const handleChangePass = async () => {
-    if (newPass.length < 6) { setMsg("كلمة المرور يجب أن تكون 6 أحرف على الأقل"); return }
+    if (newPass.length < 6) { setMsg("كلمة المرور يجب أن تكون 6 أحرف على ال��قل"); return }
     const res = await fetch("/api/admin/change-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1547,7 +1557,7 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
         <p className="text-sm text-muted-foreground mb-2">{video.description_ar}</p>
         <div className="flex flex-wrap gap-2 mb-2">
           {video.category && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">{video.category}</span>}
-          {video.teacher_name_ar && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">👨‍🏫 {video.teacher_name_ar}</span>}
+          {video.teacher_name_ar && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">👨‍���� {video.teacher_name_ar}</span>}
         </div>
       </div>
       <button

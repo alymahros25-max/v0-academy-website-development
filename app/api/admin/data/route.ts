@@ -49,8 +49,9 @@ export async function GET(request: NextRequest) {
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
     }
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 })
+  } catch (error) {
+    console.error("[v0] Admin data error:", error)
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Server error" }, { status: 500 })
   }
 }
 
@@ -87,8 +88,9 @@ export async function POST(request: NextRequest) {
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
     }
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 })
+  } catch (error) {
+    console.error("[v0] Admin data error:", error)
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Server error" }, { status: 500 })
   }
 }
 
@@ -140,8 +142,9 @@ export async function PUT(request: NextRequest) {
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
     }
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 })
+  } catch (error) {
+    console.error("[v0] Admin data error:", error)
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Server error" }, { status: 500 })
   }
 }
 
@@ -180,7 +183,8 @@ export async function DELETE(request: NextRequest) {
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
     }
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 })
+  } catch (error) {
+    console.error("[v0] Admin data error:", error)
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Server error" }, { status: 500 })
   }
 }

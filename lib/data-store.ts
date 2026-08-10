@@ -1,5 +1,6 @@
 import { promises as fs } from "fs"
 import path from "path"
+import { supabaseAdmin } from "@/lib/supabaseAdmin"
 
 const DATA_DIR = path.join(process.cwd(), "data")
 
@@ -159,18 +160,46 @@ const defaultSettings: SiteSettings = {
   aboutText: { ar: "أكاديمية الحافظ المتميز هي منصة تعليمية عالمية متخصصة", en: "Al-Hafiz Academy is a global educational platform", fr: "L'academie est une plateforme educative mondiale" },
 }
 
-// CRUD functions
-export const getTeachers = () => readData<Teacher[]>("teachers.json", defaultTeachers)
-export const setTeachers = (data: Teacher[]) => writeData("teachers.json", data)
+// Persistent CRUD functions. Supabase is the production source of truth; JSON remains a local fallback.
+async function getPersistent<T>(contentType: string, fallback: T): Promise<T> {
+  if (!supabaseAdmin) return fallback
+  const { data, error } = await supabaseAdmin.from("admin_content").select("data").eq("content_type", contentType).order("content_id")
+  if (error || !data?.length) {
+    await seedPersistent(contentType, fallback)
+    return fallback
+  }
+  if (contentType === "settings") return (data[0]?.data ?? fallback) as T
+  return data.map(row => row.data) as T
+}
 
-export const getPackages = () => readData<Package[]>("packages.json", defaultPackages)
-export const setPackages = (data: Package[]) => writeData("packages.json", data)
+async function seedPersistent<T>(contentType: string, data: T) {
+  if (!supabaseAdmin) return
+  const rows = contentType === "settings"
+    ? [{ content_type: contentType, content_id: "site", data }]
+    : (data as unknown as Array<{ id?: string }>).map((item, index) => ({ content_type: contentType, content_id: String(item.id ?? index), data: item }))
+  await supabaseAdmin.from("admin_content").upsert(rows, { onConflict: "content_type,content_id" })
+}
 
-export const getReviews = () => readData<Review[]>("reviews.json", defaultReviews)
-export const setReviews = (data: Review[]) => writeData("reviews.json", data)
+async function setPersistent<T extends Array<{ id?: string }> | SiteSettings>(contentType: string, data: T) {
+  if (!supabaseAdmin) return false
+  const deleted = await supabaseAdmin.from("admin_content").delete().eq("content_type", contentType)
+  if (deleted.error) throw deleted.error
+  const rows = contentType === "settings"
+    ? [{ content_type: contentType, content_id: "site", data }]
+    : (data as Array<{ id?: string }>).map((item, index) => ({ content_type: contentType, content_id: String(item.id ?? index), data: item }))
+  if (rows.length === 0) return true
+  const inserted = await supabaseAdmin.from("admin_content").insert(rows)
+  if (inserted.error) throw inserted.error
+  return true
+}
 
-export const getMessages = () => readData<ContactMessage[]>("messages.json", [])
-export const setMessages = (data: ContactMessage[]) => writeData("messages.json", data)
-
-export const getSettings = () => readData<SiteSettings>("settings.json", defaultSettings)
-export const setSettings = (data: SiteSettings) => writeData("settings.json", data)
+export const getTeachers = async () => getPersistent<Teacher[]>("teachers", await readData<Teacher[]>("teachers.json", defaultTeachers))
+export const setTeachers = async (data: Teacher[]) => { if (!(await setPersistent("teachers", data))) await writeData("teachers.json", data) }
+export const getPackages = async () => getPersistent<Package[]>("packages", await readData<Package[]>("packages.json", defaultPackages))
+export const setPackages = async (data: Package[]) => { if (!(await setPersistent("packages", data))) await writeData("packages.json", data) }
+export const getReviews = async () => getPersistent<Review[]>("reviews", await readData<Review[]>("reviews.json", defaultReviews))
+export const setReviews = async (data: Review[]) => { if (!(await setPersistent("reviews", data))) await writeData("reviews.json", data) }
+export const getMessages = async () => getPersistent<ContactMessage[]>("messages", await readData<ContactMessage[]>("messages.json", []))
+export const setMessages = async (data: ContactMessage[]) => { if (!(await setPersistent("messages", data))) await writeData("messages.json", data) }
+export const getSettings = async () => getPersistent<SiteSettings>("settings", await readData<SiteSettings>("settings.json", defaultSettings))
+export const setSettings = async (data: SiteSettings) => { if (!(await setPersistent("settings", data))) await writeData("settings.json", data) }
