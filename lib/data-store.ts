@@ -182,10 +182,15 @@ async function seedPersistent<T>(contentType: string, data: T) {
 
 async function setPersistent<T extends Array<{ id?: string }> | SiteSettings>(contentType: string, data: T) {
   if (!supabaseAdmin) return false
-  await supabaseAdmin.from("admin_content").delete().eq("content_type", contentType)
-  if (contentType === "settings") return !(await supabaseAdmin.from("admin_content").insert({ content_type: contentType, content_id: "site", data })).error
-  const rows = (data as Array<{ id?: string }>).map((item, index) => ({ content_type: contentType, content_id: String(item.id ?? index), data: item }))
-  return !(await supabaseAdmin.from("admin_content").insert(rows)).error
+  const deleted = await supabaseAdmin.from("admin_content").delete().eq("content_type", contentType)
+  if (deleted.error) throw deleted.error
+  const rows = contentType === "settings"
+    ? [{ content_type: contentType, content_id: "site", data }]
+    : (data as Array<{ id?: string }>).map((item, index) => ({ content_type: contentType, content_id: String(item.id ?? index), data: item }))
+  if (rows.length === 0) return true
+  const inserted = await supabaseAdmin.from("admin_content").insert(rows)
+  if (inserted.error) throw inserted.error
+  return true
 }
 
 export const getTeachers = async () => getPersistent<Teacher[]>("teachers", await readData<Teacher[]>("teachers.json", defaultTeachers))

@@ -26,7 +26,7 @@ export function TeachersManager() {
     try {
       const response = await fetch('/api/admin/data?type=teachers')
       const data = await response.json()
-      setTeachers(data.teachers || [])
+      setTeachers(Array.isArray(data) ? data : (data.teachers || []))
     } catch (error) {
       console.error('Failed to fetch teachers:', error)
     }
@@ -35,14 +35,11 @@ export function TeachersManager() {
   async function handleSave() {
     try {
       const response = await fetch('/api/admin/data', {
-        method: 'POST',
+        method: editingId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'teachers',
-          action: editingId ? 'update' : 'create',
-          id: editingId,
-          data: formData
-        })
+        body: JSON.stringify(editingId
+          ? { type: 'teachers', id: editingId, data: formData }
+          : { type: 'teachers', data: formData })
       })
 
       if (response.ok) {
@@ -58,14 +55,8 @@ export function TeachersManager() {
     if (!confirm('هل أنت متأكد من حذف المعلم؟')) return
 
     try {
-      const response = await fetch('/api/admin/data', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'teachers',
-          action: 'delete',
-          id
-        })
+      const response = await fetch(`/api/admin/data?type=teachers&id=${encodeURIComponent(id)}`, {
+        method: 'DELETE'
       })
 
       if (response.ok) {

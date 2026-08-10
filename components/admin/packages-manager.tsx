@@ -26,7 +26,7 @@ export function PackagesManager() {
     try {
       const response = await fetch('/api/admin/data?type=packages')
       const data = await response.json()
-      setPackages(data.packages || [])
+      setPackages(Array.isArray(data) ? data : (data.packages || []))
     } catch (error) {
       console.error('Failed to fetch packages:', error)
     }
@@ -35,14 +35,11 @@ export function PackagesManager() {
   async function handleSave() {
     try {
       const response = await fetch('/api/admin/data', {
-        method: 'POST',
+        method: editingId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'packages',
-          action: editingId ? 'update' : 'create',
-          id: editingId,
-          data: formData
-        })
+        body: JSON.stringify(editingId
+          ? { type: 'packages', id: editingId, data: formData }
+          : { type: 'packages', data: formData })
       })
 
       if (response.ok) {
@@ -58,14 +55,8 @@ export function PackagesManager() {
     if (!confirm('هل أنت متأكد من حذف هذه الباقة؟')) return
 
     try {
-      const response = await fetch('/api/admin/data', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'packages',
-          action: 'delete',
-          id
-        })
+      const response = await fetch(`/api/admin/data?type=packages&id=${encodeURIComponent(id)}`, {
+        method: 'DELETE'
       })
 
       if (response.ok) {
