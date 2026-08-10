@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
-  Menu, XIcon, Palette, FileText, Lock, Film, Gamepad2, Search, BarChart3
+  Menu, XIcon, Palette, FileText, Lock, Film, Gamepad2, Search, BarChart3,
+  Languages, Save, Wand2
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
@@ -19,6 +20,44 @@ import { BlogManager } from "@/components/admin/BlogManager"
 import { LibraryManager } from "@/components/admin/LibraryManager"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
+
+function AdminSectionToolbar({ section }: { section: string }) {
+  const [preview, setPreview] = useState(false)
+  const [stylesOpen, setStylesOpen] = useState(false)
+  const [styles, setStyles] = useState({ color: "", font: "inherit", motion: "هادئ", order: "0" })
+  const [status, setStatus] = useState("")
+
+  const action = (name: string) => {
+    window.dispatchEvent(new CustomEvent("admin:section-action", { detail: { section, action: name, styles } }))
+    setStatus(name === "translate" ? "تم تشغيل الترجمة التلقائية للعنصر المحدد" : `تم تنفيذ: ${name}`)
+  }
+
+  return (
+    <section className="mb-6 rounded-2xl border border-border bg-card p-4 shadow-sm" aria-label={`أدوات قسم ${section}`}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="font-bold text-foreground">أدوات إدارة القسم</p>
+          <p className="text-xs text-muted-foreground">{section} — الحفظ يحدّث بيانات الصفحة العامة بعد نجاح العملية</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => action("create")} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus data-icon="inline-start" /> إنشاء جديد</button>
+          <button type="button" onClick={() => action("save")} className="inline-flex items-center gap-2 rounded-lg bg-secondary px-3 py-2 text-sm font-bold text-secondary-foreground"><Save data-icon="inline-start" /> حفظ</button>
+          <button type="button" onClick={() => action("translate")} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground"><Languages data-icon="inline-start" /> ترجمة تلقائية</button>
+          <button type="button" onClick={() => setPreview(!preview)} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground">{preview ? <EyeOff data-icon="inline-start" /> : <Eye data-icon="inline-start" />} {preview ? "إخفاء المعاينة" : "معاينة"}</button>
+          <button type="button" onClick={() => setStylesOpen(!stylesOpen)} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground"><Wand2 data-icon="inline-start" /> تخصيص</button>
+        </div>
+      </div>
+      {stylesOpen && <div className="mt-4 grid gap-3 rounded-xl bg-muted/40 p-3 sm:grid-cols-4">
+        <label className="text-xs text-foreground">لون العنصر<input type="color" value={styles.color || "#1a4d2e"} onChange={e => setStyles({ ...styles, color: e.target.value })} className="mt-1 h-9 w-full rounded border border-border bg-background" /></label>
+        <label className="text-xs text-foreground">الخط<select value={styles.font} onChange={e => setStyles({ ...styles, font: e.target.value })} className="mt-1 w-full rounded border border-border bg-background p-2 text-sm"><option value="inherit">افتراضي</option><option value="sans-serif">Sans</option><option value="serif">Serif</option></select></label>
+        <label className="text-xs text-foreground">الحركة<select value={styles.motion} onChange={e => setStyles({ ...styles, motion: e.target.value })} className="mt-1 w-full rounded border border-border bg-background p-2 text-sm"><option>هادئ</option><option>تلاشي</option><option>انزلاق</option></select></label>
+        <label className="text-xs text-foreground">الترتيب<input type="number" value={styles.order} onChange={e => setStyles({ ...styles, order: e.target.value })} className="mt-1 w-full rounded border border-border bg-background p-2 text-sm" /></label>
+      </div>}
+      {preview && <div className="mt-4 rounded-xl border-2 border-dashed border-primary/30 bg-background p-4 text-sm text-foreground" style={{ color: styles.color || undefined, fontFamily: styles.font }}><span className="font-bold">معاينة مباشرة:</span> سيتم عرض تغييرات {section} هنا قبل الحفظ.</div>}
+      {status && <p className="mt-3 text-xs text-primary" role="status">{status}</p>}
+    </section>
+  )
+}
 
 type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
 
@@ -156,9 +195,10 @@ export default function AdminDashboard() {
           </div>
         </header>
 
-        {/* Tab Content */}
-        <div className="p-4 lg:p-6">
-          <AdminErrorBoundary>
+      {/* Tab Content */}
+      <div className="p-4 lg:p-6">
+        {activeTab !== "dashboard" && <AdminSectionToolbar section={tabs.find(t => t.id === activeTab)?.label ?? "القسم الحالي"} />}
+        <AdminErrorBoundary>
             {activeTab === "dashboard" && <DashboardTab />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
@@ -929,11 +969,11 @@ function SettingsTab() {
   )
 }
 
-// Pages Tab - للتحكم في جميع صفحات الموقع
+// Pages Tab - للتحكم في ��ميع صفحات الموقع
 function PagesTab() {
   const pages = [
     { name: "الصفحة الرئيسية", path: "/", description: "الصفحة الرئيسية للموقع" },
-    { name: "من نحن", path: "/about", description: "معلومات عن الأكاديمية" },
+    { name: "من ن��ن", path: "/about", description: "معلومات عن الأكاديمية" },
     { name: "القرآن الكريم", path: "/quran", description: "باقات تحفيظ القرآن" },
     { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
     { name: "المعلمين", path: "/teachers", description: "قائمة المعلمين المجازين" },
