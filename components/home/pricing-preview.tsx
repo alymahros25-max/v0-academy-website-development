@@ -1,18 +1,21 @@
 "use client"
 
 import Link from "next/link"
+import useSWR from "swr"
 import { useI18n } from "@/lib/i18n"
 import { Check, ArrowLeft, ArrowRight } from "lucide-react"
+
+const fetcher = (url: string) => fetch(url, { cache: "no-store" }).then((res) => res.json())
+type PublicPackage = { type: string; sessions: number; price: number; popular?: boolean; features?: { ar?: string[] } }
 
 export function PricingPreview() {
   const { t, locale, dir } = useI18n()
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight
 
-  const quranPackages = [
-    { sessions: 4, price: 15, popular: false },
-    { sessions: 8, price: 27, popular: true },
-    { sessions: 12, price: 38, popular: false },
-  ]
+  const { data: storedPackages } = useSWR<PublicPackage[]>("/api/public/packages", fetcher, { revalidateOnFocus: true })
+  const quranPackages = (Array.isArray(storedPackages) ? storedPackages : [])
+    .filter((pkg) => pkg.type === "quran")
+    .sort((a, b) => a.sessions - b.sessions)
 
   const features = [
     t("pricing.features.flexibility"),

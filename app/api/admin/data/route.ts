@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { verifyAdminSession } from "@/lib/admin-auth"
 import {
   getTeachers, setTeachers,
@@ -14,6 +15,13 @@ async function authGuard() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   return null
+}
+
+function revalidateForType(type: string) {
+  const paths = type === "packages" ? ["/", "/quran", "/arabic", "/admin"] : ["/", "/admin"]
+  for (const path of paths) revalidatePath(path)
+  revalidateTag(`admin-${type}`, "max")
+  revalidateTag("site-content", "max")
 }
 
 export async function GET(request: NextRequest) {
@@ -69,21 +77,24 @@ export async function POST(request: NextRequest) {
         const newItem = { ...data, id: Date.now().toString() }
         teachers.push(newItem)
         await setTeachers(teachers)
-        return NextResponse.json(newItem)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: newItem })
       }
       case "packages": {
         const packages = await getPackages()
         const newPkg = { ...data, id: Date.now().toString() }
         packages.push(newPkg)
         await setPackages(packages)
-        return NextResponse.json(newPkg)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: newPkg })
       }
       case "reviews": {
         const reviews = await getReviews()
         const newReview = { ...data, id: Date.now().toString(), createdAt: new Date().toISOString() }
         reviews.push(newReview)
         await setReviews(reviews)
-        return NextResponse.json(newReview)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: newReview })
       }
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
@@ -109,7 +120,8 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         teachers[idx] = { ...teachers[idx], ...data }
         await setTeachers(teachers)
-        return NextResponse.json(teachers[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: teachers[idx] })
       }
       case "packages": {
         const packages = await getPackages()
@@ -117,7 +129,8 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         packages[idx] = { ...packages[idx], ...data }
         await setPackages(packages)
-        return NextResponse.json(packages[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: packages[idx] })
       }
       case "reviews": {
         const reviews = await getReviews()
@@ -125,7 +138,8 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         reviews[idx] = { ...reviews[idx], ...data }
         await setReviews(reviews)
-        return NextResponse.json(reviews[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: reviews[idx] })
       }
       case "messages": {
         const messages = await getMessages()
@@ -133,11 +147,13 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         messages[idx] = { ...messages[idx], ...data }
         await setMessages(messages)
-        return NextResponse.json(messages[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: messages[idx] })
       }
       case "settings": {
         await setSettings(data)
-        return NextResponse.json(data)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data })
       }
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
@@ -163,22 +179,26 @@ export async function DELETE(request: NextRequest) {
       case "teachers": {
         const teachers = await getTeachers()
         await setTeachers(teachers.filter(t => t.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       case "packages": {
         const packages = await getPackages()
         await setPackages(packages.filter(p => p.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       case "reviews": {
         const reviews = await getReviews()
         await setReviews(reviews.filter(r => r.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       case "messages": {
         const messages = await getMessages()
         await setMessages(messages.filter(m => m.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
