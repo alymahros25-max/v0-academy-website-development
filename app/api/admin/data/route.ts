@@ -77,7 +77,8 @@ export async function POST(request: NextRequest) {
         const newItem = { ...data, id: Date.now().toString() }
         teachers.push(newItem)
         await setTeachers(teachers)
-        return NextResponse.json(newItem)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: newItem })
       }
       case "packages": {
         const packages = await getPackages()
@@ -92,7 +93,8 @@ export async function POST(request: NextRequest) {
         const newReview = { ...data, id: Date.now().toString(), createdAt: new Date().toISOString() }
         reviews.push(newReview)
         await setReviews(reviews)
-        return NextResponse.json(newReview)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: newReview })
       }
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
@@ -118,7 +120,8 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         teachers[idx] = { ...teachers[idx], ...data }
         await setTeachers(teachers)
-        return NextResponse.json(teachers[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: teachers[idx] })
       }
       case "packages": {
         const packages = await getPackages()
@@ -135,7 +138,8 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         reviews[idx] = { ...reviews[idx], ...data }
         await setReviews(reviews)
-        return NextResponse.json(reviews[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: reviews[idx] })
       }
       case "messages": {
         const messages = await getMessages()
@@ -143,11 +147,13 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         messages[idx] = { ...messages[idx], ...data }
         await setMessages(messages)
-        return NextResponse.json(messages[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: messages[idx] })
       }
       case "settings": {
         await setSettings(data)
-        return NextResponse.json(data)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data })
       }
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
@@ -173,7 +179,8 @@ export async function DELETE(request: NextRequest) {
       case "teachers": {
         const teachers = await getTeachers()
         await setTeachers(teachers.filter(t => t.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       case "packages": {
         const packages = await getPackages()
@@ -184,12 +191,14 @@ export async function DELETE(request: NextRequest) {
       case "reviews": {
         const reviews = await getReviews()
         await setReviews(reviews.filter(r => r.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       case "messages": {
         const messages = await getMessages()
         await setMessages(messages.filter(m => m.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       default:
         return NextResponse.json({ error: "Invalid type" }, { status: 400 })
