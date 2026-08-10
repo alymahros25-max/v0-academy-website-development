@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { verifyAdminSession } from "@/lib/admin-auth"
 import {
   getTeachers, setTeachers,
@@ -14,6 +15,13 @@ async function authGuard() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   return null
+}
+
+function revalidateForType(type: string) {
+  const paths = type === "packages" ? ["/", "/quran", "/arabic", "/admin"] : ["/", "/admin"]
+  for (const path of paths) revalidatePath(path)
+  revalidateTag(`admin-${type}`, "max")
+  revalidateTag("site-content", "max")
 }
 
 export async function GET(request: NextRequest) {
@@ -76,7 +84,8 @@ export async function POST(request: NextRequest) {
         const newPkg = { ...data, id: Date.now().toString() }
         packages.push(newPkg)
         await setPackages(packages)
-        return NextResponse.json(newPkg)
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: newPkg })
       }
       case "reviews": {
         const reviews = await getReviews()
@@ -117,7 +126,8 @@ export async function PUT(request: NextRequest) {
         if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 })
         packages[idx] = { ...packages[idx], ...data }
         await setPackages(packages)
-        return NextResponse.json(packages[idx])
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, data: packages[idx] })
       }
       case "reviews": {
         const reviews = await getReviews()
@@ -168,7 +178,8 @@ export async function DELETE(request: NextRequest) {
       case "packages": {
         const packages = await getPackages()
         await setPackages(packages.filter(p => p.id !== id))
-        return NextResponse.json({ success: true })
+        revalidateForType(type)
+        return NextResponse.json({ saved: true, deletedId: id })
       }
       case "reviews": {
         const reviews = await getReviews()
