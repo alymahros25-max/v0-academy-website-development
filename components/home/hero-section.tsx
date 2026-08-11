@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import { ArrowLeft, ArrowRight, Star } from "lucide-react"
+import { siteStats } from "@/lib/site-stats"
 
 export function HeroSection() {
   const { t, locale, dir } = useI18n()
@@ -86,7 +87,7 @@ export function HeroSection() {
                   ))}
                 </div>
                 <span className="ms-2">
-                  {locale === "ar" ? "+500 طالب" : locale === "en" ? "+500 Students" : "+500 Etudiants"}
+                  {locale === "ar" ? `+${siteStats.students} طالب` : locale === "en" ? `+${siteStats.students} Students` : `+${siteStats.students} Etudiants`}
                 </span>
               </div>
               <div className="flex items-center gap-1">
@@ -124,7 +125,7 @@ export function HeroSection() {
                     </span>
                   </div>
                   <div>
-                    <p className="font-bold text-foreground text-lg">15+</p>
+                    <p className="font-bold text-foreground text-lg">{siteStats.countries}+</p>
                     <p className="text-sm text-muted-foreground">
                       {locale === "ar"
                         ? "دولة حول العالم"

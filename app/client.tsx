@@ -8,14 +8,6 @@ import { StatsSection } from '@/components/home/stats-section'
 import { Suspense } from 'react'
 
 // Heavy components loaded dynamically
-const PricingPreview = dynamic(
-  () => import('@/components/home/pricing-preview').then(m => ({ default: m.PricingPreview })),
-  {
-    loading: () => <div className="min-h-96 bg-gradient-to-b from-muted/50 to-muted/25 animate-pulse" />,
-    ssr: true,
-  }
-)
-
 const TestimonialsPreview = dynamic(
   () => import('@/components/home/testimonials-preview').then(m => ({ default: m.TestimonialsPreview })),
   {
@@ -42,10 +34,6 @@ export default function HomePageClient() {
       <StatsSection />
 
       {/* Below the fold - Loaded dynamically */}
-      <Suspense fallback={<div className="min-h-96 bg-muted animate-pulse" />}>
-        <PricingPreview />
-      </Suspense>
-
       <Suspense fallback={<div className="min-h-80 bg-muted animate-pulse" />}>
         <TestimonialsPreview />
       </Suspense>

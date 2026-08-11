@@ -11,6 +11,7 @@ export interface SchemaContext {
 
 const BASE_URL = 'https://quran-elhafez.com'
 const SITE_NAME = 'أكاديمية الحافظ المتميز'
+import { siteStats } from './site-stats'
 
 /**
  * Generate Organization schema for company-wide structured data.
@@ -222,7 +223,9 @@ export function generateLocalBusinessSchema(): SchemaContext {
       'Arabic Language Foundation',
       'Tajweed',
     ],
-    foundingDate: '2024',
+    foundingDate: String(siteStats.foundedYear),
+    numberOfEmployees: siteStats.teachers,
+    areaServed: `${siteStats.countries} countries worldwide`,
     logo: {
       '@type': 'ImageObject',
       url: `${BASE_URL}/logo.png`,
