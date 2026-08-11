@@ -46,8 +46,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     'checkout-success': { title: 'تم الدفع بنجاح | أكاديمية الحافظ المتميز', description: 'شكراً لإتمام عملية الدفع.' },
     quran: {
       title: 'تحفيظ القرآن الكريم اون لاين | أكاديمية الحافظ المتميز',
-      description: 'حلقات تحفيظ قران اون لاين مع معلمين مجازين. تجويد وحفظ مع مرونة في المواعيد وأسعار مناسبة',
-      keywords: ['تحفيظ قران اون لاين', 'معلم قرآن', 'تجويد', 'حفظ قرآن'],
+      description: 'تحفيظ القرآن أونلاين للطلاب الناطقين بالعربية في الخليج وأمريكا وأوروبا وكندا، مع معلمين مجازين ومواعيد مرنة.',
+      keywords: ['تحفيظ القرآن أونلاين للعرب في الخارج', 'معلم قرآن عربي أونلاين', 'دروس تجويد عن بعد', 'Quran memorization classes for Arabs abroad'],
       alternates: getAlternates(pageRoutes.quran),
       openGraph: {
         title: 'تحفيظ القرآن الكريم اون لاين',
@@ -58,8 +58,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     },
     arabic: {
       title: 'تأسيس اللغة العربية للأطفال | أكاديمية الحافظ المتميز',
-      description: 'برامج تأسيس اللغة العربية بطرق حديثة. قراءة وكتابة وقواعد نحوية مع معلمين متخصصين',
-      keywords: ['تأسيس عربي', 'تعليم اللغة العربية', 'قراءة وكتابة', 'أطفال'],
+      description: 'تأسيس اللغة العربية أونلاين للطلاب الناطقين بالعربية في أي مكان بالعالم، مع قراءة وكتابة وقواعد ومواعيد مناسبة لفروق التوقيت.',
+      keywords: ['تأسيس اللغة العربية للأطفال العرب في المهجر', 'دروس عربية أونلاين للعرب خارج الوطن العربي', 'معلم عربي أونلاين', 'online Arabic classes for Arab children abroad'],
       alternates: getAlternates(pageRoutes.arabic),
       openGraph: {
         title: 'تأسيس اللغة العربية للأطفال',

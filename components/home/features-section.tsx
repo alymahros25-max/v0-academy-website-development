@@ -60,18 +60,18 @@ export function FeaturesSection() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
           {features.map((feature, idx) => {
             const Icon = featureIcons[idx]
             return (
-              <div key={idx} className="flex flex-col gap-4">
+              <div key={idx} className="mx-auto flex w-full max-w-xl flex-col gap-5 px-3 sm:px-0">
                 <div
                   data-feature-card
                   data-index={idx}
-                  className={`group rounded-2xl border bg-card p-6 shadow-sm transition-all duration-500 ease-out lg:p-8 ${
+                  className={`group rounded-2xl border bg-card p-7 shadow-md transition-all duration-700 ease-out will-change-transform sm:p-8 lg:p-8 ${
                     activeCard === idx
-                      ? "scale-[1.03] border-primary/40 shadow-xl"
-                      : "border-border"
+                      ? "scale-[1.06] border-primary/50 shadow-2xl ring-2 ring-primary/15"
+                      : "scale-100 border-border"
                   }`}
                 >
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
@@ -86,7 +86,7 @@ export function FeaturesSection() {
                 </div>
                 <Link
                   href={feature.href}
-                  className="mx-auto inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 py-3 text-center text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="mx-auto inline-flex min-h-12 items-center justify-center rounded-lg bg-[#b8d9c4] px-7 py-3 text-center text-sm font-bold text-foreground shadow-sm transition-all hover:bg-[#a6ceb5] hover:shadow-md"
                 >
                   {feature.label}
                 </Link>

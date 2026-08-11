@@ -23,9 +23,7 @@ export function HeroSection() {
           priority
           fetchpriority="high"
         />
-        {/* Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#b8d9c4]/80 via-[#b8d9c4]/70 to-[#b8d9c4]/85" />
-        <div className="absolute inset-0 islamic-pattern opacity-30" />
+
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
@@ -56,14 +54,14 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
               <Link
                 href="/classroom-moments"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-secondary-foreground rounded-xl font-bold text-lg transition-all hover:brightness-110 hover:shadow-xl hover:shadow-secondary/25 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#b8d9c4] px-8 py-4 text-lg font-bold text-foreground shadow-md transition-all hover:bg-[#a6ceb5] hover:shadow-xl hover:-translate-y-0.5"
               >
                 {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
                 <Arrow className="w-5 h-5" />
               </Link>
               <Link
                 href="/quran"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-primary-foreground/10 text-primary-foreground rounded-xl font-bold text-lg border border-primary-foreground/20 transition-all hover:bg-primary-foreground/20 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl border border-[#a6ceb5] bg-[#d8eadf] px-8 py-4 text-lg font-bold text-foreground shadow-md transition-all hover:bg-[#b8d9c4] hover:-translate-y-0.5"
               >
                 {t("hero.cta2")}
               </Link>

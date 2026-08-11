@@ -29,14 +29,14 @@ export function CTASection() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
 <Link
             href="/quran"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-secondary-foreground rounded-xl font-bold text-lg transition-all hover:brightness-110 hover:shadow-xl hover:shadow-secondary/25 hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#b8d9c4] px-8 py-4 text-lg font-bold text-foreground shadow-md transition-all hover:bg-[#a6ceb5] hover:shadow-xl hover:-translate-y-0.5"
           >
             {locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs du Coran"}
             <Arrow className="w-5 h-5" />
           </Link>
           <Link
             href="/arabic"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-primary-foreground/10 text-primary-foreground rounded-xl font-bold text-lg border border-primary-foreground/20 transition-all hover:bg-primary-foreground/20 hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#a6ceb5] bg-[#d8eadf] px-8 py-4 text-lg font-bold text-foreground shadow-md transition-all hover:bg-[#b8d9c4] hover:-translate-y-0.5"
           >
             {locale === "ar" ? "أسعار تأسيس العربي" : locale === "en" ? "Arabic Foundation Pricing" : "Tarifs de fondation arabe"}
             <Arrow className="w-5 h-5" />
