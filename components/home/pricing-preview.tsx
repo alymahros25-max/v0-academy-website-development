@@ -97,7 +97,7 @@ export function PricingPreview() {
 
 <Link
                 href="/quran"
-                className="block w-full rounded-xl bg-[#b8d9c4] py-3 text-center font-bold text-foreground shadow-sm transition-all hover:bg-[#a6ceb5] hover:-translate-y-0.5"
+                className="block w-full rounded-xl bg-primary py-3 text-center font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:-translate-y-0.5"
               >
                 {locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs du Coran"}
               </Link>

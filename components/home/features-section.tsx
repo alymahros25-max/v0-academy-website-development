@@ -86,7 +86,7 @@ export function FeaturesSection() {
                 </div>
                 <Link
                   href={feature.href}
-                  className="mx-auto inline-flex min-h-12 items-center justify-center rounded-lg bg-[#b8d9c4] px-7 py-3 text-center text-sm font-bold text-foreground shadow-sm transition-all hover:bg-[#a6ceb5] hover:shadow-md"
+                  className="mx-auto inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-7 py-3 text-center text-sm font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md"
                 >
                   {feature.label}
                 </Link>

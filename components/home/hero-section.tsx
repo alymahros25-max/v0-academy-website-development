@@ -13,11 +13,13 @@ export function HeroSection() {
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image Container */}
       <div className="absolute inset-0 bg-[#b8d9c4]">
+        <div className="absolute inset-x-0 top-0 h-[24%] bg-[#b8d9c4]" />
+        <div className="absolute inset-x-0 bottom-0 h-[18%] bg-[#b8d9c4]" />
         <Image
           src="/images/hero-children.jpg"
           alt="Children learning Quran"
           fill
-          className="object-contain md:object-cover object-center"
+          className="object-cover object-center [clip-path:inset(24%_0_18%_0)]"
           sizes="100vw"
           quality={85}
           priority
@@ -41,27 +43,29 @@ export function HeroSection() {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight text-balance mb-4">
-              أكاديمية الحافظ المتميز العالمية
-            </h1>
-            <p className="text-2xl md:text-3xl font-bold text-foreground mb-3">
-              تعليم القرآن تأسيس العربي
-            </p>
-            <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 text-pretty">
-              للناطقين بالعربية
-            </p>
+            <div className="mx-auto max-w-3xl rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:px-8 lg:py-7">
+              <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
+                أكاديمية الحافظ المتميز العالمية
+              </h1>
+              <p className="mt-3 text-2xl font-bold text-foreground md:text-3xl">
+                تعليم القرآن تأسيس العربي
+              </p>
+              <p className="mt-2 text-xl leading-relaxed text-foreground/80 md:text-2xl">
+                للناطقين بالعربية
+              </p>
+            </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
               <Link
                 href="/classroom-moments"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#b8d9c4] px-8 py-4 text-lg font-bold text-foreground shadow-md transition-all hover:bg-[#a6ceb5] hover:shadow-xl hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5"
               >
                 {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
                 <Arrow className="w-5 h-5" />
               </Link>
               <Link
                 href="/quran"
-                className="inline-flex items-center gap-2 rounded-xl border border-[#a6ceb5] bg-[#d8eadf] px-8 py-4 text-lg font-bold text-foreground shadow-md transition-all hover:bg-[#b8d9c4] hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-8 py-4 text-lg font-bold text-primary shadow-md transition-all hover:bg-primary/20 hover:-translate-y-0.5"
               >
                 {t("hero.cta2")}
               </Link>
