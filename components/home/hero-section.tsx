@@ -43,7 +43,7 @@ export function HeroSection() {
               </span>
             </div>
 
-            <div className="mx-auto max-w-3xl rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:px-8 lg:py-7">
+            <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
                 أكاديمية الحافظ المتميز العالمية
               </h1>
@@ -65,7 +65,7 @@ export function HeroSection() {
               </Link>
               <Link
                 href="/quran"
-                className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-8 py-4 text-lg font-bold text-primary shadow-md transition-all hover:bg-primary/20 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-background/85 px-8 py-4 text-lg font-bold text-primary shadow-lg backdrop-blur-sm transition-all hover:bg-background hover:-translate-y-0.5"
               >
                 {t("hero.cta2")}
               </Link>

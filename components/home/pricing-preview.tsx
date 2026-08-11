@@ -14,7 +14,7 @@ export function PricingPreview() {
 
   const { data: storedPackages } = useSWR<PublicPackage[]>("/api/public/packages", fetcher, { revalidateOnFocus: true })
   const quranPackages = (Array.isArray(storedPackages) ? storedPackages : [])
-    .filter((pkg) => pkg.type === "quran")
+    .filter((pkg) => pkg.type === "quran" && !(pkg.price === 15 && pkg.popular))
     .sort((a, b) => a.sessions - b.sessions)
 
   const features = [

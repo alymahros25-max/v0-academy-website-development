@@ -46,8 +46,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     'checkout-success': { title: 'تم الدفع بنجاح | أكاديمية الحافظ المتميز', description: 'شكراً لإتمام عملية الدفع.' },
     quran: {
       title: 'تحفيظ القرآن الكريم اون لاين | أكاديمية الحافظ المتميز',
-      description: 'تحفيظ القرآن أونلاين للطلاب الناطقين بالعربية في الخليج وأمريكا وأوروبا وكندا، مع معلمين مجازين ومواعيد مرنة.',
-      keywords: ['تحفيظ القرآن أونلاين للعرب في الخارج', 'معلم قرآن عربي أونلاين', 'دروس تجويد عن بعد', 'Quran memorization classes for Arabs abroad'],
+      description: 'تحفيظ القرآن أونلاين للطلاب الناطقين بالعربية في الخليج والأردن وأوروبا وأمريكا وكندا، مع معلمين مجازين ومواعيد مرنة.',
+      keywords: ['تحفيظ القرآن للناطقين بالعربية في الخليج', 'تحفيظ قرآن أونلاين في الأردن', 'تحفيظ القرآن للعرب في أوروبا وأمريكا', 'معلم قرآن عربي أونلاين', 'Quran memorization classes for Arabic speakers abroad'],
       alternates: getAlternates(pageRoutes.quran),
       openGraph: {
         title: 'تحفيظ القرآن الكريم اون لاين',
@@ -58,8 +58,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     },
     arabic: {
       title: 'تأسيس اللغة العربية للأطفال | أكاديمية الحافظ المتميز',
-      description: 'تأسيس اللغة العربية أونلاين للطلاب الناطقين بالعربية في أي مكان بالعالم، مع قراءة وكتابة وقواعد ومواعيد مناسبة لفروق التوقيت.',
-      keywords: ['تأسيس اللغة العربية للأطفال العرب في المهجر', 'دروس عربية أونلاين للعرب خارج الوطن العربي', 'معلم عربي أونلاين', 'online Arabic classes for Arab children abroad'],
+      description: 'تأسيس اللغة العربية أونلاين للطلاب الناطقين بالعربية في الخليج والأردن وأوروبا وأمريكا وكندا، مع قراءة وكتابة وقواعد ومواعيد مناسبة لفروق التوقيت.',
+      keywords: ['تأسيس العربية للناطقين بالعربية في الخليج', 'دروس تأسيس عربي أونلاين في الأردن', 'تعليم العربية للأطفال العرب في أوروبا وأمريكا', 'معلم لغة عربية أونلاين', 'online Arabic classes for Arabic speakers abroad'],
       alternates: getAlternates(pageRoutes.arabic),
       openGraph: {
         title: 'تأسيس اللغة العربية للأطفال',
