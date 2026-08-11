@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import {
@@ -15,6 +16,26 @@ const featureIcons = [Award, Clock, User, BookOpen, Eye, DollarSign]
 
 export function FeaturesSection() {
   const { t, locale } = useI18n()
+  const sectionRef = useRef<HTMLElement>(null)
+  const [activeCard, setActiveCard] = useState(0)
+
+  useEffect(() => {
+    const cards = sectionRef.current?.querySelectorAll<HTMLElement>("[data-feature-card]")
+    if (!cards?.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (visible) setActiveCard(Number((visible.target as HTMLElement).dataset.index))
+      },
+      { rootMargin: "-35% 0px -35% 0px", threshold: [0.15, 0.5, 0.85] },
+    )
+
+    cards.forEach((card) => observer.observe(card))
+    return () => observer.disconnect()
+  }, [])
 
   const features = [
     { title: t("features.1.title"), desc: t("features.1.desc"), href: "/quran", label: locale === "ar" ? "أسعار تحفيظ القرآن" : "Quran Pricing" },
@@ -26,7 +47,7 @@ export function FeaturesSection() {
   ]
 
   return (
-    <section className="py-20 lg:py-28 bg-muted/30 islamic-pattern">
+    <section ref={sectionRef} className="py-20 lg:py-28 bg-muted/30 islamic-pattern">
       <div className="mx-auto max-w-7xl px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -43,10 +64,16 @@ export function FeaturesSection() {
           {features.map((feature, idx) => {
             const Icon = featureIcons[idx]
             return (
-              <div
-                key={idx}
-                className="group bg-card rounded-2xl p-6 lg:p-8 shadow-sm border border-border hover:shadow-xl hover:border-primary/30 hover:-translate-y-1 transition-all duration-300"
-              >
+              <div key={idx} className="flex flex-col gap-4">
+                <div
+                  data-feature-card
+                  data-index={idx}
+                  className={`group rounded-2xl border bg-card p-6 shadow-sm transition-all duration-500 ease-out lg:p-8 ${
+                    activeCard === idx
+                      ? "scale-[1.03] border-primary/40 shadow-xl"
+                      : "border-border"
+                  }`}
+                >
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                   <Icon className="w-7 h-7 text-primary group-hover:text-primary-foreground transition-colors" />
                 </div>
@@ -56,9 +83,10 @@ export function FeaturesSection() {
                 <p className="text-muted-foreground leading-relaxed mb-6">
                   {feature.desc}
                 </p>
+                </div>
                 <Link
                   href={feature.href}
-                  className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="mx-auto inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-6 py-3 text-center text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   {feature.label}
                 </Link>

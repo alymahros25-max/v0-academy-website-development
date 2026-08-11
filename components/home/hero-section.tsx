@@ -12,7 +12,7 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image Container */}
-      <div className="absolute inset-0 bg-primary/90">
+      <div className="absolute inset-0 bg-[#b8d9c4]">
         <Image
           src="/images/hero-children.jpg"
           alt="Children learning Quran"
@@ -24,7 +24,7 @@ export function HeroSection() {
           fetchpriority="high"
         />
         {/* Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/75 to-primary/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#b8d9c4]/80 via-[#b8d9c4]/70 to-[#b8d9c4]/85" />
         <div className="absolute inset-0 islamic-pattern opacity-30" />
       </div>
 
@@ -43,12 +43,14 @@ export function HeroSection() {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary-foreground leading-tight text-balance mb-6">
-              {t("hero.title")}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight text-balance mb-4">
+              أكاديمية الحافظ المتميز العالمية
             </h1>
-
-            <p className="text-lg md:text-xl text-primary-foreground/80 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 text-pretty">
-              {t("hero.subtitle")}
+            <p className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+              تعليم القرآن تأسيس العربي
+            </p>
+            <p className="text-xl md:text-2xl text-foreground/80 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 text-pretty">
+              للناطقين بالعربية
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
