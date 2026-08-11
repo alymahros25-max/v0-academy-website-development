@@ -18,10 +18,11 @@ export function Footer() {
   ]
 
   const serviceLinks = [
-    { href: "/quran", label: locale === "ar" ? "تحفيظ القرآن وأسعار القرآن" : locale === "en" ? "Quran & Pricing" : "Coran et tarifs" },
-    { href: "/arabic", label: locale === "ar" ? "تأسيس العربي وأسعار العربي" : locale === "en" ? "Arabic Foundation & Pricing" : "Fondation arabe et tarifs" },
+    { href: "/quran", label: locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs mémorisation du Coran" },
+    { href: "/arabic", label: locale === "ar" ? "أسعار تأسيس العربي" : locale === "en" ? "Arabic Foundation Pricing" : "Tarifs fondation arabe" },
     { href: "/games", label: t("nav.games") },
     { href: "/library", label: t("nav.library") },
+    { href: "/classroom-moments", label: locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours" },
   ]
 
   const legalLinks = [

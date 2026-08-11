@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import {
   Award,
@@ -13,15 +14,15 @@ import {
 const featureIcons = [Award, Clock, User, BookOpen, Eye, DollarSign]
 
 export function FeaturesSection() {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
 
   const features = [
-    { title: t("features.1.title"), desc: t("features.1.desc") },
-    { title: t("features.2.title"), desc: t("features.2.desc") },
-    { title: t("features.3.title"), desc: t("features.3.desc") },
-    { title: t("features.4.title"), desc: t("features.4.desc") },
-    { title: t("features.5.title"), desc: t("features.5.desc") },
-    { title: t("features.6.title"), desc: t("features.6.desc") },
+    { title: t("features.1.title"), desc: t("features.1.desc"), href: "/quran", label: locale === "ar" ? "أسعار تحفيظ القرآن" : "Quran Pricing" },
+    { title: t("features.2.title"), desc: t("features.2.desc"), href: "/arabic", label: locale === "ar" ? "أسعار تأسيس العربي" : "Arabic Foundation Pricing" },
+    { title: t("features.3.title"), desc: t("features.3.desc"), href: "/blog", label: locale === "ar" ? "مدونتنا" : "Our Blog" },
+    { title: t("features.4.title"), desc: t("features.4.desc"), href: "/games", label: locale === "ar" ? "الألعاب والمسابقات" : "Games & Quizzes" },
+    { title: t("features.5.title"), desc: t("features.5.desc"), href: "/library", label: locale === "ar" ? "المكتبة الرقمية" : "Digital Library" },
+    { title: t("features.6.title"), desc: t("features.6.desc"), href: "/classroom-moments", label: locale === "ar" ? "فيديوهات من حصصنا" : "Videos from our classes" },
   ]
 
   return (
@@ -52,9 +53,15 @@ export function FeaturesSection() {
                 <h3 className="text-xl font-bold text-foreground mb-3">
                   {feature.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed mb-6">
                   {feature.desc}
                 </p>
+                <Link
+                  href={feature.href}
+                  className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  {feature.label}
+                </Link>
               </div>
             )
           })}
