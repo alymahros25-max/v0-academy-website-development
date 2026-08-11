@@ -18,9 +18,11 @@ export function Footer() {
   ]
 
   const serviceLinks = [
-    { href: "/pricing", label: locale === "ar" ? "الأسعار" : locale === "en" ? "Pricing" : "Tarifs" },
+    { href: "/quran", label: locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs mémorisation du Coran" },
+    { href: "/arabic", label: locale === "ar" ? "أسعار تأسيس العربي" : locale === "en" ? "Arabic Foundation Pricing" : "Tarifs fondation arabe" },
     { href: "/games", label: t("nav.games") },
     { href: "/library", label: t("nav.library") },
+    { href: "/classroom-moments", label: locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours" },
   ]
 
   const legalLinks = [

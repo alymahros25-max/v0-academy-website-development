@@ -14,7 +14,7 @@ export function PricingPreview() {
 
   const { data: storedPackages } = useSWR<PublicPackage[]>("/api/public/packages", fetcher, { revalidateOnFocus: true })
   const quranPackages = (Array.isArray(storedPackages) ? storedPackages : [])
-    .filter((pkg) => pkg.type === "quran")
+    .filter((pkg) => pkg.type === "quran" && !(pkg.price === 15 && pkg.popular))
     .sort((a, b) => a.sessions - b.sessions)
 
   const features = [
@@ -95,15 +95,11 @@ export function PricingPreview() {
                 ))}
               </ul>
 
-              <Link
-                href="/contact"
-                className={`block w-full py-3 rounded-xl font-bold text-center transition-all hover:-translate-y-0.5 ${
-                  pkg.popular
-                    ? "bg-secondary text-secondary-foreground hover:brightness-110 hover:shadow-lg"
-                    : "bg-primary text-primary-foreground hover:brightness-110 hover:shadow-lg"
-                }`}
+<Link
+                href="/quran"
+                className="block w-full rounded-xl bg-primary py-3 text-center font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:-translate-y-0.5"
               >
-                {t("pricing.subscribe")}
+                {locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs du Coran"}
               </Link>
             </div>
           ))}

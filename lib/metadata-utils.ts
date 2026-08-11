@@ -17,7 +17,7 @@ export const defaultMetadata: Metadata = {
   },
 }
 
-export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms' | 'pricing' | 'checkout-success'): Metadata {
+export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teachers' | 'reviews' | 'games' | 'faq' | 'contact' | 'privacy' | 'terms' | 'checkout-success'): Metadata {
   const baseUrl = 'https://quran-elhafez.com'
   const pageRoutes: Record<string, string> = {
     quran: '/quran',
@@ -30,7 +30,6 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     contact: '/contact',
     privacy: '/privacy',
     terms: '/terms',
-    pricing: '/pricing',
     'checkout-success': '/checkout-success',
   }
 
@@ -44,12 +43,11 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
   })
 
   const metadataMap: Record<string, Metadata> = {
-    pricing: { title: 'الباقات والأسعار | أكاديمية الحافظ المتميز', description: 'اختر الباقة التعليمية المناسبة لك.' },
     'checkout-success': { title: 'تم الدفع بنجاح | أكاديمية الحافظ المتميز', description: 'شكراً لإتمام عملية الدفع.' },
     quran: {
       title: 'تحفيظ القرآن الكريم اون لاين | أكاديمية الحافظ المتميز',
-      description: 'حلقات تحفيظ قران اون لاين مع معلمين مجازين. تجويد وحفظ مع مرونة في المواعيد وأسعار مناسبة',
-      keywords: ['تحفيظ قران اون لاين', 'معلم قرآن', 'تجويد', 'حفظ قرآن'],
+      description: 'تحفيظ القرآن أونلاين للطلاب الناطقين بالعربية في الخليج والأردن وأوروبا وأمريكا وكندا، مع معلمين مجازين ومواعيد مرنة.',
+      keywords: ['تحفيظ القرآن للناطقين بالعربية في الخليج', 'تحفيظ قرآن أونلاين في الأردن', 'تحفيظ القرآن للعرب في أوروبا وأمريكا', 'معلم قرآن عربي أونلاين', 'Quran memorization classes for Arabic speakers abroad'],
       alternates: getAlternates(pageRoutes.quran),
       openGraph: {
         title: 'تحفيظ القرآن الكريم اون لاين',
@@ -60,8 +58,8 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     },
     arabic: {
       title: 'تأسيس اللغة العربية للأطفال | أكاديمية الحافظ المتميز',
-      description: 'برامج تأسيس اللغة العربية بطرق حديثة. قراءة وكتابة وقواعد نحوية مع معلمين متخصصين',
-      keywords: ['تأسيس عربي', 'تعليم اللغة العربية', 'قراءة وكتابة', 'أطفال'],
+      description: 'تأسيس اللغة العربية أونلاين للطلاب الناطقين بالعربية في الخليج والأردن وأوروبا وأمريكا وكندا، مع قراءة وكتابة وقواعد ومواعيد مناسبة لفروق التوقيت.',
+      keywords: ['تأسيس العربية للناطقين بالعربية في الخليج', 'دروس تأسيس عربي أونلاين في الأردن', 'تعليم العربية للأطفال العرب في أوروبا وأمريكا', 'معلم لغة عربية أونلاين', 'online Arabic classes for Arabic speakers abroad'],
       alternates: getAlternates(pageRoutes.arabic),
       openGraph: {
         title: 'تأسيس اللغة العربية للأطفال',

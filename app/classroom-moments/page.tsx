@@ -9,11 +9,11 @@ import { extractYouTubeId } from '@/lib/youtube-utils'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'لقطات من الحصص - أكاديمية الحافظ المتميز',
+  title: 'فيديوهات من حصصنا - أكاديمية الحافظ المتميز',
   description: 'شاهد فيديوهات الحصص واللقطات الترويجية للأكاديمية. حصص تفاعلية في التجويد واللغة العربية والقرآن الكريم.',
   keywords: 'فيديوهات حصص، تجويد، قرآن، حصص أون لاين، أكاديمية الحافظ',
   openGraph: {
-    title: 'لقطات من الحصص - أكاديمية الحافظ المتميز',
+    title: 'فيديوهات من حصصنا - أكاديمية الحافظ المتميز',
     description: 'شاهد فيديوهات الحصص واللقطات الترويجية للأكاديمية',
     url: 'https://quran-elhafez.com/classroom-moments',
     type: 'website',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'لقطات من الحصص - أكاديمية الحافظ المتميز',
+    title: 'فيديوهات من حصصنا - أكاديمية الحافظ المتميز',
     description: 'شاهد فيديوهات الحصص واللقطات الترويجية',
   },
 }
@@ -96,7 +96,7 @@ export default async function ClassroomMomentsPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-              لقطات من الحصص
+              فيديوهات من حصصنا
             </h1>
             <p className="text-lg text-gray-100 mb-6">
               شاهد فيديوهات حصصنا التفاعلية وتعرف على طريقة تدريسنا الحديثة في تجويد القرآن الكريم واللغة العربية

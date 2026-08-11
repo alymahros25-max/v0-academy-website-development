@@ -36,8 +36,8 @@ export default function QuranPageClient() {
 
   const packages = [
     { sessions: 4, price: 15, popular: false },
-    { sessions: 8, price: 27, popular: true },
-    { sessions: 12, price: 38, popular: false },
+    { sessions: 8, price: 28, popular: true },
+    { sessions: 12, price: 42, popular: false },
   ]
 
   const features = [
@@ -64,6 +64,7 @@ export default function QuranPageClient() {
               <p className="text-lg text-primary-foreground/80 leading-relaxed text-pretty">
                 {t("quran.hero.desc")}
               </p>
+              <p className="mt-4 text-base font-semibold text-secondary">تحفيظ القرآن للطلاب الناطقين بالعربية في أي مكان في العالم.</p>
             </div>
             <div className="hidden lg:block">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">

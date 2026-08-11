@@ -12,56 +12,61 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image Container */}
-      <div className="absolute inset-0 bg-primary/90">
+      <div className="absolute inset-0 bg-[#b8d9c4]">
+        <div className="absolute inset-x-0 top-0 h-[24%] bg-[#b8d9c4]" />
+        <div className="absolute inset-x-0 bottom-0 h-[18%] bg-[#b8d9c4]" />
         <Image
           src="/images/hero-children.jpg"
           alt="Children learning Quran"
           fill
-          className="object-contain md:object-cover object-center"
+          className="object-cover object-center [clip-path:inset(24%_0_18%_0)]"
           sizes="100vw"
           quality={85}
           priority
           fetchpriority="high"
         />
-        {/* Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/75 to-primary/90" />
-        <div className="absolute inset-0 islamic-pattern opacity-30" />
+
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
+        <div className="pointer-events-none absolute inset-x-0 top-20 flex justify-center px-4 lg:top-24">
+          <div className="pointer-events-auto inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full border border-primary/25 bg-background/60 px-4 py-2 text-center text-sm font-medium text-primary shadow-md backdrop-blur-sm sm:px-6 sm:text-base">
+            <Star className="size-4 shrink-0 fill-current" />
+            <span>
+              {locale === "ar"
+                ? "تعلم القرآن من أي مكان في العالم"
+                : locale === "en"
+                  ? "Learn Quran from anywhere in the world"
+                  : "Apprenez le Coran de partout dans le monde"}
+            </span>
+          </div>
+        </div>
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div className="text-center lg:text-start">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 text-secondary border border-secondary/30 mb-6 text-sm font-medium">
-              <Star className="w-4 h-4 fill-current" />
-              <span>
-                {locale === "ar"
-                  ? "تعلم القرآن من أي مكان في العالم"
-                  : locale === "en"
-                    ? "Learn Quran from anywhere in the world"
-                    : "Apprenez le Coran de partout dans le monde"}
-              </span>
+            <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
+              <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
+                أكاديمية الحافظ المتميز العالمية
+              </h1>
+              <p className="mt-3 text-2xl font-bold text-foreground md:text-3xl">
+                تعليم القرآن تأسيس العربي
+              </p>
+              <p className="mt-2 text-xl leading-relaxed text-foreground/80 md:text-2xl">
+                للناطقين بالعربية
+              </p>
             </div>
-
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-primary-foreground leading-tight text-balance mb-6">
-              {t("hero.title")}
-            </h1>
-
-            <p className="text-lg md:text-xl text-primary-foreground/80 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0 text-pretty">
-              {t("hero.subtitle")}
-            </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
               <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-secondary text-secondary-foreground rounded-xl font-bold text-lg transition-all hover:brightness-110 hover:shadow-xl hover:shadow-secondary/25 hover:-translate-y-0.5"
+                href="/classroom-moments"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5"
               >
-                {t("hero.cta")}
+                {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
                 <Arrow className="w-5 h-5" />
               </Link>
               <Link
                 href="/quran"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-primary-foreground/10 text-primary-foreground rounded-xl font-bold text-lg border border-primary-foreground/20 transition-all hover:bg-primary-foreground/20 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-background/85 px-8 py-4 text-lg font-bold text-primary shadow-lg backdrop-blur-sm transition-all hover:bg-background hover:-translate-y-0.5"
               >
                 {t("hero.cta2")}
               </Link>
@@ -88,7 +93,7 @@ export function HeroSection() {
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star
                     key={i}
-                    className="w-4 h-4 fill-secondary text-secondary"
+                    className="w-4 h-4 fill-[#d4af37] text-[#d4af37]"
                   />
                 ))}
                 <span className="ms-1">4.9/5</span>
