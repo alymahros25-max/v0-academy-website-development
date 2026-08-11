@@ -29,20 +29,21 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
+        <div className="pointer-events-none absolute inset-x-0 top-20 flex justify-center px-4 lg:top-24">
+          <div className="pointer-events-auto inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full border border-primary/25 bg-background/60 px-4 py-2 text-center text-sm font-medium text-primary shadow-md backdrop-blur-sm sm:px-6 sm:text-base">
+            <Star className="size-4 shrink-0 fill-current" />
+            <span>
+              {locale === "ar"
+                ? "تعلم القرآن من أي مكان في العالم"
+                : locale === "en"
+                  ? "Learn Quran from anywhere in the world"
+                  : "Apprenez le Coran de partout dans le monde"}
+            </span>
+          </div>
+        </div>
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div className="text-center lg:text-start">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 text-secondary border border-secondary/30 mb-6 text-sm font-medium">
-              <Star className="w-4 h-4 fill-current" />
-              <span>
-                {locale === "ar"
-                  ? "تعلم القرآن من أي مكان في العالم"
-                  : locale === "en"
-                    ? "Learn Quran from anywhere in the world"
-                    : "Apprenez le Coran de partout dans le monde"}
-              </span>
-            </div>
-
             <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
                 أكاديمية الحافظ المتميز العالمية
@@ -92,7 +93,7 @@ export function HeroSection() {
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star
                     key={i}
-                    className="w-4 h-4 fill-secondary text-secondary"
+                    className="w-4 h-4 fill-[#d4af37] text-[#d4af37]"
                   />
                 ))}
                 <span className="ms-1">4.9/5</span>

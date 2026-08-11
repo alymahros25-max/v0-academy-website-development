@@ -51,7 +51,7 @@ export function StatsSection() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, idx) => (
             <div key={idx} className="text-center">
-              <div className="text-4xl md:text-5xl font-extrabold text-secondary mb-2">
+              <div className="text-4xl md:text-5xl font-extrabold text-[#d4af37] mb-2">
                 <AnimatedNumber target={stat.value} />
                 {stat.suffix}
               </div>
