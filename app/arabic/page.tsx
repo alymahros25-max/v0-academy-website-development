@@ -32,9 +32,9 @@ export default function ArabicPage() {
   const { t, locale } = useI18n()
 
   const packages = [
-    { sessions: 4, price: 24, popular: false },
-    { sessions: 8, price: 38, popular: true },
-    { sessions: 12, price: 50, popular: false },
+    { sessions: 4, price: 20, popular: false },
+    { sessions: 8, price: 36, popular: true },
+    { sessions: 12, price: 54, popular: false },
   ]
 
   const features = [
@@ -61,6 +61,7 @@ export default function ArabicPage() {
               <p className="text-lg text-primary-foreground/80 leading-relaxed text-pretty">
                 {t("arabic.hero.desc")}
               </p>
+              <p className="mt-4 text-base font-semibold text-secondary">تأسيس اللغة العربية للطلاب الناطقين بالعربية في أي مكان في العالم.</p>
             </div>
             <div className="hidden lg:block">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">

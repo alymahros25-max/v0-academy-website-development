@@ -18,7 +18,8 @@ export function Footer() {
   ]
 
   const serviceLinks = [
-    { href: "/pricing", label: locale === "ar" ? "الأسعار" : locale === "en" ? "Pricing" : "Tarifs" },
+    { href: "/quran", label: locale === "ar" ? "تحفيظ القرآن وأسعار القرآن" : locale === "en" ? "Quran & Pricing" : "Coran et tarifs" },
+    { href: "/arabic", label: locale === "ar" ? "تأسيس العربي وأسعار العربي" : locale === "en" ? "Arabic Foundation & Pricing" : "Fondation arabe et tarifs" },
     { href: "/games", label: t("nav.games") },
     { href: "/library", label: t("nav.library") },
   ]

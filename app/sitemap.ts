@@ -129,7 +129,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/blog',
     '/contact',
     '/library',
-    '/pricing',
     '/refund-policy',
   ] as const
   secondaryPages.forEach((route) => {
