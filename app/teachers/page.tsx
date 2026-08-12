@@ -58,7 +58,7 @@ function TeacherCard({ teacher, index, locale }: { teacher: Teacher; index: numb
       </div>
       <div className="mb-4 flex flex-wrap gap-2">
         <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary"><Award className="size-3" />{teacher.ijazah ? "مجاز بالسند المتصل" : "معلم قرآن كريم"}</span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs font-bold text-muted-foreground"><Globe2 className="size-3" />{teacher.english ? "يتحدث الإنجليزية" : "يتحدث العربية فقط"}</span>
+        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs font-bold text-muted-foreground"><Globe2 className="size-3" />{teacher.english ? "يتحدث الإنجليزية" : isFemale ? "تتحدث العربية فقط" : "يتحدث العربية فقط"}</span>
         <span className="inline-flex items-center gap-1 rounded-full bg-[#d4af37]/15 px-3 py-1 text-xs font-bold text-[#806510]"><Check className="size-3" />يقدم حصة تجريبية مجانية</span>
       </div>
       <p className="min-h-28 text-sm leading-7 text-muted-foreground">{locale === "ar" ? teacher.bio.ar : teacher.bio.en}</p>
