@@ -1,6 +1,6 @@
 "use client"
 
-import { useI18n } from "@/lib/i18n"
+import { siteStats, siteStatLabels } from "@/lib/site-stats"
 import { useEffect, useState, useRef } from "react"
 
 function AnimatedNumber({ target, duration = 2000 }: { target: number; duration?: number }) {
@@ -35,13 +35,11 @@ function AnimatedNumber({ target, duration = 2000 }: { target: number; duration?
 }
 
 export function StatsSection() {
-  const { t } = useI18n()
-
   const stats = [
-    { value: 500, suffix: "+", label: t("stats.students") },
-    { value: 30, suffix: "+", label: t("stats.teachers") },
-    { value: 15, suffix: "+", label: t("stats.countries") },
-    { value: 2000, suffix: "+", label: t("stats.sessions") },
+    { value: siteStats.students, suffix: "+", label: siteStatLabels.students.ar },
+    { value: siteStats.teachers, suffix: "", label: siteStatLabels.teachers.ar },
+    { value: siteStats.countries, suffix: "", label: siteStatLabels.countries.ar },
+    { value: siteStats.experienceYears, suffix: "+", label: siteStatLabels.experience.ar },
   ]
 
   return (

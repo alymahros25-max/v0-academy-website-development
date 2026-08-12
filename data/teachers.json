@@ -1,98 +1,10 @@
 [
-  {
-    "id": "1",
-    "name": {
-      "ar": "الشيخ أحمد محمود",
-      "en": "Sheikh Ahmad Mahmoud",
-      "fr": "Cheikh Ahmad Mahmoud"
-    },
-    "specialty": {
-      "ar": "حفظ القرآن والقراءات العشر",
-      "en": "Quran Memorization & Ten Qira'at",
-      "fr": "Memorisation du Coran et Dix Qira'at"
-    },
-    "experience": "15",
-    "image": "/images/teacher-quran.jpg",
-    "active": true
-  },
-  {
-    "id": "2",
-    "name": {
-      "ar": "الأستاذة نورا الهاشمي",
-      "en": "Ustaza Noura Al-Hashimi",
-      "fr": "Ustaza Noura Al-Hashimi"
-    },
-    "specialty": {
-      "ar": "تحفيظ القرآن للأطفال",
-      "en": "Quran Teaching for Children",
-      "fr": "Enseignement du Coran pour enfants"
-    },
-    "experience": "10",
-    "image": "/images/teacher-quran.jpg",
-    "active": true
-  },
-  {
-    "id": "3",
-    "name": {
-      "ar": "الشيخ عبدالرحمن السيد",
-      "en": "Sheikh Abdulrahman Al-Sayed",
-      "fr": "Cheikh Abdulrahman Al-Sayed"
-    },
-    "specialty": {
-      "ar": "التجويد وعلم القراءات",
-      "en": "Tajweed & Qira'at Science",
-      "fr": "Tajweed et Science des Qira'at"
-    },
-    "experience": "12",
-    "image": "/images/teacher-quran.jpg",
-    "active": true
-  },
-  {
-    "id": "4",
-    "name": {
-      "ar": "الأستاذة فاطمة العلي",
-      "en": "Ustaza Fatima Al-Ali",
-      "fr": "Ustaza Fatima Al-Ali"
-    },
-    "specialty": {
-      "ar": "تأسيس اللغة العربية",
-      "en": "Arabic Language Foundation",
-      "fr": "Fondation de la langue arabe"
-    },
-    "experience": "8",
-    "image": "/images/teacher-quran.jpg",
-    "active": true
-  },
-  {
-    "id": "5",
-    "name": {
-      "ar": "الشيخ محمد حسن",
-      "en": "Sheikh Muhammad Hassan",
-      "fr": "Cheikh Muhammad Hassan"
-    },
-    "specialty": {
-      "ar": "الحفظ المتقن والمراجعة",
-      "en": "Expert Memorization & Review",
-      "fr": "Memorisation experte et revision"
-    },
-    "experience": "20",
-    "image": "/images/teacher-quran.jpg",
-    "active": true
-  },
-  {
-    "id": "6",
-    "name": {
-      "ar": "الأستاذة مريم خالد",
-      "en": "Ustaza Maryam Khalid",
-      "fr": "Ustaza Maryam Khalid"
-    },
-    "specialty": {
-      "ar": "تعليم العربية لغير الناطقين بها",
-      "en": "Arabic for Non-Native Speakers",
-      "fr": "Arabe pour non-arabophones"
-    },
-    "experience": "7",
-    "image": "/images/teacher-quran.jpg",
-    "active": true
-  }
+  {"id":"muhannad-ahmed","name":{"ar":"الشيخ / مهند أحمد","en":"Sheikh Muhannad Ahmed","fr":"Cheikh Muhannad Ahmed"},"role":{"ar":"مجاز بالقراءات العشر المتواترة بالسند المتصل","en":"Certified in the Ten Mutawatir Recitations","fr":"Certifié dans les dix lectures"},"experience":"10","specialty":{"ar":"القراءات العشر والتجويد العملي","en":"Ten Recitations & Practical Tajweed","fr":"Dix lectures et Tajweed"},"bio":{"ar":"خبير في التعامل مع الطلاب والأطفال في الخليج والمهجر، ويفهم الثقافات واللهجات المحلية في السعودية والإمارات وقطر. يجمع بين الهيبة والرفق مع تصحيح فوري ومراجعة متكاملة.","en":"Experienced with Arab students and children across the Gulf and diaspora communities, with a warm and precise teaching style.","fr":"Expert avec les élèves arabophones du Golfe et de la diaspora."},"gender":"male","kids":true,"ijazah":true,"english":false,"regions":["Gulf","Europe","North America"],"image":"/images/teacher-quran.jpg","active":true},
+  {"id":"amani-al-rifi","name":{"ar":"الأستاذة / أماني الريفي","en":"Ustadha Amani Al-Rifi","fr":"Ustadha Amani Al-Rifi"},"role":{"ar":"معلمة مجازة برواية حفص عن عاصم","en":"Hafs recitation teacher","fr":"Enseignante Hafs"},"experience":"10","specialty":{"ar":"تحفيظ الأطفال والتأسيس القرآني","en":"Children's Quran Foundation","fr":"Fondation coranique pour enfants"},"bio":{"ar":"متخصصة في تدريس أبناء وبنات الجاليات العربية في أوروبا وأمريكا، مع فهم للهجة الخليجية وصبر كبير على الأطفال وتأسيس نطق كلمات القرآن.","en":"Patiently teaches Arab children in Europe and the United States with interactive review and correction.","fr":"Enseignante patiente pour les enfants arabophones en Europe et aux États-Unis."},"gender":"female","kids":true,"ijazah":true,"english":true,"regions":["Gulf","Europe","North America"],"image":"/images/teacher-quran.jpg","active":true},
+  {"id":"jihad-hamouda","name":{"ar":"الأستاذة / جهاد حمودة","en":"Ustadha Jihad Hamouda","fr":"Ustadha Jihad Hamouda"},"role":{"ar":"مجازة بحفص ومتخصصة في تأسيس العربية للناطقين بها","en":"Hafs & Arabic Foundation Teacher","fr":"Hafs et fondation arabe"},"experience":"5","specialty":{"ar":"تأسيس القراءة والكتابة والتجويد","en":"Arabic Literacy & Tajweed","fr":"Lecture, écriture et Tajweed"},"bio":{"ar":"متخصصة في تدريس الناطقين بالعربية في أوروبا وأمريكا والخليج، وتتحدث الإنجليزية بطلاقة لتسهيل الشرح للجيل الجديد في المهجر.","en":"An engaging bilingual teacher for Arabic-speaking children and girls in the Gulf and Western diaspora.","fr":"Enseignante bilingue pour les enfants arabophones."},"gender":"female","kids":true,"ijazah":true,"english":true,"regions":["Gulf","Europe","North America"],"image":"/images/teacher-quran.jpg","active":true},
+  {"id":"maryam-mohamed","name":{"ar":"الأستاذة / مريم محمد","en":"Ustadha Maryam Mohamed","fr":"Ustadha Maryam Mohamed"},"role":{"ar":"مجازة بحفص ومتخصصة في التأسيس اللغوي","en":"Hafs & Arabic Foundation Teacher","fr":"Hafs et fondation linguistique"},"experience":"5","specialty":{"ar":"تأسيس العربية ومخارج الحروف","en":"Arabic Foundation & Pronunciation","fr":"Fondation arabe et articulation"},"bio":{"ar":"موجهة للطالبات والأطفال في الخليج وأمريكا، توفر بيئة مريحة وتتعامل بلطف وصبر مع مختلف اللهجات ومستويات القراءة والكتابة.","en":"A caring teacher for Arab girls and children in the Gulf and the United States.","fr":"Enseignante douce pour les filles et les enfants arabophones."},"gender":"female","kids":true,"ijazah":true,"english":false,"regions":["Gulf","North America"],"image":"/images/teacher-quran.jpg","active":true},
+  {"id":"israa-elsayed","name":{"ar":"الأستاذة / إسراء السيد","en":"Ustadha Israa El-Sayed","fr":"Ustadha Israa El-Sayed"},"role":{"ar":"مجازة بحفص وإجازة تأسيس القراءة والكتابة","en":"Hafs & Arabic Literacy Teacher","fr":"Hafs et alphabétisation arabe"},"experience":"10","specialty":{"ar":"التجويد التطبيقي والقراءة والكتابة","en":"Applied Tajweed & Arabic Literacy","fr":"Tajweed appliqué et alphabétisation"},"bio":{"ar":"تملك خبرة واسعة مع أبناء المغتربين في الغرب ودول مجلس التعاون، وتطبق معايير تعليمية عالمية مع انضباط ولين.","en":"Brings international academy experience to Arab expat children in the West and Gulf.","fr":"Expérience internationale avec les enfants arabophones."},"gender":"female","kids":true,"ijazah":true,"english":true,"regions":["Gulf","Europe","North America"],"image":"/images/teacher-quran.jpg","active":true},
+  {"id":"omar-samir","name":{"ar":"الشيخ / عمر سمير","en":"Sheikh Omar Samir","fr":"Cheikh Omar Samir"},"role":{"ar":"مجاز برواية حفص عن عاصم","en":"Hafs Quran Teacher","fr":"Enseignant Hafs"},"experience":"10","specialty":{"ar":"المخارج والتجويد والتصحيح المكثف","en":"Makharij, Tajweed & Intensive Review","fr":"Makharij et Tajweed"},"bio":{"ar":"يتحدث الإنجليزية بطلاقة، ومتمكن من تدريس طلاب الخليج والطلاب العرب في أمريكا وبريطانيا، بأسلوب سلس ومشجع.","en":"Fluent English speaker who supports Arabic-speaking students in the Gulf, USA and UK.","fr":"Parle anglais couramment et enseigne aux élèves arabophones."},"gender":"male","kids":true,"ijazah":true,"english":true,"regions":["Gulf","Europe","North America"],"image":"/images/teacher-quran.jpg","active":true},
+  {"id":"mahmoud-momtaz","name":{"ar":"الشيخ / محمود ممتاز","en":"Sheikh Mahmoud Momtaz","fr":"Cheikh Mahmoud Momtaz"},"role":{"ar":"معلم قرآن كريم ولغة عربية قدير","en":"Quran & Arabic Teacher","fr":"Enseignant Coran et arabe"},"experience":"10","specialty":{"ar":"خطط الحفظ والمتابعة والانضباط","en":"Structured Memorization Plans","fr":"Plans de mémorisation"},"bio":{"ar":"متخصص في خطط دراسية جادة لأبناء العائلات العربية في السعودية والإمارات والولايات المتحدة وأوروبا، مع متابعة مستمرة.","en":"Builds structured learning plans for Arab families in the Gulf, United States and Europe.","fr":"Plans structurés pour les familles arabophones."},"gender":"male","kids":true,"ijazah":false,"english":true,"regions":["Gulf","Europe","North America"],"image":"/images/teacher-quran.jpg","active":true},
+  {"id":"sanaa-mohamed","name":{"ar":"الأستاذة / سناء محمد","en":"Ustadha Sanaa Mohamed","fr":"Ustadha Sanaa Mohamed"},"role":{"ar":"مجازة برواية حفص عن عاصم","en":"Hafs Quran Teacher","fr":"Enseignante Hafs"},"experience":"10","specialty":{"ar":"تعليم النساء والفتيات وكبار السن","en":"Quran for Women, Girls & Seniors","fr":"Coran pour femmes et seniors"},"bio":{"ar":"متخصصة في تعليم النساء والفتيات وكبار السن في الخليج ودول المهجر، بأسلوب راقٍ وصبور ومناسب لمختلف الأعمار.","en":"A respectful, patient teacher for Arabic-speaking women, girls and seniors across the Gulf and diaspora.","fr":"Enseignante patiente pour femmes, filles et seniors."},"gender":"female","kids":true,"ijazah":true,"english":false,"regions":["Gulf","Europe","North America"],"image":"/images/teacher-quran.jpg","active":true}
 ]
