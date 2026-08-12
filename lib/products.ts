@@ -69,7 +69,7 @@ export const PRODUCTS: Product[] = [
       en: 'Extended package of 8 individual sessions with faster progress and comprehensive tracking',
       fr: 'Forfait étendu de 8 sessions avec un progrès plus rapide et un suivi complet',
     },
-    priceInCents: 2800, // $28.00
+    priceInCents: 2700, // $27.00
     category: 'quran',
     sessions: 8,
     features: {
@@ -90,7 +90,7 @@ export const PRODUCTS: Product[] = [
       en: 'Comprehensive package of 12 sessions with integrated learning plan and advanced tracking',
       fr: 'Forfait complet de 12 sessions avec plan pédagogique intégré et suivi avancé',
     },
-    priceInCents: 4200, // $42.00
+    priceInCents: 3800, // $38.00
     category: 'quran',
     sessions: 12,
     features: {
@@ -115,7 +115,7 @@ export const PRODUCTS: Product[] = [
       en: 'Complete package of 4 individual sessions for Arabic foundation from scratch',
       fr: 'Forfait complet de 4 sessions pour les bases de la langue arabe',
     },
-    priceInCents: 2000, // $20.00
+    priceInCents: 2400, // $24.00
     category: 'arabic',
     sessions: 4,
     features: {
@@ -136,7 +136,7 @@ export const PRODUCTS: Product[] = [
       en: 'Extended package of 8 sessions with steady progress through foundational levels',
       fr: 'Forfait étendu de 8 sessions avec des progrès constants aux niveaux fondamentaux',
     },
-    priceInCents: 3600, // $36.00
+    priceInCents: 3800, // $38.00
     category: 'arabic',
     sessions: 8,
     features: {
@@ -157,7 +157,7 @@ export const PRODUCTS: Product[] = [
       en: 'Comprehensive package of 12 sessions with integrated curriculum and full assessment',
       fr: 'Forfait complet de 12 sessions avec programme intégré et évaluation complète',
     },
-    priceInCents: 5400, // $54.00
+    priceInCents: 5000, // $50.00
     category: 'arabic',
     sessions: 12,
     features: {

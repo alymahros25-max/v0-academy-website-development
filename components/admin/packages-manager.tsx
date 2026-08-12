@@ -34,12 +34,23 @@ export function PackagesManager() {
 
   async function handleSave() {
     try {
+      const packageData = {
+        id: editingId || `${formData.type}-${formData.sessions}-${Date.now()}`,
+        type: formData.type,
+        name: { ar: formData.name, en: `${formData.sessions} Sessions Package`, fr: `Forfait ${formData.sessions} séances` },
+        sessions: formData.sessions,
+        price: formData.price,
+        duration: formData.duration,
+        features: { ar: formData.features.split('،').map((item) => item.trim()).filter(Boolean), en: formData.features.split(',').map((item) => item.trim()).filter(Boolean), fr: formData.features.split(',').map((item) => item.trim()).filter(Boolean) },
+        popular: false,
+        active: true,
+      }
       const response = await fetch('/api/admin/data', {
         method: editingId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingId
-          ? { type: 'packages', id: editingId, data: formData }
-          : { type: 'packages', data: formData })
+          ? { type: 'packages', id: editingId, data: packageData }
+          : { type: 'packages', data: packageData })
       })
 
       if (response.ok) {
@@ -68,7 +79,7 @@ export function PackagesManager() {
   }
 
   function handleEdit(pkg: any) {
-    setFormData(pkg)
+    setFormData({ ...formData, name: pkg.name?.ar || '', type: pkg.type, sessions: pkg.sessions, price: Number(pkg.price), duration: pkg.duration || 30, features: pkg.features?.ar?.join('، ') || '' })
     setEditingId(pkg.id)
     setIsEditing(true)
   }
@@ -152,9 +163,9 @@ export function PackagesManager() {
           <Card key={pkg.id} className="p-4">
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="font-semibold">{pkg.name}</h4>
+                <h4 className="font-semibold">{pkg.name?.ar || `${pkg.sessions} حصص`}</h4>
                 <p className="text-sm text-gray-600">{pkg.sessions} حصة - ${pkg.price}</p>
-                <p className="text-sm text-gray-500">{pkg.features}</p>
+                <p className="text-sm text-gray-500">{pkg.features?.ar?.join('، ')}</p>
               </div>
               <div className="flex gap-2">
                 <Button onClick={() => handleEdit(pkg)} variant="outline" size="sm">

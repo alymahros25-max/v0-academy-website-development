@@ -43,8 +43,10 @@ export interface Teacher {
 export interface Package {
   id: string
   type: "quran" | "arabic"
+  name?: Record<string, string>
   sessions: number
   price: number
+  duration?: number
   popular: boolean
   features: Record<string, string[]>
   active: boolean
@@ -195,8 +197,77 @@ async function setPersistent<T extends Array<{ id?: string }> | SiteSettings>(co
 
 export const getTeachers = async () => getPersistent<Teacher[]>("teachers", await readData<Teacher[]>("teachers.json", defaultTeachers))
 export const setTeachers = async (data: Teacher[]) => { if (!(await setPersistent("teachers", data))) await writeData("teachers.json", data) }
-export const getPackages = async () => getPersistent<Package[]>("packages", await readData<Package[]>("packages.json", defaultPackages))
-export const setPackages = async (data: Package[]) => { if (!(await setPersistent("packages", data))) await writeData("packages.json", data) }
+type PackageRow = {
+  id: string
+  type: "quran" | "arabic"
+  name_ar: string
+  name_en: string
+  name_fr: string
+  sessions: number
+  price: number
+  duration: number
+  features_ar: string
+  features_en: string
+  features_fr: string
+  popular: boolean
+  active: boolean
+  sort_order: number
+}
+
+function packageRowToPackage(row: PackageRow): Package {
+  return {
+    id: row.id,
+    type: row.type,
+    name: { ar: row.name_ar, en: row.name_en, fr: row.name_fr },
+    sessions: row.sessions,
+    price: Number(row.price),
+    duration: row.duration,
+    popular: row.popular,
+    active: row.active,
+    features: {
+      ar: row.features_ar.split("،").map((item) => item.trim()).filter(Boolean),
+      en: row.features_en.split(",").map((item) => item.trim()).filter(Boolean),
+      fr: row.features_fr.split(",").map((item) => item.trim()).filter(Boolean),
+    },
+  }
+}
+
+function packageToRow(pkg: Package, index: number): PackageRow {
+  const features = pkg.features ?? { ar: [], en: [], fr: [] }
+  return {
+    id: pkg.id || `package-${index + 1}`,
+    type: pkg.type,
+    name_ar: pkg.name?.ar || `باقة ${pkg.sessions} ${pkg.sessions === 12 ? "حصة" : "حصص"}`,
+    name_en: pkg.name?.en || `${pkg.sessions} Sessions Package`,
+    name_fr: pkg.name?.fr || `Forfait ${pkg.sessions} séances`,
+    sessions: pkg.sessions,
+    price: pkg.price,
+    duration: 30,
+    features_ar: features.ar.join("، "),
+    features_en: features.en.join(", "),
+    features_fr: features.fr.join(", "),
+    popular: Boolean(pkg.popular),
+    active: pkg.active !== false,
+    sort_order: index + 1,
+  }
+}
+
+export const getPackages = async (): Promise<Package[]> => {
+  if (supabaseAdmin) {
+    const { data, error } = await supabaseAdmin.from("packages").select("*").order("type").order("sort_order")
+    if (!error && data?.length) return (data as PackageRow[]).map(packageRowToPackage)
+  }
+  return readData<Package[]>("packages.json", defaultPackages)
+}
+
+export const setPackages = async (data: Package[]) => {
+  if (supabaseAdmin) {
+    const { error } = await supabaseAdmin.from("packages").upsert(data.map(packageToRow), { onConflict: "id" })
+    if (error) throw error
+    return
+  }
+  await writeData("packages.json", data)
+}
 export const getReviews = async () => getPersistent<Review[]>("reviews", await readData<Review[]>("reviews.json", defaultReviews))
 export const setReviews = async (data: Review[]) => { if (!(await setPersistent("reviews", data))) await writeData("reviews.json", data) }
 export const getMessages = async () => getPersistent<ContactMessage[]>("messages", await readData<ContactMessage[]>("messages.json", []))
