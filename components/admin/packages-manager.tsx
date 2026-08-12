@@ -9,6 +9,7 @@ export function PackagesManager() {
   const [packages, setPackages] = useState<any[]>([])
   const [isEditing, setIsEditing] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [status, setStatus] = useState<{ kind: "success" | "error"; message: string } | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     type: 'quran',
@@ -26,9 +27,12 @@ export function PackagesManager() {
     try {
       const response = await fetch('/api/admin/data?type=packages')
       const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'تعذر تحميل الباقات')
       setPackages(Array.isArray(data) ? data : (data.packages || []))
     } catch (error) {
-      console.error('Failed to fetch packages:', error)
+      const message = error instanceof Error ? error.message : 'تحقق من الاتصال'
+      console.error('[v0] Failed to fetch packages:', error)
+      setStatus({ kind: 'error', message: `فشل تحميل الباقات: ${message}` })
     }
   }
 
@@ -53,12 +57,15 @@ export function PackagesManager() {
           : { type: 'packages', data: packageData })
       })
 
-      if (response.ok) {
-        resetForm()
-        fetchPackages()
-      }
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'تحقق من الاتصال')
+      resetForm()
+      await fetchPackages()
+      setStatus({ kind: 'success', message: 'تم الحفظ بنجاح' })
     } catch (error) {
-      console.error('Failed to save package:', error)
+      const message = error instanceof Error ? error.message : 'تحقق من الاتصال'
+      console.error('[v0] Failed to save package:', error)
+      setStatus({ kind: 'error', message: `فشل الحفظ: ${message}` })
     }
   }
 
@@ -70,11 +77,14 @@ export function PackagesManager() {
         method: 'DELETE'
       })
 
-      if (response.ok) {
-        fetchPackages()
-      }
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'تحقق من الاتصال')
+      await fetchPackages()
+      setStatus({ kind: 'success', message: 'تم حذف الباقة بنجاح' })
     } catch (error) {
-      console.error('Failed to delete package:', error)
+      const message = error instanceof Error ? error.message : 'تحقق من الاتصال'
+      console.error('[v0] Failed to delete package:', error)
+      setStatus({ kind: 'error', message: `فشل الحذف: ${message}` })
     }
   }
 
@@ -100,6 +110,7 @@ export function PackagesManager() {
   return (
     <div className="space-y-6">
       <Card className="p-6">
+        {status && <p role="status" className={`mb-4 rounded-lg border p-3 text-sm ${status.kind === 'success' ? 'border-green-200 bg-green-50 text-green-800' : 'border-red-200 bg-red-50 text-red-800'}`}>{status.message}</p>}
         <h3 className="text-lg font-semibold mb-4">إضافة/تعديل باقة</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

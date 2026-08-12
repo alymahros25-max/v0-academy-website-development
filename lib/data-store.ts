@@ -243,9 +243,9 @@ function packageToRow(pkg: Package, index: number): PackageRow {
     sessions: pkg.sessions,
     price: pkg.price,
     duration: 30,
-    features_ar: features.ar.join("، "),
-    features_en: features.en.join(", "),
-    features_fr: features.fr.join(", "),
+    features_ar: (features.ar ?? []).join("، "),
+    features_en: (features.en ?? features.ar ?? []).join(", "),
+    features_fr: (features.fr ?? features.ar ?? []).join(", "),
     popular: Boolean(pkg.popular),
     active: pkg.active !== false,
     sort_order: index + 1,
@@ -262,11 +262,13 @@ export const getPackages = async (): Promise<Package[]> => {
 
 export const setPackages = async (data: Package[]) => {
   if (supabaseAdmin) {
-    const { error } = await supabaseAdmin.from("packages").upsert(data.map(packageToRow), { onConflict: "id" })
+    const rows = data.map(packageToRow)
+    const { data: saved, error } = await supabaseAdmin.rpc("replace_packages_atomic", { payload: rows })
     if (error) throw error
-    return
+    return Array.isArray(saved) ? saved.map(packageRowToPackage) : data
   }
   await writeData("packages.json", data)
+  return data
 }
 export const getReviews = async () => getPersistent<Review[]>("reviews", await readData<Review[]>("reviews.json", defaultReviews))
 export const setReviews = async (data: Review[]) => { if (!(await setPersistent("reviews", data))) await writeData("reviews.json", data) }

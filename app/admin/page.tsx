@@ -103,7 +103,7 @@ export default function AdminDashboard() {
     { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star, group: "محتوى الموقع" },
     { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare, group: "محتوى الموقع" },
     { id: "cms", label: "صفحات الموقع والمحتوى", key: "admin.cms", icon: BookOpen, group: "محتوى الموقع" },
-    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى ا��موقع" },
+    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى ا����موقع" },
     { id: "library", label: "المكتبة الرقمية", key: "admin.library", icon: BookOpen, group: "محتوى الموقع" },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film, group: "الخدمات التعليمية" },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2, group: "الخدمات التعليمية" },
@@ -324,7 +324,7 @@ function PackagesTab() {
   const [editData, setEditData] = useState<Record<string, unknown>>({})
   const [message, setMessage] = useState("")
   const [showForm, setShowForm] = useState(false)
-  const [newPackage, setNewPackage] = useState({ type: "quran", sessions: 4, price: 15, duration: 30, popular: false, features: "" })
+  const [newPackage, setNewPackage] = useState({ type: "quran", name: "", sessions: 4, price: 15, duration: 30, popular: false, features: "" })
 
   const handleCreate = async () => {
     try {
@@ -334,6 +334,7 @@ function PackagesTab() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "packages", data: {
           type: newPackage.type,
+          name: { ar: newPackage.name || `باقة ${newPackage.sessions} حصص` },
           sessions: newPackage.sessions,
           price: newPackage.price,
           popular: newPackage.popular,
@@ -345,11 +346,11 @@ function PackagesTab() {
       if (!res.ok) throw new Error(result.error || "تعذر إضافة الباقة")
       setMessage("تمت إضافة الباقة بنجاح")
       setShowForm(false)
-      setNewPackage({ type: "quran", sessions: 4, price: 15, duration: 30, popular: false, features: "" })
+      setNewPackage({ type: "quran", name: "", sessions: 4, price: 15, duration: 30, popular: false, features: "" })
       globalMutate("/api/admin/data?type=packages")
     } catch (err) {
       console.error("Create package error:", err)
-      setMessage("تعذر إضافة الباقة")
+      setMessage(`فشل الحفظ: ${err instanceof Error ? err.message : "تحقق من الاتصال"}`)
     }
   }
 
@@ -357,10 +358,10 @@ function PackagesTab() {
     if (!confirm("هل أنت متأكد من حذف هذه الباقة؟")) return
     try {
       const res = await fetch(`/api/admin/data?type=packages&id=${id}`, { method: "DELETE" })
-      if (res.ok) {
-        setMessage("تم حذف الباقة بنجاح")
-        globalMutate("/api/admin/data?type=packages")
-      }
+      const result = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(result.error || "تحقق من الاتصال")
+      setMessage("تم حذف الباقة بنجاح")
+      globalMutate("/api/admin/data?type=packages")
     } catch (err) {
       console.error("Delete error:", err)
       setMessage("خطأ في الحذف")
@@ -412,6 +413,7 @@ function PackagesTab() {
         <div className="mb-6 bg-card rounded-2xl border border-border p-5 space-y-4">
           <h3 className="font-bold text-foreground">باقة جديدة</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <input aria-label="اسم الباقة" placeholder="اسم واضح للباقة" value={newPackage.name} onChange={(e) => setNewPackage({ ...newPackage, name: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" />
             <select aria-label="نوع الباقة" value={newPackage.type} onChange={(e) => setNewPackage({ ...newPackage, type: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm">
               <option value="quran">قرآن كريم</option><option value="arabic">لغة عربية</option>
             </select>
@@ -1276,7 +1278,7 @@ function ThemeCustomizerTab() {
   ]
   const [msg, setMsg] = useState("")
   const handleApply = () => {
-    setMsg("التعديل يتطلب تحديث ملف globals.css — تواصل مع المطور لتطبيق اللون الجديد.")
+    setMsg("التعديل يتطلب تحديث ملف globals.css — تواصل مع الم��ور لتطبيق اللون الجديد.")
   }
   return (
     <div className="space-y-6">
