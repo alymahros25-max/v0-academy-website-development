@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useI18n } from "@/lib/i18n"
 import { siteStats } from "@/lib/site-stats"
 import Image from "next/image"
@@ -89,7 +89,18 @@ function TeacherCard({ teacher, index, locale }: { teacher: Teacher; index: numb
 export default function TeachersPage() {
   const { t, locale } = useI18n()
   const [filter, setFilter] = useState<Filter>("all")
-  const filteredTeachers = useMemo(() => teachers.filter((teacher) => filter === "all" || (filter === "kids" && teacher.kids) || (filter === "male" && teacher.gender === "male") || (filter === "female" && teacher.gender === "female") || (filter === "ijazah" && teacher.ijazah)), [filter])
+  const [liveTeachers, setLiveTeachers] = useState<Teacher[]>(teachers)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch("/api/public/teachers", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Teacher data unavailable")))
+      .then((data: Teacher[]) => { if (!cancelled && Array.isArray(data) && data.length) setLiveTeachers(data) })
+      .catch(() => undefined)
+    return () => { cancelled = true }
+  }, [])
+
+  const filteredTeachers = useMemo(() => liveTeachers.filter((teacher) => filter === "all" || (filter === "kids" && teacher.kids) || (filter === "male" && teacher.gender === "male") || (filter === "female" && teacher.gender === "female") || (filter === "ijazah" && teacher.ijazah)), [filter, liveTeachers])
   return (
     <>
       <section className="relative overflow-hidden bg-primary pb-20 pt-32 lg:pb-28 lg:pt-40">
