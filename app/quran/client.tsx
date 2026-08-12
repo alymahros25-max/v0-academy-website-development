@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import useSWR from "swr"
 import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
@@ -34,11 +35,8 @@ export default function QuranPageClient() {
   const { t, locale } = useI18n()
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
 
-  const packages = [
-    { sessions: 4, price: 15, popular: false },
-    { sessions: 8, price: 28, popular: true },
-    { sessions: 12, price: 42, popular: false },
-  ]
+  const { data: livePackages } = useSWR<Array<{ id: string; type: string; name?: Record<string, string>; sessions: number; price: number; popular: boolean; active?: boolean }>>("/api/public/packages", (url) => fetch(url).then((res) => res.json()))
+  const packages = (livePackages ?? []).filter((pkg) => pkg.type === "quran" && pkg.active !== false)
 
   const features = [
     t("pricing.features.flexibility"),
@@ -154,7 +152,7 @@ export default function QuranPageClient() {
                     <BookOpen className={`w-8 h-8 ${pkg.popular ? "text-secondary" : "text-primary"}`} />
                   </div>
                   <p className={`font-bold text-lg mb-1 ${pkg.popular ? "text-primary-foreground" : "text-foreground"}`}>
-                    {pkg.sessions} {pkg.sessions > 10 ? t("pricing.session") : t("pricing.sessions")}
+                    {pkg.name?.[locale] || `${pkg.sessions} ${pkg.sessions > 10 ? t("pricing.session") : t("pricing.sessions")}`}
                   </p>
                   <div className="flex items-baseline justify-center gap-1 mb-1">
                     <span className="text-5xl font-extrabold">${pkg.price}</span>
