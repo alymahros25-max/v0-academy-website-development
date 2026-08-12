@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react"
 import { useI18n } from "@/lib/i18n"
 import { siteStats } from "@/lib/site-stats"
-import { Award, BookOpen, Check, Globe2, MessageCircle, Star } from "lucide-react"
+import Image from "next/image"
+import { Award, Check, Globe2, MessageCircle, Star } from "lucide-react"
 import teachers from "@/data/teachers.json"
 
 type Teacher = (typeof teachers)[number]
@@ -47,8 +48,8 @@ function TeacherCard({ teacher, index, locale }: { teacher: Teacher; index: numb
       <TeacherSchema teacher={teacher} />
       <div className={`absolute inset-x-0 top-0 h-1 ${index % 3 === 0 ? "bg-primary" : "bg-[#d4af37]"}`} />
       <div className="mb-5 flex items-start gap-4">
-        <div className={`flex size-16 shrink-0 items-center justify-center rounded-2xl text-2xl font-bold ${isFemale ? "bg-[#d4af37]/15 text-[#9b7b16]" : "bg-primary/10 text-primary"}`}>
-          {teacher.name.ar.charAt(teacher.name.ar.indexOf("/") + 2)}
+        <div className={`relative size-16 shrink-0 overflow-hidden rounded-2xl ${isFemale ? "bg-[#d4af37]/15" : "bg-primary/10"}`}>
+          <Image src={teacher.image} alt={`صورة رمزية لـ ${teacher.name.ar}`} fill sizes="64px" className="object-cover" />
         </div>
         <div className="min-w-0">
           <h2 className="text-lg font-bold text-foreground">{locale === "ar" ? teacher.name.ar : teacher.name.en}</h2>
@@ -57,10 +58,16 @@ function TeacherCard({ teacher, index, locale }: { teacher: Teacher; index: numb
       </div>
       <div className="mb-4 flex flex-wrap gap-2">
         <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary"><Award className="size-3" />{teacher.ijazah ? "مجاز بالسند المتصل" : "معلم قرآن كريم"}</span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs font-bold text-muted-foreground"><Globe2 className="size-3" />{teacher.english ? "يتحدث الإنجليزية" : "يفهم لهجة الخليج"}</span>
+        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 text-xs font-bold text-muted-foreground"><Globe2 className="size-3" />{teacher.english ? "يتحدث الإنجليزية" : "يتحدث العربية فقط"}</span>
         <span className="inline-flex items-center gap-1 rounded-full bg-[#d4af37]/15 px-3 py-1 text-xs font-bold text-[#806510]"><Check className="size-3" />يقدم حصة تجريبية مجانية</span>
       </div>
       <p className="min-h-28 text-sm leading-7 text-muted-foreground">{locale === "ar" ? teacher.bio.ar : teacher.bio.en}</p>
+      <div className="mt-4 grid gap-2 rounded-2xl bg-muted/50 p-4">
+        <p className="text-xs font-bold uppercase tracking-wide text-primary">مميزات المعلم</p>
+        <ul className="grid gap-2 text-sm leading-6 text-foreground">
+          {teacher.highlights.map((highlight) => <li key={highlight} className="flex items-start gap-2"><Check className="mt-1 size-4 shrink-0 text-primary" />{highlight}</li>)}
+        </ul>
+      </div>
       <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
         <div>
           <p className="text-xs text-muted-foreground">الخبرة</p>
