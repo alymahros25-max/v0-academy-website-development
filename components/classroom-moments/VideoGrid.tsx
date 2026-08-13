@@ -74,7 +74,7 @@ export function VideoGrid({ videos, language = 'ar', showCategories = true }: Vi
             onClick={() => setSelectedCategory(null)}
             className={`px-4 py-2 rounded-full font-medium transition-all ${
               selectedCategory === null
-                ? 'bg-[#1a4d2e] text-white'
+                ? 'bg-navy-primary text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
@@ -86,7 +86,7 @@ export function VideoGrid({ videos, language = 'ar', showCategories = true }: Vi
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-full font-medium transition-all ${
                 selectedCategory === cat
-                  ? 'bg-[#1a4d2e] text-white'
+                  ? 'bg-navy-primary text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
@@ -99,7 +99,7 @@ export function VideoGrid({ videos, language = 'ar', showCategories = true }: Vi
       {/* Featured Videos Section */}
       {featured.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold text-[#1a4d2e] mb-4">الحصص المميزة</h2>
+          <h2 className="text-2xl font-bold text-navy-primary mb-4">الحصص المميزة</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {featured.map((video, index) => (
               <VideoCard
@@ -123,7 +123,7 @@ export function VideoGrid({ videos, language = 'ar', showCategories = true }: Vi
       {regular.length > 0 && (
         <div>
           {featured.length > 0 && (
-            <h2 className="text-2xl font-bold text-[#1a4d2e] mb-4">باقي الحصص</h2>
+            <h2 className="text-2xl font-bold text-navy-primary mb-4">باقي الحصص</h2>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {regular.map((video, index) => (

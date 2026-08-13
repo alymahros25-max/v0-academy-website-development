@@ -95,7 +95,7 @@ export function TestimonialsPreview() {
         <div className="text-center">
           <Link
             href="/reviews"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors"
+            className="inline-flex items-center gap-2 py-3 text-navy-primary font-bold transition-colors hover:text-navy-light hover:underline underline-offset-4"
           >
             {locale === "ar" ? "عرض جميع الآراء" : locale === "en" ? "View all reviews" : "Voir tous les avis"}
           </Link>

@@ -86,9 +86,10 @@ export function FeaturesSection() {
                 </div>
                 <Link
                   href={feature.href}
-                  className="mx-auto inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-7 py-3 text-center text-sm font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:shadow-md"
+                  className="group/link mx-auto inline-flex min-h-12 items-center justify-center gap-2 py-3 text-center text-sm font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
                 >
                   {feature.label}
+                  <span aria-hidden="true" className="text-base transition-transform group-hover/link:-translate-x-1">←</span>
                 </Link>
               </div>
             )

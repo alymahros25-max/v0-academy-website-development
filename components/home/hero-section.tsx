@@ -13,9 +13,9 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image Container */}
-      <div className="absolute inset-0 bg-[#b8d9c4]">
-        <div className="absolute inset-x-0 top-0 h-[24%] bg-[#b8d9c4]" />
-        <div className="absolute inset-x-0 bottom-0 h-[18%] bg-[#b8d9c4]" />
+      <div className="absolute inset-0 bg-warm-bg">
+        <div className="absolute inset-x-0 top-0 h-[24%] bg-warm-bg" />
+        <div className="absolute inset-x-0 bottom-0 h-[18%] bg-warm-bg" />
         <Image
           src="/images/hero-children.jpg"
           alt="Children learning Quran"
@@ -30,7 +30,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
-        <div className="pointer-events-none absolute inset-x-0 top-20 flex justify-center px-4 lg:top-24">
+        <div className="pointer-events-none absolute inset-x-0 top-8 flex justify-center px-4 lg:top-12">
           <div className="pointer-events-auto inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full border border-primary/25 bg-background/60 px-4 py-2 text-center text-sm font-medium text-primary shadow-md backdrop-blur-sm sm:px-6 sm:text-base">
             <Star className="size-4 shrink-0 fill-current" />
             <span>
@@ -57,23 +57,7 @@ export function HeroSection() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-              <Link
-                href="/classroom-moments"
-                className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5"
-              >
-                {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
-                <Arrow className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/quran"
-                className="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-background/85 px-8 py-4 text-lg font-bold text-primary shadow-lg backdrop-blur-sm transition-all hover:bg-background hover:-translate-y-0.5"
-              >
-                {t("hero.cta2")}
-              </Link>
-            </div>
-
-            {/* Trust indicators */}
+                        {/* Trust indicators */}
             <div className="mt-10 flex items-center gap-6 justify-center lg:justify-start text-primary-foreground/70 text-sm">
               <div className="flex items-center gap-1">
                 <div className="flex -space-x-2 rtl:space-x-reverse">
@@ -94,7 +78,7 @@ export function HeroSection() {
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star
                     key={i}
-                    className="w-4 h-4 fill-[#d4af37] text-[#d4af37]"
+                    className="w-4 h-4 fill-gold-primary text-gold-primary"
                   />
                 ))}
                 <span className="ms-1">4.9/5</span>
@@ -139,6 +123,23 @@ export function HeroSection() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-10 z-20 flex flex-col items-center justify-center gap-2 px-4 sm:flex-row sm:gap-8">
+        <Link
+          href="/classroom-moments"
+          className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+        >
+          {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
+          <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
+        </Link>
+        <Link
+          href="/quran"
+          className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+        >
+          {t("hero.cta2")}
+          <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
+        </Link>
       </div>
 
       {/* Bottom wave */}
