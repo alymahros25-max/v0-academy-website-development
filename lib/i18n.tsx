@@ -24,14 +24,14 @@ const translations: Translations = {
 
   // Hero
   "hero.title": { ar: "أكاديمية الحافظ المتميز العالمية", en: "Al-Hafiz Al-Mutamayez Academy", fr: "Acad\u00e9mie Al-Hafiz Al-Mutamayez" },
-  "hero.subtitle": { ar: "أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين", en: "A Global Online Academy for Quran Memorization & Arabic Language Foundation", fr: "Acad\u00e9mie mondiale en ligne pour la m\u00e9morisation du Coran et l'enseignement de la langue arabe" },
+  "hero.subtitle": { ar: "تحفيظ القرآن وتأسيس العربية أونلاين لكل الأعمار والرجال والنساء والأطفال، مع معلمين ومعلمات للطلاب العرب في الخليج وأوروبا وأمريكا", en: "A Global Online Academy for Quran Memorization & Arabic Language Foundation", fr: "Acad\u00e9mie mondiale en ligne pour la m\u00e9morisation du Coran et l'enseignement de la langue arabe" },
   "hero.cta": { ar: "احجز حصتك الأولى مجاناً", en: "Book Your First Free Lesson", fr: "Réservez votre première leçon gratuite" },
   "hero.cta2": { ar: "اطلع على البرامج", en: "Explore Programs", fr: "Découvrez les programmes" },
 
   // About section
   "about.badge": { ar: "من نحن", en: "About Us", fr: "A propos" },
   "about.title": { ar: "نبذة عن الأكاديمية", en: "About the Academy", fr: "A propos de l'acad\u00e9mie" },
-  "about.desc": { ar: "أكاديمية الحافظ المتميز هي منصة تعليمية عالمية متخصصة في تحفيظ القرآن الكريم وتعليم أحكام التجويد وتأسيس اللغة العربية للأطفال والكبار عبر الإنترنت. نقدم حصصاً فردية مع معلمين مجازين ذوي خبرة عالية.", en: "Al-Hafiz Al-Mutamayez Academy is a global educational platform specializing in Quran memorization, Tajweed rules teaching, and Arabic language foundation for children and adults online. We offer individual sessions with certified and highly experienced teachers.", fr: "L'acad\u00e9mie Al-Hafiz Al-Mutamayez est une plateforme \u00e9ducative mondiale sp\u00e9cialis\u00e9e dans la m\u00e9morisation du Coran, l'enseignement du Tajweed et les bases de la langue arabe pour enfants et adultes en ligne." },
+  "about.desc": { ar: "أكاديمية الحافظ المتميز منصة عالمية لتحفيظ القرآن وتأسيس العربية أونلاين للرجال والنساء والأطفال والشباب وجميع الأعمار، مع معلمين ومعلمات وحصص فردية للطلاب العرب في الخليج وأوروبا وأمريكا.", en: "Al-Hafiz Al-Mutamayez Academy is a global educational platform specializing in Quran memorization, Tajweed rules teaching, and Arabic language foundation for children and adults online. We offer individual sessions with certified and highly experienced teachers.", fr: "L'acad\u00e9mie Al-Hafiz Al-Mutamayez est une plateforme \u00e9ducative mondiale sp\u00e9cialis\u00e9e dans la m\u00e9morisation du Coran, l'enseignement du Tajweed et les bases de la langue arabe pour enfants et adultes en ligne." },
 
   // Features
   "features.badge": { ar: "مميزاتنا", en: "Our Features", fr: "Nos avantages" },

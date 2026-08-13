@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { useI18n, type Locale } from "@/lib/i18n"
-import { Menu, X, ChevronDown, Globe, BookOpen } from "lucide-react"
+import { Menu, X, ChevronDown, Globe } from "lucide-react"
 
 const localeLabels: Record<Locale, string> = {
   ar: "العربية",
@@ -51,8 +52,9 @@ export function Header() {
       <div className="mx-auto max-w-7xl px-4 flex items-center justify-between h-16 lg:h-20">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-navy-light text-white">
-            <BookOpen className="w-5 h-5" />
+          {/* TODO: Replace placeholder-logo.png with the official transparent academy logo when provided. */}
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-navy-light overflow-hidden">
+            <Image src="/placeholder-logo.png" alt="شعار أكاديمية الحافظ المتميز" width={40} height={40} className="h-9 w-9 object-contain" priority />
           </div>
           <div className="flex flex-col">
             <span className={`font-bold text-sm lg:text-base leading-tight ${scrolled ? "text-white" : "text-white"}`}>

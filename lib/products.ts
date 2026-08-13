@@ -69,7 +69,7 @@ export const PRODUCTS: Product[] = [
       en: 'Extended package of 8 individual sessions with faster progress and comprehensive tracking',
       fr: 'Forfait étendu de 8 sessions avec un progrès plus rapide et un suivi complet',
     },
-    priceInCents: 2700, // $27.00
+    priceInCents: 2800, // $28.00
     category: 'quran',
     sessions: 8,
     features: {
@@ -90,7 +90,7 @@ export const PRODUCTS: Product[] = [
       en: 'Comprehensive package of 12 sessions with integrated learning plan and advanced tracking',
       fr: 'Forfait complet de 12 sessions avec plan pédagogique intégré et suivi avancé',
     },
-    priceInCents: 3800, // $38.00
+    priceInCents: 4200, // $42.00
     category: 'quran',
     sessions: 12,
     features: {

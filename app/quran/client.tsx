@@ -120,6 +120,11 @@ export default function QuranPageClient() {
       {/* Pricing */}
       <section className="py-20 lg:py-28 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4">
+          <div className="mb-10 text-center">
+            <Link href="/arabic" className="inline-flex items-center text-sm font-bold text-navy-primary underline underline-offset-4 transition-colors hover:text-navy-light">
+              {locale === "ar" ? "مهتم بتأسيس اللغة العربية؟ ←" : locale === "en" ? "Interested in Arabic foundation? ←" : "Intéressé par la fondation arabe ? ←"}
+            </Link>
+          </div>
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold mb-4">
               {t("pricing.quran.title")}
@@ -194,6 +199,11 @@ export default function QuranPageClient() {
                 </button>
               </div>
             ))}
+          </div>
+          <div className="mt-12 text-center">
+            <Link href="/arabic" className="inline-flex items-center text-sm font-bold text-navy-primary underline underline-offset-4 transition-colors hover:text-navy-light">
+              {locale === "ar" ? "مهتم بتأسيس اللغة العربية؟ ←" : locale === "en" ? "Interested in Arabic foundation? ←" : "Intéressé par la fondation arabe ? ←"}
+            </Link>
           </div>
         </div>
       </section>
