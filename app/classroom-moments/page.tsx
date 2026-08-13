@@ -90,9 +90,9 @@ export default async function ClassroomMomentsPage() {
   const videos = await getClassroomVideos()
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <main className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#1a4d2e] to-[#2d7a4e] text-white py-12 md:py-20">
+      <section className="bg-navy-primary text-white py-12 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
@@ -130,7 +130,7 @@ export default async function ClassroomMomentsPage() {
               </p>
               <a
                 href="/"
-                className="inline-block px-6 py-3 bg-[#1a4d2e] text-white font-medium rounded-lg hover:bg-[#0f3620] transition-colors"
+                className="inline-block px-6 py-3 bg-navy-primary text-white font-medium rounded-lg hover:bg-navy-light transition-colors"
               >
                 العودة للصفحة الرئيسية
               </a>
@@ -169,7 +169,7 @@ export default async function ClassroomMomentsPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-gradient-to-r from-[#1a4d2e] to-[#2d7a4e] text-white py-12 md:py-16">
+      <section className="bg-navy-primary text-white py-12 md:py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             جاهز للبدء؟

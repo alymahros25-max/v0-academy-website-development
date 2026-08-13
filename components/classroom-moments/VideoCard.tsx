@@ -77,13 +77,13 @@ export function VideoCard({
                 className="bg-white/95 hover:bg-white p-3 rounded-full shadow-lg transition-all"
                 aria-label={`Play ${title}`}
               >
-                <Play className="w-6 h-6 text-[#1a4d2e] fill-current" />
+                <Play className="w-6 h-6 text-navy-primary fill-current" />
               </motion.button>
             </div>
 
             {/* Category Badge */}
             {category && (
-              <div className="absolute top-2 left-2 px-3 py-1 bg-[#d4af37] text-[#1a4d2e] text-xs font-semibold rounded-full">
+              <div className="absolute top-2 left-2 px-3 py-1 bg-gold-pale text-navy-primary text-xs font-semibold rounded-full">
                 {category}
               </div>
             )}
@@ -99,7 +99,7 @@ export function VideoCard({
           {/* Content */}
           <div className="p-4 bg-white">
             {/* Title */}
-            <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-[#1a4d2e] transition-colors">
+            <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-navy-primary transition-colors">
               {title}
             </h3>
 
@@ -112,7 +112,7 @@ export function VideoCard({
 
             {/* Teacher Name */}
             {teacherName && (
-              <p className="text-xs text-[#1a4d2e] font-medium">
+              <p className="text-xs text-navy-primary font-medium">
                 👨‍🏫 {teacherName}
               </p>
             )}

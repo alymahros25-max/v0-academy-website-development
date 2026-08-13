@@ -60,14 +60,14 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
               <Link
                 href="/classroom-moments"
-                className="group inline-flex items-center gap-2 py-2 text-base font-bold text-primary transition-colors hover:text-gold-primary hover:underline underline-offset-4"
+                className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
               >
                 {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
                 <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
               </Link>
               <Link
                 href="/quran"
-                className="group inline-flex items-center gap-2 py-2 text-base font-bold text-primary transition-colors hover:text-gold-primary hover:underline underline-offset-4"
+                className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
               >
                 {t("hero.cta2")}
                 <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />

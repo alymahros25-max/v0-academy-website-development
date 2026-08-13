@@ -97,9 +97,10 @@ export function PricingPreview() {
 
 <Link
                 href="/quran"
-                className="block w-full rounded-xl bg-primary py-3 text-center font-bold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center gap-2 py-3 text-center font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
               >
                 {locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs du Coran"}
+                <Arrow className="w-4 h-4" />
               </Link>
             </div>
           ))}
@@ -109,7 +110,7 @@ export function PricingPreview() {
         <div className="text-center flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             href="/quran"
-            className="inline-flex items-center gap-2 text-primary font-bold hover:underline"
+            className="inline-flex items-center gap-2 text-navy-primary font-bold transition-colors hover:text-navy-light hover:underline underline-offset-4"
           >
             {locale === "ar" ? "عرض جميع باقات القرآن" : locale === "en" ? "View all Quran packages" : "Voir tous les forfaits Coran"}
             <Arrow className="w-4 h-4" />
@@ -117,7 +118,7 @@ export function PricingPreview() {
           <span className="text-muted-foreground">|</span>
           <Link
             href="/arabic"
-            className="inline-flex items-center gap-2 text-primary font-bold hover:underline"
+            className="inline-flex items-center gap-2 text-navy-primary font-bold transition-colors hover:text-navy-light hover:underline underline-offset-4"
           >
             {locale === "ar" ? "عرض باقات تأسيس العربي" : locale === "en" ? "View Arabic packages" : "Voir les forfaits arabe"}
             <Arrow className="w-4 h-4" />

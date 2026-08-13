@@ -24,9 +24,9 @@ interface ThemeSettings {
 export default function ThemeCustomizerPage() {
   const { toast } = useToast()
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>({
-    primaryColor: '#1a4d2e',
-    secondaryColor: '#d4af37',
-    backgroundColor: '#ffffff',
+    primaryColor: '#2C5680',
+    secondaryColor: '#5680A8',
+    backgroundColor: '#C5D6E5',
     textColor: '#000000',
   })
 

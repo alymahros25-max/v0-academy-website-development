@@ -44,21 +44,21 @@ export function Header() {
       dir={dir}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-card/95 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
+          ? "bg-navy-primary/95 backdrop-blur-md shadow-lg"
+          : "bg-navy-primary"
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 flex items-center justify-between h-16 lg:h-20">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary text-primary-foreground">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-navy-light text-white">
             <BookOpen className="w-5 h-5" />
           </div>
           <div className="flex flex-col">
-            <span className={`font-bold text-sm lg:text-base leading-tight ${scrolled ? "text-primary" : "text-primary-foreground lg:text-primary"}`}>
+            <span className={`font-bold text-sm lg:text-base leading-tight ${scrolled ? "text-white" : "text-white"}`}>
               {locale === "ar" ? "الحافظ المتميز" : "Al-Hafiz Academy"}
             </span>
-            <span className={`text-[10px] lg:text-xs ${scrolled ? "text-secondary" : "text-secondary lg:text-secondary"}`}>
+            <span className={`text-[10px] lg:text-xs text-navy-pale`}>
               {locale === "ar" ? "أكاديمية اون لاين" : "Online Academy"}
             </span>
           </div>
