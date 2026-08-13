@@ -30,7 +30,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
-        <div className="pointer-events-none absolute inset-x-0 top-20 flex justify-center px-4 lg:top-24">
+        <div className="pointer-events-none absolute inset-x-0 top-8 flex justify-center px-4 lg:top-12">
           <div className="pointer-events-auto inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full border border-primary/25 bg-background/60 px-4 py-2 text-center text-sm font-medium text-primary shadow-md backdrop-blur-sm sm:px-6 sm:text-base">
             <Star className="size-4 shrink-0 fill-current" />
             <span>
@@ -57,24 +57,7 @@ export function HeroSection() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-              <Link
-                href="/classroom-moments"
-                className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
-              >
-                {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
-                <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
-              </Link>
-              <Link
-                href="/quran"
-                className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
-              >
-                {t("hero.cta2")}
-                <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
-              </Link>
-            </div>
-
-            {/* Trust indicators */}
+                        {/* Trust indicators */}
             <div className="mt-10 flex items-center gap-6 justify-center lg:justify-start text-primary-foreground/70 text-sm">
               <div className="flex items-center gap-1">
                 <div className="flex -space-x-2 rtl:space-x-reverse">
@@ -140,6 +123,23 @@ export function HeroSection() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-10 z-20 flex flex-col items-center justify-center gap-2 px-4 sm:flex-row sm:gap-8">
+        <Link
+          href="/classroom-moments"
+          className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+        >
+          {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
+          <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
+        </Link>
+        <Link
+          href="/quran"
+          className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+        >
+          {t("hero.cta2")}
+          <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
+        </Link>
       </div>
 
       {/* Bottom wave */}
