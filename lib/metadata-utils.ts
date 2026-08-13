@@ -81,13 +81,13 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
       },
     },
     teachers: {
-      title: 'المعلمين | أكاديمية الحافظ المتميز',
+      title: 'المعلمين والمعلمات | أكاديمية الحافظ المتميز',
       description: 'تعرف على فريق المعلمين المجازين والمتخصصين في أكاديمية الحافظ المتميز',
       keywords: ['معلمين', 'مدرسين قرآن', 'معلمي عربي'],
       alternates: getAlternates(pageRoutes.teachers),
       openGraph: {
-        title: 'المعلمين',
-        description: 'فريق المعلمين المجازين والمتخصصين',
+        title: 'المعلمين والمعلمات',
+        description: 'فريق المعلمين والمعلمات المجازين والمتخصصين',
         type: 'website',
         url: 'https://quran-elhafez.com/teachers',
       },
@@ -150,7 +150,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
       },
     },
     terms: {
-      title: 'الشروط والأحكام | أكاديمية الحافظ المتميز',
+      title: 'الشر��ط والأحكام | أكاديمية الحافظ المتميز',
       description: 'الشروط والأحكام العامة والخدمات في أكاديمية الحافظ المتميز',
       alternates: getAlternates(pageRoutes.terms),
       robots: {

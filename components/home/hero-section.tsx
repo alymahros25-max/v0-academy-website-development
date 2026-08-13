@@ -30,7 +30,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
-        <div className="pointer-events-none absolute inset-x-0 top-8 flex justify-center px-4 lg:top-12">
+        <div className="pointer-events-none absolute inset-x-0 top-16 flex justify-center px-4 lg:top-20">
           <div className="pointer-events-auto inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full border border-primary/25 bg-background/60 px-4 py-2 text-center text-sm font-medium text-primary shadow-md backdrop-blur-sm sm:px-6 sm:text-base">
             <Star className="size-4 shrink-0 fill-current" />
             <span>
@@ -47,13 +47,10 @@ export function HeroSection() {
           <div className="text-center lg:text-start">
             <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
-                أكاديمية الحافظ المتميز العالمية
+                {t("hero.title")}
               </h1>
               <p className="mt-3 text-2xl font-bold text-foreground md:text-3xl">
-                تعليم القرآن تأسيس العربي
-              </p>
-              <p className="mt-2 text-xl leading-relaxed text-foreground/80 md:text-2xl">
-                للناطقين بالعربية
+                {t("hero.subtitle")}
               </p>
             </div>
 

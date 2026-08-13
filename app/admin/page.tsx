@@ -103,7 +103,7 @@ export default function AdminDashboard() {
     { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star, group: "محتوى الموقع" },
     { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare, group: "محتوى الموقع" },
     { id: "cms", label: "صفحات الموقع والمحتوى", key: "admin.cms", icon: BookOpen, group: "محتوى الموقع" },
-    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى ا����موقع" },
+    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى ا������موقع" },
     { id: "library", label: "المكتبة الرقمية", key: "admin.library", icon: BookOpen, group: "محتوى الموقع" },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film, group: "الخدمات التعليمية" },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2, group: "الخدمات التعليمية" },
@@ -277,15 +277,10 @@ function DashboardTab() {
     revalidateOnFocus: false
   })
 
-  if (isLoading) return <AdminLoadingSkeleton />
-  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">{t("admin.error")}</div>
+  const teacherRecords = Array.isArray(teachers) ? teachers : Array.isArray(teachers?.teachers) ? teachers.teachers : []
 
-  const cards = [
-    { icon: Package, label: t("admin.activePackages"), value: stats?.activePackages ?? 0, color: "bg-blue-500" },
-    { icon: Users, label: t("admin.registeredStudents"), value: stats?.totalStudents ?? 0, color: "bg-green-500" },
-    { icon: BookOpen, label: t("admin.publishedLessons"), value: stats?.publishedLessons ?? 0, color: "bg-purple-500" },
-    { icon: Star, label: t("admin.rating"), value: stats?.rating ?? "N/A", color: "bg-amber-500" },
-  ]
+  if (isLoading) return <AdminLoadingSkeleton />
+  if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">{error.message}</div>
 
   return (
     <div>
@@ -307,7 +302,7 @@ function DashboardTab() {
       <div className="bg-card rounded-2xl border border-border p-6">
         <h2 className="font-bold text-foreground mb-3">{t("admin.welcomeTitle")}</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          من هنا يمكنك إدارة جميع محتويات الموقع: الباقات والأسعار، المعلمين، آراء الطلاب، رسائل التواصل، وإعدادات الموقع العامة.
+          من هنا يمكنك إدارة جميع محتويات الموقع: الباقات والأسعار، المعلمين والمعلمات، آراء الطلاب، رسائل التواصل، وإعدادات الموقع العامة.
         </p>
       </div>
     </div>
@@ -519,6 +514,8 @@ function PackagesTab() {
 function TeachersTab() {
   const { data: teachers, isLoading, error } = useSWR("/api/admin/data?type=teachers", fetcher, {
     revalidateOnFocus: false,
+    shouldRetryOnError: false,
+    onError: (err) => console.error("[v0] Teachers fetch error:", err),
     dedupingInterval: 60000
   })
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -586,14 +583,16 @@ function TeachersTab() {
     }
   }
 
+  const teacherRecords = Array.isArray(teachers) ? teachers : Array.isArray(teachers?.teachers) ? teachers.teachers : []
+
   if (isLoading) return <AdminLoadingSkeleton />
   if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">خطأ في تحميل البيانات</div>
-  if (!Array.isArray(teachers) || teachers?.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين</div>
+  if (teacherRecords.length === 0) return <div className="p-4 text-muted-foreground">لا يوجد معلمين ومعلمات</div>
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-bold text-foreground">إدارة المعلمين</h2>
+        <h2 className="text-lg font-bold text-foreground">إدارة المعلمين والمعلمات</h2>
         <button
           onClick={() => setShowForm(!showForm)}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold"
@@ -676,7 +675,7 @@ function TeachersTab() {
       )}
 
       <div className="grid gap-4">
-        {Array.isArray(teachers) && teachers.map((teacher: { id?: string; name?: Record<string, string>; specialty?: Record<string, string>; experience?: string; active?: boolean } | null) => {
+        {teacherRecords.map((teacher: { id?: string; name?: Record<string, string>; specialty?: Record<string, string>; experience?: string; active?: boolean } | null) => {
           if (!teacher?.id) return null
           return (
             <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
@@ -988,7 +987,7 @@ function PagesTab() {
     { name: "من ن��ن", path: "/about", description: "معلومات عن الأكاديمية" },
     { name: "القرآن الكريم", path: "/quran", description: "باقات تحفيظ القرآن" },
     { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
-    { name: "المعلمين", path: "/teachers", description: "قائمة المعلمين المجازين" },
+    { name: "المعلمين والمعلمات", path: "/teachers", description: "قائمة المعلمين المجازين" },
     { name: "آراء الطلاب", path: "/reviews", description: "تقييمات وآراء الطلاب" },
     { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
     { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
@@ -1229,7 +1228,7 @@ function CMSManagementTab() {
   const sections = [
     { label: "لقطات من الحصص", desc: "إدارة فيديوهات يوتيوب الترويجية", tab: "classroom-videos" },
     { label: "الباقات والأسعار", desc: "تحديث أسعار قرآن والعربي", tab: "packages" },
-    { label: "المعلمين", desc: "إضافة وتعديل بيانات المعلمين", tab: "teachers" },
+    { label: "المعلمين والمعلمات", desc: "إضافة وتعديل بيانات المعلمين", tab: "teachers" },
     { label: "آراء الطلاب", desc: "إدارة شهادات وتقييمات الطلاب", tab: "reviews" },
   ]
   return (
@@ -1338,7 +1337,7 @@ function PagesBuilderTab() {
     { label: "قرآن الكريم", path: "/quran", desc: "الباقات والأسعار وطريقة التسجيل" },
     { label: "تأسيس العربي", path: "/arabic", desc: "باقات تعليم اللغة العربية" },
     { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
-    { label: "المعلمين", path: "/teachers", desc: "نبذة عن فريق المعلمين" },
+    { label: "المعلمين والمعلمات", path: "/teachers", desc: "نبذة عن فريق المعلمين" },
     { label: "آراء الطلاب", path: "/reviews", desc: "شهادات وتقييمات الطلاب" },
       { label: "لقطات من الحصص", path: "/classroom-moments", desc: "فيديوهات ترويجية" },
     { label: "الألعاب والمسابقات", path: "/games", desc: "ألعاب تعليمية تفاعلية" },
@@ -1804,7 +1803,7 @@ function RequestIndexingTab() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">طلب فهرسة الصفحات</h2>
-        <p className="text-sm text-muted-foreground">أدخل روابط الصفحات المراد فهرستها في Google بشكل فوري</p>
+        <p className="text-sm text-muted-foreground">أدخل روابط الصفحات الم��اد فهرستها في Google بشكل فوري</p>
       </div>
 
       <div className="bg-card border border-border rounded-xl p-6 space-y-4">

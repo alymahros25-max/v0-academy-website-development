@@ -72,7 +72,7 @@ const faqData: FAQItem[] = [
   { category: "general", q: { ar: "هل هناك سياسة استرداد الأموال؟", en: "Is there a refund policy?", fr: "Y a-t-il une politique de remboursement?" }, a: { ar: "نعم، يمكن استرداد المبلغ خلال أول 3 أيام من الاشتراك إذا لم يبدأ الطالب أي حصة، أو تعويض بحصص إضافية.", en: "Yes, refund is available within the first 3 days if no sessions have started, or compensation with additional sessions.", fr: "Remboursement dans les 3 premiers jours si aucune session n'a commence." } },
   { category: "general", q: { ar: "كيف يمكنني التواصل مع الإدارة؟", en: "How can I contact administration?", fr: "Comment contacter l'administration?" }, a: { ar: "يمكنك التواصل معنا عبر: واتساب (اضغط الزر أدناه)، تيليجرام (@acabemy_quraan)، أو البريد الإلكتروني (enamel311@gmail.com).", en: "Contact us via: WhatsApp (use the button below), Telegram (@acabemy_quraan), or email (enamel311@gmail.com).", fr: "WhatsApp (bouton ci-dessous), Telegram (@acabemy_quraan), ou email (enamel311@gmail.com)." } },
   { category: "general", q: { ar: "هل تقدمون دورات في العقيدة والفقه؟", en: "Do you offer Aqeedah and Fiqh courses?", fr: "Offrez-vous des cours de Aqeedah et Fiqh?" }, a: { ar: "حالياً نركز على تحفيظ القرآن والتجويد وتأسيس اللغة العربية، ونخطط لإضافة دورات في العقيدة والفقه قريباً.", en: "Currently we focus on Quran memorization, Tajweed, and Arabic foundation. We plan to add Aqeedah and Fiqh courses soon.", fr: "Actuellement, nous nous concentrons sur le Coran et l'arabe. Cours de Aqeedah et Fiqh bientot." } },
-  { category: "general", q: { ar: "هل يمكنني حضور حصة تجريبية مع طفلي؟", en: "Can I attend a trial session with my child?", fr: "Puis-je assister a une session d'essai avec mon enfant?" }, a: { ar: "نعم، نرحب بحضور أولياء الأمور في الحصة ا��تجريبية الأولى للاطمئنان على جودة التعليم وطريقة التدريس.", en: "Yes, parents are welcome to attend the first trial session to observe the quality of teaching and methods.", fr: "Oui, les parents sont les bienvenus a la premiere session d'essai." } },
+  { category: "general", q: { ar: "هل يمكنني حضور حصة تجريبية مع طفلي؟", en: "Can I attend a trial session with my child?", fr: "Puis-je assister a une session d'essai avec mon enfant?" }, a: { ar: "نعم، نرحب بحضور أولياء الأمور في الحصة ا����تجريبية الأولى للاطمئنان على جودة التعليم وطريقة التدريس.", en: "Yes, parents are welcome to attend the first trial session to observe the quality of teaching and methods.", fr: "Oui, les parents sont les bienvenus a la premiere session d'essai." } },
   { category: "general", q: { ar: "هل يوجد حد أقصى لعدد الحصص أسبوعياً؟", en: "Is there a maximum number of weekly sessions?", fr: "Y a-t-il un maximum de sessions par semaine?" }, a: { ar: "لا يوجد حد أقصى، يمكنك ترتيب الحصص حسب رغبتك ضمن الباقة المشترك بها، سواء يومياً أو عدة مرات أسبوعياً.", en: "No maximum limit. You can arrange sessions as you wish within your package, daily or several times a week.", fr: "Pas de limite. Organisez selon vos preferences." } },
   { category: "general", q: { ar: "هل تقدمون مسابقات قرآنية؟", en: "Do you offer Quran competitions?", fr: "Organisez-vous des concours coraniques?" }, a: { ar: "نعم، ننظم مسابقات قرآنية دورية مع جوائز تحفيزية للطلاب المتميزين لتشجيعهم على الحفظ والتلاوة.", en: "Yes, we organize periodic Quran competitions with incentive prizes for outstanding students.", fr: "Oui, concours periodiques avec prix pour les etudiants distingues." } },
   { category: "general", q: { ar: "هل تقبلون الطلاب غير الناطقين بالعربية؟", en: "Do you accept non-Arabic speaking students?", fr: "Acceptez-vous les non-arabophones?" }, a: { ar: "نعم، لدينا معلمون متخصصون في تعليم القرآن والعربية لغير الناطقين بها باستخدام مناهج مبسطة وفعالة.", en: "Yes, we have specialized teachers for non-Arabic speakers using simplified and effective curricula.", fr: "Oui, avec des enseignants specialises pour les non-arabophones." } },
@@ -87,7 +87,7 @@ const faqCategories: { key: string; label: Record<string, string> }[] = [
   { key: "academy", label: { ar: "عن الأكاديمية", en: "About Academy", fr: "L'Academie" } },
   { key: "lessons", label: { ar: "الدروس والحصص", en: "Lessons", fr: "Cours" } },
   { key: "packages", label: { ar: "الباقات والأسعار", en: "Packages & Prices", fr: "Forfaits" } },
-  { key: "teachers", label: { ar: "المعلمين", en: "Teachers", fr: "Enseignants" } },
+  { key: "teachers", label: { ar: "المعلمين والمعلمات", en: "Teachers", fr: "Enseignants" } },
   { key: "curriculum", label: { ar: "المنهج", en: "Curriculum", fr: "Programme" } },
   { key: "technical", label: { ar: "تقنية", en: "Technical", fr: "Technique" } },
   { key: "certificates", label: { ar: "الشهادات", en: "Certificates", fr: "Certificats" } },
@@ -193,7 +193,7 @@ export default function FAQPage() {
                 return (
                   <div
                     key={idx}
-                    className={`rounded-2xl border transition-all ${
+                    className={`scroll-card rounded-2xl border transition-all ${
                       isOpen ? "border-primary/30 shadow-md bg-card" : "border-border bg-card hover:border-primary/20"
                     }`}
                   >
