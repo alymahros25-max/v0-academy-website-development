@@ -151,7 +151,7 @@ const translations: Translations = {
   // Account
   "account.title": { ar: "حسابي", en: "My Account", fr: "Mon compte" },
   "account.login": { ar: "تسجيل الدخول", en: "Sign In", fr: "Se connecter" },
-  "account.signup": { ar: "إنشاء حس����ب", en: "Sign Up", fr: "S'inscrire" },
+  "account.signup": { ar: "إنشاء حساب", en: "Sign Up", fr: "S'inscrire" },
   "account.logout": { ar: "تسجيل الخروج", en: "Sign Out", fr: "Se déconnecter" },
   "account.email": { ar: "البريد الإلكتروني", en: "Email", fr: "E-mail" },
   "account.password": { ar: "كلمة المرور", en: "Password", fr: "Mot de passe" },

@@ -29,7 +29,6 @@ export default function HomePageClient() {
     <>
       {/* Above the fold - Critical, rendered as static HTML */}
       <HeroSection />
-      <AboutSection />
       <FeaturesSection />
       <StatsSection />
 
@@ -37,6 +36,8 @@ export default function HomePageClient() {
       <Suspense fallback={<div className="min-h-80 bg-muted animate-pulse" />}>
         <TestimonialsPreview />
       </Suspense>
+
+      <AboutSection />
 
       <Suspense fallback={<div className="min-h-72 bg-muted animate-pulse" />}>
         <CTASection />
