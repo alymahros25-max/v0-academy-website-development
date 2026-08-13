@@ -13,8 +13,9 @@ export function PricingPreview() {
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight
 
   const { data: storedPackages } = useSWR<PublicPackage[]>("/api/public/packages", fetcher, { revalidateOnFocus: true })
-  const quranPackages = (Array.isArray(storedPackages) ? storedPackages : [])
-    .filter((pkg) => pkg.type === "quran" && !(pkg.price === 15 && pkg.popular))
+  const packages = Array.isArray(storedPackages) ? storedPackages : []
+  const quranPackages = packages
+    .filter((pkg) => pkg.type === "quran")
     .sort((a, b) => a.sessions - b.sessions)
 
   const features = [
@@ -95,13 +96,22 @@ export function PricingPreview() {
                 ))}
               </ul>
 
-<Link
-                href="/quran"
-                className="inline-flex items-center justify-center gap-2 py-3 text-center font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
-              >
-                {locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs du Coran"}
-                <Arrow className="w-4 h-4" />
-              </Link>
+<div className="flex flex-col items-center gap-2 border-t border-border/60 pt-4 sm:flex-row sm:justify-center sm:gap-4">
+                <Link
+                  href="/quran"
+                  className="inline-flex items-center justify-center gap-2 py-2 text-center text-sm font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+                >
+                  {locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs du Coran"}
+                  <Arrow className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/arabic"
+                  className="inline-flex items-center justify-center gap-2 py-2 text-center text-sm font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+                >
+                  {locale === "ar" ? "أسعار تأسيس اللغة العربية" : locale === "en" ? "Arabic Foundation Pricing" : "Tarifs de fondation arabe"}
+                  <Arrow className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
           ))}
         </div>

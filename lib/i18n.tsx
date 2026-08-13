@@ -12,7 +12,7 @@ const translations: Translations = {
   "nav.about": { ar: "من نحن", en: "About Us", fr: "A propos" },
   "nav.quran": { ar: "القرآن والتجويد", en: "Quran & Tajweed", fr: "Coran & Tajweed" },
   "nav.arabic": { ar: "تأسيس العربي", en: "Arabic Language", fr: "Langue Arabe" },
-  "nav.teachers": { ar: "المعلمين", en: "Teachers", fr: "Enseignants" },
+  "nav.teachers": { ar: "المعلمين والمعلمات", en: "Teachers", fr: "Enseignants" },
   "nav.reviews": { ar: "آراء الطلاب", en: "Reviews", fr: "Avis" },
   "nav.library": { ar: "المكتبة", en: "Library", fr: "Biblioth\u00e8que" },
   "nav.games": { ar: "الألعاب والمسابقات", en: "Games & Quizzes", fr: "Jeux & Quiz" },
@@ -23,7 +23,7 @@ const translations: Translations = {
   "nav.subscribe": { ar: "ابدأ الآن", en: "Get Started", fr: "Commencer" },
 
   // Hero
-  "hero.title": { ar: "أكاديمية الحافظ المتميز", en: "Al-Hafiz Al-Mutamayez Academy", fr: "Acad\u00e9mie Al-Hafiz Al-Mutamayez" },
+  "hero.title": { ar: "أكاديمية الحافظ المتميز العالمية", en: "Al-Hafiz Al-Mutamayez Academy", fr: "Acad\u00e9mie Al-Hafiz Al-Mutamayez" },
   "hero.subtitle": { ar: "أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين", en: "A Global Online Academy for Quran Memorization & Arabic Language Foundation", fr: "Acad\u00e9mie mondiale en ligne pour la m\u00e9morisation du Coran et l'enseignement de la langue arabe" },
   "hero.cta": { ar: "احجز حصتك الأولى مجاناً", en: "Book Your First Free Lesson", fr: "Réservez votre première leçon gratuite" },
   "hero.cta2": { ar: "اطلع على البرامج", en: "Explore Programs", fr: "Découvrez les programmes" },
@@ -99,12 +99,12 @@ const translations: Translations = {
   "arabic.method.desc": { ar: "نستخدم أحدث الطرق التعليمية في تأسيس اللغة العربية من خلال مناهج تفاعلية تشمل تعلم الحروف والحركات والقراءة والكتابة والإملاء والتعبير، مع استخدام وسائل تعليمية مبتكرة تناسب الأطفال والمبتدئين.", en: "We use the latest educational methods for Arabic language foundation through interactive curricula including letters, vowels, reading, writing, dictation, and expression, with innovative teaching tools suitable for children and beginners.", fr: "Nous utilisons les derni\u00e8res m\u00e9thodes pour les bases de la langue arabe \u00e0 travers des programmes interactifs." },
 
   // Teachers
-  "teachers.title": { ar: "فريق المعلمين", en: "Our Teachers", fr: "Nos Enseignants" },
-  "teachers.desc": { ar: "نخبة من المعلمين المجازين ذوي الخبرة العالية في تعليم القرآن واللغة العربية", en: "Elite certified teachers with extensive experience in teaching Quran and Arabic", fr: "Enseignants certifi\u00e9s d'\u00e9lite avec une vaste exp\u00e9rience" },
+  "teachers.title": { ar: "فريق المعلمين والمعلمات", en: "Our Teachers", fr: "Nos Enseignants" },
+  "teachers.desc": { ar: "نخبة من المعلمين والمعلمات المجازين ذوي الخبرة العالية في تعليم القرآن واللغة العربية", en: "Elite certified teachers with extensive experience in teaching Quran and Arabic", fr: "Enseignants certifi\u00e9s d'\u00e9lite avec une vaste exp\u00e9rience" },
 
   // Reviews
   "reviews.title": { ar: "آراء طلابنا وأولياء الأمور", en: "Student & Parent Reviews", fr: "Avis des \u00e9tudiants et parents" },
-  "reviews.desc": { ar: "ماذا يقول طلابنا وأولياء ��مورهم عن تجربتهم معنا", en: "What our students and their parents say about their experience", fr: "Ce que nos \u00e9tudiants et leurs parents disent de leur exp\u00e9rience" },
+  "reviews.desc": { ar: "ماذا يقول طلابنا وأولياء أمورهم عن تجربتهم معنا", en: "What our students and their parents say about their experience", fr: "Ce que nos \u00e9tudiants et leurs parents disent de leur exp\u00e9rience" },
 
   // Library
   "library.title": { ar: "المكتبة الإلكترونية", en: "Digital Library", fr: "Biblioth\u00e8que num\u00e9rique" },
@@ -210,7 +210,7 @@ const translations: Translations = {
   "admin.title": { ar: "لوحة التحكم", en: "Admin Dashboard", fr: "Tableau de bord administrateur" },
   "admin.dashboard": { ar: "الرئيسية", en: "Dashboard", fr: "Tableau de bord" },
   "admin.packages": { ar: "الباقات", en: "Packages", fr: "Forfaits" },
-  "admin.teachers": { ar: "المعلمين", en: "Teachers", fr: "Enseignants" },
+  "admin.teachers": { ar: "المعلمين والمعلمات", en: "Teachers", fr: "Enseignants" },
   "admin.reviews": { ar: "آراء الطلاب", en: "Reviews", fr: "Avis" },
   "admin.messages": { ar: "الرسائل", en: "Messages", fr: "Messages" },
   "admin.pages": { ar: "الصفحات", en: "Pages", fr: "Pages" },

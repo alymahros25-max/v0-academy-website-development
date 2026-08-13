@@ -58,7 +58,7 @@ export function TestimonialsPreview() {
           {testimonials.map((review, idx) => (
             <div
               key={idx}
-              className="bg-card rounded-2xl p-6 lg:p-8 shadow-sm border border-border hover:shadow-lg hover:border-primary/20 transition-all"
+              className="scroll-card bg-card rounded-2xl p-6 lg:p-8 shadow-sm border border-border hover:shadow-lg hover:border-primary/20 transition-all"
             >
               <Quote className="w-8 h-8 text-secondary/40 mb-4" />
               <p className="text-foreground leading-relaxed mb-6">

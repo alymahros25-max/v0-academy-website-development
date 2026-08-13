@@ -68,7 +68,7 @@ export function FeaturesSection() {
                 <div
                   data-feature-card
                   data-index={idx}
-                  className={`group rounded-2xl border bg-card p-7 shadow-md transition-all duration-700 ease-out will-change-transform sm:p-8 lg:p-8 ${
+                  className={`scroll-card group rounded-2xl border bg-card p-7 shadow-md transition-all duration-700 ease-out will-change-transform sm:p-8 lg:p-8 ${
                     activeCard === idx
                       ? "scale-[1.06] border-primary/50 shadow-2xl ring-2 ring-primary/15"
                       : "scale-100 border-border"

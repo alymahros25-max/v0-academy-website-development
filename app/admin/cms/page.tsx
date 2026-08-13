@@ -150,7 +150,7 @@ export default function CMSPage() {
               <option value="quran">القرآن</option>
               <option value="arabic">تأسيس العربي</option>
               <option value="about">عن الأكاديمية</option>
-              <option value="teachers">المعلمين</option>
+              <option value="teachers">المعلمين والمعلمات</option>
               <option value="pages">صفحات عامة</option>
             </select>
           </div>
