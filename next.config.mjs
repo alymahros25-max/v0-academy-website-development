@@ -28,6 +28,7 @@ const nextConfig = {
   // IMAGE OPTIMIZATION
   // ============================================================
   images: {
+    qualities: [75, 80, 85, 100],
     // Disable format conversion to reduce build memory on Vercel
     unoptimized: true,
   },

@@ -30,18 +30,6 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
-        <div className="pointer-events-none absolute inset-x-0 top-16 flex justify-center px-4 lg:top-20">
-          <div className="pointer-events-auto inline-flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-full border border-primary/25 bg-background/60 px-4 py-2 text-center text-sm font-medium text-primary shadow-md backdrop-blur-sm sm:px-6 sm:text-base">
-            <Star className="size-4 shrink-0 fill-current" />
-            <span>
-              {locale === "ar"
-                ? "تعلم القرآن من أي مكان في العالم"
-                : locale === "en"
-                  ? "Learn Quran from anywhere in the world"
-                  : "Apprenez le Coran de partout dans le monde"}
-            </span>
-          </div>
-        </div>
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div className="-translate-y-5 text-center transition-transform md:-translate-y-8 lg:-translate-y-10 lg:text-start">

@@ -3,6 +3,7 @@
 import { useI18n } from "@/lib/i18n"
 import { Star, Quote } from "lucide-react"
 import Link from "next/link"
+import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 
 const testimonials = [
   {
@@ -56,8 +57,8 @@ export function TestimonialsPreview() {
         {/* Testimonial Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12">
           {testimonials.map((review, idx) => (
+            <RevealOnScroll key={idx} delay={idx * 80}>
             <div
-              key={idx}
               className="scroll-card bg-card rounded-2xl p-6 lg:p-8 shadow-sm border border-border hover:shadow-lg hover:border-primary/20 transition-all"
             >
               <Quote className="w-8 h-8 text-secondary/40 mb-4" />
@@ -88,6 +89,7 @@ export function TestimonialsPreview() {
                 </div>
               </div>
             </div>
+            </RevealOnScroll>
           ))}
         </div>
 

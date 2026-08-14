@@ -4,6 +4,7 @@ import Link from "next/link"
 import useSWR from "swr"
 import { useI18n } from "@/lib/i18n"
 import { Check, ArrowLeft, ArrowRight } from "lucide-react"
+import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 
 const fetcher = (url: string) => fetch(url, { cache: "no-store" }).then((res) => res.json())
 type PublicPackage = { type: string; sessions: number; price: number; popular?: boolean; features?: { ar?: string[] } }
@@ -52,8 +53,8 @@ export function PricingPreview() {
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto mb-12">
           {quranPackages.map((pkg, idx) => (
+            <RevealOnScroll key={idx} delay={idx * 80}>
             <div
-              key={idx}
               className={`relative rounded-2xl p-6 lg:p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
                 pkg.popular
                   ? "bg-primary text-primary-foreground shadow-xl scale-105 border-2 border-secondary"
@@ -113,6 +114,7 @@ export function PricingPreview() {
                 </Link>
               </div>
             </div>
+            </RevealOnScroll>
           ))}
         </div>
 
