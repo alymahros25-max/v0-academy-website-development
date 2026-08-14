@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/api-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -12,6 +13,9 @@ const supabase = supabaseUrl && supabaseServiceKey
  * Check if a user role has permission to perform an action on a module
  */
 export async function POST(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ hasPermission: false }, { status: 200 })

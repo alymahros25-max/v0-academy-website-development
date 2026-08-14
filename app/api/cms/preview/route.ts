@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/api-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -21,6 +22,9 @@ interface PreviewRequest {
  * Used for split-screen editing and real-time preview
  */
 export async function POST(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 503 })

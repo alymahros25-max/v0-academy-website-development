@@ -1,35 +1,50 @@
 import { cookies } from "next/headers"
 import { createHash } from "crypto"
 
-const ADMIN_EMAIL = "alymahros25@gmail.com"
-const ADMIN_PASSWORD = "admin@hafiz2025"
-const ADMIN_PASSWORD_HASH = createHash("sha256").update(ADMIN_PASSWORD).digest("hex")
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH
 const SESSION_COOKIE = "admin_session"
-const SESSION_SECRET = "hafiz-academy-secret-key-2025"
+const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET
+
+function assertAdminConfig(): void {
+  if (!ADMIN_EMAIL || !ADMIN_PASSWORD_HASH || !SESSION_SECRET) {
+    throw new Error("Admin authentication is not configured")
+  }
+}
 
 function generateSessionToken(email: string): string {
-  return createHash("sha256").update(`${email}:${SESSION_SECRET}:${Date.now()}`).digest("hex")
+  assertAdminConfig()
+  return createHash("sha256").update(`${email}:${SESSION_SECRET}`).digest("hex")
 }
 
 export async function verifyAdminSession(): Promise<boolean> {
-  const cookieStore = await cookies()
-  const session = cookieStore.get(SESSION_COOKIE)
-  if (!session?.value) return false
   try {
+    assertAdminConfig()
+    const cookieStore = await cookies()
+    const session = cookieStore.get(SESSION_COOKIE)
+    if (!session?.value) return false
     const decoded = Buffer.from(session.value, "base64").toString()
-    const [email] = decoded.split(":")
-    return email === ADMIN_EMAIL
+    const separator = decoded.lastIndexOf(":")
+    const email = decoded.slice(0, separator)
+    const token = decoded.slice(separator + 1)
+    return email === ADMIN_EMAIL && token === generateSessionToken(email)
   } catch {
     return false
   }
 }
 
 export function verifyCredentials(email: string, password: string): boolean {
-  const passwordHash = createHash("sha256").update(password).digest("hex")
-  return email === ADMIN_EMAIL && passwordHash === ADMIN_PASSWORD_HASH
+  try {
+    assertAdminConfig()
+    const passwordHash = createHash("sha256").update(password).digest("hex")
+    return email === ADMIN_EMAIL && passwordHash === ADMIN_PASSWORD_HASH
+  } catch {
+    return false
+  }
 }
 
 export async function createSession(email: string) {
+  assertAdminConfig()
   const token = generateSessionToken(email)
   const sessionValue = Buffer.from(`${email}:${token}`).toString("base64")
   const cookieStore = await cookies()

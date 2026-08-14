@@ -29,11 +29,11 @@ export async function POST(request: NextRequest) {
     console.log('[v0] Zapier POST request received')
     
     // التحقق من API Key
-    const apiKey = request.headers.get('x-api-key') || request.headers.get('authorization')?.replace('Bearer ', '')
-    const expectedKey = process.env.ZAPIER_API_KEY || 'your-secret-key-here'
+    const apiKey = request.headers.get('x-api-key') || request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
+    const expectedKey = process.env.ZAPIER_API_KEY
     
-    if (apiKey !== expectedKey) {
-      console.log('[v0] Invalid API Key:', apiKey)
+    if (!expectedKey || apiKey !== expectedKey) {
+      console.warn('[v0] Invalid Zapier API key')
       return NextResponse.json(
         { error: 'Unauthorized: Invalid API Key' },
         { status: 401 }

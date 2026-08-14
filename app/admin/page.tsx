@@ -277,7 +277,12 @@ function DashboardTab() {
     revalidateOnFocus: false
   })
 
-  const teacherRecords = Array.isArray(teachers) ? teachers : Array.isArray(teachers?.teachers) ? teachers.teachers : []
+  const cards = [
+    { label: "المعلمون النشطون", value: stats?.totalTeachers ?? 0, icon: Users, color: "bg-primary" },
+    { label: "التقييمات النشطة", value: stats?.totalReviews ?? 0, icon: Star, color: "bg-secondary" },
+    { label: "الرسائل", value: stats?.totalMessages ?? 0, icon: MessageSquare, color: "bg-accent" },
+    { label: "الرسائل غير المقروءة", value: stats?.unreadMessages ?? 0, icon: Mail, color: "bg-muted-foreground" },
+  ]
 
   if (isLoading) return <AdminLoadingSkeleton />
   if (error) return <div className="text-red-500 p-4 rounded-lg bg-red-50 dark:bg-red-950">{error.message}</div>
@@ -285,18 +290,16 @@ function DashboardTab() {
   return (
     <div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {cards?.map((card, idx) => (
-          card ? (
-            <div key={idx} className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
-              <div className={`w-12 h-12 rounded-xl ${card?.color ?? "bg-gray-500"} text-white flex items-center justify-center`}>
-                <card.icon className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-2xl font-extrabold text-foreground">{card?.value ?? 0}</p>
-                <p className="text-xs text-muted-foreground">{card?.label ?? "-"}</p>
-              </div>
+        {cards.map((card, idx) => (
+          <div key={idx} className="bg-card rounded-2xl border border-border p-5 flex items-center gap-4">
+            <div className={`w-12 h-12 rounded-xl ${card.color} text-primary-foreground flex items-center justify-center`}>
+              <card.icon className="w-6 h-6" />
             </div>
-          ) : null
+            <div>
+              <p className="text-2xl font-extrabold text-foreground">{card.value}</p>
+              <p className="text-xs text-muted-foreground">{card.label}</p>
+            </div>
+          </div>
         ))}
       </div>
       <div className="bg-card rounded-2xl border border-border p-6">

@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/api-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { revalidateDynamicPages } from '@/lib/api-revalidate'
@@ -64,6 +65,9 @@ export async function GET(request: NextRequest) {
 
 // POST: Create new page
 export async function POST(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
@@ -119,6 +123,9 @@ export async function POST(request: NextRequest) {
 
 // PATCH: Update page
 export async function PATCH(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
@@ -181,6 +188,9 @@ export async function PATCH(request: NextRequest) {
 
 // DELETE: Delete page
 export async function DELETE(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 503 })

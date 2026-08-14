@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/api-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { revalidateThemeSettings, revalidateDynamicPages } from '@/lib/api-revalidate'
@@ -85,6 +86,9 @@ export async function GET(request: NextRequest) {
 
 // POST: Create new classroom video
 export async function POST(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
@@ -162,6 +166,9 @@ export async function POST(request: NextRequest) {
 
 // PATCH: Update classroom video
 export async function PATCH(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 503 })
@@ -245,6 +252,9 @@ export async function PATCH(request: NextRequest) {
 
 // DELETE: Delete classroom video
 export async function DELETE(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 503 })

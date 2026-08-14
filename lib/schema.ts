@@ -225,7 +225,6 @@ export function generateLocalBusinessSchema(): SchemaContext {
     ],
     foundingDate: String(siteStats.foundedYear),
     numberOfEmployees: siteStats.teachers,
-    areaServed: `${siteStats.countries} countries worldwide`,
     logo: {
       '@type': 'ImageObject',
       url: `${BASE_URL}/logo.png`,
