@@ -25,6 +25,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://quran-elhafez.com'),
+  icons: { icon: '/placeholder-logo.png', apple: '/placeholder-logo.png' },
   title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
   description:
     "أكاديمية الحافظ المتميز العالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية أونلاين للناطقين بالعربية في الخليج وأوروبا وأمريكا وكندا، مع معلمين مجازين وحصص فردية ومواعيد تناسب فروق التوقيت.",

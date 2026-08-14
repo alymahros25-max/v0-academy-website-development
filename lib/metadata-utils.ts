@@ -150,7 +150,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
       },
     },
     terms: {
-      title: 'الشر��ط والأحكام | أكاديمية الحافظ المتميز',
+      title: 'الشروط والأحكام | أكاديمية الحافظ المتميز',
       description: 'الشروط والأحكام العامة والخدمات في أكاديمية الحافظ المتميز',
       alternates: getAlternates(pageRoutes.terms),
       robots: {

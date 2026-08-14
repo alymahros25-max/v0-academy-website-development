@@ -1,82 +1,62 @@
 "use client"
 
-import Image from "next/image"
 import { useI18n } from "@/lib/i18n"
-import { BookOpen, Users, Award, GraduationCap } from "lucide-react"
+import { Compass, Target } from "lucide-react"
+
+function MissionIcon() {
+  return (
+    <svg viewBox="-10 -10 140 140" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-12" aria-hidden="true">
+      <g transform="rotate(-35 60 60)">
+        <path d="M60 10 L95 100 L60 82 L25 100 Z" fill="#2C5680" stroke="#1B3A5C" strokeWidth="1.5" strokeLinejoin="round" />
+        <line x1="60" y1="10" x2="60" y2="82" stroke="#1B3A5C" strokeWidth="1" opacity="0.4" />
+        <path d="M60 10 L25 100 L60 82 Z" fill="#5680A8" />
+        <path d="M60 10 L68 35 L52 35 Z" fill="#DDBB85" />
+        <line x1="60" y1="102" x2="60" y2="124" stroke="#5680A8" strokeWidth="2.5" strokeLinecap="round" opacity="0.55" />
+        <line x1="75" y1="102" x2="75" y2="118" stroke="#5680A8" strokeWidth="2.5" strokeLinecap="round" opacity="0.4" />
+        <line x1="90" y1="102" x2="90" y2="112" stroke="#5680A8" strokeWidth="2.5" strokeLinecap="round" opacity="0.28" />
+        <line x1="45" y1="102" x2="45" y2="118" stroke="#5680A8" strokeWidth="2.5" strokeLinecap="round" opacity="0.4" />
+        <line x1="30" y1="102" x2="30" y2="112" stroke="#5680A8" strokeWidth="2.5" strokeLinecap="round" opacity="0.28" />
+      </g>
+    </svg>
+  )
+}
 
 export function AboutSection() {
   const { t, locale } = useI18n()
-
-  const highlights = [
+  const cards = [
     {
-      icon: BookOpen,
-      label: locale === "ar" ? "حفظ وتجويد" : locale === "en" ? "Memorization & Tajweed" : "Memorisation & Tajweed",
+      title: locale === "ar" ? "رسالتنا" : locale === "en" ? "Our Mission" : "Notre mission",
+      description: locale === "ar" ? "تيسير تعلّم القرآن الكريم واللغة العربية أونلاين، بأسلوب حديث يجمع بين الأصالة والمرونة." : locale === "en" ? "Making Quran and Arabic learning accessible online through a modern approach rooted in authenticity and flexibility." : "Faciliter l'apprentissage du Coran et de l'arabe en ligne, avec une approche moderne, authentique et flexible.",
+      icon: <MissionIcon />,
     },
     {
-      icon: Users,
-      label: locale === "ar" ? "حصص فردية" : locale === "en" ? "One-on-One" : "Individuel",
+      title: locale === "ar" ? "رؤيتنا" : locale === "en" ? "Our Vision" : "Notre vision",
+      description: locale === "ar" ? "أن نكون الوجهة الأولى لتعليم القرآن والعربية للعرب في كل مكان حول العالم." : locale === "en" ? "To be the first destination for Quran and Arabic education for Arabs everywhere in the world." : "Devenir la première destination pour l'enseignement du Coran et de l'arabe aux Arabes partout dans le monde.",
+      icon: <Compass className="size-12 text-navy-primary" strokeWidth={1.5} aria-hidden="true" />,
     },
     {
-      icon: Award,
-      label: locale === "ar" ? "معلمون مجازون" : locale === "en" ? "Certified Teachers" : "Enseignants certifies",
-    },
-    {
-      icon: GraduationCap,
-      label: locale === "ar" ? "منهج شامل" : locale === "en" ? "Full Curriculum" : "Programme complet",
+      title: locale === "ar" ? "أهدافنا" : locale === "en" ? "Our Goals" : "Nos objectifs",
+      description: locale === "ar" ? "حفظ متقن، تجويد صحيح، ومتابعة مستمرة تراعي مستوى كل طالب وعمره." : locale === "en" ? "Strong memorization, correct Tajweed, and continuous support tailored to every student's level and age." : "Une mémorisation solide, un Tajweed correct et un suivi continu adapté au niveau et à l'âge de chaque étudiant.",
+      icon: <Target className="size-12 text-navy-primary" strokeWidth={1.5} aria-hidden="true" />,
     },
   ]
 
   return (
-    <section className="py-20 lg:py-28 bg-background">
+    <section className="bg-navy-pale/25 py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Image */}
-          <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-              <Image
-                src="/images/about-academy.jpg"
-                alt="About the academy"
-                width={600}
-                height={450}
-                sizes="(max-width: 1023px) 100vw, 50vw"
-                quality={78}
-                className="w-full h-auto object-cover"
-              />
-            </div>
-            {/* Decorative elements */}
-            <div className="absolute -z-10 -top-6 -start-6 w-full h-full rounded-3xl border-2 border-secondary/30" />
-            <div className="absolute -z-10 -bottom-6 -end-6 w-32 h-32 rounded-2xl bg-secondary/10" />
-          </div>
-
-          {/* Content */}
-          <div>
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold mb-4">
-              {t("about.badge")}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6 text-balance">
-              {t("about.title")}
-            </h2>
-            <p className="text-muted-foreground leading-relaxed text-lg mb-8">
-              {t("about.desc")}
-            </p>
-
-            {/* Highlights grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {highlights.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border hover:border-primary/30 hover:bg-primary/5 transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                    <item.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <span className="font-medium text-foreground text-sm">
-                    {item.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="mx-auto max-w-3xl text-center">
+          <span className="mb-4 inline-block rounded-full bg-gold-pale px-4 py-1.5 text-sm font-bold text-navy-primary">{t("about.badge")}</span>
+          <h2 className="text-balance text-3xl font-extrabold text-navy-primary md:text-4xl">{t("about.title")}</h2>
+          <p className="mt-5 text-pretty text-lg leading-8 text-foreground/75">{t("about.desc")}</p>
+        </div>
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {cards.map((card) => (
+            <article key={card.title} className="scroll-card rounded-3xl border border-navy-light/40 bg-card p-8 text-center shadow-sm transition-shadow hover:shadow-lg">
+              <div className="mx-auto flex size-20 items-center justify-center rounded-2xl bg-gold-pale/60">{card.icon}</div>
+              <h3 className="mt-6 text-xl font-extrabold text-navy-primary">{card.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">{card.description}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
