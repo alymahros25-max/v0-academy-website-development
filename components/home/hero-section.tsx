@@ -47,10 +47,12 @@ export function HeroSection() {
           <div className="-translate-y-5 text-center transition-transform md:-translate-y-8 lg:-translate-y-10 lg:text-start">
             <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
-                {t("hero.title")}
+                أكاديمية الحافظ المتميز
               </h1>
-              <p className="mt-3 text-2xl font-bold text-foreground md:text-3xl">
-                {t("hero.subtitle")}
+              <p className="mt-3 text-2xl font-bold leading-relaxed text-foreground md:text-3xl">
+                <span className="block">تحفيظ القرآن وتأسيس العربية</span>
+                <span className="block">رجال ونساء وأطفال</span>
+                <span className="mt-1 block text-lg font-semibold text-muted-foreground md:text-xl">(الخليج، أوروبا، أمريكا)</span>
               </p>
             </div>
 

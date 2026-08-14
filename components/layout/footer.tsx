@@ -178,7 +178,7 @@ export function Footer() {
                 : "Al-Hafez Al-Motamayez est une plateforme d'apprentissage numérique à 100%. Tous les programmes éducatifs, les cours, les actifs numériques et les jeux sont livrés entièrement en ligne via notre salle de classe virtuelle intégrée. Aucun produit physique ou service hors ligne n'est fourni."}
           </p>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-primary-foreground/10">
-            <p className="text-sm text-primary-foreground/60">
+            <p className="text-sm text-primary-foreground/80">
               &copy; {new Date().getFullYear()}{" "}
               {locale === "ar" ? "أكاديمية الحافظ المتميز" : "Al-Hafiz Al-Mutamayez Academy"}.{" "}
               {t("footer.rights")}
