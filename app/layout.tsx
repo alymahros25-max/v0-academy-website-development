@@ -25,7 +25,15 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://quran-elhafez.com'),
-  icons: { icon: '/placeholder-logo.png', apple: '/placeholder-logo.png' },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16 32x32' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',
   title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
   description:
     "أكاديمية الحافظ المتميز العالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية أونلاين للناطقين بالعربية في الخليج وأوروبا وأمريكا وكندا، مع معلمين مجازين وحصص فردية ومواعيد تناسب فروق التوقيت.",

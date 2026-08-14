@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
+import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 import {
   Award,
   Clock,
@@ -64,7 +65,7 @@ export function FeaturesSection() {
           {features.map((feature, idx) => {
             const Icon = featureIcons[idx]
             return (
-              <div key={idx} className="mx-auto flex w-full max-w-xl flex-col gap-5 px-3 sm:px-0">
+              <RevealOnScroll key={idx} delay={idx * 80} className="mx-auto flex w-full max-w-xl flex-col gap-5 px-3 sm:px-0">
                 <div
                   data-feature-card
                   data-index={idx}
@@ -91,7 +92,7 @@ export function FeaturesSection() {
                   {feature.label}
                   <span aria-hidden="true" className="text-base transition-transform group-hover/link:-translate-x-1">←</span>
                 </Link>
-              </div>
+              </RevealOnScroll>
             )
           })}
         </div>

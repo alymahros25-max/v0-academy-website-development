@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useI18n } from "@/lib/i18n"
-import { BookOpen, Mail, Phone, MapPin } from "lucide-react"
+import { Mail, Phone, MapPin } from "lucide-react"
 
 export function Footer() {
   const { t, locale, dir } = useI18n()
@@ -41,8 +42,8 @@ export function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-secondary text-secondary-foreground">
-                <BookOpen className="w-5 h-5" />
+              <div className="flex items-center justify-center w-14 h-14 rounded-lg bg-secondary overflow-hidden">
+                <Image src="/logo.png" alt="شعار أكاديمية الحافظ المتميز" width={56} height={56} className="h-14 w-14 object-contain" />
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-base text-primary-foreground">

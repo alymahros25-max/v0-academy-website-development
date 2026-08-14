@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { HeroSection } from '@/components/home/hero-section'
+import { AcademyBanner } from '@/components/home/academy-banner'
 import { AboutSection } from '@/components/home/about-section'
 import { FeaturesSection } from '@/components/home/features-section'
 import { StatsSection } from '@/components/home/stats-section'
@@ -28,6 +29,7 @@ export default function HomePageClient() {
   return (
     <>
       {/* Above the fold - Critical, rendered as static HTML */}
+      <AcademyBanner />
       <HeroSection />
       <FeaturesSection />
       <StatsSection />
