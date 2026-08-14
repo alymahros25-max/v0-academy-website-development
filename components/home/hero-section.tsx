@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import { ArrowLeft, ArrowRight, Star } from "lucide-react"
 import { siteStats } from "@/lib/site-stats"
+import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 
 export function HeroSection() {
   const { t, locale, dir } = useI18n()
@@ -88,7 +89,8 @@ export function HeroSection() {
                 />
               </div>
               {/* Floating card */}
-              <div className="absolute -bottom-6 -start-12 bg-card rounded-2xl shadow-xl p-4 animate-float">
+              <RevealOnScroll className="absolute -bottom-6 -start-12" delay={0}>
+              <div className="bg-card rounded-2xl shadow-xl p-4 animate-float">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                     <span className="text-2xl font-bold text-primary">
@@ -107,6 +109,7 @@ export function HeroSection() {
                   </div>
                 </div>
               </div>
+              </RevealOnScroll>
             </div>
           </div>
         </div>
