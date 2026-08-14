@@ -9,9 +9,9 @@ const testimonials = [
     name: { ar: "أم محمد", en: "Um Muhammad", fr: "Oum Mohammed" },
     country: { ar: "السعودية", en: "Saudi Arabia", fr: "Arabie Saoudite" },
     text: {
-      ar: "أكاديمية رائعة! ابني حفظ 5 أجزاء في أقل من سنة بفضل المعلم المتميز والمتابعة المستمرة. أنصح الجميع بها.",
-      en: "Amazing academy! My son memorized 5 Juz in less than a year thanks to the excellent teacher and continuous follow-up.",
-      fr: "Academie incroyable! Mon fils a memorise 5 Juz en moins d'un an grace a l'excellent enseignant.",
+      ar: "أكاديمية رائعة! ابني حفظ 3 أجزاء في أقل من سنة بفضل المعلم المتميز والمتابعة المستمرة. أنصح الجميع بها.",
+      en: "Amazing academy! My son memorized 3 Juz in less than a year thanks to the excellent teacher and continuous follow-up.",
+      fr: "Academie incroyable! Mon fils a memorise 3 Juz en moins d'un an grace a l'excellent enseignant.",
     },
     rating: 5,
   },
