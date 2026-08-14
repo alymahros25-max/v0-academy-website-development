@@ -18,7 +18,7 @@ const featureIcons = [Award, Clock, User, BookOpen, Eye, DollarSign]
 export function FeaturesSection() {
   const { t, locale } = useI18n()
   const sectionRef = useRef<HTMLElement>(null)
-  const [activeCard, setActiveCard] = useState(0)
+  const [activeCard, setActiveCard] = useState<number | null>(null)
 
   useEffect(() => {
     const cards = sectionRef.current?.querySelectorAll<HTMLElement>("[data-feature-card]")
@@ -29,7 +29,7 @@ export function FeaturesSection() {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible) setActiveCard(Number((visible.target as HTMLElement).dataset.index))
+        setActiveCard(visible ? Number((visible.target as HTMLElement).dataset.index) : null)
       },
       { rootMargin: "-35% 0px -35% 0px", threshold: [0.15, 0.5, 0.85] },
     )

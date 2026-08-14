@@ -1,5 +1,6 @@
 "use client"
 
+import { Star } from "lucide-react"
 import { useI18n } from "@/lib/i18n"
 
 export function AcademyBanner() {
@@ -8,21 +9,20 @@ export function AcademyBanner() {
   return (
     <section
       dir={dir}
-      aria-label={locale === "ar" ? "إعلان الأكاديمية" : "Academy announcement"}
-      className="academy-banner relative z-10 overflow-hidden border-y border-[#DDBB85]/70 bg-[#5680A8] text-white shadow-sm"
+      aria-label={locale === "ar" ? "بانر تعلم القرآن حول العالم" : "Global Quran learning banner"}
+      className="academy-banner relative z-10 mt-20 overflow-hidden lg:mt-24 border-b border-[#DDBB85]/70 bg-gradient-to-b from-[#102B49] to-[#5680A8] text-[#F4D58D] shadow-sm"
     >
       <div className="mx-auto flex min-h-14 max-w-7xl items-center justify-center px-4 py-3 text-center">
-        <p className="text-sm font-bold leading-6 sm:text-base">
+        <p className="banner-enter flex items-center justify-center gap-2 text-base font-bold leading-6 [text-shadow:0_1px_2px_rgba(0,0,0,0.35)] sm:text-lg">
           {locale === "ar" ? (
             <>
-              <span className="text-[#E8D3A0]">أكاديمية الحافظ المتميز</span>
-              <span className="mx-2 text-[#DDBB85]" aria-hidden="true">|</span>
-              <span>تعلم القرآن من أي مكان في العالم</span>
+              <Star className="size-4 shrink-0 fill-current" aria-hidden="true" />
+              <span>تعلم القرآن في أي مكان في العالم</span>
             </>
           ) : locale === "fr" ? (
-            "Académie Al-Hafiz Al-Mutamayez | Apprenez le Coran où que vous soyez"
+            "Apprenez le Coran partout dans le monde"
           ) : (
-            "Al-Hafiz Al-Mutamayez Academy | Learn the Quran from anywhere in the world"
+            "Learn the Quran anywhere in the world"
           )}
         </p>
       </div>
