@@ -1,6 +1,7 @@
 "use client"
 
 import { siteStats, siteStatLabels } from "@/lib/site-stats"
+import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 import { useEffect, useState, useRef } from "react"
 
 function AnimatedNumber({ target, duration = 2000 }: { target: number; duration?: number }) {
@@ -48,7 +49,8 @@ export function StatsSection() {
       <div className="relative z-10 mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, idx) => (
-            <div key={idx} className="text-center">
+            <RevealOnScroll key={idx} delay={idx * 80}>
+            <div className="text-center">
               <div className="text-4xl md:text-5xl font-extrabold text-[#d4af37] mb-2">
                 <AnimatedNumber target={stat.value} />
                 {stat.suffix}
@@ -57,6 +59,7 @@ export function StatsSection() {
                 {stat.label}
               </p>
             </div>
+            </RevealOnScroll>
           ))}
         </div>
       </div>
