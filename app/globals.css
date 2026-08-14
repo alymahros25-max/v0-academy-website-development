@@ -116,17 +116,17 @@ html {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-@keyframes cardEntrance {
-  from { opacity: 0; transform: translateY(18px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes bannerEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.scroll-card {
-  animation: cardEntrance 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+.banner-enter {
+  animation: bannerEnter 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-card,
+  .banner-enter,
   .animate-fade-in-up,
   .animate-float,
   .animate-shimmer {

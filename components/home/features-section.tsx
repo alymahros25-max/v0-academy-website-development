@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
+import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 import {
   Award,
   Clock,
@@ -17,7 +18,7 @@ const featureIcons = [Award, Clock, User, BookOpen, Eye, DollarSign]
 export function FeaturesSection() {
   const { t, locale } = useI18n()
   const sectionRef = useRef<HTMLElement>(null)
-  const [activeCard, setActiveCard] = useState(0)
+  const [activeCard, setActiveCard] = useState<number | null>(null)
 
   useEffect(() => {
     const cards = sectionRef.current?.querySelectorAll<HTMLElement>("[data-feature-card]")
@@ -28,7 +29,7 @@ export function FeaturesSection() {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible) setActiveCard(Number((visible.target as HTMLElement).dataset.index))
+        setActiveCard(visible ? Number((visible.target as HTMLElement).dataset.index) : null)
       },
       { rootMargin: "-35% 0px -35% 0px", threshold: [0.15, 0.5, 0.85] },
     )
@@ -64,7 +65,7 @@ export function FeaturesSection() {
           {features.map((feature, idx) => {
             const Icon = featureIcons[idx]
             return (
-              <div key={idx} className="mx-auto flex w-full max-w-xl flex-col gap-5 px-3 sm:px-0">
+              <RevealOnScroll key={idx} delay={idx * 80} className="mx-auto flex w-full max-w-xl flex-col gap-5 px-3 sm:px-0">
                 <div
                   data-feature-card
                   data-index={idx}
@@ -91,7 +92,7 @@ export function FeaturesSection() {
                   {feature.label}
                   <span aria-hidden="true" className="text-base transition-transform group-hover/link:-translate-x-1">←</span>
                 </Link>
-              </div>
+              </RevealOnScroll>
             )
           })}
         </div>

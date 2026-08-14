@@ -24,7 +24,7 @@ export function HeroSection() {
           sizes="100vw"
           quality={85}
           priority
-          fetchpriority="high"
+          fetchPriority="high"
         />
 
       </div>
@@ -88,7 +88,7 @@ export function HeroSection() {
           {/* Decorative Card */}
           <div className="hidden lg:flex justify-center">
             <div className="relative">
-              <div className="w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-secondary/30 rotate-3 hover:rotate-0 transition-transform duration-500">
+              <div className="relative w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-secondary/30 rotate-3 hover:rotate-0 transition-transform duration-500">
                 <Image
                   src="/images/teacher-quran.jpg"
                   alt="Quran teacher"
