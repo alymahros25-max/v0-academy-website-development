@@ -3,7 +3,9 @@ import 'server-only'
 import Stripe from 'stripe'
 import { getProductById } from './products'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+
+export const stripe = stripeSecretKey ? new Stripe(stripeSecretKey) : null
 
 /**
  * Server-side price validation

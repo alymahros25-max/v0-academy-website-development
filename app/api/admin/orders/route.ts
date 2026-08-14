@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { requireAdmin } from '@/lib/api-auth'
 
 /**
  * GET /api/admin/orders
@@ -8,11 +9,8 @@ import { createClient } from '@supabase/supabase-js'
  */
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication
-    const authCookie = request.cookies.get('admin_token')?.value
-    if (!authCookie) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const authError = await requireAdmin()
+    if (authError) return authError
 
     // Initialize Supabase client
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -74,11 +72,8 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    const authCookie = request.cookies.get('admin_token')?.value
-    if (!authCookie) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const authError = await requireAdmin()
+    if (authError) return authError
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY

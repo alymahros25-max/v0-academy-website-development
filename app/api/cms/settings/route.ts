@@ -1,3 +1,4 @@
+import { requireAdmin } from '@/lib/api-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { revalidateThemeSettings } from '@/lib/api-revalidate'
@@ -87,6 +88,9 @@ export async function GET(request: NextRequest) {
  * }
  */
 export async function POST(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     const body = await request.json() as {
       setting_key?: string
@@ -196,6 +200,9 @@ export async function POST(request: NextRequest) {
  * ]
  */
 export async function PATCH(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     const body = await request.json() as Array<{
       setting_key?: string
@@ -265,6 +272,9 @@ export async function PATCH(request: NextRequest) {
  * Query params: key=string
  */
 export async function DELETE(request: NextRequest) {
+    const authError = await requireAdmin()
+    if (authError) return authError
+
   try {
     const { searchParams } = new URL(request.url)
     const key = searchParams.get('key')
