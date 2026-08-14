@@ -10,9 +10,9 @@ export function AcademyBanner() {
     <section
       dir={dir}
       aria-label={locale === "ar" ? "بانر تعلم القرآن حول العالم" : "Global Quran learning banner"}
-      className="academy-banner relative z-10 mt-20 overflow-hidden lg:mt-24 border-b border-[#DDBB85]/70 bg-gradient-to-b from-[#102B49] to-[#5680A8] text-[#F4D58D] shadow-sm"
+      className="academy-banner relative z-10 overflow-hidden border-b border-[#DDBB85]/70 bg-[#102B49] text-[#F4D58D] shadow-sm"
     >
-      <div className="mx-auto flex min-h-14 max-w-7xl items-center justify-center px-4 py-3 text-center">
+      <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-center px-4 py-5 text-center sm:min-h-24 sm:py-6">
         <p className="banner-enter flex items-center justify-center gap-2 text-base font-bold leading-6 [text-shadow:0_1px_2px_rgba(0,0,0,0.35)] sm:text-lg">
           {locale === "ar" ? (
             <>

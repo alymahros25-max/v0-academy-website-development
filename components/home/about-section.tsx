@@ -2,6 +2,7 @@
 
 import { useI18n } from "@/lib/i18n"
 import { Compass, Target } from "lucide-react"
+import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 
 function MissionIcon() {
   return (
@@ -50,12 +51,14 @@ export function AboutSection() {
           <p className="mt-5 text-pretty text-lg leading-8 text-foreground/75">{t("about.desc")}</p>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {cards.map((card) => (
-            <article key={card.title} className="scroll-card rounded-3xl border border-navy-light/40 bg-card p-8 text-center shadow-sm transition-shadow hover:shadow-lg">
+          {cards.map((card, idx) => (
+            <RevealOnScroll key={card.title} delay={idx * 80}>
+            <article className="scroll-card rounded-3xl border border-navy-light/40 bg-card p-8 text-center shadow-sm transition-shadow hover:shadow-lg">
               <div className="mx-auto flex size-20 items-center justify-center rounded-2xl bg-gold-pale/60">{card.icon}</div>
               <h3 className="mt-6 text-xl font-extrabold text-navy-primary">{card.title}</h3>
               <p className="mt-3 text-sm leading-7 text-muted-foreground">{card.description}</p>
             </article>
+            </RevealOnScroll>
           ))}
         </div>
       </div>

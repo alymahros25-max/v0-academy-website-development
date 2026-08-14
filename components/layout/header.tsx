@@ -104,7 +104,7 @@ export function Header() {
             {langOpen && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setLangOpen(false)} />
-                <div className="absolute top-full mt-1 bg-card rounded-lg shadow-xl border border-border overflow-hidden z-20 min-w-[140px] end-0">
+                <div className="absolute top-full mt-1 min-w-[140px] overflow-hidden rounded-lg border border-border bg-card text-foreground shadow-xl z-20 end-0">
                   {(Object.keys(localeLabels) as Locale[]).map((loc) => (
                     <button
                       key={loc}
