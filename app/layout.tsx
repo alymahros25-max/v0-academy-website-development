@@ -141,7 +141,7 @@ export default function RootLayout({
         />
         <Script
           id="ga4-config"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];

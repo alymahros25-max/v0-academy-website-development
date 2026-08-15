@@ -43,7 +43,7 @@ export function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="flex items-center justify-center w-14 h-14 rounded-lg bg-secondary overflow-hidden">
-                <Image src="/logo.png" alt="شعار أكاديمية الحافظ المتميز" width={56} height={56} className="h-14 w-14 object-contain" />
+                <Image src="/logo.png" alt="شعار أكاديمية الحافظ المتميز" width={56} height={56} style={{ width: "56px", height: "56px" }} className="size-14 object-contain" />
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-base text-primary-foreground">
