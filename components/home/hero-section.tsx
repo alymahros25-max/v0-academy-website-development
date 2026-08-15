@@ -15,15 +15,15 @@ export function HeroSection() {
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Background Image Container */}
       <div className="absolute inset-0 bg-warm-bg">
-        <div className="absolute inset-x-0 top-0 h-[24%] bg-warm-bg" />
-        <div className="absolute inset-x-0 bottom-0 h-[18%] bg-warm-bg" />
+        <div className="absolute inset-x-0 top-0 hidden h-[24%] bg-warm-bg lg:block" />
+        <div className="absolute inset-x-0 bottom-0 hidden h-[18%] bg-warm-bg lg:block" />
         <Image
           src="/images/hero-children.jpg"
           alt="Children learning Quran"
           fill
-          className="object-cover object-center [clip-path:inset(24%_0_18%_0)]"
+          className="object-cover object-center lg:[clip-path:inset(24%_0_18%_0)]"
           sizes="100vw"
-          quality={85}
+          quality={75}
           priority
           fetchPriority="high"
         />
