@@ -131,25 +131,6 @@ const nextConfig = {
   },
 
   // ============================================================
-  // REWRITES (Internal routing without URL change)
-  // ============================================================
-  async rewrites() {
-    return {
-      beforeFiles: [
-        // Rewrite language-prefixed routes to root routes
-        {
-          source: '/en/:path*',
-          destination: '/:path*?lang=en',
-        },
-        {
-          source: '/fr/:path*',
-          destination: '/:path*?lang=fr',
-        },
-      ],
-    }
-  },
-
-  // ============================================================
   // BUILD OPTIMIZATION
   // ============================================================
   productionBrowserSourceMaps: false,

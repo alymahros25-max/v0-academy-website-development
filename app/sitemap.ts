@@ -4,8 +4,6 @@ import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 
 const BASE_URL = 'https://quran-elhafez.com'
-const LANGUAGES = ['ar', 'en', 'fr'] as const
-type Language = (typeof LANGUAGES)[number]
 
 /**
  * Get dynamic blog articles from Supabase.
@@ -63,42 +61,16 @@ function getBlogArticlesFromFilesystem(): string[] {
   ]
 }
 
-// Helper: Get language prefix for URL
-const getLanguagePrefix = (lang: Language): string => {
-  return lang === 'ar' ? '' : `/${lang}`
-}
-
-// Helper: Generate localized URLs with xhtml:link alternates
 const generateLocalizedUrl = (
   route: string,
   priority: number,
   changefreq: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' = 'weekly'
-): MetadataRoute.Sitemap => {
-  const urls: MetadataRoute.Sitemap = []
-
-  LANGUAGES.forEach((lang) => {
-    const langPrefix = getLanguagePrefix(lang)
-    const urlPath = route === '/' ? langPrefix : `${langPrefix}${route}`
-    const fullUrl = `${BASE_URL}${urlPath === '' ? '/' : urlPath}`
-
-    urls.push({
-      url: fullUrl,
-      lastModified: new Date().toISOString().split('T')[0],
-      changeFrequency: changefreq,
-      priority: priority,
-      alternates: {
-        languages: {
-          ar: `${BASE_URL}${route === '/' ? '' : route}`,
-          en: `${BASE_URL}/en${route === '/' ? '' : route}`,
-          fr: `${BASE_URL}/fr${route === '/' ? '' : route}`,
-          'x-default': `${BASE_URL}${route === '/' ? '' : route}`,
-        },
-      },
-    })
-  })
-
-  return urls
-}
+): MetadataRoute.Sitemap => [{
+  url: `${BASE_URL}${route === '/' ? '/' : route}`,
+  lastModified: new Date().toISOString().split('T')[0],
+  changeFrequency: changefreq,
+  priority,
+}]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sitemap: MetadataRoute.Sitemap = []
@@ -147,24 +119,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ============================================================
   const blogArticles = await getDynamicBlogArticles()
   blogArticles.forEach((slug) => {
-    LANGUAGES.forEach((lang) => {
-      const langPrefix = getLanguagePrefix(lang)
-      const fullUrl = `${BASE_URL}${langPrefix}/blog/${slug}`
-
-      sitemap.push({
-        url: fullUrl,
-        lastModified: new Date().toISOString().split('T')[0],
-        changeFrequency: 'monthly',
-        priority: 0.6,
-        alternates: {
-          languages: {
-            ar: `${BASE_URL}/blog/${slug}`,
-            en: `${BASE_URL}/en/blog/${slug}`,
-            fr: `${BASE_URL}/fr/blog/${slug}`,
-            'x-default': `${BASE_URL}/blog/${slug}`,
-          },
-        },
-      })
+    sitemap.push({
+      url: `${BASE_URL}/blog/${slug}`,
+      lastModified: new Date().toISOString().split('T')[0],
+      changeFrequency: 'monthly',
+      priority: 0.6,
     })
   })
 

@@ -35,7 +35,7 @@ export default function QuranPageClient() {
   const { t, locale } = useI18n()
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null)
 
-  const { data: livePackages } = useSWR<Array<{ id: string; type: string; name?: Record<string, string>; sessions: number; price: number; popular: boolean; active?: boolean }>>("/api/public/packages", (url) => fetch(url).then((res) => res.json()))
+  const { data: livePackages } = useSWR<Array<{ id: string; type: string; name?: Record<string, string>; sessions: number; price: number; popular: boolean; active?: boolean }>>("/api/public/packages", (url: string) => fetch(url).then((res) => res.json()))
   const packages = (livePackages ?? []).filter((pkg) => pkg.type === "quran" && pkg.active !== false)
 
   const features = [
