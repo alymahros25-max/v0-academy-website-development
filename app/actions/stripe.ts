@@ -15,6 +15,10 @@ export async function startCheckoutSession(productId: string, locale: string = '
   const productName = typeof product.name === 'object' ? product.name[locale as keyof typeof product.name] || product.name.ar : product.name
   const productDescription = typeof product.description === 'object' ? product.description[locale as keyof typeof product.description] || product.description.ar : product.description
 
+  if (!stripe) {
+    throw new Error('Stripe is not configured')
+  }
+
   // Create Checkout Sessions from body params.
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
@@ -37,6 +41,10 @@ export async function startCheckoutSession(productId: string, locale: string = '
       sessions: String(product.sessions),
     },
   })
+
+  if (!session.client_secret) {
+    throw new Error('Stripe did not return a client secret')
+  }
 
   return session.client_secret
 }

@@ -76,8 +76,6 @@ export function getLocalizedPath(
 export function getLanguageAlternates(path: string): Record<string, string> {
   return {
     ar: `https://quran-elhafez.com${path}`,
-    en: `https://quran-elhafez.com/en${path}`,
-    fr: `https://quran-elhafez.com/fr${path}`,
     'x-default': `https://quran-elhafez.com${path}`,
   }
 }

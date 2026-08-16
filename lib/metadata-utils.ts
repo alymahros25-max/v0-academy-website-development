@@ -8,12 +8,7 @@ export const defaultMetadata: Metadata = {
   },
   description: 'أكاديمية عالمية لتحفيظ القرآن الكريم وتأسيس اللغة العربية اون لاين مع معلمين مجازين',
   alternates: {
-    languages: {
-      'ar': 'https://quran-elhafez.com',
-      'en': 'https://quran-elhafez.com?lang=en',
-      'fr': 'https://quran-elhafez.com?lang=fr',
-      'x-default': 'https://quran-elhafez.com',
-    },
+    canonical: 'https://quran-elhafez.com/',
   },
 }
 
@@ -34,12 +29,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
   }
 
   const getAlternates = (route: string) => ({
-    languages: {
-      'ar': `${baseUrl}${route}`,
-      'en': `${baseUrl}${route}?lang=en`,
-      'fr': `${baseUrl}${route}?lang=fr`,
-      'x-default': `${baseUrl}${route}`,
-    },
+    canonical: `${baseUrl}${route}`,
   })
 
   const metadataMap: Record<string, Metadata> = {

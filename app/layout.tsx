@@ -53,14 +53,7 @@ export const metadata: Metadata = {
   authors: [{ name: "أكاديمية الحافظ المتميز" }],
   creator: "أكاديمية الحافظ المتميز",
   alternates: {
-    // Only advertise language URLs that the application actually serves.
-    // Regional relevance comes from truthful content and structured data, not cloaking.
-    languages: {
-      'ar': 'https://quran-elhafez.com',
-      'en': 'https://quran-elhafez.com?lang=en',
-      'fr': 'https://quran-elhafez.com?lang=fr',
-      'x-default': 'https://quran-elhafez.com',
-    },
+    canonical: 'https://quran-elhafez.com/',
   },
   openGraph: {
     type: "website",

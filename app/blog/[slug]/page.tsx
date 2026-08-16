@@ -149,12 +149,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: post.description.ar,
     keywords: post.keywords.ar,
     alternates: {
-      languages: {
-        'ar': articleUrl,
-        'en': `${articleUrl}?lang=en`,
-        'fr': `${articleUrl}?lang=fr`,
-        'x-default': articleUrl,
-      },
+      canonical: articleUrl,
     },
     openGraph: {
       title: post.title.ar,

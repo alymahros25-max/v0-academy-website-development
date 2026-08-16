@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import {
   EmbeddedCheckout,
   EmbeddedCheckoutProvider,
@@ -20,23 +20,27 @@ interface CheckoutProps {
   onCancel?: () => void
 }
 
+
 export default function Checkout({ productId, onSuccess, onCancel }: CheckoutProps) {
+  const [clientSecret, setClientSecret] = useState<string | null>(null)
   const { locale } = useI18n()
 
-  const startCheckoutSessionForProduct = useCallback(
-    async () => {
-      const clientSecret = await startCheckoutSession(productId, locale)
-      return clientSecret
-    },
-    [productId, locale],
-  )
+  useEffect(() => {
+    let cancelled = false
+    startCheckoutSession(productId, locale).then((secret) => {
+      if (!cancelled) setClientSecret(secret)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [productId, locale])
 
   return (
     <div id="stripe-checkout" className="w-full">
       <EmbeddedCheckoutProvider
         stripe={stripePromise}
-        options={{ 
-          clientSecret: startCheckoutSessionForProduct,
+        options={{
+          clientSecret,
           onComplete: onSuccess,
         }}
       >

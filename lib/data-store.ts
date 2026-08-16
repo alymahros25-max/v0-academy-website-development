@@ -163,6 +163,12 @@ const defaultSettings: SiteSettings = {
 }
 
 // Persistent CRUD functions. Supabase is the production source of truth; JSON remains a local fallback.
+type AdminContentWrite = {
+  content_type: string
+  content_id: string
+  data: unknown
+}
+
 async function getPersistent<T>(contentType: string, fallback: T): Promise<T> {
   if (!supabaseAdmin) return fallback
   const { data, error } = await supabaseAdmin.from("admin_content").select("data").eq("content_type", contentType).order("content_id")
@@ -176,21 +182,21 @@ async function getPersistent<T>(contentType: string, fallback: T): Promise<T> {
 
 async function seedPersistent<T>(contentType: string, data: T) {
   if (!supabaseAdmin) return
-  const rows = contentType === "settings"
+  const rows: AdminContentWrite[] = contentType === "settings"
     ? [{ content_type: contentType, content_id: "site", data }]
     : (data as unknown as Array<{ id?: string }>).map((item, index) => ({ content_type: contentType, content_id: String(item.id ?? index), data: item }))
-  await supabaseAdmin.from("admin_content").upsert(rows, { onConflict: "content_type,content_id" })
+  await supabaseAdmin.from("admin_content").upsert(rows as never, { onConflict: "content_type,content_id" })
 }
 
 async function setPersistent<T extends Array<{ id?: string }> | SiteSettings>(contentType: string, data: T) {
   if (!supabaseAdmin) return false
   const deleted = await supabaseAdmin.from("admin_content").delete().eq("content_type", contentType)
   if (deleted.error) throw deleted.error
-  const rows = contentType === "settings"
+  const rows: AdminContentWrite[] = contentType === "settings"
     ? [{ content_type: contentType, content_id: "site", data }]
     : (data as Array<{ id?: string }>).map((item, index) => ({ content_type: contentType, content_id: String(item.id ?? index), data: item }))
   if (rows.length === 0) return true
-  const inserted = await supabaseAdmin.from("admin_content").insert(rows)
+  const inserted = await supabaseAdmin.from("admin_content").insert(rows as never)
   if (inserted.error) throw inserted.error
   return true
 }
