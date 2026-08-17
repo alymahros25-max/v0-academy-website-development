@@ -144,3 +144,25 @@ html {
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
+
+.saudi-hero { background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(var(--background)) 72%); }
+.saudi-eyebrow { display: inline-flex; align-items: center; gap: .5rem; color: hsl(var(--primary)); font-size: .875rem; font-weight: 700; }
+.saudi-primary-cta, .saudi-secondary-cta, .saudi-plan-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: .75rem; padding: .85rem 1.15rem; font-weight: 700; transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease; }
+.saudi-primary-cta { color: hsl(var(--primary-foreground)); background: hsl(var(--primary)); box-shadow: 0 12px 28px hsl(var(--primary) / .22); }
+.saudi-primary-cta:hover, .saudi-primary-cta:focus-visible { transform: translateY(-3px); box-shadow: 0 16px 34px hsl(var(--primary) / .3); }
+.saudi-secondary-cta { color: hsl(var(--foreground)); background: hsl(var(--card) / .75); border: 1px solid hsl(var(--border)); }
+.saudi-secondary-cta:hover, .saudi-secondary-cta:focus-visible { transform: translateY(-2px); background: hsl(var(--card)); }
+.saudi-proof { display: flex; align-items: center; gap: .65rem; border: 1px solid hsl(var(--border)); border-radius: .85rem; background: hsl(var(--card) / .7); padding: .85rem 1rem; color: hsl(var(--muted-foreground)); font-size: .875rem; }
+.saudi-proof svg { color: hsl(var(--accent)); flex: 0 0 auto; }
+.saudi-plan-nav-wrap { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; border-block: 1px solid hsl(var(--border)); background: hsl(var(--card) / .75); }
+.saudi-plan-nav-wrap.saudi-reveal-visible { opacity: 1; transform: translateY(0); }
+.saudi-chip { border-radius: 999px; border: 1px solid hsl(var(--border)); padding: .55rem 1rem; color: hsl(var(--primary)); font-size: .875rem; font-weight: 700; transition: background-color .2s ease, transform .2s ease; }
+.saudi-chip:hover, .saudi-chip:focus-visible { background: hsl(var(--secondary)); transform: translateY(-2px); }
+.saudi-plan-card { position: relative; display: flex; flex-direction: column; border: 1px solid hsl(var(--border)); border-radius: 1.1rem; background: hsl(var(--card)); padding: 1.5rem; box-shadow: 0 8px 24px hsl(var(--foreground) / .06); transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
+.saudi-plan-card:hover, .saudi-plan-card:focus-within { transform: translateY(-7px); border-color: hsl(var(--primary) / .45); box-shadow: 0 22px 45px hsl(var(--primary) / .16); }
+.saudi-plan-card-featured { border-color: hsl(var(--accent)); box-shadow: 0 16px 36px hsl(var(--accent) / .2); }
+.saudi-plan-card-featured:hover, .saudi-plan-card-featured:focus-within { box-shadow: 0 26px 52px hsl(var(--accent) / .28); }
+.saudi-popular-badge { position: absolute; inset-inline-start: 1.25rem; top: -0.75rem; display: inline-flex; align-items: center; gap: .35rem; border-radius: 999px; background: hsl(var(--accent)); color: hsl(var(--accent-foreground)); padding: .35rem .7rem; font-size: .75rem; font-weight: 800; }
+.saudi-plan-cta { margin-top: auto; color: hsl(var(--primary-foreground)); background: hsl(var(--primary)); }
+.saudi-plan-cta:hover, .saudi-plan-cta:focus-visible { transform: translateY(-2px); box-shadow: 0 10px 22px hsl(var(--primary) / .22); }
+@media (prefers-reduced-motion: reduce) { .saudi-primary-cta, .saudi-secondary-cta, .saudi-plan-cta, .saudi-chip, .saudi-plan-card, .saudi-plan-nav-wrap { transition: none; transform: none !important; } }
