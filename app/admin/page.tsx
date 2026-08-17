@@ -6,7 +6,7 @@ import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
   Menu, XIcon, Palette, FileText, Lock, Film, Gamepad2, Search, BarChart3,
-  Languages, Save, Wand2
+  Languages, Save, Wand2, MapPin
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
@@ -18,6 +18,7 @@ import useSWR, { mutate as globalMutate } from "swr"
 import { VideoForm } from "@/components/classroom-moments/VideoForm"
 import { BlogManager } from "@/components/admin/BlogManager"
 import { LibraryManager } from "@/components/admin/LibraryManager"
+import { SaudiLandingTab } from "@/components/admin/SaudiLandingTab"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
@@ -59,7 +60,7 @@ function AdminSectionToolbar({ section }: { section: string }) {
   )
 }
 
-type Tab = "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
+type Tab = "saudi-landing" | "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -98,6 +99,7 @@ export default function AdminDashboard() {
 
   const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard; group: string }[] = [
     { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard, group: "الرئيسية" },
+    { id: "saudi-landing", label: "صفحة الهبوط السعودية", key: "admin.saudiLanding", icon: MapPin, group: "محتوى الموقع" },
     { id: "packages", label: t("admin.packages"), key: "admin.packages", icon: Package, group: "محتوى الموقع" },
     { id: "teachers", label: t("admin.teachers"), key: "admin.teachers", icon: Users, group: "محتوى الموقع" },
     { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star, group: "محتوى الموقع" },
@@ -200,6 +202,9 @@ export default function AdminDashboard() {
         {activeTab !== "dashboard" && <AdminSectionToolbar section={tabs.find(t => t.id === activeTab)?.label ?? "القسم الحالي"} />}
         <AdminErrorBoundary>
             {activeTab === "dashboard" && <DashboardTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "saudi-landing" && <SaudiLandingTab />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "packages" && <PackagesTab />}
@@ -849,7 +854,7 @@ function MessagesTab() {
                 </div>
                 <div className="flex items-center gap-1">
                   {!msg?.read && (
-                    <button onClick={() => handleRead(msg.id)} className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="تحديد كمقروء">
+                    <button onClick={() => handleRead(msg.id)} className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="تح��يد كمقروء">
                       <Check className="w-4 h-4" />
                     </button>
                   )}
