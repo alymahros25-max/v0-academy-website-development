@@ -1,30 +1,11 @@
-"use client"
+import type { Metadata } from "next"
+import { AdminLayoutProvider } from "@/components/admin/admin-layout-content"
 
-import { ReactNode } from "react"
-import { I18nProvider, useI18n } from "@/lib/i18n"
-
-function AdminLayoutContent({
-  children,
-}: {
-  children: ReactNode
-}) {
-  const { dir, locale } = useI18n()
-
-  return (
-    <div dir={dir} lang={locale}>
-      {children}
-    </div>
-  )
+export const metadata: Metadata = {
+  alternates: { canonical: 'https://quran-elhafez.com/admin' },
+  robots: { index: false, follow: false },
 }
 
-export default function AdminLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
-  return (
-    <I18nProvider>
-      <AdminLayoutContent>{children}</AdminLayoutContent>
-    </I18nProvider>
-  )
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return <AdminLayoutProvider>{children}</AdminLayoutProvider>
 }
