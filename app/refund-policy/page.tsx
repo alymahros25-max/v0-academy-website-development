@@ -7,6 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'سياسة الاسترداد | أكاديمية الحافظ المتميز',
     description: 'سياسة واضحة وشفافة لاسترجاع الأموال من الدورات المدفوعة والجلسات المباشرة',
+    alternates: { canonical: 'https://quran-elhafez.com/refund-policy' },
     openGraph: {
       title: 'سياسة الاسترداد',
       description: 'سياسة الاسترجاع الكاملة والشروط والأحكام',

@@ -33,7 +33,12 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
   })
 
   const metadataMap: Record<string, Metadata> = {
-    'checkout-success': { title: 'تم الدفع بنجاح | أكاديمية الحافظ المتميز', description: 'شكراً لإتمام عملية الدفع.' },
+    'checkout-success': {
+      title: 'تم الدفع بنجاح | أكاديمية الحافظ المتميز',
+      description: 'شكراً لإتمام عملية الدفع.',
+      alternates: { canonical: 'https://quran-elhafez.com/checkout-success' },
+      robots: { index: false, follow: false },
+    },
     quran: {
       title: 'تحفيظ القرآن الكريم اون لاين | أكاديمية الحافظ المتميز',
       description: 'تحفيظ القرآن أونلاين للطلاب الناطقين بالعربية في الخليج والأردن وأوروبا وأمريكا وكندا، مع معلمين مجازين ومواعيد مرنة.',
