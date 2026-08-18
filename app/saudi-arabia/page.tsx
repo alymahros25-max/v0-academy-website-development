@@ -14,16 +14,6 @@ export const metadata: Metadata = {
   openGraph: { title: saudiLandingConfig.seo.title, description: saudiLandingConfig.seo.description, url: saudiLandingConfig.seo.canonical, locale: "ar_SA", type: "website" },
 }
 
-const faqs = [
-  ["هل الحصص حضورية أم أونلاين؟", "نقدم الحصص أونلاين بالكامل، ولا تحتاج إلى الحضور لمقر."],
-  ["هل البرامج للأطفال فقط؟", "لا، البرامج مناسبة للأطفال والفتيات والشباب والرجال والنساء وجميع الأعمار."],
-  ["هل يمكن اختيار معلم أو معلمة؟", "نعم، يمكنك توضيح تفضيلك في رسالة واتساب وسننسق معك الأنسب."],
-  ["هل أحتاج إلى معرفة مستوى الطالب مسبقاً؟", "لا، نساعدك على تحديد المستوى المناسب خلال التنسيق والحصة التجريبية."],
-  ["هل الأسعار شهرية؟", "نعم، الأسعار المعروضة بالريال السعودي شهرية حسب عدد الحصص ومدة الحصة."],
-  ["هل يمكنني اختيار وقت الحصة؟", "نعم، ننسق معك موعداً مرناً مناسباً بتوقيت السعودية."],
-  ["هل الخدمة متاحة من جميع مدن السعودية؟", "نعم، الخدمة أونلاين ومتاحة من جميع مدن ومناطق المملكة."],
-  ["كيف أحجز الحصة التجريبية؟", "اضغط على جرب حصة مجانا وأرسل بيانات الطالب والوقت المناسب عبر واتساب."],
-]
 
 function PlanCard({ plan }: { plan: (typeof saudiLandingConfig.plans)[number] }) {
   return <article data-saudi-program={plan.program} data-saudi-duration={plan.duration} className={`saudi-plan-card ${plan.popular ? "saudi-plan-card-featured" : ""}`}>
@@ -37,23 +27,31 @@ function PlanCard({ plan }: { plan: (typeof saudiLandingConfig.plans)[number] })
   </article>
 }
 
-const planInfo = [
-  ["تعلم يناسب وقتك ومستواك", "يمكنك اختيار عدد الحصص ومدة الحصة بما يناسب وقتك. سواء كنت تبحث عن بداية هادئة أو متابعة منتظمة للحفظ والمراجعة، نساعدك على اختيار المسار الأقرب إلى هدفك."],
-  ["برامج للأطفال والكبار", "البرامج متاحة للأطفال والفتيات والشباب والرجال والنساء، مع مراعاة عمر الطالب ومستواه واحتياجه. يمكنك طلب معلم أو معلمة عند التواصل معنا."],
-  ["حصص أونلاين من جميع مدن السعودية", "نقدم الحصص أونلاين للطلاب والطالبات من الرياض وجدة ومكة المكرمة والمدينة المنورة والدمام والخبر والأحساء وجميع مدن ومناطق المملكة، من دون الحاجة إلى الحضور لمقر."],
-  ["ابدأ بخطوة بسيطة", "اختر الباقة المناسبة، واضغط على «جرب حصة مجانا»، ثم أرسل بيانات الطالب والوقت المناسب للحصة التجريبية عبر واتساب، وسنساعدك في تنسيق الموعد."],
-  ["ابدأ بحصة تجريبية", "يمكنك البدء بحصة تجريبية مجانية لمعرفة مستوى الطالب واحتياجه قبل اختيار البرنامج الشهري."],
-  ["يسعدنا نساعدك", "إذا لم تكن متأكداً من الباقة المناسبة، أرسل بيانات الطالب عبر واتساب وسنساعدك في اختيار المدة وعدد الحصص الأنسب."],
-]
+const planInfoByProgram = {
+  quran: [
+    ["تحفيظ قرآن أونلاين بخطة تناسب الطالب", "نساعد الطلاب والطالبات من الرياض وجدة ومكة والمدينة والدمام وبقية مدن السعودية على حفظ القرآن ومراجعته من خلال حصص فردية مرنة تناسب العمر والمستوى."],
+    ["متابعة الحفظ والتجويد خطوة بخطوة", "تتضمن حصص تحفيظ القرآن متابعة الحفظ الجديد والمراجعة وتصحيح التلاوة والتجويد، مع اختيار مدة وعدد حصص يناسبان وقت الأسرة."],
+    ["حصة تجريبية قبل اختيار الباقة", "ابدأ بحصة تجريبية مجانية ليتعرف المعلم على مستوى الطالب وهدفه، ثم نساعدك في اختيار الباقة المناسبة بالريال السعودي."],
+  ],
+  arabic: [
+    ["تأسيس اللغة العربية أونلاين للأطفال والكبار", "برنامج تأسيس العربية مناسب للطلاب والطالبات في السعودية، ويبدأ من مستوى الطالب في القراءة والكتابة والنطق دون افتراض مستوى سابق."],
+    ["قراءة وكتابة وإملاء بطريقة متدرجة", "نركز على بناء أساس قوي في القراءة والكتابة والإملاء والتعبير، مع متابعة فردية تناسب عمر الطالب واحتياجه."],
+    ["برنامج مرن يناسب وقت الأسرة", "يمكن اختيار مدة الحصة وعدد الحصص الأسبوعية والتنسيق على موعد مناسب بتوقيت السعودية، مع إمكانية بدء التجربة قبل الاشتراك الشهري."],
+  ],
+} as const
 
-const faqGroups: readonly (readonly (readonly [string, string])[])[] = [
-  [["هل الحصص حضورية أم أونلاين؟", "الحصص أونلاين بالكامل، ويمكن حضورها من المنزل عبر الهاتف أو الكمبيوتر."], ["هل البرامج للأطفال فقط؟", "لا، البرامج متاحة للأطفال والشباب والفتيات والرجال والنساء وجميع الأعمار."]],
-  [["هل يمكن اختيار معلم أو معلمة؟", "يمكن طلب معلم أو معلمة، ويتم التنسيق حسب البرنامج والتوفر."], ["هل أحتاج إلى معرفة مستوى الطالب مسبقاً؟", "لا، تساعدنا الحصة التجريبية على معرفة مستوى الطالب واحتياجه."]],
-  [["هل الأسعار شهرية؟", "نعم، الأسعار المعروضة بالريال السعودي وهي أسعار شهرية، وتختلف حسب مدة الحصة وعدد الحصص."], ["هل يوجد دفع إلكتروني داخل الصفحة؟", "لا، الصفحة للتعريف والتواصل. بعد اختيار الباقة يتم التواصل عبر واتساب لمعرفة خطوات التسجيل."]],
-  [["هل يمكنني اختيار وقت الحصة؟", "نعم، أرسل الوقت المناسب لك بتوقيت السعودية عبر واتساب، وسنساعدك في تنسيق الموعد."], ["كيف أحجز الحصة التجريبية؟", "اختر الباقة واضغط «جرب حصة مجانا»، ثم أرسل بيانات الطالب والوقت المناسب للحصة التجريبية."]],
-  [["هل الخدمة متاحة من جميع مدن السعودية؟", "نعم، لأنها أونلاين وتشمل الرياض وجدة ومكة والمدينة والدمام والخبر والأحساء وجميع مدن المملكة."], ["هل يمكن التسجيل للرجال والنساء؟", "نعم، البرامج متاحة للرجال والنساء والأطفال والشباب والفتيات حسب البرنامج المناسب."]],
-  [["ماذا يحدث في الحصة التجريبية؟", "نتعرف على مستوى الطالب واحتياجه، ثم نرشح له البرنامج والمدة وعدد الحصص المناسب."], ["كيف أتواصل مع الأكاديمية؟", "اضغط على «جرب حصة مجانا» وأرسل البيانات المطلوبة عبر واتساب، وسيتم التواصل معك للتنسيق."]],
-] as const satisfies readonly (readonly (readonly [string, string])[])[]
+const faqGroupsByProgram = {
+  quran: [
+    [["هل تحفيظ القرآن مناسب للمبتدئ؟", "نعم، نبدأ مع الطالب من المستوى المناسب له، سواء كان مبتدئاً أو لديه حفظ سابق، ثم نضع خطة للحفظ والمراجعة والتجويد."], ["هل الحصص فردية أم جماعية؟", "الحصص فردية أونلاين، حتى يحصل الطالب على متابعة مباشرة وتصحيح مستمر أثناء التلاوة والحفظ."]],
+    [["هل يمكن اختيار معلم أو معلمة؟", "نعم، يمكنك توضيح تفضيلك عند التواصل عبر واتساب، وسننسق معك حسب البرنامج والتوفر."], ["هل تشمل الحصة الحفظ والمراجعة؟", "نعم، يحدد المعلم وقت الحصة بين الحفظ الجديد والمراجعة وتصحيح التلاوة والتجويد بحسب مستوى الطالب."]],
+    [["هل الخدمة متاحة من الرياض وجدة وبقية المدن؟", "نعم، الحصص أونلاين ومتاحة من الرياض وجدة ومكة المكرمة والمدينة المنورة والدمام والخبر والأحساء وجميع مدن المملكة."], ["كيف أختار عدد الحصص المناسب؟", "نساعدك في الاختيار بعد معرفة عمر الطالب ومستواه وهدفه والوقت المتاح له، ويمكن البدء بحصة تجريبية مجانية."]],
+  ],
+  arabic: [
+    [["هل تأسيس العربية مناسب لمن لا يقرأ جيداً؟", "نعم، يبدأ البرنامج من مستوى الطالب ويركز تدريجياً على الحروف والقراءة والكتابة والنطق."], ["ماذا يتعلم الطالب في برنامج العربي؟", "يتعلم القراءة والكتابة والإملاء والنطق والتعبير، مع متابعة تناسب عمره ومستواه واحتياجه."]],
+    [["هل البرنامج مناسب للأطفال والكبار؟", "نعم، توجد متابعة للأطفال والشباب والفتيات والرجال والنساء، ويتم اختيار المحتوى حسب مستوى كل طالب."], ["هل يمكن تحديد وقت يناسب الأسرة؟", "نعم، ننسق موعد الحصة بتوقيت السعودية وفق الأوقات المتاحة للطالب والأسرة."]],
+    [["هل الأسعار شهرية؟", "نعم، الأسعار المعروضة بالريال السعودي شهرية، وتختلف حسب مدة الحصة وعدد الحصص الأسبوعية."], ["كيف أحجز الحصة التجريبية؟", "اختر الباقة المناسبة واضغط جرب حصة مجانا، ثم أرسل بيانات الطالب والوقت المناسب عبر واتساب."]],
+  ],
+} as const
 
 function PlanInfoCard({ title, text }: { title: string; text: string }) {
   return <div className="saudi-reveal my-10 rounded-2xl border border-border bg-secondary/50 p-6 text-center shadow-sm"><h3 className="text-xl font-bold">{title}</h3><p className="mx-auto mt-3 max-w-3xl leading-8 text-muted-foreground">{text}</p></div>
@@ -65,7 +63,9 @@ function FAQGroup({ items }: { items: readonly (readonly [string, string])[] }) 
 
 function PlansSection({ program, title }: { program: SaudiProgram; title: string }) {
   const plans = saudiLandingConfig.plans.filter((plan) => plan.program === program && plan.visible)
-  return <section className="mt-16" aria-labelledby={`${program}-plans`}><h3 id={`${program}-plans`} className="text-center text-2xl font-bold text-foreground">{title}</h3><div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{plans.map((plan) => <PlanCard key={plan.id} plan={plan} />)}</div>{Array.from({ length: Math.ceil(plans.length / 4) }, (_, groupIndex) => <div key={`${program}-group-${groupIndex}`}><PlanInfoCard title={planInfo[groupIndex]?.[0] ?? "يسعدنا نساعدك"} text={planInfo[groupIndex]?.[1] ?? planInfo[5][1]} /><FAQGroup items={faqGroups[groupIndex] ?? faqGroups[5]} /></div>)}</section>
+  const info = planInfoByProgram[program]
+  const faqs = faqGroupsByProgram[program]
+  return <section className="mt-16" aria-labelledby={`${program}-plans`}><h3 id={`${program}-plans`} className="text-center text-2xl font-bold text-foreground">{title}</h3>{Array.from({ length: Math.ceil(plans.length / 4) }, (_, groupIndex) => <div key={`${program}-group-${groupIndex}`}><div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{plans.slice(groupIndex * 4, groupIndex * 4 + 4).map((plan) => <PlanCard key={plan.id} plan={plan} />)}</div><PlanInfoCard title={info[groupIndex][0]} text={info[groupIndex][1]} /><FAQGroup items={faqs[groupIndex]} /></div>)}</section>
 }
 
 export default function SaudiArabiaPage() {
@@ -82,6 +82,6 @@ export default function SaudiArabiaPage() {
     <section className="mx-auto max-w-4xl px-5 py-16 sm:px-8"><div className="text-center"><p className="saudi-eyebrow justify-center">ابدأ بخطوات بسيطة</p><h2 className="mt-4 text-3xl font-bold">كيف تبدأ؟</h2></div><ol className="mx-auto mt-10 grid max-w-2xl gap-4">{["اختر البرنامج والباقـة المناسبة.", "اضغط على جرب حصة مجانا.", "أرسل بيانات الطالب والوقت المناسب عبر واتساب.", "ننسق معك موعد الحصة التجريبية."].map((step, index) => <li key={step} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 shadow-sm"><span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground">{index + 1}</span><span className="font-semibold">{step}</span></li>)}</ol></section>
     <section className="px-5 py-20 text-center sm:px-8"><div className="mx-auto max-w-3xl rounded-2xl bg-primary px-6 py-12 text-primary-foreground shadow-xl"><h2 className="text-3xl font-bold sm:text-4xl">ابدأ الآن بحصة تجريبية مجانية</h2><p className="mt-4 text-primary-foreground/80">أرسل لنا بيانات الطالب والوقت المناسب، وسنساعدك في اختيار البرنامج الأفضل.</p><a className="saudi-secondary-cta mt-8 bg-primary-foreground text-primary" href={trialUrl} target="_blank" rel="noreferrer"><MessageCircle size={19} /> جرب حصة مجانا</a></div></section>
     <footer className="bg-primary text-primary-foreground"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-8 md:grid-cols-2"><div><div className="flex items-center gap-3"><Image src="/logo.png" alt="شعار أكاديمية الحافظ المتميز" width={48} height={48} className="size-12 rounded-lg bg-secondary object-contain" /><div><p className="font-bold">أكاديمية الحافظ المتميز</p><p className="mt-1 text-sm text-primary-foreground/70">تعليم القرآن واللغة العربية أونلاين</p></div></div><p className="mt-4 max-w-md text-sm leading-7 text-primary-foreground/75">حصص فردية مرنة للقرآن الكريم واللغة العربية للطلاب والطالبات من جميع مدن السعودية.</p></div><nav aria-label="روابط صفحة السعودية" className="grid content-start gap-3 text-sm text-primary-foreground/85 sm:grid-cols-2"><Link href="/">الرئيسية</Link><Link href="/quran">أسعار تحفيظ القرآن</Link><Link href="/arabic">أسعار اللغة العربية</Link><Link href="/classroom-moments">فيديوهات من حصصنا</Link><Link href="/contact">تواصل معنا</Link><Link href="/saudi-arabia">تحفيظ القرآن واللغة العربية في السعودية</Link></nav></div><div className="border-t border-primary-foreground/10 px-5 py-5 text-center text-xs text-primary-foreground/65 sm:px-8">© {new Date().getFullYear()} أكاديمية الحافظ المتميز. جميع الحقوق محفوظة.</div></footer>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqGroups.reduce<readonly (readonly [string, string])[]>((items, group) => [...items, ...group], []).map(([name, text]) => ({ "@type": "Question", name, acceptedAnswer: { "@type": "Answer", text } })) }) }} />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: [...faqGroupsByProgram.quran.flat(1), ...faqGroupsByProgram.arabic.flat(1)].map(([name, text]) => ({ "@type": "Question", name, acceptedAnswer: { "@type": "Answer", text } })) }) }} />
   </main>
 }
