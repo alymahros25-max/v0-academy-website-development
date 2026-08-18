@@ -9,7 +9,10 @@ export function proxy(request: NextRequest) {
   // ============================================================
   // Completely bypass multilingual and redirect logic for all admin routes
   if (pathname.startsWith('/admin') || pathname.startsWith('/ac')) {
-    // Allow admin routes to pass through without any redirects or locale prefixing
+    // Keep the login route public; require the signed session cookie for admin pages.
+    if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !request.cookies.has('admin_session')) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
+    }
     const response = NextResponse.next()
     
     // Still apply security headers

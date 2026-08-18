@@ -27,7 +27,7 @@ export async function verifyAdminSession(): Promise<boolean> {
     const separator = decoded.lastIndexOf(":")
     const email = decoded.slice(0, separator)
     const token = decoded.slice(separator + 1)
-    return email === ADMIN_EMAIL && token === generateSessionToken(email)
+    return email === ADMIN_EMAIL?.trim().toLowerCase() && token === generateSessionToken(email)
   } catch {
     return false
   }
@@ -37,7 +37,7 @@ export function verifyCredentials(email: string, password: string): boolean {
   try {
     assertAdminConfig()
     const passwordHash = createHash("sha256").update(password).digest("hex")
-    return email === ADMIN_EMAIL && passwordHash === ADMIN_PASSWORD_HASH
+    return email.trim().toLowerCase() === ADMIN_EMAIL?.trim().toLowerCase() && passwordHash === ADMIN_PASSWORD_HASH
   } catch {
     return false
   }
