@@ -10,14 +10,25 @@ export default function SaudiLandingClient() {
 
   useEffect(() => {
     const revealItems = document.querySelectorAll<HTMLElement>(".saudi-reveal")
+    if (typeof IntersectionObserver === "undefined") {
+      revealItems.forEach((item) => item.classList.add("saudi-reveal-visible"))
+      return
+    }
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add("saudi-reveal-visible")
+        if (entry.isIntersecting) {
+          entry.target.classList.add("saudi-reveal-visible")
+          observer.unobserve(entry.target)
+        }
       })
     }, { threshold: 0.12 })
     revealItems.forEach((item, index) => { item.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`; observer.observe(item) })
     const section = document.getElementById("plans")
     if (section) setVisible(true)
+    document.querySelectorAll<HTMLElement>("[data-saudi-program]").forEach((card) => {
+      const matches = card.dataset.saudiProgram === "quran"
+      card.hidden = !matches
+    })
     return () => observer.disconnect()
   }, [])
 
