@@ -24,10 +24,13 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ email, password }),
       })
 
+      const data = await res.json().catch(() => ({}))
       if (res.ok) {
-        router.push("/admin")
+        router.replace("/admin")
+      } else if (res.status === 500) {
+        setError(data.error || "تعذر تسجيل الدخول حالياً. تحقق من إعدادات المصادقة.")
       } else {
-        setError("البريد الإلكتروني أو كلمة المرور غير صحيحة")
+        setError(data.error || "البريد الإلكتروني أو كلمة المرور غير صحيحة")
       }
     } catch {
       setError("حدث خطأ في الاتصال بالخادم")

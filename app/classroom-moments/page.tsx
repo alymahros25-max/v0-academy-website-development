@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
-import { createClient } from '@supabase/supabase-js'
-import { VideoGrid, VideoData } from '@/components/classroom-moments/VideoGrid'
-import { extractYouTubeId } from '@/lib/youtube-utils'
+import { VideoGrid } from '@/components/classroom-moments/VideoGrid'
+import { getPublishedClassroomVideos } from '@/lib/classroom-videos'
 
 // Revalidate every 60 s as a safety net.
 // The admin CMS route also calls revalidateTag('classroom-videos') on every
@@ -26,64 +25,8 @@ export const metadata: Metadata = {
   },
 }
 
-async function getClassroomVideos(): Promise<VideoData[]> {
-  try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-      console.error('[v0] classroom-moments: Missing Supabase public keys')
-      return []
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-    const { data: videos, error } = await supabase
-      .from('classroom_videos')
-      .select('*')
-      .eq('is_published', true)
-      .order('display_order', { ascending: true })
-      .order('created_at', { ascending: false })
-      .limit(50)
-
-    if (error) {
-      console.error('[v0] classroom-moments: Supabase error:', error.message)
-      return []
-    }
-
-    return (videos ?? [])
-      .map((video: any): VideoData => {
-        const embedId: string =
-          extractYouTubeId(video?.youtube_url ?? '') ??
-          video?.youtube_embed_id ??
-          ''
-
-        return {
-          id: video?.id ?? '',
-          title_ar: video?.title_ar || 'بدون عنوان',
-          title_en: video?.title_en || video?.title_ar || 'No title',
-          title_fr: video?.title_fr || video?.title_ar || 'Sans titre',
-          description_ar: video?.description_ar ?? '',
-          description_en: video?.description_en ?? '',
-          description_fr: video?.description_fr ?? '',
-          youtube_embed_id: embedId,
-          thumbnail_url:
-            video?.thumbnail_url ||
-            `https://img.youtube.com/vi/${embedId}/sddefault.jpg`,
-          category: video?.category ?? '',
-          teacher_name_ar: video?.teacher_name_ar ?? '',
-          teacher_name_en: video?.teacher_name_en ?? '',
-          teacher_name_fr: video?.teacher_name_fr ?? '',
-          duration_seconds: video?.duration_seconds ?? undefined,
-          is_featured: video?.is_featured ?? false,
-        }
-      })
-      // Drop rows without a valid 11-char YouTube ID
-      .filter((v) => /^[a-zA-Z0-9_-]{11}$/.test(v.youtube_embed_id))
-  } catch (error) {
-    console.error('[v0] classroom-moments: getClassroomVideos error:', error)
-    return []
-  }
+async function getClassroomVideos() {
+  return getPublishedClassroomVideos()
 }
 
 export default async function ClassroomMomentsPage() {
