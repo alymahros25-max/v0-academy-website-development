@@ -5,6 +5,8 @@ import { HeroSection } from "@/components/home/hero-section"
 import { AboutSection } from "@/components/home/about-section"
 import { FeaturesSection } from "@/components/home/features-section"
 import { StatsSection } from "@/components/home/stats-section"
+import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
+import { HomeAudienceSection, HomeFAQSection, HomeHowToStartSection, HomeIntroSection } from "@/components/home/home-content-sections"
 import { Suspense } from "react"
 
 // SSG with 1-hour revalidation (ISR)
@@ -37,12 +39,17 @@ export default function HomePage() {
     <>
       <AcademyBanner />
       <HeroSection />
+      <LandingPageVideoStrip />
+      <HomeIntroSection />
+      <HomeAudienceSection />
       <FeaturesSection />
       <StatsSection />
       <Suspense fallback={<div className="min-h-80 bg-muted" />}>
         <TestimonialsPreview />
       </Suspense>
       <AboutSection />
+      <HomeHowToStartSection />
+      <HomeFAQSection />
       <Suspense fallback={<div className="min-h-72 bg-muted" />}>
         <CTASection />
       </Suspense>

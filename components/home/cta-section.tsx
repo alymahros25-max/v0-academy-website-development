@@ -14,24 +14,24 @@ export function CTASection() {
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-foreground mb-6 text-balance">
           {locale === "ar"
-            ? "ابدأ رحلة حفظ القرآن اليوم"
+            ? "ابدأ خطوتك الأولى اليوم"
             : locale === "en"
-              ? "Start Your Quran Journey Today"
-              : "Commencez votre parcours coranique aujourd'hui"}
+              ? "Start Your Learning Journey Today"
+              : "Commencez votre parcours d'apprentissage aujourd'hui"}
         </h2>
         <p className="text-primary-foreground/80 text-lg mb-10 max-w-2xl mx-auto text-pretty">
           {locale === "ar"
-            ? "سجّل الآن واحصل على حصة تجريبية مجانية مع أحد معلمينا المجازين"
+            ? "اختر البرنامج المناسب، أو تواصل معنا لمعرفة المسار الأفضل لك أو لأحد أفراد أسرتك."
             : locale === "en"
-              ? "Register now and get a free trial session with one of our certified teachers"
-              : "Inscrivez-vous maintenant et obtenez une session d'essai gratuite"}
+              ? "Choose the right program or contact us to find the best path for you or your family."
+              : "Choisissez le programme adapté ou contactez-nous pour trouver le meilleur parcours pour vous ou votre famille."}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
 <Link
-            href="/quran"
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-xl hover:-translate-y-0.5"
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-foreground px-8 py-4 text-lg font-bold text-primary shadow-md transition-all hover:bg-primary-foreground/90 hover:shadow-xl hover:-translate-y-0.5"
           >
-            {locale === "ar" ? "أسعار تحفيظ القرآن" : locale === "en" ? "Quran Pricing" : "Tarifs du Coran"}
+            {locale === "ar" ? "جرب حصة مجانا" : locale === "en" ? "Try a Free Session" : "Essayez une séance gratuite"}
             <Arrow className="w-5 h-5" />
           </Link>
           <Link
