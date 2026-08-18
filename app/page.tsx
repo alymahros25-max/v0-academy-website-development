@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import dynamic from "next/dynamic"
-import { AcademyBanner } from "@/components/home/academy-banner"
 import { HeroSection } from "@/components/home/hero-section"
 import { AboutSection } from "@/components/home/about-section"
 import { FeaturesSection } from "@/components/home/features-section"
@@ -22,30 +21,12 @@ export const metadata: Metadata = {
   },
 }
 
-const TestimonialsPreview = dynamic(
-  () => import("@/components/home/testimonials-preview").then((module) => ({ default: module.TestimonialsPreview })),
-  { ssr: true, loading: () => <div className="min-h-80 bg-muted" /> },
-)
-
-const CTASection = dynamic(
-  () => import("@/components/home/cta-section").then((module) => ({ default: module.CTASection })),
-  { ssr: true, loading: () => <div className="min-h-72 bg-muted" /> },
-)
+// Enable dynamic rendering for interactive sections while keeping static shell
+const HomePageClient = dynamic(() => import('./client').then(m => m.default), {
+  ssr: true,
+  loading: () => <div className="min-h-screen bg-muted" />
+})
 
 export default function HomePage() {
-  return (
-    <>
-      <AcademyBanner />
-      <HeroSection />
-      <FeaturesSection />
-      <StatsSection />
-      <Suspense fallback={<div className="min-h-80 bg-muted" />}>
-        <TestimonialsPreview />
-      </Suspense>
-      <AboutSection />
-      <Suspense fallback={<div className="min-h-72 bg-muted" />}>
-        <CTASection />
-      </Suspense>
-    </>
-  )
+  return <HomePageClient />
 }
