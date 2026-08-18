@@ -9,10 +9,11 @@ export default function SaudiLandingClient() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
+    document.documentElement.classList.add("saudi-js")
     const revealItems = document.querySelectorAll<HTMLElement>(".saudi-reveal")
     if (typeof IntersectionObserver === "undefined") {
       revealItems.forEach((item) => item.classList.add("saudi-reveal-visible"))
-      return
+      return () => document.documentElement.classList.remove("saudi-js")
     }
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -29,7 +30,10 @@ export default function SaudiLandingClient() {
       const matches = card.dataset.saudiProgram === "quran"
       card.hidden = !matches
     })
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      document.documentElement.classList.remove("saudi-js")
+    }
   }, [])
 
   function updateFilters(nextProgram: SaudiProgram, nextDuration: SaudiDuration | "all") {
