@@ -18,22 +18,21 @@ export function HeroSection() {
         <div className="absolute inset-x-0 top-0 hidden h-[24%] bg-warm-bg lg:block" />
         <div className="absolute inset-x-0 bottom-0 hidden h-[18%] bg-warm-bg lg:block" />
         <Image
-          src="/images/hero-children.jpg"
+          src="/images/hero-children.webp"
           alt="Children learning Quran"
           fill
-          className="object-cover object-center lg:[clip-path:inset(24%_0_18%_0)]"
+          className="object-cover object-[center_15%] lg:[clip-path:inset(8%_0_10%_0)]"
           sizes="100vw"
           quality={75}
           priority
           fetchPriority="high"
         />
-
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-32 lg:py-40 w-full">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pt-16 pb-32 lg:pt-24 lg:pb-40 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
-          <div className="-translate-y-5 text-center transition-transform md:-translate-y-8 lg:-translate-y-10 lg:text-start">
+          <div className="-translate-y-10 text-center transition-transform md:-translate-y-14 lg:-translate-y-16 lg:text-start">
             <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
                 أكاديمية الحافظ المتميز
@@ -45,7 +44,7 @@ export function HeroSection() {
               </p>
             </div>
 
-                        {/* Trust indicators */}
+            {/* Trust indicators */}
             <div className="mt-10 flex items-center gap-6 justify-center lg:justify-start text-primary-foreground/70 text-sm">
               <div className="flex items-center gap-1">
                 <div className="flex -space-x-2 rtl:space-x-reverse">
@@ -90,25 +89,25 @@ export function HeroSection() {
               </div>
               {/* Floating card */}
               <RevealOnScroll className="absolute -bottom-6 -start-12" delay={0}>
-              <div className="bg-card rounded-2xl shadow-xl p-4 animate-float">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-primary">
-                      {locale === "ar" ? "+" : "+"}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-bold text-foreground text-lg">{siteStats.countries}+</p>
-                    <p className="text-sm text-muted-foreground">
-                      {locale === "ar"
-                        ? "دولة حول العالم"
-                        : locale === "en"
-                          ? "Countries worldwide"
-                          : "Pays dans le monde"}
-                    </p>
+                <div className="bg-card rounded-2xl shadow-xl p-4 animate-float">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <span className="text-2xl font-bold text-primary">
+                        {locale === "ar" ? "+" : "+"}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground text-lg">{siteStats.countries}+</p>
+                      <p className="text-sm text-muted-foreground">
+                        {locale === "ar"
+                          ? "دولة حول العالم"
+                          : locale === "en"
+                            ? "Countries worldwide"
+                            : "Pays dans le monde"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
               </RevealOnScroll>
             </div>
           </div>
