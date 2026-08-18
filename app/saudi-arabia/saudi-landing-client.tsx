@@ -9,15 +9,15 @@ export default function SaudiLandingClient() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
+    const revealItems = document.querySelectorAll<HTMLElement>(".saudi-reveal")
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("saudi-reveal-visible")
+      })
+    }, { threshold: 0.12 })
+    revealItems.forEach((item, index) => { item.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`; observer.observe(item) })
     const section = document.getElementById("plans")
-    if (!section) return
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setVisible(true)
-        observer.disconnect()
-      }
-    }, { threshold: 0.15 })
-    observer.observe(section)
+    if (section) setVisible(true)
     return () => observer.disconnect()
   }, [])
 
