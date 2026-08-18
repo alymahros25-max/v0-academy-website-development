@@ -30,7 +30,7 @@ export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
           <article key={video.id} className="saudi-reveal saudi-video-card min-w-[calc(100%-2rem)] snap-start overflow-hidden rounded-2xl border border-border bg-background shadow-sm sm:min-w-[calc(50%-0.5rem)] lg:min-w-[calc(33.333%-0.75rem)]">
             <button type="button" onClick={() => setActiveVideo(video)} className="group block w-full text-right" aria-label={`تشغيل داخل الصفحة: ${video.title_ar}`}>
               <div className="relative aspect-video overflow-hidden bg-muted">
-                <Image src={video.poster || `https://img.youtube.com/vi/${video.youtube_embed_id}/sddefault.jpg`} alt="" fill sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw" loading="lazy" className="object-cover transition-transform duration-300 group-hover:scale-105" unoptimized />
+                <Image src={video.poster || `https://img.youtube.com/vi/${video.youtube_embed_id}/sddefault.jpg`} alt="" fill sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw" loading="lazy" fetchPriority="low" className="object-cover transition-transform duration-300 group-hover:scale-105" unoptimized />
                 <span className="absolute inset-0 flex items-center justify-center bg-foreground/10"><span className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"><Play size={20} fill="currentColor" /></span></span>
               </div>
               <div className="p-4"><h3 className="font-bold text-foreground">{video.title_ar}</h3>{video.description_ar && <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{video.description_ar}</p>}</div>
