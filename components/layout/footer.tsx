@@ -25,7 +25,7 @@ export function Footer() {
     { href: "/library", label: t("nav.library") },
     { href: "/classroom-moments", label: locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours" },
     { href: "/saudi-arabia", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في السعودية" : locale === "en" ? "Quran and Arabic in Saudi Arabia" : "Coran et arabe en Arabie Saoudite" },
-    { href: "/uae", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في الإمارات" : locale === "en" ? "Quran and Arabic in the UAE" : "Coran et arabe aux Émirats" },
+    { href: "/united-arab-emirates", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في الإمارات" : locale === "en" ? "Quran and Arabic in the UAE" : "Coran et arabe aux Émirats" },
   ]
 
   const legalLinks = [
@@ -158,7 +158,7 @@ export function Footer() {
               <li className="flex items-center gap-2 text-sm text-primary-foreground/90">
                 <Phone className="w-4 h-4 text-secondary shrink-0" />
                 <a href="https://bit.ly/4aJfOl6" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">
-                  {locale === "ar" ? "تواصل عبر WhatsApp" : "Contact via WhatsApp"}
+                  {locale === "ar" ? "��واصل عبر WhatsApp" : "Contact via WhatsApp"}
                 </a>
               </li>
               <li className="flex items-start gap-2 text-sm text-primary-foreground/90">
