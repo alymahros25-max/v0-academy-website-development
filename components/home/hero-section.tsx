@@ -32,7 +32,7 @@ export function HeroSection() {
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-16 pb-32 lg:pt-24 lg:pb-40 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
-          <div className="-translate-y-[72px] text-center transition-transform md:-translate-y-[80px] lg:-translate-y-[96px] lg:text-start">
+          <div className="-translate-y-[144px] text-center transition-transform md:-translate-y-[160px] lg:-translate-y-[192px] lg:text-start">
             <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
                 أكاديمية الحافظ المتميز
