@@ -15,7 +15,7 @@ function LayoutWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const isAdmin = pathname.startsWith("/admin")
   const isSaudiLanding = pathname === "/saudi-arabia"
-  const isUaeLanding = pathname === "/uae"
+  const isUaeLanding = pathname === "/united-arab-emirates"
 
   useEffect(() => {
     document.documentElement.lang = locale
