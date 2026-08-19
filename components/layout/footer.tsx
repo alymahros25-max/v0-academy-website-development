@@ -25,6 +25,7 @@ export function Footer() {
     { href: "/library", label: t("nav.library") },
     { href: "/classroom-moments", label: locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours" },
     { href: "/saudi-arabia", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في السعودية" : locale === "en" ? "Quran and Arabic in Saudi Arabia" : "Coran et arabe en Arabie Saoudite" },
+    { href: "/uae", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في الإمارات" : locale === "en" ? "Quran and Arabic in the UAE" : "Coran et arabe aux Émirats" },
   ]
 
   const legalLinks = [
