@@ -12,7 +12,7 @@ const notoArabic = Noto_Sans_Arabic({
   subsets: ["arabic"],
   variable: "--font-arabic",
   display: "swap",
-  weight: ["400", "600", "700"],
+  weight: ["400", "700"],
   preload: true,
 })
 
