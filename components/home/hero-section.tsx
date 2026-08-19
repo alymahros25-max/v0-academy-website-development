@@ -12,22 +12,18 @@ export function HeroSection() {
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Background Image Container */}
-      <div className="absolute inset-0 bg-warm-bg">
-        <div className="absolute inset-x-0 top-0 hidden h-[24%] bg-warm-bg lg:block" />
-        <div className="absolute inset-x-0 bottom-0 hidden h-[18%] bg-warm-bg lg:block" />
-        <Image
-          src="/images/hero-children.webp"
-          alt="Children learning Quran"
-          fill
-          className="object-cover object-[center_15%] lg:[clip-path:inset(8%_0_10%_0)]"
-          sizes="100vw"
-          quality={75}
-          priority
-          fetchPriority="high"
-        />
-      </div>
+    <section className="relative min-h-screen overflow-hidden bg-warm-bg">
+      <Image
+        src="/images/hero-children.webp"
+        alt="Children learning Quran"
+        fill
+        className="object-cover object-[center_15%]"
+        sizes="100vw"
+        quality={75}
+        priority
+        fetchPriority="high"
+        loading="eager"
+      />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 pb-32 lg:pt-16 lg:pb-40 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
