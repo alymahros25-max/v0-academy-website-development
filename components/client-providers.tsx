@@ -15,13 +15,14 @@ function LayoutWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const isAdmin = pathname.startsWith("/admin")
   const isSaudiLanding = pathname === "/saudi-arabia"
+  const isUaeLanding = pathname === "/uae"
 
   useEffect(() => {
     document.documentElement.lang = locale
     document.documentElement.dir = dir
   }, [dir, locale])
 
-  if (isAdmin || isSaudiLanding) {
+  if (isAdmin || isSaudiLanding || isUaeLanding) {
     return <div dir={dir}>{children}</div>
   }
 

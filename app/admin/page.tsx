@@ -19,6 +19,7 @@ import { VideoForm } from "@/components/classroom-moments/VideoForm"
 import { BlogManager } from "@/components/admin/BlogManager"
 import { LibraryManager } from "@/components/admin/LibraryManager"
 import { SaudiLandingTab } from "@/components/admin/SaudiLandingTab"
+import { UaeLandingTab } from "@/components/admin/UaeLandingTab"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
@@ -60,7 +61,7 @@ function AdminSectionToolbar({ section }: { section: string }) {
   )
 }
 
-type Tab = "saudi-landing" | "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
+type Tab = "saudi-landing" | "uae-landing" | "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -100,6 +101,7 @@ export default function AdminDashboard() {
   const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard; group: string }[] = [
     { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard, group: "الرئيسية" },
     { id: "saudi-landing", label: "صفحة الهبوط السعودية", key: "admin.saudiLanding", icon: MapPin, group: "محتوى الموقع" },
+    { id: "uae-landing", label: "صفحة الهبوط الإماراتية", key: "admin.uaeLanding", icon: MapPin, group: "محتوى الموقع" },
     { id: "packages", label: t("admin.packages"), key: "admin.packages", icon: Package, group: "محتوى الموقع" },
     { id: "teachers", label: t("admin.teachers"), key: "admin.teachers", icon: Users, group: "محتوى الموقع" },
     { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star, group: "محتوى الموقع" },
@@ -205,6 +207,9 @@ export default function AdminDashboard() {
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "saudi-landing" && <SaudiLandingTab />}
+          </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "uae-landing" && <UaeLandingTab />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
             {activeTab === "packages" && <PackagesTab />}
