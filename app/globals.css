@@ -170,6 +170,10 @@ html {
 @keyframes saudi-flag-wave { 0%, 100% { transform: rotate(6deg) skewY(0deg); } 50% { transform: rotate(2deg) skewY(-3deg); } }
 .home-video-strip { overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: inline mandatory; scrollbar-width: thin; }
 .home-video-strip > * { scroll-snap-align: start; }
+.uae-flag-badge { position: absolute; top: 1.25rem; inset-inline-end: 1.25rem; z-index: 20; display: inline-flex; align-items: center; justify-content: center; width: 4.25rem; height: 3.15rem; border: 1px solid rgb(221 187 133 / .65); border-radius: .75rem .25rem .75rem .25rem; background: rgb(255 255 255 / .94); box-shadow: 0 10px 24px rgb(0 0 0 / .14); font-size: 2rem; transform: rotate(6deg); transform-origin: top center; animation: uae-flag-wave 4s ease-in-out infinite; }
+@keyframes uae-flag-wave { 0%, 100% { transform: rotate(6deg) skewY(0deg); } 50% { transform: rotate(2deg) skewY(-3deg); } }
+@media (max-width: 640px) { .uae-flag-badge { top: .85rem; inset-inline-end: .85rem; width: 3.4rem; height: 2.6rem; font-size: 1.55rem; } }
+@media (prefers-reduced-motion: reduce) { .uae-flag-badge { animation: none; transform: rotate(4deg); } }
 @media (max-width: 640px) { .saudi-flag-badge { top: .85rem; inset-inline-end: .85rem; width: 3.4rem; height: 2.6rem; font-size: 1.55rem; } }
 @media (prefers-reduced-motion: reduce) { .saudi-flag-badge { animation: none; transform: rotate(4deg); } }
 .saudi-hero-image-wrapper { display: block; min-height: 0; }
