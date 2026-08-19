@@ -25,7 +25,7 @@ export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
 
   return (
     <div className="relative mt-8">
-      <div ref={scroller} className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" aria-label="فيديوهات الحصص">
+      <div ref={scroller} className="home-video-strip flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [scrollbar-width:thin]" aria-label="فيديوهات الحصص">
         {videos.map((video) => (
           <article key={video.id} className="saudi-reveal saudi-video-card min-w-[calc(100%-2rem)] snap-start overflow-hidden rounded-2xl border border-border bg-background shadow-sm sm:min-w-[calc(50%-0.5rem)] lg:min-w-[calc(33.333%-0.75rem)]">
             <button type="button" onClick={() => setActiveVideo(video)} className="group block w-full text-right" aria-label={`تشغيل داخل الصفحة: ${video.title_ar}`}>
