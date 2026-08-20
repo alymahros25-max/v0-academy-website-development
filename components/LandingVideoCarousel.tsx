@@ -8,9 +8,26 @@ import type { LandingVideo } from "@/lib/classroom-videos"
 export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
   const scroller = useRef<HTMLDivElement>(null)
   const [activeVideo, setActiveVideo] = useState<LandingVideo | null>(null)
+  const [visibleVideoIds, setVisibleVideoIds] = useState<Set<string>>(() => new Set())
   const move = (direction: "next" | "previous") => {
     scroller.current?.scrollBy({ left: direction === "next" ? -340 : 340, behavior: "smooth" })
   }
+
+  useEffect(() => {
+    const root = scroller.current
+    if (!root) return
+    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-video-id]"))
+    if (typeof IntersectionObserver === "undefined") {
+      setVisibleVideoIds(new Set(cards.map((card) => card.dataset.videoId).filter((id): id is string => Boolean(id))))
+      return
+    }
+    const observer = new IntersectionObserver((entries) => {
+      const ids = entries.filter((entry) => entry.isIntersecting).map((entry) => (entry.target as HTMLElement).dataset.videoId)
+      if (ids.length) setVisibleVideoIds((current) => new Set([...current, ...ids.filter((id): id is string => Boolean(id))]))
+    }, { root, rootMargin: "240px" })
+    cards.forEach((card) => observer.observe(card))
+    return () => observer.disconnect()
+  }, [videos])
 
   useEffect(() => {
     if (!activeVideo) return
@@ -27,10 +44,10 @@ export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
     <div className="relative mt-8">
       <div ref={scroller} className="home-video-strip flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [scrollbar-width:thin]" aria-label="فيديوهات الحصص">
         {videos.map((video) => (
-          <article key={video.id} className="saudi-reveal saudi-video-card min-w-[calc(100%-2rem)] snap-start overflow-hidden rounded-2xl border border-border bg-background shadow-sm sm:min-w-[calc(50%-0.5rem)] lg:min-w-[calc(33.333%-0.75rem)]">
+          <article key={video.id} data-video-id={video.id} className="saudi-reveal saudi-video-card min-w-[calc(100%-2rem)] snap-start overflow-hidden rounded-2xl border border-border bg-background shadow-sm sm:min-w-[calc(50%-0.5rem)] lg:min-w-[calc(33.333%-0.75rem)]">
             <button type="button" onClick={() => setActiveVideo(video)} className="group block w-full text-right" aria-label={`تشغيل داخل الصفحة: ${video.title_ar}`}>
               <div className="relative aspect-video overflow-hidden bg-muted">
-                <Image src={video.poster || `https://img.youtube.com/vi/${video.youtube_embed_id}/mqdefault.jpg`} alt="" fill sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw" loading="lazy" fetchPriority="low" className="object-cover transition-transform duration-300 group-hover:scale-105" unoptimized />
+                {visibleVideoIds.has(video.id) ? <Image src={video.poster || `https://img.youtube.com/vi/${video.youtube_embed_id}/mqdefault.jpg`} alt="" fill sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw" loading="lazy" fetchPriority="low" className="object-cover transition-transform duration-300 group-hover:scale-105" unoptimized /> : <div className="size-full bg-muted" aria-hidden="true" />}
                 <span className="absolute inset-0 flex items-center justify-center bg-foreground/10"><span className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg"><Play size={20} fill="currentColor" /></span></span>
               </div>
               <div className="p-4"><h3 className="font-bold text-foreground">{video.title_ar}</h3>{video.description_ar && <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{video.description_ar}</p>}</div>
