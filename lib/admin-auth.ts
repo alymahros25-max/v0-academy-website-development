@@ -7,9 +7,13 @@ const SESSION_COOKIE = "admin_session"
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET
 
 function assertAdminConfig(): void {
-  if (!ADMIN_EMAIL || !ADMIN_PASSWORD_HASH || !SESSION_SECRET) {
+  if (!ADMIN_EMAIL?.trim() || !ADMIN_PASSWORD_HASH?.trim() || !SESSION_SECRET?.trim()) {
     throw new Error("Admin authentication is not configured")
   }
+}
+
+export function isAdminAuthConfigured(): boolean {
+  return Boolean(ADMIN_EMAIL?.trim() && ADMIN_PASSWORD_HASH?.trim() && SESSION_SECRET?.trim())
 }
 
 function generateSessionToken(email: string): string {
@@ -34,13 +38,10 @@ export async function verifyAdminSession(): Promise<boolean> {
 }
 
 export function verifyCredentials(email: string, password: string): boolean {
-  try {
-    assertAdminConfig()
-    const passwordHash = createHash("sha256").update(password).digest("hex")
-    return email.trim().toLowerCase() === ADMIN_EMAIL?.trim().toLowerCase() && passwordHash === ADMIN_PASSWORD_HASH
-  } catch {
-    return false
-  }
+  assertAdminConfig()
+  const normalizedEmail = email.trim().toLowerCase()
+  const passwordHash = createHash("sha256").update(password).digest("hex")
+  return normalizedEmail === ADMIN_EMAIL!.trim().toLowerCase() && passwordHash === ADMIN_PASSWORD_HASH!.trim()
 }
 
 export async function createSession(email: string) {
