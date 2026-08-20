@@ -1,0 +1,65 @@
+import type { Metadata } from "next"
+import Image from "next/image"
+import Link from "next/link"
+import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
+import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
+import { getUnitedStatesTrialUrl, getUnitedStatesWhatsAppUrl, unitedStatesLandingConfig, type UnitedStatesDuration, type UnitedStatesPlan } from "@/lib/united-states-landing-config"
+
+export const metadata: Metadata = {
+  title: unitedStatesLandingConfig.seo.title,
+  description: unitedStatesLandingConfig.seo.description,
+  alternates: { canonical: unitedStatesLandingConfig.seo.canonical },
+  openGraph: { title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description, url: unitedStatesLandingConfig.seo.canonical, locale: "ar_US", type: "website" },
+  twitter: { card: "summary_large_image", title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description },
+}
+
+const durationCopy: Record<UnitedStatesDuration, { title: string; text: string }> = {
+  30: { title: "اختر الإيقاع المناسب لوقت طفلك ودراسته", text: "البدء بحصة أسبوعية مناسب للتجربة، بينما تساعد الحصص الأكثر انتظاماً على بناء عادة ثابتة في الحفظ والمراجعة." },
+  40: { title: "وقت أطول للمراجعة والتسميع", text: "تمنح مدة 40 دقيقة الطالب وقتاً أكبر للتسميع والتصحيح والمراجعة، خصوصاً لمن يريد تقدماً منتظماً مع الدراسة." },
+  60: { title: "لمن يريد وقتاً أوسع للحفظ والمراجعة", text: "الساعة الكاملة مناسبة للطلاب الذين يريدون الجمع بين الحفظ الجديد والمراجعة والتسميع في الحصة نفسها." },
+}
+
+const faqs = [
+  ["هل الحصة التجريبية الأولى مجانية؟", "نعم، يمكن للأسرة تجربة الحصة الأولى مجاناً للتعرف على المعلم أو المعلمة وتقييم مستوى الطالب قبل اختيار الباقة."],
+  ["هل الحصص مناسبة للأطفال المقيمين في أمريكا؟", "نعم، يتم اختيار محتوى ومدة الحصة بما يناسب عمر الطالب ومستواه ووقت المدرسة والأسرة."],
+  ["هل يمكن اختيار معلم أو معلمة؟", "نعم، يمكن توضيح تفضيل الأسرة لمعلم أو معلمة عند التواصل عبر واتساب، ثم يتم ترشيح الخيار المناسب حسب التوفر واحتياج الطالب."],
+  ["هل تناسب الحصص جميع الولايات والتوقيتات؟", "نعم، الخدمة أونلاين ويتم تنسيق الموعد حسب الولاية والتوقيت المناسب للأسرة، سواء كانت في الساحل الشرقي أو الوسط أو الساحل الغربي."],
+  ["هل يوجد خصم للإخوة؟", "نعم، اذكر عدد الإخوة عند التواصل عبر واتساب لمعرفة الخصم المناسب للأسرة."],
+  ["هل الأسعار شهرية؟", "نعم، الأسعار المعروضة هي أسعار شهرية حسب عدد الحصص ومدة الحصة، ويتم تأكيد التفاصيل النهائية عبر واتساب قبل البدء."],
+  ["هل يحتاج الطالب إلى تطبيق خاص؟", "تتم الحصص عبر رابط المنصة التعليمية المستخدم حالياً في الأكاديمية، ويُرسل الرابط عند تنسيق الموعد عبر واتساب."],
+  ["هل يمكن تغيير الموعد؟", "يمكن طلب تعديل الموعد بالتنسيق المسبق عبر واتساب حسب توفر المعلم أو المعلمة."],
+  ["هل الخدمة متاحة للرجال والنساء والأطفال والشباب؟", "نعم، الخدمة متاحة لمختلف الأعمار، مع مراعاة اختيار المعلم أو المعلمة والمدة المناسبة لكل طالب."],
+] as const
+
+function PlanCard({ plan }: { plan: UnitedStatesPlan }) {
+  return <article className={`saudi-plan-card ${plan.popular ? "saudi-plan-card-featured" : ""}`}>
+    {plan.popular && <span className="saudi-popular-badge"><Sparkles size={14} /> الأكثر طلباً</span>}
+    <div className="flex items-start justify-between gap-4"><div><p className="text-sm font-semibold text-muted-foreground">تحفيظ القرآن للناطقين بالعربية</p><h3 className="mt-2 text-xl font-bold">{plan.monthlySessions} حصص شهرياً</h3></div><div className="rounded-full bg-secondary p-3 text-primary"><MessageCircle size={20} /></div></div>
+    <div className="mt-7 flex items-end gap-2"><strong className="text-4xl font-bold tracking-tight text-primary">${plan.price}</strong><span className="pb-1 text-sm font-semibold text-muted-foreground">شهرياً</span></div>
+    <p className="mt-2 text-sm text-muted-foreground">حصة واحدة كل أسبوع تقريباً · {plan.duration} دقيقة للحصة</p>
+    <p className="mt-4 min-h-12 text-sm leading-6 text-muted-foreground">{plan.description}</p>
+    <ul className="mt-5 grid gap-3 border-t border-border pt-5 text-sm"><li className="flex items-center gap-2"><Check size={17} className="text-accent" />{plan.features[0]}</li><li className="flex items-center gap-2"><Check size={17} className="text-accent" />{plan.features[1]}</li><li className="flex items-center gap-2"><Check size={17} className="text-accent" />{plan.features[2]}</li></ul>
+    <a className="saudi-plan-cta mt-7" href={getUnitedStatesWhatsAppUrl(plan)} target="_blank" rel="noreferrer"><MessageCircle size={18} /> احجز هذه الباقة عبر واتساب</a>
+  </article>
+}
+
+function PlansGroup({ duration }: { duration: UnitedStatesDuration }) {
+  const plans = unitedStatesLandingConfig.plans.filter((plan) => plan.duration === duration && plan.visible)
+  return <section className="mt-16" aria-labelledby={`usa-plans-${duration}`}><h3 id={`usa-plans-${duration}`} className="text-center text-2xl font-bold">باقات تحفيظ القرآن — {duration} دقيقة للحصة</h3><div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{plans.map((plan) => <PlanCard key={plan.id} plan={plan} />)}</div><div className="saudi-reveal my-10 rounded-2xl border border-border bg-secondary/50 p-6 text-center shadow-sm"><h4 className="text-xl font-bold">{durationCopy[duration].title}</h4><p className="mx-auto mt-3 max-w-3xl leading-8 text-muted-foreground">{durationCopy[duration].text}</p></div></section>
+}
+
+export default function UnitedStatesPage() {
+  const trialUrl = getUnitedStatesTrialUrl()
+  return <main dir="rtl" className="min-h-screen overflow-hidden bg-background">
+    <header className="bg-primary text-primary-foreground"><div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8"><Link href="/" className="flex items-center gap-3"><Image src="/logo.png" alt="شعار أكاديمية الحافظ المتميز" width={44} height={44} className="size-11 rounded-lg bg-secondary object-contain" priority /><span className="font-bold">أكاديمية الحافظ المتميز</span></Link><div className="flex items-center gap-3"><span className="text-2xl" role="img" aria-label="الولايات المتحدة">🇺🇸</span><a className="saudi-secondary-cta bg-primary-foreground px-3 py-2 text-sm text-primary" href={trialUrl} target="_blank" rel="noreferrer">جرب حصة مجانا</a></div></div></header>
+    <section className="saudi-hero relative islamic-pattern text-center"><div className="saudi-flag-badge" aria-label="الولايات المتحدة"><span aria-hidden="true">🇺🇸</span></div><div className="mx-auto max-w-4xl px-5 py-20 sm:px-8 lg:py-28"><p className="saudi-eyebrow justify-center"><Sparkles size={16} /> Online Quran Classes for Arabic-Speaking Families in the USA</p><h1 className="mt-6 text-balance text-4xl font-bold leading-tight sm:text-6xl">تحفيظ القرآن أونلاين للعائلات العربية في أمريكا</h1><p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground sm:text-xl">حصص فردية مباشرة للأطفال والشباب والنساء والرجال، مع معلمين ومعلمات، وموعد يناسب توقيتك داخل الولايات المتحدة.</p><div className="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-2 text-sm font-bold"><span className="rounded-full bg-secondary px-4 py-2 text-secondary-foreground">أول حصة تجريبية مجانية</span><span className="rounded-full bg-secondary px-4 py-2 text-secondary-foreground">خصم خاص للإخوة</span><span className="rounded-full bg-secondary px-4 py-2 text-secondary-foreground">مواعيد مرنة بتوقيت أمريكا</span></div><div className="mt-8 flex flex-wrap justify-center gap-3"><a className="saudi-primary-cta" href={trialUrl} target="_blank" rel="noreferrer"><MessageCircle size={19} /> احجز حصتك التجريبية المجانية</a><a className="saudi-secondary-cta" href="https://wa.me/201130127894" target="_blank" rel="noreferrer"><MessageCircle size={18} /> تواصل معنا عبر واتساب</a></div></div></section>
+    <LandingPageVideoStrip />
+    <section className="mx-auto grid max-w-6xl gap-3 px-5 py-8 sm:grid-cols-2 sm:px-8 lg:grid-cols-4"><div className="saudi-proof"><ShieldCheck size={20} /><span>متابعة فردية لكل طالب</span></div><div className="saudi-proof"><Clock3 size={20} /><span>أوقات مرنة تناسب الدراسة والعمل</span></div><div className="saudi-proof"><MapPin size={20} /><span>حصص أونلاين من المنزل</span></div><div className="saudi-proof"><MessageCircle size={20} /><span>تواصل سريع عبر واتساب</span></div></section>
+    <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-24"><div className="saudi-reveal mx-auto max-w-4xl rounded-2xl border border-border bg-card p-7 text-center shadow-md"><p className="saudi-eyebrow justify-center">تعليم يناسب الأسرة العربية</p><h2 className="mt-4 text-3xl font-bold sm:text-4xl">قرآن كريم عن بُعد، بمتابعة قريبة من بيتك</h2><p className="mt-5 leading-8 text-muted-foreground">تساعد الأكاديمية الأسر العربية في أمريكا على تعليم أبنائها القرآن الكريم من المنزل، مع المتابعة الفردية وتصحيح التلاوة وخطة تناسب عمر الطالب ومستواه ووقته. الحصص مباشرة أونلاين للأسر في نيويورك ونيوجيرسي وديترويت وشيكاغو وهيوستن ودالاس ولوس أنجلوس وبقية الولايات، من دون ادعاء وجود فروع محلية. يختار ولي الأمر الموعد المناسب حسب توقيته داخل الولايات المتحدة.</p></div><div className="mt-16 text-center"><p className="saudi-eyebrow justify-center">باقات شهرية بالدولار الأمريكي</p><h2 className="mt-4 text-3xl font-bold sm:text-4xl">اختر مدة الحصة المناسبة</h2><p className="mt-4 leading-7 text-muted-foreground">كل باقة تتضمن حصصاً فردية مباشرة، ويمكنك البدء بحصة تجريبية مجانية قبل الاشتراك.</p></div><div id="plans" className="scroll-mt-8"><PlansGroup duration={30} /><PlansGroup duration={40} /><PlansGroup duration={60} /></div></section>
+    <section className="bg-secondary/40 px-5 py-16 sm:px-8"><div className="mx-auto max-w-5xl text-center"><p className="saudi-eyebrow justify-center">مميزات صُممت للمهجر</p><h2 className="mt-4 text-3xl font-bold">تعلم ثابت يناسب المدرسة والعمل</h2><div className="mt-10 grid gap-4 text-right sm:grid-cols-2 lg:grid-cols-3">{["تصحيح التلاوة ومخارج الحروف", "اختيار معلم أو معلمة حسب احتياج الأسرة", "خطط مناسبة للأطفال والشباب والكبار", "إمكانية اختيار عدد الحصص الأسبوعية", "متابعة الأسرة لتقدم الطالب", "حصة تجريبية أولى مجانية"].map((item) => <article key={item} className="rounded-2xl border border-border bg-card p-5"><h3 className="font-bold">{item}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">ننسق التفاصيل مع الأسرة عبر واتساب ونبني بداية واضحة تناسب الطالب.</p></article>)}</div></div></section>
+    <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8"><div className="text-center"><p className="saudi-eyebrow justify-center">أسئلة العائلات العربية</p><h2 className="mt-4 text-3xl font-bold">أسئلة شائعة بإجابات واضحة</h2></div><div className="mt-10 grid gap-3 sm:grid-cols-2">{faqs.map(([question, answer]) => <details key={question} className="rounded-xl border border-border bg-card p-5 shadow-sm"><summary className="cursor-pointer font-bold">{question}</summary><p className="mt-3 leading-7 text-muted-foreground">{answer}</p></details>)}</div></section>
+    <section className="px-5 py-20 text-center sm:px-8"><div className="mx-auto max-w-3xl rounded-2xl bg-primary px-6 py-12 text-primary-foreground shadow-xl"><h2 className="text-3xl font-bold sm:text-4xl">ابدأ الآن بحصة تجريبية مجانية</h2><p className="mt-4 text-primary-foreground/80">أرسل الولاية والتوقيت المناسب وسنساعدك على اختيار الباقة.</p><a className="saudi-secondary-cta mt-8 bg-primary-foreground text-primary" href={trialUrl} target="_blank" rel="noreferrer"><MessageCircle size={19} /> احجز حصتك التجريبية المجانية</a></div></section>
+    <footer className="bg-primary text-primary-foreground"><div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:px-8 md:grid-cols-[1.2fr_1fr]"><div className="flex items-start gap-3"><Image src="/logo.png" alt="شعار أكاديمية الحافظ المتميز" width={48} height={48} className="size-12 rounded-lg bg-secondary object-contain" /><div><p className="font-bold">أكاديمية الحافظ المتميز</p><p className="mt-2 text-sm leading-7 text-primary-foreground/75">تحفيظ القرآن أونلاين للعائلات العربية في الولايات المتحدة.</p></div></div><nav aria-label="روابط صفحة الولايات المتحدة" className="grid content-start gap-3 text-sm"><Link href="/">الصفحة الرئيسية</Link><Link href="/saudi-arabia">تحفيظ القرآن واللغة العربية في السعودية</Link><Link href="/united-arab-emirates">تحفيظ القرآن واللغة العربية في الإمارات</Link><Link href="/games">الألعاب والمسابقات</Link><Link href="/library">المكتبة</Link><Link href="/teachers">المعلمين والمعلمات</Link><Link href="/blog">المدونة</Link><Link href="/privacy">سياسة الخصوصية</Link><Link href="/terms">شروط الاستخدام</Link><Link href="/refund-policy">سياسة الاسترداد</Link></nav></div><div className="border-t border-primary-foreground/10 px-5 py-5 text-center text-xs text-primary-foreground/65">© {new Date().getFullYear()} أكاديمية الحافظ المتميز. جميع الحقوق محفوظة.</div></footer>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map(([name, text]) => ({ "@type": "Question", name, acceptedAnswer: { "@type": "Answer", text } })) }) }} />
+  </main>
+}

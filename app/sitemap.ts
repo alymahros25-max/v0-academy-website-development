@@ -84,7 +84,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // TIER 2: CORE PAGES (Priority 0.9, weekly)
   // Main offerings: Quran, Arabic, About
   // ============================================================
-  const corePages = ['/quran', '/arabic', '/about', '/saudi-arabia', '/united-arab-emirates'] as const
+  const corePages = ['/quran', '/arabic', '/about', '/saudi-arabia', '/united-arab-emirates', '/united-states'] as const
   corePages.forEach((route) => {
     sitemap.push(...generateLocalizedUrl(route, 0.9, 'weekly'))
   })
