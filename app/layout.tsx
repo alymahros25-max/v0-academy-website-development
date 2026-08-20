@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next"
-import Script from "next/script"
 import { Noto_Sans_Arabic, Inter } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
@@ -121,33 +120,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <head>
-  {/* Non-critical analytics DNS hint only; next/font handles font loading locally. */}
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        
-        {/* Defer Google Analytics to improve FCP/LCP */}
-        <Script
-          strategy="lazyOnload"
-          src="https://www.googletagmanager.com/gtag/js?id=G-94X5S3J229"
-          async
-        />
-        <Script
-          id="ga4-config"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-94X5S3J229', {
-                page_path: window.location.pathname,
-                page_title: document.title,
-              });
-            `,
-          }}
-        />
-      </head>
+      <head />
       <body
         className={`${notoArabic.variable} ${inter.variable} font-sans antialiased`}
       >
