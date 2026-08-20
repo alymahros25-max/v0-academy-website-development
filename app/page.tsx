@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import dynamic from "next/dynamic"
 import { AcademyBanner } from "@/components/home/academy-banner"
 import { HeroSection } from "@/components/home/hero-section"
-import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
+import { DeferredLandingVideoStrip } from "@/components/home/deferred-landing-video-strip"
 import { AboutSection } from "@/components/home/about-section"
 import { FeaturesSection } from "@/components/home/features-section"
 import { StatsSection } from "@/components/home/stats-section"
@@ -38,7 +38,7 @@ export default function HomePage() {
     <>
       <AcademyBanner />
       <HeroSection />
-      <LandingPageVideoStrip />
+      <DeferredLandingVideoStrip />
       <FeaturesSection />
       <StatsSection />
       <Suspense fallback={<div className="min-h-80 bg-muted" />}>

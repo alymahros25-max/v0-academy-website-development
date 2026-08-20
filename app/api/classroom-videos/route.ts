@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
+export const revalidate = 300
+
 if (!supabaseUrl || !supabaseKey) {
   console.error('[v0] Missing Supabase credentials')
 }
@@ -55,7 +57,12 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    return NextResponse.json(data || [], { status: 200 })
+    return NextResponse.json(data || [], {
+      status: 200,
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      },
+    })
   } catch (err: any) {
     console.error('[v0] GET error:', err?.message)
     return NextResponse.json(
