@@ -41,7 +41,7 @@ export async function getPublishedClassroomVideos(): Promise<LandingVideo[]> {
       description_en: String(video.description_en ?? ''),
       description_fr: String(video.description_fr ?? ''),
       youtube_embed_id: embedId,
-      thumbnail_url: String(video.thumbnail_url ?? `https://img.youtube.com/vi/${embedId}/sddefault.jpg`),
+      thumbnail_url: String(video.thumbnail_url ?? `https://img.youtube.com/vi/${embedId}/mqdefault.jpg`),
       category: String(video.category ?? ''),
       teacher_name_ar: String(video.teacher_name_ar ?? ''),
       teacher_name_en: String(video.teacher_name_en ?? ''),
@@ -52,7 +52,7 @@ export async function getPublishedClassroomVideos(): Promise<LandingVideo[]> {
       order: Number(video.display_order ?? index),
       showOnLandingPages: video.show_on_landing_pages !== false,
       videoUrl,
-      poster: String(video.thumbnail_url ?? `https://img.youtube.com/vi/${embedId}/sddefault.jpg`),
+      poster: String(video.thumbnail_url ?? `https://img.youtube.com/vi/${embedId}/mqdefault.jpg`),
     }
   }).filter((video) => /^[a-zA-Z0-9_-]{11}$/.test(video.youtube_embed_id) && video.showOnLandingPages)
 }

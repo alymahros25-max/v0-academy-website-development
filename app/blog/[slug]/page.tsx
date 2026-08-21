@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import BlogArticleClient from "./client"
+import { notFound } from 'next/navigation'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -169,8 +170,8 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   const { slug } = await params
   const zapierArticles = await readZapierArticles()
   const allPosts = { ...blogPosts, ...zapierArticles }
-  
-  console.log('[v0] Loading article:', slug, 'Found:', slug in allPosts)
-  
+
+  if (!(slug in allPosts)) notFound()
+
   return <BlogArticleClient slug={slug} blogPosts={allPosts} />
 }
