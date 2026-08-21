@@ -8,6 +8,12 @@ module.exports = {
         'http://localhost:3000/united-states',
       ],
       numberOfRuns: 1,
+      startServerCommand: 'pnpm start',
+      startServerReadyPattern: 'Ready in|started server on|Ready on',
+      startServerReadyTimeout: 120000,
+      settings: {
+        chromeFlags: '--headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-software-rasterizer',
+      },
     },
     assert: {
       assertions: {

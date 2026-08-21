@@ -22,28 +22,7 @@ jobs:
       - uses: browser-actions/setup-chrome@v1
         id: chrome
       - run: pnpm build
-      - name: Start Next.js and run Lighthouse CI
-        shell: bash
-        run: |
-          set -euo pipefail
-          pnpm start > /tmp/next-server.log 2>&1 &
-          server_pid=$!
-          cleanup() {
-            kill "$server_pid" 2>/dev/null || true
-            wait "$server_pid" 2>/dev/null || true
-          }
-          trap cleanup EXIT
-
-          for attempt in {1..60}; do
-            if curl --fail --silent --show-error http://localhost:3000/ > /dev/null; then
-              break
-            fi
-            if [ "$attempt" -eq 60 ]; then
-              echo "Next.js did not become ready. Server log:"
-              cat /tmp/next-server.log
-              exit 1
-            fi
-            sleep 1
-          done
-
-          CHROME_PATH="${{ steps.chrome.outputs.chrome-path }}" pnpm dlx @lhci/cli@0.15.x autorun
+      - name: Run Lighthouse CI
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: pnpm dlx @lhci/cli@0.15.x autorun
