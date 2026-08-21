@@ -118,7 +118,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Individual articles with language variants
   // ============================================================
   const blogArticles = await getDynamicBlogArticles()
-  blogArticles.forEach((slug) => {
+  blogArticles
+    .filter((slug) => slug && slug !== '-5-')
+    .forEach((slug) => {
     sitemap.push({
       url: `${BASE_URL}/blog/${slug}`,
       lastModified: new Date().toISOString().split('T')[0],
