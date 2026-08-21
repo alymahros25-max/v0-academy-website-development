@@ -15,19 +15,27 @@ export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
 
   useEffect(() => {
     const root = scroller.current
-    if (!root) return
-    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-video-id]"))
+    if (!root || !videos.length) return
+
+    const revealThumbnails = () => {
+      setVisibleVideoIds(new Set(videos.map((video) => video.id)))
+    }
+
     if (typeof IntersectionObserver === "undefined") {
-      setVisibleVideoIds(new Set(cards.map((card) => card.dataset.videoId).filter((id): id is string => Boolean(id))))
+      revealThumbnails()
       return
     }
-    const observer = new IntersectionObserver((entries) => {
-      const ids = entries.filter((entry) => entry.isIntersecting).map((entry) => (entry.target as HTMLElement).dataset.videoId)
-      if (ids.length) setVisibleVideoIds((current) => new Set([...current, ...ids.filter((id): id is string => Boolean(id))]))
-    }, { root, rootMargin: "240px" })
-    cards.forEach((card) => observer.observe(card))
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      revealThumbnails()
+      observer.disconnect()
+    }, { rootMargin: "320px 0px" })
+
+    observer.observe(root)
     return () => observer.disconnect()
   }, [videos])
+
 
   useEffect(() => {
     if (!activeVideo) return
