@@ -1,0 +1,28 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+      - run: pnpm build
+      - name: Run Lighthouse CI
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: pnpm dlx @lhci/cli@0.15.x autorun
