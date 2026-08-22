@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useI18n } from "@/lib/i18n"
 import { Mail, Phone, MapPin } from "lucide-react"
+import { CountryPagesSection } from "@/components/layout/country-pages-section"
 
 export function Footer() {
   const { t, locale, dir } = useI18n()
@@ -171,6 +172,8 @@ export function Footer() {
             </ul>
           </div>
         </div>
+
+        <CountryPagesSection />
 
         {/* Compliance Notice */}
         <div className="mt-12 pt-6 border-t border-primary-foreground/10">
