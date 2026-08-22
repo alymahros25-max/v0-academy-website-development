@@ -33,10 +33,12 @@ export const canadaLandingConfig = {
 } as const
 
 export function getCanadaWhatsAppUrl(plan: CanadaPlan | string) {
-  const value = typeof plan === "string" ? plan : `${plan.name}\nالسعر: CA$${plan.price}\nمدة الحصة: ${plan.duration} دقيقة\nعدد الحصص شهرياً: ${plan.monthlySessions}`
-  const program = typeof plan === "string" ? "تحفيظ القرآن أو تأسيس اللغة العربية" : plan.program === "quran" ? "تحفيظ القرآن" : "تأسيس اللغة العربية"
-  const message = `السلام عليكم،\nأرغب في الاشتراك في باقة ${value} دولاراً كندياً.\nبيانات الطالب:\nالاسم:\nالعمر:\nولد أم بنت:\nقرآن أم تأسيس عربي:\nكمية الحفظ أو المستوى الحالي:\nمعلم أم معلمة:\nالوقت المناسب للحصة التجريبية:`
-  return `https://wa.me/${CANADA_WHATSAPP_NUMBER}?text=${encodeURIComponent(`السلام عليكم،\nأرغب في الاشتراك في ${program}.\n${message}`)}`
+  const isPlan = typeof plan !== "string"
+  const program = isPlan ? (plan.program === "quran" ? "تحفيظ القرآن" : "تأسيس اللغة العربية") : "تحفيظ القرآن أو تأسيس اللغة العربية"
+  const message = isPlan
+    ? `السلام عليكم،\nأرغب في الاشتراك في باقة ${program} للناطقين بالعربية في كندا.\n\nالباقة المطلوبة: ${plan.name}\nنوع البرنامج: ${program}\nمدة الحصة: ${plan.duration} دقيقة\nعدد الحصص شهرياً: ${plan.monthlySessions}\nعدد المرات أسبوعياً: ${plan.weeklySessions}\nالسعر الشهري: CA$${plan.price}\n\nبيانات الطالب:\nالاسم:\nالعمر:\nولد أم بنت:\nقرآن أم تأسيس عربي:\nالمستوى الحالي أو كمية الحفظ:\nمعلم أم معلمة:\nالمدينة والمقاطعة داخل كندا:\nالوقت المناسب للحصة:`
+    : `السلام عليكم،\nأرغب في حجز أول حصة تجريبية مجانية في ${program} للناطقين بالعربية في كندا.\n\nبيانات الطالب:\nالاسم:\nالعمر:\nولد أم بنت:\nقرآن أم تأسيس عربي:\nالمستوى الحالي أو كمية الحفظ:\nمعلم أم معلمة:\nالوقت المناسب للحصة التجريبية:`
+  return `https://wa.me/${CANADA_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
 }
 interface CanadaConfigCheck { readonly __brand?: "canada" }
 void (undefined as CanadaConfigCheck | undefined)
