@@ -18,7 +18,7 @@ module.exports = {
     assert: {
       assertions: {
         'categories:performance': ['warn', { minScore: 0 }],
-        'metrics:cls': ['error', { maxNumericValue: 0.1 }],
+        'metrics:cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
         'metrics:total-blocking-time': ['error', { maxNumericValue: 300 }],
       },
     },
