@@ -28,6 +28,7 @@ export function Footer() {
     { href: "/saudi-arabia", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في السعودية" : locale === "en" ? "Quran and Arabic in Saudi Arabia" : "Coran et arabe en Arabie Saoudite" },
     { href: "/united-arab-emirates", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في الإمارات" : locale === "en" ? "Quran and Arabic in the UAE" : "Coran et arabe aux Émirats" },
     { href: "/united-states", label: locale === "ar" ? "تحفيظ القرآن وتعليم العربية في أمريكا" : locale === "en" ? "Quran and Arabic in the USA" : "Coran et arabe aux États-Unis" },
+    { href: "/canada", label: locale === "ar" ? "تحفيظ القرآن واللغة العربية في كندا" : locale === "en" ? "Quran and Arabic in Canada" : "Coran et arabe au Canada" },
   ]
 
   const legalLinks = [

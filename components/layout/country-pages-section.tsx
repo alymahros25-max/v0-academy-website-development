@@ -8,6 +8,7 @@ const countryPages = [
   { href: "/saudi-arabia", label: "السعودية", name: "Saudi Arabia", flag: "🇸🇦" },
   { href: "/united-arab-emirates", label: "الإمارات", name: "United Arab Emirates", flag: "🇦🇪" },
   { href: "/united-states", label: "الولايات المتحدة", name: "United States", flag: "🇺🇸" },
+  { href: "/canada", label: "كندا", name: "Canada", flag: "🇨🇦" },
 ] as const
 
 export function CountryPagesSection() {
