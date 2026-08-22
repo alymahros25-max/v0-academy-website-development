@@ -9,6 +9,7 @@ const pages = [
   ["الإمارات", "United Arab Emirates", "/united-arab-emirates", "🇦🇪"],
   ["الولايات المتحدة", "United States", "/united-states", "🇺🇸"],
   ["كندا", "Canada", "/canada", "🇨🇦"],
+  ["المملكة المتحدة", "United Kingdom", "/united-kingdom", "🇬🇧"],
 ] as const
 
 export function CountryLandingPagesTab() {

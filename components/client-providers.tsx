@@ -18,13 +18,14 @@ function LayoutWrapper({ children }: { children: ReactNode }) {
   const isUaeLanding = pathname === "/united-arab-emirates"
   const isUnitedStatesLanding = pathname === "/united-states"
   const isCanadaLanding = pathname === "/canada"
+  const isUnitedKingdomLanding = pathname === "/united-kingdom"
 
   useEffect(() => {
     document.documentElement.lang = locale
     document.documentElement.dir = dir
   }, [dir, locale])
 
-  if (isAdmin || isSaudiLanding || isUaeLanding || isUnitedStatesLanding || isCanadaLanding) {
+  if (isAdmin || isSaudiLanding || isUaeLanding || isUnitedStatesLanding || isCanadaLanding || isUnitedKingdomLanding) {
     return <div dir={dir}>{children}</div>
   }
 
