@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
 import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
 import { getUnitedStatesWhatsAppUrl, unitedStatesLandingConfig, type UnitedStatesPlan, type UnitedStatesProgram } from "@/lib/united-states-landing-config"
+import { CountryPagesSection } from "@/components/layout/country-pages-section"
 
 export const metadata: Metadata = {
   title: unitedStatesLandingConfig.seo.title,
@@ -15,12 +16,13 @@ export const metadata: Metadata = {
 const faq = [
   ["هل الحصة التجريبية الأولى مجانية؟", "نعم، الحصة التجريبية الأولى مجانية، ونتعرف خلالها على مستوى الطالب واحتياجه والموعد الأنسب له قبل اختيار الباقة."],
   ["هل الحصص مناسبة للأطفال في أمريكا؟", "نعم، الحصص الفردية مناسبة للأطفال والشباب والطلاب، مع محتوى ومدة يتناسبان مع العمر والمستوى."],
-  ["هل يمكن اختيار معلم أو معلمة؟", "نعم، اذكر تفضيلك عند التواصل عبر واتساب وسننسق معك حسب البرنامج والتوفر."],
-  ["هل تناسب الحصص جميع الولايات والتوقيتات؟", "نعم، الخدمة أونلاين للعائلات في جميع الولايات، وننسق الموعد حسب توقيتك والدراسة والعمل."],
+  ["هل يبدأ طالب العربية من الحروف أم يمكن تقييم مستواه أولاً؟", "نبدأ بتقييم بسيط لمستوى الطالب، ثم نبني خطة مناسبة؛ يمكن البدء من الحروف أو الانتقال إلى مهارات القراءة والكتابة المتقدمة."],
+  ["هل يناسب تأسيس العربية الأطفال والبالغين من الناطقين بالعربية؟", "نعم، البرنامج مناسب للأطفال والبالغين من الناطقين بالعربية، ويُكيّف المحتوى حسب العمر والهدف والمستوى."],
+  ["هل تشمل حصة العربية القراءة والكتابة والنطق؟", "نعم، تشمل الحصة المهارات التي يحتاجها الطالب من القراءة والكتابة والإملاء والنطق والفهم، وفق خطة فردية."],
+  ["هل يمكن اختيار معلم أو معلمة ووقت مناسب؟", "نعم، اذكر تفضيلك والوقت المناسب عند التواصل عبر واتساب، وسننسق حسب البرنامج والتوفر وتوقيت ولايتك."],
+  ["هل تحفيظ القرآن مناسب للمبتدئ؟", "نعم، نبدأ مع الطالب من المستوى المناسب له، مع الحفظ الجديد والتسميع وتصحيح التلاوة والتجويد والمراجعة."],
   ["هل يوجد خصم للإخوة؟", "نعم، يوجد خصم خاص عند تسجيل الإخوة معاً، ويمكن معرفة التفاصيل عند التواصل."],
   ["هل الأسعار شهرية؟", "نعم، جميع الأسعار المعروضة بالدولار الأمريكي وشهرية، وتختلف حسب مدة الحصة وعدد الحصص."],
-  ["هل الخدمة مناسبة للرجال والنساء والأطفال والشباب؟", "نعم، نقدم متابعة فردية للأطفال والشباب والنساء والرجال، مع إمكانية اختيار معلم أو معلمة."],
-  ["ما الفرق بين تحفيظ القرآن وتأسيس اللغة العربية؟", "تحفيظ القرآن يركز على الحفظ والتسميع والتجويد والمراجعة، أما تأسيس العربية فيركز على القراءة والكتابة والنطق والفهم."],
   ["هل يمكن تغيير الموعد بالتنسيق المسبق؟", "نعم، يمكن طلب تغيير الموعد بالتنسيق المسبق، ونبحث عن وقت مناسب متاح للطالب والمعلم."],
 ] as const
 
@@ -53,7 +55,7 @@ export default function UnitedStatesPage() {
     <section id="plans" className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-24"><Plans program="quran" title="باقات تحفيظ القرآن للناطقين بالعربية" description="باقات شهرية بالدولار الأمريكي لحصص فردية في الحفظ والتسميع والتجويد والمراجعة." /><Plans program="arabic" title="باقات تأسيس اللغة العربية للناطقين بالعربية" description="مناسبة للأطفال والشباب والطلاب الذين يحتاجون إلى تأسيس القراءة والكتابة والنطق والفهم باللغة العربية، مع حصص فردية مباشرة أونلاين." /></section>
     <section className="bg-secondary/40 px-5 py-16 sm:px-8"><div className="mx-auto max-w-4xl text-center"><h2 className="text-3xl font-bold">تعليم أونلاين من أي مدينة في أمريكا</h2><p className="mt-5 leading-8 text-muted-foreground">نخدم العائلات العربية في نيويورك ونيوجيرسي وواشنطن وفيلادلفيا وبوسطن وديترويت وشيكاغو وهيوستن ودالاس وأورلاندو وأتلانتا ولوس أنجلوس وسان فرانسيسكو وفلوريدا، من دون الحاجة إلى فرع محلي.</p></div></section>
     <section className="mx-auto max-w-5xl px-5 py-16 sm:px-8"><h2 className="text-center text-3xl font-bold">الأسئلة الشائعة</h2><div className="mt-8 grid gap-3 sm:grid-cols-2">{faq.map(([question, answer]) => <details key={question} className="rounded-xl border border-border bg-card p-5"><summary className="cursor-pointer font-bold">{question}</summary><p className="mt-3 leading-7 text-muted-foreground">{answer}</p></details>)}</div></section>
-    <footer className="bg-primary px-5 py-10 text-primary-foreground"><div className="mx-auto max-w-6xl"><h2 className="font-bold">صفحاتنا حسب الدولة</h2><nav className="mt-4 flex flex-wrap gap-4 text-sm"><Link href="/">الرئيسية</Link><Link href="/saudi-arabia">تحفيظ القرآن واللغة العربية في السعودية</Link><Link href="/united-arab-emirates">تحفيظ القرآن واللغة العربية في الإمارات</Link></nav><div className="mt-8 flex flex-wrap gap-4 text-sm"><Link href="/games">الألعاب والمسابقات</Link><Link href="/library">المكتبة</Link><Link href="/teachers">المعلمون والمعلمات</Link><Link href="/blog">المدونة</Link><Link href="/privacy-policy">سياسة الخصوصية</Link><Link href="/terms">شروط الاستخدام</Link><Link href="/refund-policy">سياسة الاسترداد</Link></div></div></footer>
+    <footer className="bg-primary px-5 py-10 text-primary-foreground"><div className="mx-auto max-w-6xl"><CountryPagesSection /><nav className="mt-4 flex flex-wrap gap-4 text-sm"><Link href="/">الرئيسية</Link><Link href="/saudi-arabia">تحفيظ القرآن واللغة العربية في السعودية</Link><Link href="/united-arab-emirates">تحفيظ القرآن واللغة العربية في الإمارات</Link></nav><div className="mt-8 flex flex-wrap gap-4 text-sm"><Link href="/games">الألعاب والمسابقات</Link><Link href="/library">المكتبة</Link><Link href="/teachers">المعلمون والمعلمات</Link><Link href="/blog">المدونة</Link><Link href="/privacy-policy">سياسة الخصوصية</Link><Link href="/terms">شروط الاستخدام</Link><Link href="/refund-policy">سياسة الاسترداد</Link></div></div></footer>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
   </main>
 }

@@ -20,6 +20,7 @@ import { BlogManager } from "@/components/admin/BlogManager"
 import { LibraryManager } from "@/components/admin/LibraryManager"
 import { SaudiLandingTab } from "@/components/admin/SaudiLandingTab"
 import { UaeLandingTab } from "@/components/admin/UaeLandingTab"
+import { CountryLandingPagesTab } from "@/components/admin/CountryLandingPagesTab"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
@@ -61,7 +62,7 @@ function AdminSectionToolbar({ section }: { section: string }) {
   )
 }
 
-type Tab = "saudi-landing" | "uae-landing" | "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
+type Tab = "country-pages" | "saudi-landing" | "uae-landing" | "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "zapier" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -100,6 +101,7 @@ export default function AdminDashboard() {
 
   const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard; group: string }[] = [
     { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard, group: "الرئيسية" },
+    { id: "country-pages", label: "صفحاتنا حسب الدولة", key: "admin.countryPages", icon: MapPin, group: "محتوى الموقع" },
     { id: "saudi-landing", label: "صفحة الهبوط السعودية", key: "admin.saudiLanding", icon: MapPin, group: "محتوى الموقع" },
     { id: "uae-landing", label: "صفحة الهبوط الإماراتية", key: "admin.uaeLanding", icon: MapPin, group: "محتوى الموقع" },
     { id: "packages", label: t("admin.packages"), key: "admin.packages", icon: Package, group: "محتوى الموقع" },
@@ -202,9 +204,13 @@ export default function AdminDashboard() {
       {/* Tab Content */}
       <div className="p-4 lg:p-6">
         {activeTab !== "dashboard" && <AdminSectionToolbar section={tabs.find(t => t.id === activeTab)?.label ?? "القسم الحالي"} />}
-        <AdminErrorBoundary>
+          <AdminErrorBoundary>
             {activeTab === "dashboard" && <DashboardTab />}
           </AdminErrorBoundary>
+          <AdminErrorBoundary>
+            {activeTab === "country-pages" && <CountryLandingPagesTab />}
+          </AdminErrorBoundary>
+
           <AdminErrorBoundary>
             {activeTab === "saudi-landing" && <SaudiLandingTab />}
           </AdminErrorBoundary>
@@ -1517,7 +1523,7 @@ function ClassroomVideosTab() {
           </div>
         ) : !Array.isArray(videos) || videos?.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">لم يتم إضافة أي فيديوهات حتى الآن</p>
+            <p className="text-muted-foreground mb-4">لم يتم إضافة أي فيديوهات حتى ��لآن</p>
             <button
               onClick={() => setShowForm(true)}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
