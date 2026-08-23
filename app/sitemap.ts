@@ -1,142 +1,90 @@
-import { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 
 const BASE_URL = 'https://quran-elhafez.com'
 
-/**
- * Get dynamic blog articles from Supabase.
- * Falls back to file system if Supabase is unavailable.
- */
-async function getDynamicBlogArticles(): Promise<string[]> {
-  try {
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
-    const supabaseKey =
-      process.env.SUPABASE_SERVICE_ROLE_KEY ||
-      process.env.SUPABASE_ANON_KEY ||
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+type BlogArticle = { slug: string; lastModified?: string }
 
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Supabase env vars missing')
-    }
+async function getDynamicBlogArticles(): Promise<BlogArticle[]> {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseKey) throw new Error('Supabase env vars missing')
 
     const supabase = createClient(supabaseUrl, supabaseKey)
-
     const { data: articles, error } = await supabase
       .from('blog_posts')
-      .select('slug, created_at')
+      .select('slug, created_at, updated_at')
       .eq('is_published', true)
       .order('created_at', { ascending: false })
       .limit(100)
-
     if (error) throw error
 
-    return (articles || []).map((a) => a.slug)
+    return (articles || []).map((article) => ({
+      slug: article.slug,
+      lastModified: article.updated_at || article.created_at,
+    }))
   } catch (error) {
     console.warn('[sitemap] Failed to fetch from Supabase:', error)
     return getBlogArticlesFromFilesystem()
   }
 }
 
-/**
- * Get blog articles from filesystem as fallback.
- */
-function getBlogArticlesFromFilesystem(): string[] {
+function getBlogArticlesFromFilesystem(): BlogArticle[] {
   try {
-    const zapierFile = path.join(process.cwd(), 'data', 'zapier-articles.json')
-    if (fs.existsSync(zapierFile)) {
-      const data = JSON.parse(fs.readFileSync(zapierFile, 'utf-8'))
-      return Object.keys(data)
+    const file = path.join(process.cwd(), 'data', 'zapier-articles.json')
+    if (fs.existsSync(file)) {
+      const data = JSON.parse(fs.readFileSync(file, 'utf-8'))
+      return Object.keys(data).map((slug) => ({ slug }))
     }
   } catch (error) {
-    console.log('[sitemap] Using default blog articles')
+    console.warn('[sitemap] Using default blog articles')
   }
-
   return [
-    'quran-memorization-techniques',
-    'arabic-foundation-importance',
-    'online-learning-benefits',
+    { slug: 'quran-memorization-techniques' },
+    { slug: 'arabic-foundation-importance' },
+    { slug: 'online-learning-benefits' },
   ]
 }
 
-const generateLocalizedUrl = (
-  route: string,
-  priority: number,
-  changefreq: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' = 'weekly'
-): MetadataRoute.Sitemap => [{
-  url: `${BASE_URL}${route === '/' ? '/' : route}`,
-  lastModified: new Date().toISOString().split('T')[0],
-  changeFrequency: changefreq,
-  priority,
-}]
+const staticRoutes = [
+  '/',
+  '/quran',
+  '/arabic',
+  '/about',
+  '/saudi-arabia',
+  '/united-arab-emirates',
+  '/united-states',
+  '/canada',
+  '/united-kingdom',
+  '/australia',
+  '/germany',
+  '/teachers',
+  '/reviews',
+  '/games',
+  '/faq',
+  '/blog',
+  '/contact',
+  '/library',
+  '/classroom-moments',
+  '/refund-policy',
+  '/privacy',
+  '/terms',
+] as const
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sitemap: MetadataRoute.Sitemap = []
+  const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
+    url: `${BASE_URL}${route === '/' ? '/' : route}`,
+  }))
 
-  // ============================================================
-  // TIER 1: HOMEPAGE (Priority 1.0, daily)
-  // ============================================================
-  sitemap.push(...generateLocalizedUrl('/', 1.0, 'daily'))
-
-  // ============================================================
-  // TIER 2: CORE PAGES (Priority 0.9, weekly)
-  // Main offerings: Quran, Arabic, About
-  // ============================================================
-  const corePages = ['/quran', '/arabic', '/about', '/saudi-arabia', '/united-arab-emirates', '/united-states', '/canada', '/united-kingdom', '/australia', '/germany'] as const
-  corePages.forEach((route) => {
-    sitemap.push(...generateLocalizedUrl(route, 0.9, 'weekly'))
-  })
-
-  // ============================================================
-  // TIER 3: SECONDARY PAGES (Priority 0.7, weekly)
-  // Content and engagement pages
-  // ============================================================
-  const secondaryPages = [
-    '/teachers',
-    '/reviews',
-    '/games',
-    '/faq',
-    '/blog',
-    '/contact',
-    '/library',
-    '/refund-policy',
-  ] as const
-  secondaryPages.forEach((route) => {
-    sitemap.push(...generateLocalizedUrl(route, 0.7, 'weekly'))
-  })
-
-  // ============================================================
-  // TIER 5: CLASSROOM MOMENTS (Priority 0.75, weekly)
-  // User-generated and featured content
-  // ============================================================
-  sitemap.push(...generateLocalizedUrl('/classroom-moments', 0.75, 'weekly'))
-
-  // ============================================================
-  // TIER 6: BLOG ARTICLES (Priority 0.6, monthly)
-  // Individual articles with language variants
-  // ============================================================
-  const blogArticles = await getDynamicBlogArticles()
-  blogArticles
-    .filter((slug) => slug && slug !== '-5-')
-    .forEach((slug) => {
-    sitemap.push({
+  const blogEntries: MetadataRoute.Sitemap = (await getDynamicBlogArticles())
+    .filter(({ slug }) => slug && slug !== '-5-')
+    .map(({ slug, lastModified }) => ({
       url: `${BASE_URL}/blog/${slug}`,
-      lastModified: new Date().toISOString().split('T')[0],
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    })
-  })
+      ...(lastModified ? { lastModified } : {}),
+    }))
 
-  // ============================================================
-  // TIER 5: LEGAL/UTILITY PAGES (Priority 0.3, monthly)
-  // Privacy and terms of service
-  // ============================================================
-  const legalPages = ['/privacy', '/terms'] as const
-  legalPages.forEach((route) => {
-    sitemap.push(...generateLocalizedUrl(route, 0.3, 'monthly'))
-  })
-
-  return sitemap
+  return [...staticEntries, ...blogEntries]
 }
