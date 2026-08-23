@@ -11,6 +11,7 @@ const pages = [
   ["كندا", "Canada", "/canada", "🇨🇦"],
   ["المملكة المتحدة", "United Kingdom", "/united-kingdom", "🇬🇧"],
   ["أستراليا", "Australia", "/australia", "🇦🇺"],
+  ["ألمانيا", "Germany", "/germany", "🇩🇪"],
 ] as const
 
 export function CountryLandingPagesTab() {
