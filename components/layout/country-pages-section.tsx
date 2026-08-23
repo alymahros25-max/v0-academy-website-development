@@ -11,6 +11,7 @@ const countryPages = [
   { href: "/canada", label: "كندا", name: "Canada", flag: "🇨🇦" },
   { href: "/united-kingdom", label: "المملكة المتحدة", name: "United Kingdom", flag: "🇬🇧" },
   { href: "/australia", label: "أستراليا", name: "Australia", flag: "🇦🇺" },
+  { href: "/germany", label: "ألمانيا", name: "Germany", flag: "🇩🇪" },
 ] as const
 
 export function CountryPagesSection() {
