@@ -18,11 +18,10 @@ export function HeroSection() {
         alt="Children learning Quran"
         fill
         className="object-cover object-[center_15%]"
-        sizes="100vw"
+        sizes="(max-width: 1023px) 100vw, 50vw"
         quality={75}
         priority
         fetchPriority="high"
-        loading="eager"
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 pb-32 lg:pt-16 lg:pb-40 w-full">
