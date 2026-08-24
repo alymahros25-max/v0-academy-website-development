@@ -3,10 +3,6 @@ const nextConfig = {
   // ============================================================
   // PERFORMANCE & OPTIMIZATION
   // ============================================================
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-
   // Enable experimental features for optimization
   experimental: {
     // Enable external packages for better tree-shaking (disabled for Vercel compat)
@@ -42,7 +38,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=120',
+            value: 'no-store',
           },
           {
             key: 'X-Content-Type-Options',

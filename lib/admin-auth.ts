@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { createHash } from "crypto"
+import { createHash, createHmac, timingSafeEqual } from "crypto"
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH
@@ -16,25 +16,30 @@ export function isAdminAuthConfigured(): boolean {
   return Boolean(ADMIN_EMAIL?.trim() && ADMIN_PASSWORD_HASH?.trim() && SESSION_SECRET?.trim())
 }
 
-function generateSessionToken(email: string): string {
+function generateSessionToken(email: string, issuedAt: number): string {
   assertAdminConfig()
-  return createHash("sha256").update(`${email}:${SESSION_SECRET}`).digest("hex")
+  return createHmac("sha256", SESSION_SECRET!).update(`${email}:${issuedAt}`).digest("hex")
 }
 
-export async function verifyAdminSession(): Promise<boolean> {
+export function verifySessionValue(value: string): boolean {
   try {
     assertAdminConfig()
-    const cookieStore = await cookies()
-    const session = cookieStore.get(SESSION_COOKIE)
-    if (!session?.value) return false
-    const decoded = Buffer.from(session.value, "base64").toString()
-    const separator = decoded.lastIndexOf(":")
-    const email = decoded.slice(0, separator)
-    const token = decoded.slice(separator + 1)
-    return email === ADMIN_EMAIL?.trim().toLowerCase() && token === generateSessionToken(email)
+    const decoded = Buffer.from(value, "base64url").toString("utf8")
+    const [email, issuedAtText, token] = decoded.split(":")
+    const issuedAt = Number(issuedAtText)
+    if (!email || !token || !Number.isSafeInteger(issuedAt)) return false
+    if (Date.now() - issuedAt > 7 * 24 * 60 * 60 * 1000 || issuedAt > Date.now() + 60_000) return false
+    const expected = generateSessionToken(email, issuedAt)
+    return email === ADMIN_EMAIL?.trim().toLowerCase() && token.length === expected.length && timingSafeEqual(Buffer.from(token), Buffer.from(expected))
   } catch {
     return false
   }
+}
+
+export async function verifyAdminSession(): Promise<boolean> {
+  const cookieStore = await cookies()
+  const session = cookieStore.get(SESSION_COOKIE)
+  return Boolean(session?.value && verifySessionValue(session.value))
 }
 
 export function verifyCredentials(email: string, password: string): boolean {
@@ -46,8 +51,9 @@ export function verifyCredentials(email: string, password: string): boolean {
 
 export async function createSession(email: string) {
   assertAdminConfig()
-  const token = generateSessionToken(email)
-  const sessionValue = Buffer.from(`${email}:${token}`).toString("base64")
+  const issuedAt = Date.now()
+  const token = generateSessionToken(email, issuedAt)
+  const sessionValue = Buffer.from(`${email}:${issuedAt}:${token}`).toString("base64url")
   const cookieStore = await cookies()
   cookieStore.set(SESSION_COOKIE, sessionValue, {
     httpOnly: true,

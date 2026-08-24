@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { LEGACY_ROUTES, getLocalizedPath } from '@/lib/routing-config'
+import { verifySessionValue } from '@/lib/admin-auth'
 
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname
@@ -10,7 +11,7 @@ export function proxy(request: NextRequest) {
   // Completely bypass multilingual and redirect logic for all admin routes
   if (pathname.startsWith('/admin') || pathname.startsWith('/ac')) {
     // Keep the login route public; require the signed session cookie for admin pages.
-    if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !request.cookies.has('admin_session')) {
+    if (pathname.startsWith('/admin') && pathname !== '/admin/login' && !verifySessionValue(request.cookies.get('admin_session')?.value ?? '')) {
       return NextResponse.redirect(new URL('/admin/login', request.url))
     }
     const response = NextResponse.next()
