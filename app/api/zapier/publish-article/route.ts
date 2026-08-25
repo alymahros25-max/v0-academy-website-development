@@ -26,8 +26,6 @@ async function saveArticles(articles: any) {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('[v0] Zapier POST request received')
-    
     // التحقق من API Key
     const apiKey = request.headers.get('x-api-key') || request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
     const expectedKey = process.env.ZAPIER_API_KEY
@@ -41,8 +39,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    console.log('[v0] Request body received - Slug:', body.slug, 'Content length:', JSON.stringify(body).length)
-    
     // التحقق من البيانات المطلوبة
     const requiredFields = ['slug', 'title']
     const missingFields = requiredFields.filter(field => !body[field])
@@ -124,7 +120,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('[v0] Zapier Error:', error)
     return NextResponse.json(
-      { error: 'Internal Server Error', details: String(error) },
+      { error: 'Internal Server Error' },
       { status: 500 }
     )
   }

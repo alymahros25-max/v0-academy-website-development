@@ -2,6 +2,17 @@ import { NextResponse } from "next/server"
 import { getMessages, setMessages } from "@/lib/data-store"
 import fs from "fs/promises"
 import path from "path"
+import { z } from "zod"
+import { verifyAdminSession } from "@/lib/admin-auth"
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  email: z.string().trim().email().max(320),
+  phone: z.string().trim().max(40).optional().default(""),
+  message: z.string().trim().min(1).max(5000),
+  subject: z.string().trim().max(200).optional().default("Contact Form"),
+  language: z.enum(["ar", "en", "fr"]).optional().default("ar"),
+}).strict()
 
 async function loadData() {
   try {
@@ -25,23 +36,11 @@ async function saveData(data: any) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { name, email, phone, message, subject, language } = body
-
-    if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: "Name, email, and message are required" },
-        { status: 400 }
-      )
+    const parsed = contactSchema.safeParse(await request.json())
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid contact form data" }, { status: 400 })
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email address" },
-        { status: 400 }
-      )
-    }
+    const { name, email, phone, message, subject, language } = parsed.data
 
     const newMessage = {
       id: Date.now().toString(),
@@ -60,8 +59,6 @@ export async function POST(request: Request) {
     data.contactMessages = data.contactMessages || []
     data.contactMessages.push(newMessage)
     await saveData(data)
-
-    console.log("[Contact Message Received]", newMessage)
 
     return NextResponse.json({
       success: true,
@@ -82,6 +79,9 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
+  if (!(await verifyAdminSession())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
   try {
     const data = await loadData()
     return NextResponse.json({ messages: data.contactMessages || [] })
