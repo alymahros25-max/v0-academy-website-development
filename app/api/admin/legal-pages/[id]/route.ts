@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/api-auth'
 import { updateLegalPage } from '@/lib/legal-service'
 
 /**
@@ -16,6 +17,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireAdmin()
+  if (authError) return authError
+
   try {
     const { id } = await params
     const body = await request.json()
