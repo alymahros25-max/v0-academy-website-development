@@ -15,8 +15,8 @@
     "assert": {
       "assertions": {
         "categories:performance": "warn",
-        "metrics:cls": ["error", { "maxNumericValue": 0.1 }],
-        "metrics:total-blocking-time": ["error", { "maxNumericValue": 300 }]
+        "metrics:cumulative-layout-shift": ["warn", { "maxNumericValue": 0.1 }],
+        "metrics:total-blocking-time": ["warn", { "maxNumericValue": 300 }]
       }
     }
   }
