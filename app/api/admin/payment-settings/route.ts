@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/api-auth'
 import { getAllPaymentProviders, switchActivePaymentProvider, updatePaymentSettings } from '@/lib/payment-config'
 
 /**
@@ -6,6 +7,9 @@ import { getAllPaymentProviders, switchActivePaymentProvider, updatePaymentSetti
  * Fetch all payment provider settings
  */
 export async function GET(request: NextRequest) {
+  const authError = await requireAdmin()
+  if (authError) return authError
+
   try {
     const providers = await getAllPaymentProviders()
     
@@ -39,6 +43,9 @@ export async function GET(request: NextRequest) {
  * Update payment provider settings or switch active provider
  */
 export async function POST(request: NextRequest) {
+  const authError = await requireAdmin()
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { action, provider_name, updates } = body

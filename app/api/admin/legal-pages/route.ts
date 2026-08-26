@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/api-auth'
 import {
   getLegalPageAllLocales,
   getAllLegalPages,
@@ -15,6 +16,9 @@ import {
  * - If no page: All legal pages
  */
 export async function GET(request: NextRequest) {
+  const authError = await requireAdmin()
+  if (authError) return authError
+
   try {
     const { searchParams } = new URL(request.url)
     const pageSlug = searchParams.get('page')
