@@ -50,4 +50,4 @@ jobs:
       - name: Run Lighthouse CI
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: pnpm dlx @lhci/cli@0.15.x autorun --collect.url=http://localhost:3000/ --collect.url=http://localhost:3000/saudi-arabia --collect.url=http://localhost:3000/united-arab-emirates --collect.url=http://localhost:3000/united-states --collect.numberOfRuns=1 --assert.assertions.categories:performance=warn --assert.assertions.metrics:cls=0.1 --assert.assertions.metrics:total-blocking-time=300000 --collect.settings.chromeFlags="--no-sandbox"
+        run: pnpm dlx @lhci/cli@0.15.x autorun
