@@ -1,6 +1,4 @@
 import type { MetadataRoute } from 'next'
-import fs from 'fs'
-import path from 'path'
 import { createClient } from '@supabase/supabase-js'
 
 const BASE_URL = 'https://quran-elhafez.com'
@@ -33,15 +31,6 @@ async function getDynamicBlogArticles(): Promise<BlogArticle[]> {
 }
 
 function getBlogArticlesFromFilesystem(): BlogArticle[] {
-  try {
-    const file = path.join(process.cwd(), 'data', 'zapier-articles.json')
-    if (fs.existsSync(file)) {
-      const data = JSON.parse(fs.readFileSync(file, 'utf-8'))
-      return Object.keys(data).map((slug) => ({ slug }))
-    }
-  } catch (error) {
-    console.warn('[sitemap] Using default blog articles')
-  }
   return [
     { slug: 'quran-memorization-techniques' },
     { slug: 'arabic-foundation-importance' },

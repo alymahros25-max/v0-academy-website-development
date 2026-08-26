@@ -223,7 +223,6 @@ const translations: Translations = {
   "admin.classroomVideos": { ar: "فيديوهات من الحصص", en: "Classroom Videos", fr: "Vidéos de classe" },
   "admin.digitalLibrary": { ar: "المكتبة الرقمية", en: "Digital Library", fr: "Bibliothèque numérique" },
   "admin.educationalGames": { ar: "الألعاب التعليمية", en: "Educational Games", fr: "Jeux éducatifs" },
-  "admin.zapier": { ar: "Zapier", en: "Zapier", fr: "Zapier" },
   "admin.welcomeTitle": { ar: "مرحباً بك في لوحة التحكم", en: "Welcome to Admin Dashboard", fr: "Bienvenue dans le tableau de bord" },
   "admin.activePackages": { ar: "الباقات النشطة", en: "Active Packages", fr: "Forfaits actifs" },
   "admin.registeredStudents": { ar: "الطلاب المسجلين", en: "Registered Students", fr: "Étudiants inscrits" },

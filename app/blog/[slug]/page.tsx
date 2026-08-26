@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
 import BlogArticleClient from "./client"
 import { notFound } from 'next/navigation'
-import fs from 'fs/promises'
-import path from 'path'
 
 // المقالات الثابتة الافتراضية
 const blogPosts: Record<string, any> = {
@@ -126,17 +124,6 @@ const blogPosts: Record<string, any> = {
   }
 }
 
-// قراءة المقالات من Zapier
-async function readZapierArticles() {
-  try {
-    const zapierFile = path.join(process.cwd(), 'data', 'zapier-articles.json')
-    const data = await fs.readFile(zapierFile, 'utf-8')
-    return JSON.parse(data)
-  } catch {
-    return {}
-  }
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const post = blogPosts[slug]
@@ -166,10 +153,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  // دمج المقالات الثابتة مع مقالات Zapier
   const { slug } = await params
-  const zapierArticles = await readZapierArticles()
-  const allPosts = { ...blogPosts, ...zapierArticles }
+  const allPosts = blogPosts
 
   if (!(slug in allPosts)) notFound()
 
