@@ -42,7 +42,7 @@ export function TestimonialsPreview() {
   const { t, locale } = useI18n()
 
   return (
-    <section className="py-20 lg:py-28 bg-muted/30">
+    <section className="content-auto py-20 lg:py-28 bg-muted/30">
       <div className="mx-auto max-w-7xl px-4">
         {/* Header */}
         <div className="text-center mb-16">

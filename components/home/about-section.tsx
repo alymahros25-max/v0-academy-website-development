@@ -43,7 +43,7 @@ export function AboutSection() {
   ]
 
   return (
-    <section className="bg-navy-pale/25 py-20 lg:py-28">
+    <section className="content-auto bg-navy-pale/25 py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mx-auto max-w-3xl text-center">
           <span className="mb-4 inline-block rounded-full bg-gold-pale px-4 py-1.5 text-sm font-bold text-navy-primary">{t("about.badge")}</span>
