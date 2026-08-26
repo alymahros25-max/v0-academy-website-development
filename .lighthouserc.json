@@ -1,0 +1,23 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3000/",
+        "http://localhost:3000/saudi-arabia",
+        "http://localhost:3000/united-arab-emirates",
+        "http://localhost:3000/united-states"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "chromeFlags": "--no-sandbox"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": "warn",
+        "metrics:cumulative-layout-shift": ["warn", { "maxNumericValue": 0.1 }],
+        "metrics:total-blocking-time": ["warn", { "maxNumericValue": 300 }]
+      }
+    }
+  }
+}
