@@ -44,7 +44,7 @@ export function StatsSection() {
   ]
 
   return (
-    <section className="py-16 bg-primary relative overflow-hidden">
+    <section className="content-auto py-16 bg-primary relative overflow-hidden">
       <div className="absolute inset-0 islamic-pattern opacity-20" />
       <div className="relative z-10 mx-auto max-w-7xl px-4">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">

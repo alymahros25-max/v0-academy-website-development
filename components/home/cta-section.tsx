@@ -9,7 +9,7 @@ export function CTASection() {
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight
 
   return (
-    <section className="py-20 lg:py-28 bg-primary relative overflow-hidden">
+    <section className="content-auto py-20 lg:py-28 bg-primary relative overflow-hidden">
       <div className="absolute inset-0 islamic-pattern opacity-20" />
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-primary-foreground mb-6 text-balance">
