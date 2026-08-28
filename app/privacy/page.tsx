@@ -1,9 +1,15 @@
 "use client"
 
 import { useI18n } from "@/lib/i18n"
+import useSWR from "swr"
+import ReactMarkdown from "react-markdown"
+
+type PublicLegalPage = { title: string; content: string; updated_at: string }
+const fetcher = (url: string) => fetch(url, { cache: "no-store" }).then((res) => res.json())
 
 export default function PrivacyPage() {
   const { locale } = useI18n()
+  const { data: dynamicPage } = useSWR<PublicLegalPage>(`/api/public/legal?slug=privacy&locale=${locale}`, fetcher)
 
   const content = {
     ar: {
@@ -48,13 +54,14 @@ export default function PrivacyPage() {
   }
 
   const c = content[locale]
+  const displayTitle = dynamicPage?.title || c.title
 
   return (
     <>
       <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-primary overflow-hidden">
         <div className="absolute inset-0 islamic-pattern opacity-20" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-primary-foreground mb-4">{c.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-primary-foreground mb-4">{displayTitle}</h1>
           <p className="text-primary-foreground/60">{c.lastUpdate}</p>
         </div>
         <div className="absolute bottom-0 left-0 right-0">
@@ -68,7 +75,9 @@ export default function PrivacyPage() {
         <div className="mx-auto max-w-4xl px-4">
           <div className="bg-card rounded-2xl p-6 lg:p-10 shadow-lg border border-border">
             <div className="flex flex-col gap-8">
-              {c.sections.map((section, idx) => (
+              {dynamicPage?.content ? (
+                <div className="prose prose-slate max-w-none dark:prose-invert"><ReactMarkdown>{dynamicPage.content}</ReactMarkdown></div>
+              ) : c.sections.map((section, idx) => (
                 <div key={idx}>
                   <h2 className="text-xl font-bold text-foreground mb-3">{section.title}</h2>
                   <p className="text-muted-foreground leading-relaxed">{section.text}</p>
