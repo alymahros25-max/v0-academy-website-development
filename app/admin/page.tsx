@@ -21,6 +21,7 @@ import { LibraryManager } from "@/components/admin/LibraryManager"
 import { SaudiLandingTab } from "@/components/admin/SaudiLandingTab"
 import { UaeLandingTab } from "@/components/admin/UaeLandingTab"
 import { CountryLandingPagesTab } from "@/components/admin/CountryLandingPagesTab"
+import { FAQManager } from "@/components/admin/faq-manager"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
 
@@ -62,7 +63,7 @@ function AdminSectionToolbar({ section }: { section: string }) {
   )
 }
 
-type Tab = "country-pages" | "saudi-landing" | "uae-landing" | "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
+type Tab = "faq" | "country-pages" | "saudi-landing" | "uae-landing" | "dashboard" | "packages" | "teachers" | "reviews" | "messages" | "settings" | "pages" | "seo-guide" | "cms" | "theme" | "pages-builder" | "users" | "classroom-videos" | "educational-games" | "gsc-dashboard" | "request-indexing" | "orders" | "payment-settings" | "blog" | "library"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -100,6 +101,7 @@ export default function AdminDashboard() {
   }
 
   const tabs: { id: Tab; label: string; key: string; icon: typeof LayoutDashboard; group: string }[] = [
+    { id: "faq", label: "الأسئلة الشائعة", key: "admin.faq", icon: MessageSquare, group: "محتوى الموقع" },
     { id: "dashboard", label: t("admin.dashboard"), key: "admin.dashboard", icon: LayoutDashboard, group: "الرئيسية" },
     { id: "country-pages", label: "صفحاتنا حسب الدولة", key: "admin.countryPages", icon: MapPin, group: "محتوى الموقع" },
     { id: "saudi-landing", label: "صفحة الهبوط السعودية", key: "admin.saudiLanding", icon: MapPin, group: "محتوى الموقع" },
@@ -205,6 +207,7 @@ export default function AdminDashboard() {
       <div className="p-4 lg:p-6">
         {activeTab !== "dashboard" && <AdminSectionToolbar section={tabs.find(t => t.id === activeTab)?.label ?? "القسم الحالي"} />}
           <AdminErrorBoundary>
+            {activeTab === "faq" && <FAQManager />}
             {activeTab === "dashboard" && <DashboardTab />}
           </AdminErrorBoundary>
           <AdminErrorBoundary>
