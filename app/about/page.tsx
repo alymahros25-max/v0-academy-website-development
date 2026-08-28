@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import AboutPageClient from './client'
+import { getPublicContent } from '@/lib/public-content'
 
 export const revalidate = 3600
 
@@ -13,6 +14,16 @@ export const metadata: Metadata = {
   },
 }
 
-export default function AboutPage() {
-  return <AboutPageClient />
+export default async function AboutPage() {
+  const content = await getPublicContent([
+    'about_badge',
+    'about_title',
+    'about_description',
+    'mission_title',
+    'mission_description',
+    'vision_title',
+    'vision_description',
+  ])
+
+  return <AboutPageClient content={content} />
 }

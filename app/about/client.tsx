@@ -4,8 +4,10 @@ import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 import { Target, Eye, Heart, Award, Users, Globe } from 'lucide-react'
 import { imageContextConfig } from '@/lib/image-optimization'
+import type { PublicContent } from '@/lib/public-content'
+import { localizedContent } from '@/lib/public-content'
 
-export default function AboutPageClient() {
+export default function AboutPageClient({ content = {} }: { content?: Record<string, PublicContent> }) {
   const { t, locale } = useI18n()
 
   const values = [
@@ -38,13 +40,13 @@ export default function AboutPageClient() {
         <div className="absolute inset-0 islamic-pattern opacity-20" />
         <div className="relative z-10 mx-auto max-w-7xl px-4 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/20 text-secondary text-sm font-bold mb-4 border border-secondary/30">
-            {t('about.badge')}
+            {localizedContent(content.about_badge, locale, t('about.badge'))}
           </span>
           <h1 className="text-4xl md:text-5xl font-extrabold text-primary-foreground mb-6 text-balance">
-            {t('about.title')}
+            {localizedContent(content.about_title, locale, t('about.title'))}
           </h1>
           <p className="text-lg text-primary-foreground/80 max-w-3xl mx-auto text-pretty">
-            {t('about.desc')}
+            {localizedContent(content.about_description, locale, t('about.desc'))}
           </p>
         </div>
         <div className="absolute bottom-0 left-0 right-0">
@@ -78,29 +80,29 @@ export default function AboutPageClient() {
               <div className="flex items-center gap-3 mb-6">
                 <Target className="w-8 h-8 text-primary" />
                 <h2 className="text-3xl font-extrabold text-foreground">
-                  {locale === 'ar' ? 'رسالتنا' : locale === 'en' ? 'Our Mission' : 'Notre mission'}
+                  {localizedContent(content.mission_title, locale, locale === 'ar' ? 'رسالتنا' : locale === 'en' ? 'Our Mission' : 'Notre mission')}
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed text-lg mb-8">
-                {locale === 'ar'
+                {localizedContent(content.mission_description, locale, locale === 'ar'
                   ? 'نسعى لنشر تعليم القرآن الكريم واللغة العربية في جميع أنحاء العالم من خلال توفير بيئة تعليمية احترافية عبر الإنترنت، مع الحفاظ على أعلى معايير الجودة والاحترافية في التعليم.'
                   : locale === 'en'
                     ? 'We strive to spread Quran and Arabic language education worldwide by providing a professional online learning environment, while maintaining the highest standards of quality and professionalism.'
-                    : 'Nous nous efforcons de repandre l\'enseignement du Coran et de la langue arabe dans le monde entier en fournissant un environnement d\'apprentissage professionnel en ligne.'}
+                    : 'Nous nous efforcons de repandre l\'enseignement du Coran et de la langue arabe dans le monde entier en fournissant un environnement d\'apprentissage professionnel en ligne.')}
               </p>
 
               <div className="flex items-center gap-3 mb-6">
                 <Eye className="w-8 h-8 text-primary" />
                 <h2 className="text-3xl font-extrabold text-foreground">
-                  {locale === 'ar' ? 'رؤيتنا' : locale === 'en' ? 'Our Vision' : 'Notre vision'}
+                  {localizedContent(content.vision_title, locale, locale === 'ar' ? 'رؤيتنا' : locale === 'en' ? 'Our Vision' : 'Notre vision')}
                 </h2>
               </div>
               <p className="text-muted-foreground leading-relaxed text-lg">
-                {locale === 'ar'
+                {localizedContent(content.vision_description, locale, locale === 'ar'
                   ? 'أن نكون الأكاديمية الرائدة عالمياً في تحفيظ القرآن الكريم وتأسيس اللغة العربية عن بعد، وأن نساهم في تخريج جيل حافظ لكتاب الله متقن لتلاوته.'
                   : locale === 'en'
                     ? 'To be the world\'s leading online academy in Quran memorization and Arabic language foundation, contributing to graduating a generation that has memorized and mastered the Book of Allah.'
-                    : 'Etre l\'academie en ligne leader mondial dans la memorisation du Coran et les fondations de la langue arabe.'}
+                    : 'Etre l\'academie en ligne leader mondial dans la memorisation du Coran et les fondations de la langue arabe.')}
               </p>
             </div>
           </div>
