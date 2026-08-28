@@ -35,7 +35,19 @@ const CTASection = dynamic(
 )
 
 export default async function HomePage() {
-  const content = await getPublicContent(["hero_title", "hero_subtitle"])
+  const content = await getPublicContent([
+    "hero_title",
+    "hero_subtitle",
+    "about_badge",
+    "about_title",
+    "about_description",
+    "mission_title",
+    "mission_description",
+    "vision_title",
+    "vision_description",
+    "goals_title",
+    "goals_description",
+  ])
 
   return (
     <>
@@ -47,7 +59,7 @@ export default async function HomePage() {
       <Suspense fallback={<div className="min-h-80 bg-muted" />}>
         <TestimonialsPreview />
       </Suspense>
-      <AboutSection />
+      <AboutSection content={content} />
       <Suspense fallback={<div className="min-h-72 bg-muted" />}>
         <CTASection />
       </Suspense>

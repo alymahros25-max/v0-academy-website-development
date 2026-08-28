@@ -3,6 +3,8 @@
 import { useI18n } from "@/lib/i18n"
 import { Compass, Target } from "lucide-react"
 import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
+import type { PublicContent } from "@/lib/public-content"
+import { localizedContent } from "@/lib/public-content"
 
 function MissionIcon() {
   return (
@@ -22,22 +24,22 @@ function MissionIcon() {
   )
 }
 
-export function AboutSection() {
+export function AboutSection({ content = {} }: { content?: Record<string, PublicContent> }) {
   const { t, locale } = useI18n()
   const cards = [
     {
-      title: locale === "ar" ? "رسالتنا" : locale === "en" ? "Our Mission" : "Notre mission",
-      description: locale === "ar" ? "تيسير تعلّم القرآن الكريم واللغة العربية أونلاين، بأسلوب حديث يجمع بين الأصالة والمرونة." : locale === "en" ? "Making Quran and Arabic learning accessible online through a modern approach rooted in authenticity and flexibility." : "Faciliter l'apprentissage du Coran et de l'arabe en ligne, avec une approche moderne, authentique et flexible.",
+      title: localizedContent(content.mission_title, locale, locale === "ar" ? "رسالتنا" : locale === "en" ? "Our Mission" : "Notre mission"),
+      description: localizedContent(content.mission_description, locale, locale === "ar" ? "تيسير تعلّم القرآن الكريم واللغة العربية أونلاين، بأسلوب حديث يجمع بين الأصالة والمرونة." : locale === "en" ? "Making Quran and Arabic learning accessible online through a modern approach rooted in authenticity and flexibility." : "Faciliter l'apprentissage du Coran et de l'arabe en ligne, avec une approche moderne, authentique et flexible."),
       icon: <MissionIcon />,
     },
     {
-      title: locale === "ar" ? "رؤيتنا" : locale === "en" ? "Our Vision" : "Notre vision",
-      description: locale === "ar" ? "أن نكون الوجهة الأولى لتعليم القرآن والعربية للعرب في كل مكان حول العالم." : locale === "en" ? "To be the first destination for Quran and Arabic education for Arabs everywhere in the world." : "Devenir la première destination pour l'enseignement du Coran et de l'arabe aux Arabes partout dans le monde.",
+      title: localizedContent(content.vision_title, locale, locale === "ar" ? "رؤيتنا" : locale === "en" ? "Our Vision" : "Notre vision"),
+      description: localizedContent(content.vision_description, locale, locale === "ar" ? "أن نكون الوجهة الأولى لتعليم القرآن والعربية للعرب في كل مكان حول العالم." : locale === "en" ? "To be the first destination for Quran and Arabic education for Arabs everywhere in the world." : "Devenir la première destination pour l'enseignement du Coran et de l'arabe aux Arabes partout dans le monde."),
       icon: <Compass className="size-12 text-navy-primary" strokeWidth={1.5} aria-hidden="true" />,
     },
     {
-      title: locale === "ar" ? "أهدافنا" : locale === "en" ? "Our Goals" : "Nos objectifs",
-      description: locale === "ar" ? "حفظ متقن، تجويد صحيح، ومتابعة مستمرة تراعي مستوى كل طالب وعمره." : locale === "en" ? "Strong memorization, correct Tajweed, and continuous support tailored to every student's level and age." : "Une mémorisation solide, un Tajweed correct et un suivi continu adapté au niveau et à l'âge de chaque étudiant.",
+      title: localizedContent(content.goals_title, locale, locale === "ar" ? "أهدافنا" : locale === "en" ? "Our Goals" : "Nos objectifs"),
+      description: localizedContent(content.goals_description, locale, locale === "ar" ? "حفظ متقن، تجويد صحيح، ومتابعة مستمرة تراعي مستوى كل طالب وعمره." : locale === "en" ? "Strong memorization, correct Tajweed, and continuous support tailored to every student's level and age." : "Une mémorisation solide, un Tajweed correct et un suivi continu adapté au niveau et à l'âge de chaque étudiant."),
       icon: <Target className="size-12 text-navy-primary" strokeWidth={1.5} aria-hidden="true" />,
     },
   ]
@@ -46,9 +48,9 @@ export function AboutSection() {
     <section className="content-auto bg-navy-pale/25 py-20 lg:py-28">
       <div className="mx-auto max-w-7xl px-4">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="mb-4 inline-block rounded-full bg-gold-pale px-4 py-1.5 text-sm font-bold text-navy-primary">{t("about.badge")}</span>
-          <h2 className="text-balance text-3xl font-extrabold text-navy-primary md:text-4xl">{t("about.title")}</h2>
-          <p className="mt-5 text-pretty text-lg leading-8 text-foreground/75">{t("about.desc")}</p>
+          <span className="mb-4 inline-block rounded-full bg-gold-pale px-4 py-1.5 text-sm font-bold text-navy-primary">{localizedContent(content.about_badge, locale, t("about.badge"))}</span>
+          <h2 className="text-balance text-3xl font-extrabold text-navy-primary md:text-4xl">{localizedContent(content.about_title, locale, t("about.title"))}</h2>
+          <p className="mt-5 text-pretty text-lg leading-8 text-foreground/75">{localizedContent(content.about_description, locale, t("about.desc"))}</p>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {cards.map((card, idx) => (
