@@ -54,12 +54,15 @@ export default function AccountPage() {
         }
       }
 
-      // Simulate API call
-      setTimeout(() => {
-        setSuccess(true)
-        setFormData({ name: "", email: "", phone: "", password: "", confirmPassword: "" })
-        setTimeout(() => setSuccess(false), 3000)
-      }, 1000)
+      // Student authentication is not connected to a production identity provider yet.
+      // Do not report success until a real account API is available.
+      throw new Error(
+        locale === "ar"
+          ? "خدمة حسابات الطلاب قيد الإعداد حاليًا. يمكنك التواصل مع الأكاديمية للبدء."
+          : locale === "fr"
+            ? "Le service des comptes étudiants est encore en préparation. Contactez l'académie pour commencer."
+            : "Student accounts are still being prepared. Please contact the academy to get started."
+      )
     } catch (err: any) {
       setError(err.message)
     } finally {
