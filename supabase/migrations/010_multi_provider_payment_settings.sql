@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS payment_settings (
   provider_name TEXT NOT NULL UNIQUE, -- 'stripe', 'paddle', 'paytabs'
   
   -- API credentials (encrypted by Supabase)
-  api_key TEXT NOT NULL,
+  api_key TEXT NOT NULL DEFAULT '',
   secret_key TEXT,
   merchant_id TEXT,
   vendor_id TEXT, -- Paddle specific

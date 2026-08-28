@@ -175,8 +175,14 @@ pnpm run build
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics عند التفعيل | إعداد عام |
 | `STRIPE_SECRET_KEY` | عمليات Stripe على الخادم | سري جدًا |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | مفتاح Stripe العام | عام للتطبيق |
+| `NEXT_PUBLIC_PAYMENTS_ENABLED` | إظهار واجهة الاشتراك والدفع | معطّل افتراضيًا؛ لا يُفعّل إلا بعد اختبار Preview |
+| `PAYMENTS_ENABLED` | السماح الخادمي بإنشاء جلسات الدفع | سري/تشغيلي؛ يجب أن يظل غير مضبوط أو `false` حتى الإطلاق |
 
 في Vercel يجب ضبط القيم المناسبة في بيئتي **Production** و**Preview** كلٌ حسب حاجته. لا تضع مفاتيح الخدمة أو مفاتيح Stripe السرية في متغيرات عامة أو داخل مكونات العميل.
+
+### حالة الدفع الحالية
+
+الدفع مجهّز من ناحية الجداول والخدمات والـ webhooks، لكنه **مخفي ومعطّل افتراضيًا**. لا تظهر أزرار الاشتراك ولا تُنشأ جلسات Stripe أو Paddle ما لم يتم ضبط متغيري `NEXT_PUBLIC_PAYMENTS_ENABLED=true` و`PAYMENTS_ENABLED=true` صراحةً. راجع `MULTI_PROVIDER_PAYMENTS.md` و`STRIPE_SETUP.md` قبل أي تفعيل.
 
 ## قاعدة البيانات وSupabase Preview
 

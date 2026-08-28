@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
 import { Check, BookOpen, Star, Users, Clock, Shield, X } from "lucide-react"
 import { DynamicCheckout } from "@/components/dynamic-checkout"
+import { PAYMENTS_ENABLED } from "@/lib/payment-feature"
 
 const methodSteps = [
   {
@@ -187,16 +188,18 @@ export default function QuranPageClient() {
                   ))}
                 </ul>
 
-                <button
-                  onClick={() => setSelectedProduct(`quran-${pkg.sessions}-sessions`)}
-                  className={`w-full py-3.5 rounded-xl font-bold text-center transition-all hover:-translate-y-0.5 hover:shadow-lg ${
-                    pkg.popular
-                      ? "bg-secondary text-secondary-foreground hover:brightness-110"
-                      : "bg-primary text-primary-foreground hover:brightness-110"
-                  }`}
-                >
-                  {t("pricing.subscribe")}
-                </button>
+                {PAYMENTS_ENABLED && (
+                  <button
+                    onClick={() => setSelectedProduct(`quran-${pkg.sessions}-sessions`)}
+                    className={`w-full py-3.5 rounded-xl font-bold text-center transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                      pkg.popular
+                        ? "bg-secondary text-secondary-foreground hover:brightness-110"
+                        : "bg-primary text-primary-foreground hover:brightness-110"
+                    }`}
+                  >
+                    {t("pricing.subscribe")}
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -209,7 +212,7 @@ export default function QuranPageClient() {
       </section>
 
       {/* Checkout Modal */}
-      {selectedProduct && (
+      {PAYMENTS_ENABLED && selectedProduct && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b sticky top-0 bg-background">

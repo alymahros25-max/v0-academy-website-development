@@ -4,8 +4,11 @@ import { headers } from 'next/headers'
 
 import { stripe } from '../../lib/stripe'
 import { PRODUCTS } from '../../lib/products'
+import { assertPaymentsEnabled } from '@/lib/payment-feature'
 
 export async function startCheckoutSession(productId: string, locale: string = 'ar') {
+  assertPaymentsEnabled()
+
   const product = PRODUCTS.find((p) => p.id === productId)
   if (!product) {
     throw new Error(`Product with id "${productId}" not found`)

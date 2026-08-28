@@ -1,8 +1,10 @@
 # Stripe Payment Integration - Setup Guide
 
-## Current Status: ✅ READY FOR TESTING
+## Current Status: Prepared but disabled by default
 
-Your Stripe payment system is **fully integrated** and ready to use. The sandbox is already connected to your project.
+The Stripe infrastructure is prepared for future testing, but **public payment is currently disabled and the checkout button is hidden**. Do not add live keys or enable public checkout until the launch checklist in `MULTI_PROVIDER_PAYMENTS.md` is complete.
+
+To enable the flow later, set both `NEXT_PUBLIC_PAYMENTS_ENABLED=true` and `PAYMENTS_ENABLED=true` in the intended environment, then use test-mode credentials and webhooks first.
 
 ---
 
@@ -50,7 +52,10 @@ All 6 course packages are configured:
 
 ---
 
-## How to Test (Using Sandbox)
+## How to Test (Only after explicit enablement)
+
+The public checkout is intentionally hidden while payments are disabled. The testing steps below apply only after enabling both payment feature flags in a non-production Preview environment and completing the launch checklist in `MULTI_PROVIDER_PAYMENTS.md`.
+
 
 ### Step 1: Use Stripe Test Cards
 
@@ -96,7 +101,7 @@ After each test payment:
 
 ---
 
-## Next Steps: Going Live
+## Next Steps: Going Live (only after test approval)
 
 When you're ready for **real money**:
 
@@ -219,4 +224,4 @@ Money appears in your bank account (2-3 days)
 For Stripe questions: https://stripe.com/docs
 For webhook testing: https://stripe.com/docs/webhooks/test
 
-Your system is production-ready!
+The payment infrastructure is documented and guarded, but it is **not publicly enabled** until the required provider, webhook, database, legal, and operational checks are completed.
