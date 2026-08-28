@@ -1,7 +1,11 @@
 "use client"
 
 import { useI18n } from "@/lib/i18n"
+import useSWR from "swr"
 import { Star, Quote } from "lucide-react"
+
+type PublicReview = { id: string; name: string; country: string; rating: number; text: { ar: string; en: string; fr: string }; active?: boolean }
+const fetcher = (url: string) => fetch(url, { cache: "no-store" }).then((response) => response.json())
 
 const reviews = [
   { name: { ar: "أم محمد", en: "Um Muhammad", fr: "Oum Mohammed" }, country: { ar: "السعودية", en: "Saudi Arabia", fr: "Arabie Saoudite" }, text: { ar: "أكاديمية رائعة! ابني حفظ 5 أجزاء في أقل من سنة بفضل المعلم المتميز والمتابعة المستمرة. أنصح الجميع بها.", en: "Amazing academy! My son memorized 5 Juz in less than a year thanks to the excellent teacher and continuous follow-up. I recommend it to everyone.", fr: "Academie incroyable! Mon fils a memorise 5 Juz en moins d'un an grace a l'excellent enseignant." }, rating: 5 },
@@ -17,6 +21,13 @@ const reviews = [
 
 export default function ReviewsPage() {
   const { t, locale } = useI18n()
+  const { data: publicReviews } = useSWR<PublicReview[]>("/api/public/reviews", fetcher)
+  const visibleReviews = Array.isArray(publicReviews) && publicReviews.length > 0
+    ? publicReviews.map((review) => ({
+        ...review,
+        country: { ar: review.country, en: review.country, fr: review.country },
+      }))
+    : reviews
 
   return (
     <>
@@ -42,7 +53,7 @@ export default function ReviewsPage() {
       <section className="py-20 lg:py-28 bg-background">
         <div className="mx-auto max-w-7xl px-4">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {reviews.map((review, idx) => (
+            {visibleReviews.map((review, idx) => (
               <div key={idx} className="bg-card rounded-2xl p-6 lg:p-8 shadow-sm border border-border hover:shadow-lg hover:border-primary/20 transition-all">
                 <Quote className="w-8 h-8 text-secondary/40 mb-4" />
                 <p className="text-foreground leading-relaxed mb-6 text-sm">{review.text[locale]}</p>
@@ -53,10 +64,10 @@ export default function ReviewsPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="font-bold text-primary text-sm">{review.name[locale].charAt(0)}</span>
+                    <span className="font-bold text-primary text-sm">{(typeof review.name === "string" ? review.name : review.name[locale]).charAt(0)}</span>
                   </div>
                   <div>
-                    <p className="font-bold text-foreground text-sm">{review.name[locale]}</p>
+                    <p className="font-bold text-foreground text-sm">{typeof review.name === "string" ? review.name : review.name[locale]}</p>
                     <p className="text-xs text-muted-foreground">{review.country[locale]}</p>
                   </div>
                 </div>
