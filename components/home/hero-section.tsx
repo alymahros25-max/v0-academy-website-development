@@ -6,8 +6,10 @@ import { useI18n } from "@/lib/i18n"
 import { ArrowLeft, ArrowRight, Star } from "lucide-react"
 import { siteStats } from "@/lib/site-stats"
 import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
+import type { PublicContent } from "@/lib/public-content"
+import { localizedContent } from "@/lib/public-content"
 
-export function HeroSection() {
+export function HeroSection({ content = {} }: { content?: Record<string, PublicContent> }) {
   const { t, locale, dir } = useI18n()
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight
 
@@ -31,10 +33,10 @@ export function HeroSection() {
           <div className="text-center transition-transform lg:text-start">
             <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
-                أكاديمية الحافظ المتميز
+                {localizedContent(content.hero_title, locale, "أكاديمية الحافظ المتميز")}
               </h1>
               <p className="mt-3 text-2xl font-bold leading-relaxed text-foreground md:text-3xl">
-                <span className="block">تحفيظ القرآن وتأسيس العربية</span>
+                <span className="block">{localizedContent(content.hero_subtitle, locale, "تحفيظ القرآن وتأسيس العربية")}</span>
                 <span className="block">رجال ونساء وأطفال</span>
                 <span className="mt-1 block text-lg font-semibold text-muted-foreground md:text-xl">(الخليج، أوروبا، أمريكا)</span>
               </p>
