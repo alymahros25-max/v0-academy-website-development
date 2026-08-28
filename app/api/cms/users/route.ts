@@ -27,6 +27,9 @@ interface CMSUser {
 
 // GET: Fetch all users or a specific user
 export async function GET(request: NextRequest) {
+  const authError = await requireAdmin()
+  if (authError) return authError
+
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured', data: [] }, { status: 200 })
