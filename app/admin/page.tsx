@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
@@ -1428,9 +1429,11 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
   return (
     <div className="flex items-start gap-4 p-4 border border-border rounded-lg">
       {video.thumbnail_url && (
-        <img
+        <Image
           src={video.thumbnail_url}
           alt={video.title_ar}
+          width={80}
+          height={80}
           className="w-20 h-20 rounded object-cover"
         />
       )}

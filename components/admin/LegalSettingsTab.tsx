@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { AlertCircle, Loader2, Save, X } from 'lucide-react'
 import type { LegalPageSlug, LegalPage, Locale } from '@/lib/legal-service'
@@ -30,12 +30,7 @@ export function LegalSettingsTab() {
   const [editContent, setEditContent] = useState('')
   const [editTitle, setEditTitle] = useState('')
 
-  // Load pages when selection changes
-  useEffect(() => {
-    loadPages()
-  }, [selectedPage])
-
-  const loadPages = async () => {
+  const loadPages = useCallback(async () => {
     setLoading(true)
     setError(null)
 
@@ -68,7 +63,12 @@ export function LegalSettingsTab() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedPage, selectedLocale])
+
+  // Load pages when selection changes
+  useEffect(() => {
+    void loadPages()
+  }, [loadPages])
 
   // Load content when locale changes
   useEffect(() => {

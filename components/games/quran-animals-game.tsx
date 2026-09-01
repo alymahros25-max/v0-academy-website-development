@@ -43,6 +43,8 @@ export function QuranAnimalsGame() {
   // Shuffle options ONLY when current question changes
   const shuffled = useMemo(() => {
     return [...qAnimals].sort(() => Math.random() - 0.5)
+  // Intentional: reshuffle the options whenever the current question changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx])
 
   if (done) {

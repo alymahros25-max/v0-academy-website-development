@@ -15,7 +15,6 @@ export function debounce<T extends (...args: any[]) => any>(
     timeout = setTimeout(later, wait)
   }
 }
-
 // Throttle function for scroll events
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
@@ -128,7 +127,7 @@ export const bundleSizeOptimizations = {
   loading: 'lazy', // Lazy load components
 }
 
-export default {
+const performanceUtilities = {
   debounce,
   throttle,
   CacheManager,
@@ -139,3 +138,5 @@ export default {
   fontOptimization,
   bundleSizeOptimizations,
 }
+
+export default performanceUtilities

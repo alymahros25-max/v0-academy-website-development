@@ -32,6 +32,8 @@ export function QuranOrderGame() {
 
   const shuffledIndices = useMemo(() => {
     return shuffleArray([0, 1, 2, 3])
+  // Intentional: regenerate the shuffled order for every question.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQ])
 
   useEffect(() => {

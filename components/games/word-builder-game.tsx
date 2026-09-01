@@ -43,7 +43,7 @@ export function WordBuilderGame() {
     if (currentWordIdx === 0 && selectedLetters.length === 0) {
       setAvailableLetters(shuffleArray(currentWord.letters))
     }
-  }, [currentWordIdx, selectedLetters])
+  }, [currentWordIdx, selectedLetters, currentWord.letters])
 
   useEffect(() => {
     let interval: NodeJS.Timeout

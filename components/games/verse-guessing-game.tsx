@@ -20,6 +20,8 @@ export function VerseGuessingGame() {
 
   const shuffled = useMemo(() => {
     return [...verses].sort(() => Math.random() - 0.5)
+  // Intentional: reshuffle the options whenever the current question changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx])
 
   const handleAns = (surah: string) => {

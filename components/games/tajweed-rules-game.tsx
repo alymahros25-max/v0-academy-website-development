@@ -56,7 +56,7 @@ export function TajweedRulesGame() {
         setGameComplete(true)
       }
     },
-    [currentQ, currentQuestion, combo]
+    [currentQ, currentQuestion, combo, totalQuestions]
   )
 
   if (gameComplete) {

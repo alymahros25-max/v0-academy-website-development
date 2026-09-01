@@ -206,14 +206,13 @@ export const generateWebPageSchema = (page: {
 export function renderSchemaMarkup(schema: any): string {
   return JSON.stringify(schema)
 }
-
 // Structured data component helper
 export interface SchemaProps {
   type: 'organization' | 'article' | 'course' | 'faq' | 'localBusiness' | 'product' | 'webpage' | 'breadcrumb'
   data: any
 }
 
-export default {
+const schemaMarkupUtilities = {
   generateOrganizationSchema,
   generateBreadcrumbSchema,
   generateArticleSchema,
@@ -224,3 +223,5 @@ export default {
   generateWebPageSchema,
   renderSchemaMarkup,
 }
+
+export default schemaMarkupUtilities

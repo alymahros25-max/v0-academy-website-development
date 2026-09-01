@@ -1,4 +1,5 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 import { VideoGrid } from '@/components/classroom-moments/VideoGrid'
 import { getPublishedClassroomVideos } from '@/lib/classroom-videos'
 
@@ -72,12 +73,12 @@ export default async function ClassroomMomentsPage() {
               <p className="text-gray-600 mb-6">
                 سيتم إضافة حصص جديدة قريباً. تابعنا للحصول على أحدث المحتوى
               </p>
-              <a
+              <Link
                 href="/"
                 className="inline-block px-6 py-3 bg-navy-primary text-white font-medium rounded-lg hover:bg-navy-light transition-colors"
               >
                 العودة للصفحة الرئيسية
-              </a>
+              </Link>
             </div>
           )}
         </div>

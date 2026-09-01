@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer"
 import { FloatingButtons } from "@/components/floating-buttons"
 import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react"
 import Link from "next/link"
+import { supabase } from "@/lib/supabaseClient"
 
 export default function AccountPage() {
   const { t, locale, dir } = useI18n()
@@ -54,15 +55,49 @@ export default function AccountPage() {
         }
       }
 
-      // Student authentication is not connected to a production identity provider yet.
-      // Do not report success until a real account API is available.
-      throw new Error(
-        locale === "ar"
-          ? "خدمة حسابات الطلاب قيد الإعداد حاليًا. يمكنك التواصل مع الأكاديمية للبدء."
-          : locale === "fr"
-            ? "Le service des comptes étudiants est encore en préparation. Contactez l'académie pour commencer."
-            : "Student accounts are still being prepared. Please contact the academy to get started."
-      )
+      if (!supabase) {
+        throw new Error(
+          locale === "ar"
+            ? "تعذر الاتصال بخدمة الحسابات. تحقق من إعدادات Supabase ثم حاول مرة أخرى."
+            : locale === "fr"
+              ? "Le service des comptes est indisponible. Vérifiez la configuration Supabase."
+              : "The account service is unavailable. Please verify the Supabase configuration."
+        )
+      }
+
+      if (isSignUp) {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email: formData.email.trim(),
+          password: formData.password,
+          options: {
+            data: {
+              full_name: formData.name.trim(),
+              phone: formData.phone.trim(),
+              account_type: "student",
+            },
+          },
+        })
+        if (signUpError) throw signUpError
+        setSuccess(true)
+        setError("")
+        if (!data.session) {
+          setError(
+            locale === "ar"
+              ? "تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتأكيد الحساب قبل تسجيل الدخول."
+              : locale === "fr"
+                ? "Compte créé. Vérifiez votre e-mail pour confirmer votre compte avant de vous connecter."
+                : "Account created. Check your email to confirm your account before signing in."
+          )
+        }
+      } else {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: formData.email.trim(),
+          password: formData.password,
+        })
+        if (signInError) throw signInError
+        setSuccess(true)
+        setError("")
+      }
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -225,7 +260,7 @@ export default function AccountPage() {
                 disabled={loading}
                 className="w-full mt-6 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg font-bold transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? (locale === 'ar' ? 'جاري معالجة الدفع الرقمي ...' : locale === 'fr' ? 'En cours...' : 'Processing...') : (isSignUp ? t("account.signup") : t("account.login"))}
+                {loading ? (locale === 'ar' ? 'جارٍ التحقق...' : locale === 'fr' ? 'Vérification...' : 'Verifying...') : (isSignUp ? t("account.signup") : t("account.login"))}
               </button>
 
               {/* Toggle Sign Up / Sign In */}
