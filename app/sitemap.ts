@@ -9,7 +9,9 @@ async function getDynamicBlogArticles(): Promise<BlogArticle[]> {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    if (!supabaseUrl || !supabaseKey) throw new Error('Supabase env vars missing')
+    // CI and local builds may intentionally omit Supabase secrets; use the
+    // deterministic filesystem fallback without logging a misleading error.
+    if (!supabaseUrl || !supabaseKey) return getBlogArticlesFromFilesystem()
 
     const supabase = createClient(supabaseUrl, supabaseKey)
     const { data: articles, error } = await supabase

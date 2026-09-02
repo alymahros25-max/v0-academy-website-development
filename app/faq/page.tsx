@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import useSWR from "swr"
 import { useI18n } from "@/lib/i18n"
 import { Search, ChevronDown, HelpCircle, MessageCircle } from "lucide-react"
 import Link from "next/link"
@@ -82,6 +83,20 @@ const faqData: FAQItem[] = [
   { category: "general", q: { ar: "هل هناك برنامج خاص لذوي الاحتياجات الخاصة؟", en: "Is there a special program for special needs?", fr: "Y a-t-il un programme pour les besoins speciaux?" }, a: { ar: "نعم، لدينا معلمون مدربون على التعامل مع ذوي الاحتياجات الخاصة بصبر واحترافية مع مناهج مخصصة.", en: "Yes, we have teachers trained to work with special needs students with patience and professionalism using customized curricula.", fr: "Oui, enseignants formes pour les besoins speciaux avec des programmes personnalises." } },
 ]
 
+type PublicFAQ = {
+  id: number
+  question_ar: string
+  question_en: string | null
+  question_fr: string | null
+  answer_ar: string
+  answer_en: string | null
+  answer_fr: string | null
+  category: string
+  sort_order: number
+}
+
+const fetcher = (url: string) => fetch(url, { cache: "no-store" }).then((res) => res.json())
+
 const faqCategories: { key: string; label: Record<string, string> }[] = [
   { key: "all", label: { ar: "الكل", en: "All", fr: "Tout" } },
   { key: "academy", label: { ar: "عن الأكاديمية", en: "About Academy", fr: "L'Academie" } },
@@ -100,9 +115,17 @@ export default function FAQPage() {
   const [activeCategory, setActiveCategory] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const { data: publicFAQs } = useSWR<PublicFAQ[]>("/api/public/faq", fetcher, { revalidateOnFocus: true })
+  const activeFAQs: FAQItem[] = Array.isArray(publicFAQs) && publicFAQs.length > 0
+    ? publicFAQs.map((faq) => ({
+        category: faq.category,
+        q: { ar: faq.question_ar, en: faq.question_en ?? faq.question_ar, fr: faq.question_fr ?? faq.question_ar },
+        a: { ar: faq.answer_ar, en: faq.answer_en ?? faq.answer_ar, fr: faq.answer_fr ?? faq.answer_ar },
+      }))
+    : faqData
 
   const filteredFAQs = useMemo(() => {
-    return faqData.filter((faq) => {
+    return activeFAQs.filter((faq) => {
       const matchesCategory = activeCategory === "all" || faq.category === activeCategory
       const matchesSearch =
         searchQuery === "" ||
@@ -110,7 +133,7 @@ export default function FAQPage() {
         faq.a[locale].toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
     })
-  }, [activeCategory, searchQuery, locale])
+  }, [activeCategory, searchQuery, locale, activeFAQs])
 
   return (
     <>

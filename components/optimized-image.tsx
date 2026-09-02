@@ -1,6 +1,6 @@
 import Image, { ImageProps } from 'next/image'
-import { CSSProperties, useState } from 'react'
-import { imageContextConfig, imageDimensions } from '@/lib/image-optimization'
+import { useState } from 'react'
+import { imageContextConfig } from '@/lib/image-optimization'
 
 type ImageContext = 'hero' | 'card' | 'thumbnail' | 'background'
 
@@ -12,8 +12,7 @@ interface OptimizedImageProps extends Omit<ImageProps, 'sizes'> {
 }
 
 /**
- * Optimized Image Component with AVIF/WebP support
- * Provides automatic format selection, lazy loading, and responsive sizing
+ * Optimized Image Component with automatic format selection through next/image.
  */
 export function OptimizedImage({
   context = 'card',
@@ -28,12 +27,9 @@ export function OptimizedImage({
 
   return (
     <div className={`relative bg-muted/50 overflow-hidden ${containerClassName}`}>
-      {/* Placeholder while loading */}
       {isLoading && showPlaceholder && (
         <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-muted/5 animate-pulse" />
       )}
-
-      {/* Actual image */}
       <Image
         {...props}
         alt={alt}
@@ -50,8 +46,8 @@ export function OptimizedImage({
 }
 
 /**
- * Picture element with AVIF/WebP support for maximum compatibility
- * Use this when you need the most control over image delivery
+ * Backward-compatible image component. next/image selects modern formats via
+ * the configured Next.js image optimizer, so a raw <img> fallback is not needed.
  */
 export function PictureImage({
   src,
@@ -60,7 +56,6 @@ export function PictureImage({
   height,
   className = '',
   context = 'card',
-  priority = false,
 }: {
   src: string
   alt: string
@@ -70,29 +65,23 @@ export function PictureImage({
   context?: ImageContext
   priority?: boolean
 }) {
-  const pathWithoutExt = src.replace(/\.[^/.]+$/, '')
   const config = imageContextConfig[context]
-
   return (
-    <picture>
-      <source srcSet={`${pathWithoutExt}.avif`} type="image/avif" />
-      <source srcSet={`${pathWithoutExt}.webp`} type="image/webp" />
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className={`max-w-full h-auto ${className}`}
-        loading={config.priority ? 'eager' : 'lazy'}
-        style={{ width: '100%', height: 'auto' } as CSSProperties}
-      />
-    </picture>
+    <Image
+      src={src}
+      alt={alt}
+      width={width ?? 1200}
+      height={height ?? 800}
+      className={`max-w-full h-auto ${className}`}
+      loading={config.priority ? 'eager' : 'lazy'}
+      priority={config.priority}
+      sizes="100vw"
+    />
   )
 }
 
 /**
  * High-performance background image component
- * Uses Next.js Image with fill layout for backgrounds
  */
 export function BackgroundImage({
   src,
@@ -123,7 +112,6 @@ export function BackgroundImage({
 
 /**
  * Lazy-loaded image component with intersection observer
- * Only loads image when it enters viewport
  */
 export function LazyImage({
   src,
@@ -158,13 +146,7 @@ export function LazyImage({
       }}
     >
       {isInView ? (
-        <OptimizedImage
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          context={context}
-        />
+        <OptimizedImage src={imageSrc || src} alt={alt} width={width} height={height} context={context} />
       ) : (
         <div className="w-full h-full bg-muted/50 animate-pulse" />
       )}

@@ -3,6 +3,7 @@
 import { getActivePaymentProvider } from '@/lib/payment-config'
 import { createPaddleCheckoutSession } from '@/lib/paddle-client'
 import { getProductById } from '@/lib/products'
+import { isPaymentsEnabledOnServer } from '@/lib/payment-feature'
 
 interface CheckoutSessionResult {
   success: boolean
@@ -22,6 +23,10 @@ export async function initializePaddleCheckout(
   customerEmail?: string
 ): Promise<CheckoutSessionResult> {
   try {
+    if (!isPaymentsEnabledOnServer()) {
+      return { success: false, error: 'Payments are currently disabled' }
+    }
+
     // Verify payment provider is active
     const activeProvider = await getActivePaymentProvider()
 
@@ -126,6 +131,10 @@ export async function verifyPaddlePayment(
  */
 export async function getCheckoutConfig(productId: string) {
   try {
+    if (!isPaymentsEnabledOnServer()) {
+      return { success: false, error: 'Payments are currently disabled' }
+    }
+
     const activeProvider = await getActivePaymentProvider()
     const product = getProductById(productId)
 

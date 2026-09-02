@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
+import { PAYMENTS_ENABLED } from '@/lib/payment-feature'
 
 // Lazy load only the appropriate checkout component based on provider
 // Don't preload both - this prevents unnecessary script loads
@@ -27,11 +28,14 @@ export function DynamicCheckout({
   onError,
 }: DynamicCheckoutProps) {
   const { locale } = useI18n()
+
   const [provider, setProvider] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!PAYMENTS_ENABLED) return
+
     const fetchProvider = async () => {
       try {
         setLoading(true)
@@ -71,6 +75,8 @@ export function DynamicCheckout({
 
     fetchProvider()
   }, [onError])
+
+  if (!PAYMENTS_ENABLED) return null
 
   if (loading) {
     return (

@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server"
 import { getMessages, setMessages } from "@/lib/data-store"
-import fs from "fs/promises"
-import path from "path"
 import { z } from "zod"
 import { verifyAdminSession } from "@/lib/admin-auth"
 
@@ -13,26 +11,6 @@ const contactSchema = z.object({
   subject: z.string().trim().max(200).optional().default("Contact Form"),
   language: z.enum(["ar", "en", "fr"]).optional().default("ar"),
 }).strict()
-
-async function loadData() {
-  try {
-    const dataPath = path.join(process.cwd(), "data", "data.json")
-    const content = await fs.readFile(dataPath, "utf-8")
-    return JSON.parse(content)
-  } catch {
-    return { contactMessages: [] }
-  }
-}
-
-async function saveData(data: any) {
-  try {
-    const dataPath = path.join(process.cwd(), "data", "data.json")
-    await fs.mkdir(path.dirname(dataPath), { recursive: true })
-    await fs.writeFile(dataPath, JSON.stringify(data, null, 2))
-  } catch (error) {
-    console.error("Failed to save data:", error)
-  }
-}
 
 export async function POST(request: Request) {
   try {
@@ -55,10 +33,8 @@ export async function POST(request: Request) {
       replied: false,
     }
 
-    const data = await loadData()
-    data.contactMessages = data.contactMessages || []
-    data.contactMessages.push(newMessage)
-    await saveData(data)
+    const messages = await getMessages()
+    await setMessages([...messages, newMessage])
 
     return NextResponse.json({
       success: true,
@@ -83,8 +59,8 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
   try {
-    const data = await loadData()
-    return NextResponse.json({ messages: data.contactMessages || [] })
+    const messages = await getMessages()
+    return NextResponse.json({ messages })
   } catch (error) {
     console.error("Failed to fetch messages:", error)
     return NextResponse.json({ messages: [] })

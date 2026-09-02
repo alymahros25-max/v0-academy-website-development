@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
+import useSWR from "swr"
 import { Check, PenTool, BookOpen, Lightbulb, GraduationCap } from "lucide-react"
 
 const methodSteps = [
@@ -28,14 +29,27 @@ const methodSteps = [
   },
 ]
 
+type PublicPackage = {
+  id?: string
+  type: string
+  sessions: number
+  price: number
+  popular?: boolean
+}
+
+const fetcher = (url: string) => fetch(url, { cache: "no-store" }).then((res) => res.json())
+
 export default function ArabicPage() {
   const { t, locale } = useI18n()
-
-  const packages = [
-    { sessions: 4, price: 20, popular: false },
-    { sessions: 8, price: 36, popular: true },
-    { sessions: 12, price: 54, popular: false },
-  ]
+  const { data: storedPackages } = useSWR<PublicPackage[]>("/api/public/packages", fetcher, { revalidateOnFocus: true })
+  const packages = (Array.isArray(storedPackages) && storedPackages.length > 0
+    ? storedPackages
+    : [
+        { type: "arabic", sessions: 4, price: 20, popular: false },
+        { type: "arabic", sessions: 8, price: 36, popular: true },
+        { type: "arabic", sessions: 12, price: 54, popular: false },
+      ]
+  ).filter((pkg) => pkg.type === "arabic").sort((a, b) => a.sessions - b.sessions)
 
   const features = [
     t("pricing.features.flexibility"),
@@ -129,9 +143,9 @@ export default function ArabicPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-            {packages.map((pkg, idx) => (
+            {packages.map((pkg) => (
               <div
-                key={idx}
+                key={pkg.id ?? `${pkg.type}-${pkg.sessions}`}
                 className={`relative rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
                   pkg.popular
                     ? "bg-primary text-primary-foreground shadow-xl scale-105 border-2 border-secondary"

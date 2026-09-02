@@ -8,17 +8,19 @@ import { WhatsAppDialog } from "@/components/whatsapp-dialog"
 export default function ContactPage() {
   const { t, locale } = useI18n()
   const [sent, setSent] = useState(false)
+  const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [whatsappDialogOpen, setWhatsappDialogOpen] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
+    setError("")
     const form = e.currentTarget
     const data = new FormData(form)
 
     try {
-      await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -26,12 +28,17 @@ export default function ContactPage() {
           email: data.get("email"),
           phone: data.get("phone"),
           message: data.get("message"),
+          language: locale,
         }),
       })
+      if (!response.ok) {
+        const result = await response.json().catch(() => null)
+        throw new Error(result?.error || (locale === "ar" ? "تعذر إرسال الرسالة" : "Unable to send the message"))
+      }
       setSent(true)
       form.reset()
-    } catch {
-      // handle error
+    } catch (err) {
+      setError(err instanceof Error ? err.message : (locale === "ar" ? "تعذر إرسال الرسالة" : "Unable to send the message"))
     } finally {
       setLoading(false)
     }

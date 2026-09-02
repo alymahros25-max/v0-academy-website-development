@@ -120,11 +120,11 @@ flowchart LR
 
 | الدولة | المسار |
 | --- | --- |
-| السعودية | `/arabia-saudi` |
-| الإمارات | `/emirates-arab-united` |
-| الولايات المتحدة | `/states-united` |
+| السعودية | `/saudi-arabia` |
+| الإمارات | `/united-arab-emirates` |
+| الولايات المتحدة | `/united-states` |
 | كندا | `/canada` |
-| المملكة المتحدة | `/kingdom-united` |
+| المملكة المتحدة | `/united-kingdom` |
 | أستراليا | `/australia` |
 | ألمانيا | `/germany` |
 
@@ -175,8 +175,14 @@ pnpm run build
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics عند التفعيل | إعداد عام |
 | `STRIPE_SECRET_KEY` | عمليات Stripe على الخادم | سري جدًا |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | مفتاح Stripe العام | عام للتطبيق |
+| `NEXT_PUBLIC_PAYMENTS_ENABLED` | إظهار واجهة الاشتراك والدفع | معطّل افتراضيًا؛ لا يُفعّل إلا بعد اختبار Preview |
+| `PAYMENTS_ENABLED` | السماح الخادمي بإنشاء جلسات الدفع | سري/تشغيلي؛ يجب أن يظل غير مضبوط أو `false` حتى الإطلاق |
 
 في Vercel يجب ضبط القيم المناسبة في بيئتي **Production** و**Preview** كلٌ حسب حاجته. لا تضع مفاتيح الخدمة أو مفاتيح Stripe السرية في متغيرات عامة أو داخل مكونات العميل.
+
+### حالة الدفع الحالية
+
+الدفع مجهّز من ناحية الجداول والخدمات والـ webhooks، لكنه **مخفي ومعطّل افتراضيًا**. لا تظهر أزرار الاشتراك ولا تُنشأ جلسات Stripe أو Paddle ما لم يتم ضبط متغيري `NEXT_PUBLIC_PAYMENTS_ENABLED=true` و`PAYMENTS_ENABLED=true` صراحةً. راجع `MULTI_PROVIDER_PAYMENTS.md` و`STRIPE_SETUP.md` قبل أي تفعيل.
 
 ## قاعدة البيانات وSupabase Preview
 
@@ -200,6 +206,40 @@ sequenceDiagram
 ```
 
 إذا ظهر فحص **Supabase Preview** بحالة `Skipped`، فتحقق من أن GitHub Integration مفعّل، وأن المستودع ومجلد العمل مضبوطون على المستودع الحالي ومجلد `.`، وأن خيار الاقتصار على تغييرات Supabase لا يمنع الفحص في نوع الـ PR الذي تختبره. لا تُنشئ migration وهمية لمجرد إزالة علامة `Skipped`.
+
+### تدفق المحتوى بين Supabase والكود ولوحة التحكم
+
+تستخدم الصفحات المرتبطة مصدرًا واحدًا للحقيقة: تكتب لوحة التحكم عبر مسار إداري محمي، وتقرأ الصفحات العامة عبر مسار عام يحدد السجلات النشطة فقط. حاليًا يشمل ذلك المحتوى العام عبر `site_content`، الباقات عبر `/api/admin/data?type=packages` و`/api/public/packages`، الأسئلة الشائعة عبر جدول `faq_items` وواجهتي `/api/admin/faq` و`/api/public/faq`، والصفحات القانونية عبر `legal_pages` و`/api/public/legal`.
+
+عند إضافة جدول أو نوع محتوى جديد، أنشئ Migration مرقمة في `supabase/migrations/`، وأضف RLS للقراءة العامة أو إدارة المشرفين حسب الحاجة، ثم أنشئ مسار API إداريًا محميًا ومسار قراءة عام محدودًا، وبعد ذلك اربط لوحة التحكم والصفحة العامة بالعقد نفسه. لا تعدّل Migration مطبقة سابقًا؛ أضف Migration جديدة، واختبر `tsc` و`eslint` و`git diff --check` قبل رفع الفرع. يجب أن تتضمن الصفحة fallback واضحًا عند غياب البيانات، وأن تستخدم `revalidate` أو إعادة التحقق المناسبة بعد أي تعديل إداري.
+
+لإدارة FAQ من لوحة التحكم افتح `/admin` ثم تبويب **الأسئلة الشائعة**. يمكن للمشرف إضافة السؤال والإجابة بالعربية والإنجليزية والفرنسية، تحديد التصنيف والترتيب، وتعديل أو حذف السجل. بعد الحفظ، تقرأ صفحة `/faq` السجلات النشطة من Supabase، بينما تبقى البيانات المضمنة داخل الكود fallback مؤقتًا إلى أن تكتمل عملية ترحيل المحتوى.
+
+### عزل بيانات صفحات الدول
+
+أُضيفت بنية مستقلة في Migration `014_site_areas_country_content.sql`، ثم زُرعت البيانات في Migration `015_seed_isolated_country_data.sql`، وأُكمل كيان الموقع الرئيسي وFAQ ألمانيا في Migration `016_seed_global_and_germany_faq.sql`. يمثل جدول `site_areas` كل كيان مرة واحدة: سجل `global` للموقع الرئيسي، وسجل مستقل لكل دولة. لا يجوز أن تستعلم صفحة دولة عن بيانات دولة أخرى أو تستخدم fallback من دولة مختلفة.
+
+| الجدول | المسؤولية | مفتاح العزل |
+| --- | --- | --- |
+| `site_areas` | هوية الكيان والعملة والاسم والرابط | `id` و`slug` |
+| `area_content` | نصوص ومقاطع ومحتوى الكيان | `area_id` |
+| `area_packages` | الأسعار والبرامج والمزايا الخاصة بالكيان | `area_id` و`package_key` |
+| `area_faq_items` | الأسئلة والإجابات الخاصة بالكيان | `area_id` و`question_key` |
+| `area_links` | الروابط والأزرار ومسارات التواصل الخاصة بالكيان | `area_id` و`link_key` |
+
+تقرأ الصفحات من `lib/country-content.ts`، ويضمن `getAreaLandingData(slug)` أن جميع الباقات والأسئلة والمحتوى والروابط قادمة من `site_area` المطلوب فقط. كما يحول `toAreaDisplayPlan` سجل الباقة إلى شكل بطاقة العرض الموحد. يوجد مسار قراءة عام موحد هو `/api/public/areas/[slug]`، ويعيد منطقة واحدة مع سجلاتها النشطة فقط.
+
+وتستخدم لوحة الإدارة المسار المحمي `/api/admin/areas`: طلب `GET /api/admin/areas` يعرض الكيانات وسجلاتها، وطلب `GET /api/admin/areas?slug=canada` يقتصر على كندا، بينما يستعمل `PATCH` لتعديل الحقول المسموح بها في `content` أو `packages` أو `faq` أو `links`. كل طلب إداري يمر عبر `verifyAdminSession`، ولا يُسمح بتحديث حقول أو جداول خارج القائمة البيضاء. بعد أي تغيير اضغط **تحديث** في تبويب صفحات الدول أو أعد تحميل الصفحة العامة.
+
+لإضافة دولة جديدة، أضف Migration جديدة تُنشئ سجلًا في `site_areas` وتزرع `area_packages` و`area_faq_items` و`area_content` و`area_links` مع مفاتيح فريدة داخل الكيان، ثم أضف صفحة Next.js تستدعي `getAreaLandingData` بالـslug نفسه، وأضف بطاقة المعاينة إلى لوحة الإدارة إذا لزم. لا تعدل Migration مطبقة سابقًا ولا تكرر بيانات دولة في سجل global. اختبر استعلام العدّ حسب `area_id` وتحقق من أن تحديث FAQ أو السعر في كيان لا يغير أي كيان آخر.
+
+### هوية الطالب
+
+صفحة `/account` تستخدم Supabase Auth الحقيقي عبر `supabase.auth.signUp` و`supabase.auth.signInWithPassword`. عند إنشاء الحساب تُحفظ `full_name` و`phone` و`account_type=student` في metadata الخاصة بالمستخدم، بينما يبقى المفتاح العام في المتصفح ويظل `SUPABASE_SERVICE_ROLE_KEY` على الخادم فقط. يجب تفعيل Email Auth وإعداد رابط التأكيد في Supabase قبل اختبار التسجيل، وعدم عرض نجاح زائف عند غياب إعدادات الاتصال.
+
+### حالة الدفع
+
+تبقى الباقات قابلة للعرض والحجز عبر WhatsApp، لكن الدفع الإلكتروني مخفي ومعطّل. لا تضف زر دفع في صفحة دولة ولا تجعل Migration جديدة تفعّل الدفع تلقائيًا؛ لا يُفعّل إلا بعد ضبط متغيرات الدفع صراحةً واختبار webhooks في Preview وفق `MULTI_PROVIDER_PAYMENTS.md`.
 
 ## النشر وCI/CD
 

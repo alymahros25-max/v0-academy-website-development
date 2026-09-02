@@ -7,6 +7,7 @@ import { AboutSection } from "@/components/home/about-section"
 import { FeaturesSection } from "@/components/home/features-section"
 import { StatsSection } from "@/components/home/stats-section"
 import { Suspense } from "react"
+import { getPublicContent } from "@/lib/public-content"
 
 // SSG with 1-hour revalidation (ISR)
 export const revalidate = 3600
@@ -33,18 +34,32 @@ const CTASection = dynamic(
   { ssr: true, loading: () => <div className="min-h-72 bg-muted" /> },
 )
 
-export default function HomePage() {
+export default async function HomePage() {
+  const content = await getPublicContent([
+    "hero_title",
+    "hero_subtitle",
+    "about_badge",
+    "about_title",
+    "about_description",
+    "mission_title",
+    "mission_description",
+    "vision_title",
+    "vision_description",
+    "goals_title",
+    "goals_description",
+  ])
+
   return (
     <>
       <AcademyBanner />
-      <HeroSection />
+      <HeroSection content={content} />
       <DeferredLandingVideoStrip />
       <FeaturesSection />
       <StatsSection />
       <Suspense fallback={<div className="min-h-80 bg-muted" />}>
         <TestimonialsPreview />
       </Suspense>
-      <AboutSection />
+      <AboutSection content={content} />
       <Suspense fallback={<div className="min-h-72 bg-muted" />}>
         <CTASection />
       </Suspense>

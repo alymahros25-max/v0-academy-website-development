@@ -24,6 +24,8 @@ export function ColorsQuizGame() {
 
   const shuffled = useMemo(() => {
     return [...colors].sort(() => Math.random() - 0.5)
+  // Intentional: reshuffle the options whenever the current question changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx])
 
   useEffect(() => {

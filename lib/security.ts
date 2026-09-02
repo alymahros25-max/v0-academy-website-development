@@ -12,7 +12,6 @@ export function sanitizeInput(input: string): string {
     .replace(/'/g, '&#x27;')
     .replace(/\//g, '&#x2F;')
 }
-
 // Validate email format
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -121,7 +120,7 @@ export const securityHeaders = {
   ...CSPHeaders,
 }
 
-export default {
+const securityUtilities = {
   sanitizeInput,
   isValidEmail,
   isValidPhone,
@@ -131,3 +130,5 @@ export default {
   checkPasswordStrength,
   securityHeaders,
 }
+
+export default securityUtilities
