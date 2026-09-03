@@ -7,6 +7,11 @@ import { generateOrganizationSchema, generateWebSiteSchema, generateCombinedSche
 import "./globals.css"
 import { ClientProviders } from "@/components/client-providers"
 
+const rootStructuredData = generateCombinedSchema(
+  generateOrganizationSchema(),
+  generateWebSiteSchema(),
+)
+
 const notoArabic = Noto_Sans_Arabic({
   subsets: ["arabic"],
   variable: "--font-arabic",
@@ -67,14 +72,14 @@ export const metadata: Metadata = {
     title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
     description:
       "تحفيظ القرآن وتأسيس العربية أونلاين للناطقين بالعربية في السعودية والإمارات وقطر وأوروبا وأمريكا وكندا، مع تعليم فردي عن بعد.",
-    images: [{ url: "/images/hero-children.jpg", width: 1200, height: 630 }],
+    images: [{ url: "/images/hero-children.webp", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "أكاديمية الحافظ المتميز اون لاين",
     description:
       "تعليم القرآن وتأسيس اللغة العربية أونلاين للطلاب العرب في الخليج وأوروبا وأمريكا وكندا.",
-    images: ["/images/hero-children.jpg"],
+    images: ["/images/hero-children.webp"],
   },
   robots: {
     index: true,
@@ -96,13 +101,6 @@ export const metadata: Metadata = {
     // Additional service regions for diaspora targeting
     'serviceable-regions': 'SA,AE,KW,QA,BH,OM,US,GB,FR,DE,IT',
     
-    // JSON-LD Schema for SEO rich snippets
-    'application/ld+json': JSON.stringify(
-      generateCombinedSchema(
-        generateOrganizationSchema(),
-        generateWebSiteSchema()
-      )
-    ),
   },
 }
 
@@ -120,7 +118,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <head />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(rootStructuredData) }}
+        />
+      </head>
       <body
         className={`${notoArabic.variable} ${inter.variable} font-sans antialiased`}
       >

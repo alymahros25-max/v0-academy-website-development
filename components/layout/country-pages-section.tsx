@@ -14,9 +14,9 @@ const countryPages = [
 export function CountryPagesSection() {
   return (
     <section className="mt-8 border-t border-primary-foreground/10 pt-6" aria-labelledby="country-pages-title">
-      <details className="group">
+      <details open className="group">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-right font-bold text-secondary transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-primary [&::-webkit-details-marker]:hidden">
-          <span id="country-pages-title">اختر صفحتك حسب الدولة</span>
+          <span id="country-pages-title">صفحاتنا حسب الدولة</span>
           <ChevronDown aria-hidden="true" className="size-5 shrink-0 transition-transform duration-200 motion-reduce:transition-none [[open]>&]:rotate-180" />
         </summary>
         <nav id="country-pages-list" aria-label="صفحات الهبوط حسب الدولة" className="mt-4 grid gap-3 sm:grid-cols-3">

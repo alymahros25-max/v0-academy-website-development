@@ -42,7 +42,7 @@ const emptyForm = (): FormData => ({
   title_ar: "", title_en: "", title_fr: "",
   excerpt_ar: "", excerpt_en: "", excerpt_fr: "",
   content_ar: "", content_en: "", content_fr: "",
-  cover_image: "/images/hero-children.jpg",
+  cover_image: "/images/hero-children.webp",
   category_ar: "عام", category_en: "General", category_fr: "Général",
   author_ar: "فريق الأكاديمية", author_en: "Academy Team", author_fr: "Équipe de l'académie",
   read_time: 5,
@@ -84,7 +84,7 @@ export function BlogManager() {
       title_ar: post.title_ar || "", title_en: post.title_en || "", title_fr: post.title_fr || "",
       excerpt_ar: post.excerpt_ar || "", excerpt_en: post.excerpt_en || "", excerpt_fr: post.excerpt_fr || "",
       content_ar: post.content_ar || "", content_en: post.content_en || "", content_fr: post.content_fr || "",
-      cover_image: post.cover_image || "/images/hero-children.jpg",
+      cover_image: post.cover_image || "/images/hero-children.webp",
       category_ar: post.category_ar || "عام", category_en: post.category_en || "General", category_fr: post.category_fr || "Général",
       author_ar: post.author_ar || "فريق الأكاديمية", author_en: post.author_en || "Academy Team", author_fr: post.author_fr || "Équipe de l'académie",
       read_time: post.read_time || 5,
@@ -269,7 +269,7 @@ export function BlogManager() {
           <div>
             <label className={labelCls}>صورة الغلاف (URL)</label>
             <input className={inputCls} value={form.cover_image} onChange={e => set("cover_image", e.target.value)}
-              placeholder="/images/hero-children.jpg" dir="ltr" />
+              placeholder="/images/hero-children.webp" dir="ltr" />
           </div>
 
           {/* Language tabs */}

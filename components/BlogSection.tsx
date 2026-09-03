@@ -61,7 +61,7 @@ function BlogCard({ post, locale, t }: { post: BlogPost; locale: Locale; t: (k: 
           {/* Image */}
           <div className="relative h-48 overflow-hidden shrink-0">
             <Image
-              src={post.cover_image || '/images/hero-children.jpg'}
+              src={post.cover_image || '/images/hero-children.webp'}
               alt={title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"

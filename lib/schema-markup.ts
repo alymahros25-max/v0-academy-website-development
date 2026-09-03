@@ -126,7 +126,7 @@ export const generateLocalBusinessSchema = () => ({
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   'name': 'أكاديمية الحافظ المتميز',
-  'image': 'https://quran-elhafez.com/images/hero-children.jpg',
+  'image': 'https://quran-elhafez.com/images/hero-children.webp',
   'description': 'أكاديمية عالمية متخصصة في تحفيظ القرآن الكريم وتأسيس اللغة العربية',
   'email': 'enamel311@gmail.com',
   'areaServed': {
