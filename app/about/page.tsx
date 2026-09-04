@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import AboutPageClient from './client'
 import { getPublicContent } from '@/lib/public-content'
+import { getSeoAlternates } from '@/lib/seo-metadata'
 
 export const revalidate = 3600
 
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
   title: "من نحن - أكاديمية الحافظ المتميز",
   description: "تعرف على أكاديمية الحافظ المتميز، رؤيتنا وقيمنا ومعلمونا المتخصصون في تعليم القرآن الكريم والعربية",
   keywords: "من نحن، أكاديمية، معلمون، القرآن",
+  alternates: getSeoAlternates('https://quran-elhafez.com/about'),
   openGraph: {
     title: "من نحن - أكاديمية الحافظ المتميز",
     description: "رحلتنا وقيمنا في تعليم القرآن والعربية",

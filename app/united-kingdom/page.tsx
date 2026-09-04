@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getSeoAlternates } from "@/lib/seo-metadata"
 import Link from "next/link"
 import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
 import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
@@ -9,7 +10,7 @@ import { getAreaLandingData, getAreaWhatsAppUrl, toAreaDisplayPlan, type AreaDis
 export const metadata: Metadata = {
   title: unitedKingdomLandingConfig.seo.title,
   description: unitedKingdomLandingConfig.seo.description,
-  alternates: { canonical: unitedKingdomLandingConfig.seo.canonical },
+  alternates: getSeoAlternates(unitedKingdomLandingConfig.seo.canonical),
   openGraph: { title: unitedKingdomLandingConfig.seo.title, description: unitedKingdomLandingConfig.seo.description, url: unitedKingdomLandingConfig.seo.canonical, locale: "ar_GB", type: "website" },
   twitter: { card: "summary_large_image", title: unitedKingdomLandingConfig.seo.title, description: unitedKingdomLandingConfig.seo.description },
 }

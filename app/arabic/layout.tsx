@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
+import { getSeoAlternates } from '@/lib/seo-metadata'
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://quran-elhafez.com/arabic' },
+  alternates: getSeoAlternates('https://quran-elhafez.com/arabic'),
 }
 
 export default function ArabicLayout({ children }: { children: React.ReactNode }) {

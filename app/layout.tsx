@@ -93,11 +93,6 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    // Geographical targeting meta tags for Gulf region primary focus
-    'geo.region': 'SA', // Saudi Arabia as primary
-    'geo.position': '24.7136; 46.6753', // Riyadh coordinates (Gulf region center)
-    'ICBM': '24.7136, 46.6753', // ICBM format for geographic position
-    
     // Additional service regions for diaspora targeting
     'serviceable-regions': 'SA,AE,KW,QA,BH,OM,US,GB,FR,DE,IT',
     
