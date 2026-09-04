@@ -65,7 +65,7 @@ export const CRITICAL_PREFETCH_PATHS = [
  */
 export function prefetchCriticalImages(): string[] {
   return [
-    '/images/hero-children.jpg',
+    '/images/hero-children.webp',
     '/images/hero-quran.jpg',
     '/images/hero-arabic.jpg',
     '/images/logo.png',

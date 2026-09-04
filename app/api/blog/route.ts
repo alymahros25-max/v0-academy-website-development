@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
         content_ar: content_ar?.trim() || '',
         content_en: content_en?.trim() || content_ar?.trim() || '',
         content_fr: content_fr?.trim() || content_ar?.trim() || '',
-        cover_image: cover_image?.trim() || '/images/hero-children.jpg',
+        cover_image: cover_image?.trim() || '/images/hero-children.webp',
         category_ar: category_ar?.trim() || 'عام',
         category_en: category_en?.trim() || 'General',
         category_fr: category_fr?.trim() || 'Général',

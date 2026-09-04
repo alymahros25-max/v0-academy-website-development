@@ -10,7 +10,7 @@ const blogPosts: Record<string, any> = {
     author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l'académie" },
     date: "2024-06-15",
     readTime: 9,
-    image: "/images/hero-children.jpg",
+    image: "/images/hero-children.webp",
     keywords: { ar: "حفظ القرآن، التقنيات، التجويد", en: "Quran memorization, techniques, tajweed", fr: "Mémorisation du Coran, techniques" },
     description: { ar: "تقنيات عملية وفعالة لحفظ القرآن الكريم بسرعة واتقان باستخدام أحدث الطرق المجربة والناجحة", en: "Practical and effective techniques for memorizing the Holy Quran quickly and accurately", fr: "Techniques pratiques et efficaces pour mémoriser le Coran rapidement" },
     content: {
