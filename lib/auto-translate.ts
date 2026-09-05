@@ -1,100 +1,80 @@
-// Auto-Translation Utility using Google Translate API
-const GOOGLE_TRANSLATE_API = "https://translate.googleapis.com/translate_a/element.js?cb=googleTranslateElementInit"
+type SupportedLanguage = "ar" | "en" | "fr"
 
-export async function translateText(text: string, sourceLang: string = "ar", targetLangs: string[] = ["en", "fr"]): Promise<Record<string, string>> {
-  const result: Record<string, string> = {
-    [sourceLang]: text,
-  }
+type TranslationResponse = {
+  translated?: unknown
+}
 
-  try {
-    for (const targetLang of targetLangs) {
-      if (targetLang === sourceLang) continue
+const TRANSLATION_TIMEOUT_MS = 10_000
 
-      const translated = await fetchTranslation(text, sourceLang, targetLang)
-      result[targetLang] = translated
-    }
-  } catch (error) {
-    console.error("[v0] Translation error:", error)
-    // If API fails, return original text for all languages
-    for (const lang of targetLangs) {
-      if (lang !== sourceLang) {
-        result[lang] = text
-      }
-    }
+export async function translateText(
+  text: string,
+  sourceLang: SupportedLanguage = "ar",
+  targetLangs: SupportedLanguage[] = ["en", "fr"],
+): Promise<Record<string, string>> {
+  const result: Record<string, string> = { [sourceLang]: text }
+  const targets = targetLangs.filter((targetLang) => targetLang !== sourceLang)
+
+  const translations = await Promise.all(
+    targets.map(async (targetLang) => [
+      targetLang,
+      await fetchTranslation(text, sourceLang, targetLang),
+    ] as const),
+  )
+
+  for (const [language, translated] of translations) {
+    result[language] = translated
   }
 
   return result
 }
 
-async function fetchTranslation(text: string, sourceLang: string, targetLang: string): Promise<string> {
-  try {
-    // Using Google Translate free API (without authentication)
-    const response = await fetch(
-      `https://translate.googleapis.com/translate_a/element.js?cb=googleTranslateElementInit`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    )
+async function fetchTranslation(
+  text: string,
+  sourceLang: SupportedLanguage,
+  targetLang: SupportedLanguage,
+): Promise<string> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), TRANSLATION_TIMEOUT_MS)
 
-    // Fallback: Use a simple translation service
-    return await translateUsingFallback(text, sourceLang, targetLang)
+  try {
+    const response = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text, sourceLang, targetLang }),
+      signal: controller.signal,
+    })
+
+    if (!response.ok) return text
+
+    const data = (await response.json()) as TranslationResponse
+    return typeof data.translated === "string" && data.translated.trim()
+      ? data.translated
+      : text
   } catch {
     return text
+  } finally {
+    clearTimeout(timeoutId)
   }
 }
 
-// Fallback translation function using a simple online service
-async function translateUsingFallback(text: string, sourceLang: string, targetLang: string): Promise<string> {
-  try {
-    const encodedText = encodeURIComponent(text)
-    const langMap: Record<string, string> = {
-      ar: "ar",
-      en: "en",
-      fr: "fr",
-    }
-
-    const response = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodedText}&langpair=${langMap[sourceLang]}|${langMap[targetLang]}`
-    )
-
-    if (!response.ok) {
-      return text
-    }
-
-    const data: any = await response.json()
-
-    if (data.responseStatus === 200 && data.responseData?.translatedText) {
-      return data.responseData.translatedText
-    }
-
-    return text
-  } catch (error) {
-    console.error("[v0] Fallback translation error:", error)
-    return text
-  }
-}
-
-// Translate multiple fields in an object
 export async function translateObject(
-  obj: Record<string, any>,
+  obj: Record<string, unknown>,
   fieldsToTranslate: string[],
-  sourceLang: string = "ar"
-): Promise<Record<string, any>> {
+  sourceLang: SupportedLanguage = "ar",
+): Promise<Record<string, unknown>> {
   const result = { ...obj }
 
-  for (const field of fieldsToTranslate) {
-    if (obj[field] && typeof obj[field] === "string") {
-      const translations = await translateText(obj[field], sourceLang, ["en", "fr"])
+  await Promise.all(
+    fieldsToTranslate.map(async (field) => {
+      const value = obj[field]
+      if (typeof value !== "string" || !value.trim()) return
 
-      // Add translated fields
+      const translations = await translateText(value, sourceLang, ["en", "fr"])
       result[`${field}_ar`] = translations.ar
       result[`${field}_en`] = translations.en
       result[`${field}_fr`] = translations.fr
-    }
-  }
+    }),
+  )
 
   return result
 }
