@@ -112,7 +112,7 @@ export default function AdminDashboard() {
     { id: "reviews", label: t("admin.reviews"), key: "admin.reviews", icon: Star, group: "محتوى الموقع" },
     { id: "messages", label: t("admin.messages"), key: "admin.messages", icon: MessageSquare, group: "محتوى الموقع" },
     { id: "cms", label: "صفحات الموقع والمحتوى", key: "admin.cms", icon: BookOpen, group: "محتوى الموقع" },
-    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى ا������موقع" },
+    { id: "blog", label: t("admin.blog"), key: "admin.blog", icon: BookOpen, group: "محتوى الموقع" },
     { id: "library", label: "المكتبة الرقمية", key: "admin.library", icon: BookOpen, group: "محتوى الموقع" },
     { id: "classroom-videos", label: t("admin.classroomVideos"), key: "admin.classroomVideos", icon: Film, group: "الخدمات التعليمية" },
     { id: "educational-games", label: t("admin.educationalGames"), key: "admin.educationalGames", icon: Gamepad2, group: "الخدمات التعليمية" },
@@ -635,7 +635,7 @@ function TeachersTab() {
             <input aria-label="اسم المعلم بالعربية" value={String((editData.name as Record<string, string> | undefined)?.ar ?? "")} onChange={(e) => setEditData({ ...editData, name: { ...((editData.name as Record<string, string>) || {}), ar: e.target.value } })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="الاسم بالعربية" />
             <input aria-label="تخصص المعلم بالعربية" value={String((editData.specialty as Record<string, string> | undefined)?.ar ?? "")} onChange={(e) => setEditData({ ...editData, specialty: { ...((editData.specialty as Record<string, string>) || {}), ar: e.target.value } })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="التخصص" />
             <input aria-label="سنوات الخبرة" value={String(editData.experience ?? "")} onChange={(e) => setEditData({ ...editData, experience: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="سنوات الخبرة" />
-            <input aria-label="رابط صورة المعلم" value={String(editData.image ?? "")} onChange={(e) => setEditData({ ...editData, image: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="رابط الصو��ة" />
+            <input aria-label="رابط صورة المعلم" value={String(editData.image ?? "")} onChange={(e) => setEditData({ ...editData, image: e.target.value })} className="px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" placeholder="رابط الصورة" />
           </div>
           <div className="flex gap-2"><button type="button" onClick={() => editingId && handleSave(editingId)} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold">حفظ التعديل</button><button type="button" onClick={() => setEditingId(null)} className="px-4 py-2 bg-muted text-muted-foreground rounded-lg text-sm">إلغاء</button></div>
         </div>
@@ -646,7 +646,7 @@ function TeachersTab() {
           <h3 className="font-bold text-foreground mb-4">معلم جديد</h3>
           <div className="grid sm:grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">الاسم (عر��ي)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">الاسم (عربي)</label>
               <input
                 value={newTeacher?.name?.ar ?? ''}
                 onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, ar: e.target.value}})}
@@ -655,7 +655,7 @@ function TeachersTab() {
               />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground mb-1 block">الاسم (إ��جليزي)</label>
+              <label className="text-xs text-muted-foreground mb-1 block">الاسم (إنجليزي)</label>
               <input
                 value={newTeacher?.name?.en ?? ''}
                 onChange={(e) => setNewTeacher({...newTeacher, name: {...newTeacher?.name || {}, en: e.target.value}})}
@@ -704,7 +704,7 @@ function TeachersTab() {
                   <Users className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدو�� اسم'}</p>
+                  <p className="font-bold text-foreground">{teacher?.name?.ar || 'بدون اسم'}</p>
                   <p className="text-sm text-muted-foreground">{teacher?.specialty?.ar || 'بدون تخصص'} - {teacher?.experience || '0'} سنة خبرة</p>
                 </div>
               </div>
@@ -843,7 +843,7 @@ function MessagesTab() {
     return (
       <div className="text-center py-16">
         <MessageSquare className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-        <p className="text-lg text-muted-foreground">لا ����وجد رسائل بعد</p>
+        <p className="text-lg text-muted-foreground">لا توجد رسائل بعد</p>
       </div>
     )
   }
@@ -866,7 +866,7 @@ function MessagesTab() {
                 </div>
                 <div className="flex items-center gap-1">
                   {!msg?.read && (
-                    <button onClick={() => handleRead(msg.id)} className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="تح��يد كمقروء">
+                    <button onClick={() => handleRead(msg.id)} className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors" title="تحديد كمقروء">
                       <Check className="w-4 h-4" />
                     </button>
                   )}
@@ -922,7 +922,7 @@ function SettingsTab() {
           disabled={saving}
           className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-bold disabled:opacity-50"
         >
-          {saving ? "جاري الحفظ..." : saved ? "تم الحفظ" : "حفظ التغ��يرات"}
+          {saving ? "جاري الحفظ..." : saved ? "تم الحفظ" : "حفظ التغييرات"}
         </button>
       </div>
 
@@ -1000,11 +1000,11 @@ function SettingsTab() {
   )
 }
 
-// Pages Tab - للتحكم في ��ميع صفحات الموقع
+// Pages Tab - للتحكم في جميع صفحات الموقع
 function PagesTab() {
   const pages = [
-    { name: "الصفحة الرئيسية", path: "/", description: "الصفحة الرئ��سية للموقع" },
-    { name: "من ن��ن", path: "/about", description: "معلومات عن الأكاديمية" },
+    { name: "الصفحة الرئيسية", path: "/", description: "الصفحة الرئيسية للموقع" },
+    { name: "من نحن", path: "/about", description: "معلومات عن الأكاديمية" },
     { name: "القرآن الكريم", path: "/quran", description: "باقات تحفيظ القرآن" },
     { name: "تأسيس العربي", path: "/arabic", description: "باقات تأسيس اللغة العربية" },
     { name: "المعلمين والمعلمات", path: "/teachers", description: "قائمة المعلمين المجازين" },
@@ -1012,7 +1012,7 @@ function PagesTab() {
     { name: "الألعاب والمسابقات", path: "/games", description: "ألعاب تعليمية" },
     { name: "الأسئلة الشائعة", path: "/faq", description: "50 سؤال شامل" },
     { name: "المدونة", path: "/blog", description: "مقالات وإرشادات" },
-    { name: "اتصل بن��", path: "/contact", description: "نموذج التواصل" },
+    { name: "اتصل بنا", path: "/contact", description: "نموذج التواصل" },
     { name: "حسابي", path: "/account", description: "تسجيل الحساب" },
     { name: "الخصوصية", path: "/privacy", description: "سياسة الخصوصية" },
     { name: "الشروط والأحكام", path: "/terms", description: "شروط الاستخدام" },
@@ -1159,7 +1159,7 @@ function ThemeCustomizerTab() {
   ]
   const [msg, setMsg] = useState("")
   const handleApply = () => {
-    setMsg("التعديل يتطلب تحديث ملف globals.css — تواصل مع الم��ور لتطبيق اللون الجديد.")
+    setMsg("التعديل يتطلب تحديث ملف globals.css — تواصل مع المطور لتطبيق اللون الجديد.")
   }
   return (
     <div className="space-y-6">
@@ -1215,7 +1215,7 @@ function ThemeCustomizerTab() {
 // Pages Builder Tab - list of all site pages with quick links
 function PagesBuilderTab() {
   const pages = [
-    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشه��د��ت" },
+    { label: "الصفحة الرئيسية", path: "/", desc: "Hero، المميزات، الباقات، الشهادات" },
     { label: "قرآن الكريم", path: "/quran", desc: "الباقات والأسعار وطريقة التسجيل" },
     { label: "تأسيس العربي", path: "/arabic", desc: "باقات تعليم اللغة العربية" },
     { label: "من نحن", path: "/about", desc: "قصة الأكاديمية وقيمها" },
@@ -1264,7 +1264,7 @@ function UsersManagementTab() {
   const [msg, setMsg] = useState("")
 
   const handleChangePass = async () => {
-    if (newPass.length < 6) { setMsg("كلمة المرور يجب أن تكون 6 أحرف على ال��قل"); return }
+    if (newPass.length < 6) { setMsg("كلمة المرور يجب أن تكون 6 أحرف على الأقل"); return }
     const res = await fetch("/api/admin/change-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1386,7 +1386,7 @@ function ClassroomVideosTab() {
           </div>
         ) : !Array.isArray(videos) || videos?.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">لم يتم إضافة أي فيديوهات حتى ��لآن</p>
+            <p className="text-muted-foreground mb-4">لم يتم إضافة أي فيديوهات حتى الآن</p>
             <button
               onClick={() => setShowForm(true)}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition"
@@ -1442,7 +1442,7 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
         <p className="text-sm text-muted-foreground mb-2">{video.description_ar}</p>
         <div className="flex flex-wrap gap-2 mb-2">
           {video.category && <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded">{video.category}</span>}
-          {video.teacher_name_ar && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">👨‍���� {video.teacher_name_ar}</span>}
+          {video.teacher_name_ar && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">👨‍🏫 {video.teacher_name_ar}</span>}
         </div>
       </div>
       <button
@@ -1630,7 +1630,7 @@ function GSCDashboardTab() {
       <div className="bg-primary/5 border border-primary/20 rounded-xl p-4">
         <p className="text-sm text-foreground font-medium mb-2">نصيحة</p>
         <p className="text-xs text-muted-foreground">
-          استخدم علامة "طلب فهرسة" أعلاه ��طلب فهرسة الصفحات الجديدة أو المحدثة في Google بشكل فوري.
+          استخدم علامة "طلب فهرسة" أعلاه لطلب فهرسة الصفحات الجديدة أو المحدثة في Google بشكل فوري.
         </p>
       </div>
     </div>
@@ -1687,7 +1687,7 @@ function RequestIndexingTab() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">طلب فهرسة الصفحات</h2>
-        <p className="text-sm text-muted-foreground">أدخل روابط الصفحات الم��اد فهرستها في Google بشكل فوري</p>
+        <p className="text-sm text-muted-foreground">أدخل روابط الصفحات المراد فهرستها في Google بشكل فوري</p>
       </div>
 
       <div className="bg-card border border-border rounded-xl p-6 space-y-4">
