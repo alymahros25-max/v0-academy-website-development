@@ -3,12 +3,12 @@ import { Noto_Sans_Arabic, Inter } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { ErrorBoundary } from "@/components/error-boundary"
-import { generateOrganizationSchema, generateWebSiteSchema, generateCombinedSchema } from "@/lib/schema"
+import { generateEducationalOrganizationSchema, generateWebSiteSchema, generateCombinedSchema } from "@/lib/schema"
 import "./globals.css"
 import { ClientProviders } from "@/components/client-providers"
 
 const rootStructuredData = generateCombinedSchema(
-  generateOrganizationSchema(),
+  generateEducationalOrganizationSchema(),
   generateWebSiteSchema(),
 )
 
@@ -93,11 +93,6 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    // Geographical targeting meta tags for Gulf region primary focus
-    'geo.region': 'SA', // Saudi Arabia as primary
-    'geo.position': '24.7136; 46.6753', // Riyadh coordinates (Gulf region center)
-    'ICBM': '24.7136, 46.6753', // ICBM format for geographic position
-    
     // Additional service regions for diaspora targeting
     'serviceable-regions': 'SA,AE,KW,QA,BH,OM,US,GB,FR,DE,IT',
     

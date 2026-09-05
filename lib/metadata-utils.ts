@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { getSeoAlternates } from './seo-metadata'
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL('https://quran-elhafez.com'),
@@ -28,9 +29,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
     'checkout-success': '/checkout-success',
   }
 
-  const getAlternates = (route: string) => ({
-    canonical: `${baseUrl}${route}`,
-  })
+  const getAlternates = (route: string) => getSeoAlternates(`${baseUrl}${route}`)
 
   const metadataMap: Record<string, Metadata> = {
     'checkout-success': {

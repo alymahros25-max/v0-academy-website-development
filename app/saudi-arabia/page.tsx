@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getSeoAlternates } from "@/lib/seo-metadata"
 import Link from "next/link"
 import Image from "next/image"
 import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
@@ -11,7 +12,7 @@ import { CountryPagesSection } from "@/components/layout/country-pages-section"
 export const metadata: Metadata = {
   title: saudiLandingConfig.seo.title,
   description: saudiLandingConfig.seo.description,
-  alternates: { canonical: saudiLandingConfig.seo.canonical },
+  alternates: getSeoAlternates(saudiLandingConfig.seo.canonical),
   robots: { index: true, follow: true },
   openGraph: { title: saudiLandingConfig.seo.title, description: saudiLandingConfig.seo.description, url: saudiLandingConfig.seo.canonical, locale: "ar_SA", type: "website" },
   twitter: { card: "summary_large_image", title: saudiLandingConfig.seo.title, description: saudiLandingConfig.seo.description },

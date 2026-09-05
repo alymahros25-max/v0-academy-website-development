@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getSeoAlternates } from "@/lib/seo-metadata"
 import Link from "next/link"
 import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
 import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
@@ -9,7 +10,7 @@ import { CountryPagesSection } from "@/components/layout/country-pages-section"
 export const metadata: Metadata = {
   title: unitedStatesLandingConfig.seo.title,
   description: unitedStatesLandingConfig.seo.description,
-  alternates: { canonical: unitedStatesLandingConfig.seo.canonical },
+  alternates: getSeoAlternates(unitedStatesLandingConfig.seo.canonical),
   openGraph: { title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description, url: unitedStatesLandingConfig.seo.canonical, locale: "ar_US", type: "website" },
   twitter: { card: "summary_large_image", title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description },
 }

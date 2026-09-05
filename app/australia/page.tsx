@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getSeoAlternates } from "@/lib/seo-metadata"
 import Link from "next/link"
 import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
 import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
@@ -6,7 +7,7 @@ import { CountryPagesSection } from "@/components/layout/country-pages-section"
 import { australiaLandingConfig, getAustraliaWhatsAppUrl, type AustraliaProgram } from "@/lib/australia-landing-config"
 import { getAreaLandingData, getAreaWhatsAppUrl, toAreaDisplayPlan, type AreaDisplayPlan } from "@/lib/country-content"
 
-export const metadata: Metadata = { title: australiaLandingConfig.seo.title, description: australiaLandingConfig.seo.description, alternates: { canonical: australiaLandingConfig.seo.canonical }, openGraph: { title: australiaLandingConfig.seo.title, description: australiaLandingConfig.seo.description, url: australiaLandingConfig.seo.canonical, locale: "ar_AU", type: "website" }, twitter: { card: "summary_large_image", title: australiaLandingConfig.seo.title, description: australiaLandingConfig.seo.description } }
+export const metadata: Metadata = { title: australiaLandingConfig.seo.title, description: australiaLandingConfig.seo.description, alternates: getSeoAlternates(australiaLandingConfig.seo.canonical), openGraph: { title: australiaLandingConfig.seo.title, description: australiaLandingConfig.seo.description, url: australiaLandingConfig.seo.canonical, locale: "ar_AU", type: "website" }, twitter: { card: "summary_large_image", title: australiaLandingConfig.seo.title, description: australiaLandingConfig.seo.description } }
 
 const faq = [
   ["هل تناسب الحصص الأطفال المقيمين في أستراليا؟", "نعم، الحصص الفردية مناسبة للأطفال والشباب والبالغين من الناطقين بالعربية، مع خطة تناسب مستوى الطالب."],
