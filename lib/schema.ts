@@ -73,10 +73,12 @@ export function generateCourseSchema(course: {
   name_ar: string
   name_en: string
   description_ar: string
-  price: number
+  price?: number
   currency?: string
   duration?: string
   level?: string
+  url?: string
+  image?: string
 }): SchemaContext {
   return {
     '@context': 'https://schema.org',
@@ -85,25 +87,24 @@ export function generateCourseSchema(course: {
     alternateName: course.name_en,
     description: course.description_ar,
     provider: {
-      '@type': 'Organization',
+      '@type': 'EducationalOrganization',
       name: SITE_NAME,
       url: BASE_URL,
     },
-    offers: {
-      '@type': 'Offer',
-      price: course.price,
-      priceCurrency: course.currency || 'USD',
-      availability: 'InStock',
-    },
-    educationLevel: course.level || 'BeginnerLevel',
+    ...(typeof course.price === 'number' && {
+      offers: {
+        '@type': 'Offer',
+        price: course.price,
+        priceCurrency: course.currency || 'USD',
+        availability: 'InStock',
+      },
+    }),
+    ...(course.url && { url: course.url }),
+    ...(course.image && { image: course.image }),
+    educationalLevel: course.level || 'BeginnerLevel',
     duration: course.duration || 'P12W',
     inLanguage: 'ar',
     teaches: ['Quranic Studies', 'Islamic Education'],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: 4.8,
-      ratingCount: 250,
-    },
   }
 }
 
@@ -175,7 +176,7 @@ export function generateBreadcrumbSchema(breadcrumbs: Array<{
  * Generate EducationalOrganization schema for academy with geo-targeting.
  * Includes comprehensive areaServed for Gulf region and Western diaspora.
  */
-export function generateLocalBusinessSchema(): SchemaContext {
+export function generateEducationalOrganizationSchema(): SchemaContext {
   return {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
@@ -232,13 +233,13 @@ export function generateLocalBusinessSchema(): SchemaContext {
       height: 256,
     },
     // Add review aggregate if available
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: 4.9,
-      reviewCount: 180,
-    },
   }
 }
+
+/**
+ * Backward-compatible alias for callers using the former helper name.
+ */
+export const generateLocalBusinessSchema = generateEducationalOrganizationSchema
 
 /**
  * Inject JSON-LD script tag into component metadata.
