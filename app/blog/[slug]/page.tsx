@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import BlogArticleClient from "./client"
+import { getSeoAlternates } from '@/lib/seo-metadata'
 import { notFound } from 'next/navigation'
 
 // المقالات الثابتة الافتراضية
@@ -136,9 +137,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: post.title.ar,
     description: post.description.ar,
     keywords: post.keywords.ar,
-    alternates: {
-      canonical: articleUrl,
-    },
+    alternates: getSeoAlternates(articleUrl),
     openGraph: {
       title: post.title.ar,
       description: post.description.ar,

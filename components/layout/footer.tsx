@@ -157,7 +157,7 @@ export function Footer() {
               <li className="flex items-center gap-2 text-sm text-primary-foreground/90">
                 <Phone className="w-4 h-4 text-secondary shrink-0" />
                 <a href="https://bit.ly/4aJfOl6" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">
-                  {locale === "ar" ? "��واصل عبر WhatsApp" : "Contact via WhatsApp"}
+                  {locale === "ar" ? "تواصل عبر WhatsApp" : "Contact via WhatsApp"}
                 </a>
               </li>
               <li className="flex items-start gap-2 text-sm text-primary-foreground/90">
