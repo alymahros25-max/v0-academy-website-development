@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react"
-import { Clock3, MapPin, Palette } from "lucide-react"
+import { BookOpenText, Clock3, MapPin } from "lucide-react"
 import type { AreaCity, AreaTheme, AreaTimezone } from "@/lib/country-content"
 
 type CountryStyle = CSSProperties & Record<`--${string}`, string>
@@ -86,19 +86,13 @@ export function CountryEnrichmentSection({
 }) {
   if (!theme && cities.length === 0 && timezones.length === 0) return null
 
-  const palette = theme ? [
-    ["الأساسي", safeHex(theme.primary_color, "#5680A8")],
-    ["الثانوي", safeHex(theme.secondary_color, "#9AB5D2")],
-    ["المميز", safeHex(theme.accent_color, "#DDBB85")],
-  ] as const : []
-
   return (
     <section className="content-auto border-y border-border bg-secondary/35 px-5 py-16 sm:px-8" aria-labelledby="country-coverage-title">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="saudi-eyebrow justify-center"><MapPin size={17} /> تغطية محلية وهوية مستقلة</p>
           <h2 id="country-coverage-title" className="mt-4 text-3xl font-bold">خدمة أونلاين تناسب العائلات في {countryName}</h2>
-          <p className="mt-4 leading-8 text-muted-foreground">المدن والمناطق الزمنية أدناه بيانات تنظيمية للمواعيد والتغطية، ولا تتضمن أعداد طلاب أو معلمين أو تقييمات غير موثقة.</p>
+          <p className="mt-4 leading-8 text-muted-foreground">تعرّف على المدن التي نخدمها، واضبط الموعد حسب توقيتك، واقرأ فائدة قرآنية موجزة ومختلفة لهذه الصفحة.</p>
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -117,7 +111,7 @@ export function CountryEnrichmentSection({
               </div>
             </article>
 
-            {theme && <article className="rounded-2xl border border-border bg-card p-6 shadow-sm"><div className="flex items-center gap-3"><Palette className="text-primary" /><div><h3 className="text-xl font-bold">{theme.theme_name_ar}</h3><p className="text-sm text-muted-foreground">لوحة بصرية مستقلة لهذه الصفحة.</p></div></div><div className="mt-5 grid grid-cols-3 gap-3">{palette.map(([label, color]) => <div key={label} className="text-center"><span className="mx-auto block size-10 rounded-full border border-border shadow-sm" style={{ backgroundColor: color }} /><span className="mt-2 block text-xs text-muted-foreground">{label}</span></div>)}</div></article>}
+            {theme?.quran_fact_title_ar && theme.quran_fact_body_ar && <article className="rounded-2xl border border-primary/20 bg-primary/5 p-6 shadow-sm"><div className="flex items-center gap-3"><BookOpenText className="text-primary" /><div><h3 className="text-xl font-bold">{theme.quran_fact_title_ar}</h3><p className="text-sm text-muted-foreground">معلومة قرآنية مختارة لصفحة {countryName}</p></div></div><blockquote className="mt-5 border-r-4 border-primary pr-4 leading-8 text-foreground">{theme.quran_fact_body_ar}</blockquote>{theme.quran_fact_reference_ar && <p className="mt-4 text-xs font-semibold text-muted-foreground">المرجع: {theme.quran_fact_reference_ar}</p>}</article>}
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const fieldAllowList: Record<z.infer<typeof resourceSchema>, Set<string>> = {
   packages: new Set(["program", "name_ar", "name_en", "name_fr", "description_ar", "description_en", "description_fr", "price", "billing_period", "sessions_per_month", "features_ar", "features_en", "features_fr", "is_popular", "is_active", "sort_order"]),
   faq: new Set(["question_ar", "question_en", "question_fr", "answer_ar", "answer_en", "answer_fr", "is_active", "sort_order"]),
   links: new Set(["label_ar", "label_en", "label_fr", "href", "link_type", "is_external", "is_active", "sort_order"]),
-  themes: new Set(["theme_name_ar", "theme_name_en", "primary_color", "secondary_color", "accent_color", "background_color", "text_color", "is_active", "sort_order"]),
+  themes: new Set(["theme_name_ar", "theme_name_en", "primary_color", "secondary_color", "accent_color", "background_color", "text_color", "quran_fact_title_ar", "quran_fact_body_ar", "quran_fact_reference_ar", "is_active", "sort_order"]),
   cities: new Set(["name_ar", "name_en", "region_name", "is_active", "sort_order"]),
   timezones: new Set(["timezone_name", "label_ar", "label_en", "is_primary", "is_active", "sort_order"]),
 }
@@ -31,6 +31,9 @@ const enrichmentChangeSchemas = {
     accent_color: hexColorSchema,
     background_color: hexColorSchema,
     text_color: hexColorSchema,
+    quran_fact_title_ar: z.string().trim().min(1).max(160),
+    quran_fact_body_ar: z.string().trim().min(1).max(700),
+    quran_fact_reference_ar: z.string().trim().min(1).max(120),
     is_active: z.boolean(),
     sort_order: z.number().int().min(0).max(10000),
   }).partial().strict(),
