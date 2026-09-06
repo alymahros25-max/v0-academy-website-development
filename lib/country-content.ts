@@ -45,6 +45,36 @@ export type AreaLink = {
   sort_order: number
 }
 
+export type AreaTheme = {
+  id: number
+  theme_name_ar: string
+  theme_name_en: string | null
+  primary_color: string
+  secondary_color: string
+  accent_color: string
+  background_color: string
+  text_color: string
+  sort_order: number
+}
+
+export type AreaCity = {
+  id: number
+  city_key: string
+  name_ar: string
+  name_en: string
+  region_name: string | null
+  sort_order: number
+}
+
+export type AreaTimezone = {
+  id: number
+  timezone_name: string
+  label_ar: string
+  label_en: string
+  is_primary: boolean
+  sort_order: number
+}
+
 export type SiteArea = {
   id: number
   slug: string
@@ -115,18 +145,41 @@ export async function getAreaContent(slug: string, section?: string) {
 
 export async function getAreaLandingData(slug: string) {
   const area = await getSiteArea(slug)
-  if (!area || !supabaseAdmin) return { area, packages: [], faq: [], content: [], links: [] }
-  const [{ data: packages, error: packagesError }, { data: faq, error: faqError }, { data: content, error: contentError }, { data: links, error: linksError }] = await Promise.all([
+  if (!area || !supabaseAdmin) return { area, packages: [], faq: [], content: [], links: [], theme: null, cities: [], timezones: [] }
+  const [
+    { data: packages, error: packagesError },
+    { data: faq, error: faqError },
+    { data: content, error: contentError },
+    { data: links, error: linksError },
+    { data: themes, error: themesError },
+    { data: cities, error: citiesError },
+    { data: timezones, error: timezonesError },
+  ] = await Promise.all([
     supabaseAdmin.from("area_packages").select("id, program, package_key, name_ar, name_en, name_fr, description_ar, description_en, description_fr, price, currency_code, billing_period, sessions_per_month, features_ar, features_en, features_fr, is_popular, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
     supabaseAdmin.from("area_faq_items").select("id, question_key, question_ar, question_en, question_fr, answer_ar, answer_en, answer_fr, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
     supabaseAdmin.from("area_content").select("id, content_key, content_ar, content_en, content_fr, content_type, section, href, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
     supabaseAdmin.from("area_links").select("id, link_key, label_ar, label_en, label_fr, href, link_type, is_external, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
+    supabaseAdmin.from("area_themes").select("id, theme_name_ar, theme_name_en, primary_color, secondary_color, accent_color, background_color, text_color, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }).limit(1),
+    supabaseAdmin.from("area_cities").select("id, city_key, name_ar, name_en, region_name, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
+    supabaseAdmin.from("area_timezones").select("id, timezone_name, label_ar, label_en, is_primary, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
   ])
   if (packagesError) console.warn("[Country Content] landing packages read failed:", packagesError.message)
   if (faqError) console.warn("[Country Content] landing FAQ read failed:", faqError.message)
   if (contentError) console.warn("[Country Content] landing content read failed:", contentError.message)
   if (linksError) console.warn("[Country Content] landing links read failed:", linksError.message)
-  return { area, packages: packages ?? [], faq: faq ?? [], content: content ?? [], links: links ?? [] }
+  if (themesError) console.warn("[Country Content] landing theme read failed:", themesError.message)
+  if (citiesError) console.warn("[Country Content] landing cities read failed:", citiesError.message)
+  if (timezonesError) console.warn("[Country Content] landing timezones read failed:", timezonesError.message)
+  return {
+    area,
+    packages: packages ?? [],
+    faq: faq ?? [],
+    content: content ?? [],
+    links: links ?? [],
+    theme: (themes?.[0] as AreaTheme | undefined) ?? null,
+    cities: (cities ?? []) as AreaCity[],
+    timezones: (timezones ?? []) as AreaTimezone[],
+  }
 }
 
 export function areaLocalized(value: { content_ar?: string | null; content_en?: string | null; content_fr?: string | null } | undefined, locale = "ar") {
