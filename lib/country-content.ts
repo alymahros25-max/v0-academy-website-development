@@ -54,6 +54,9 @@ export type AreaTheme = {
   accent_color: string
   background_color: string
   text_color: string
+  quran_fact_title_ar: string | null
+  quran_fact_body_ar: string | null
+  quran_fact_reference_ar: string | null
   sort_order: number
 }
 
@@ -159,7 +162,7 @@ export async function getAreaLandingData(slug: string) {
     supabaseAdmin.from("area_faq_items").select("id, question_key, question_ar, question_en, question_fr, answer_ar, answer_en, answer_fr, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
     supabaseAdmin.from("area_content").select("id, content_key, content_ar, content_en, content_fr, content_type, section, href, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
     supabaseAdmin.from("area_links").select("id, link_key, label_ar, label_en, label_fr, href, link_type, is_external, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
-    supabaseAdmin.from("area_themes").select("id, theme_name_ar, theme_name_en, primary_color, secondary_color, accent_color, background_color, text_color, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }).limit(1),
+    supabaseAdmin.from("area_themes").select("id, theme_name_ar, theme_name_en, primary_color, secondary_color, accent_color, background_color, text_color, quran_fact_title_ar, quran_fact_body_ar, quran_fact_reference_ar, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }).limit(1),
     supabaseAdmin.from("area_cities").select("id, city_key, name_ar, name_en, region_name, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
     supabaseAdmin.from("area_timezones").select("id, timezone_name, label_ar, label_en, is_primary, sort_order").eq("area_id", area.id).eq("is_active", true).order("sort_order", { ascending: true }),
   ])
