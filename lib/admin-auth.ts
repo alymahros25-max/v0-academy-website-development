@@ -1,19 +1,41 @@
 import { cookies } from "next/headers"
-import { createHash, createHmac, timingSafeEqual } from "crypto"
+import { createHmac, scryptSync, timingSafeEqual } from "crypto"
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH
+const ADMIN_PASSWORD_SCRYPT_HASH = process.env.ADMIN_PASSWORD_SCRYPT_HASH
 const SESSION_COOKIE = "admin_session"
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET
 
 function assertAdminConfig(): void {
-  if (!ADMIN_EMAIL?.trim() || !ADMIN_PASSWORD_HASH?.trim() || !SESSION_SECRET?.trim()) {
+  if (!ADMIN_EMAIL?.trim() || !ADMIN_PASSWORD_SCRYPT_HASH?.trim() || !SESSION_SECRET?.trim()) {
     throw new Error("Admin authentication is not configured")
   }
 }
 
 export function isAdminAuthConfigured(): boolean {
-  return Boolean(ADMIN_EMAIL?.trim() && ADMIN_PASSWORD_HASH?.trim() && SESSION_SECRET?.trim())
+  return Boolean(ADMIN_EMAIL?.trim() && ADMIN_PASSWORD_SCRYPT_HASH?.trim() && SESSION_SECRET?.trim())
+}
+
+function verifyScryptPassword(password: string, storedHash: string): boolean {
+  try {
+    const [saltHex, keyHex] = storedHash.split(":")
+    if (!saltHex || !keyHex) return false
+
+    const salt = Buffer.from(saltHex, "hex")
+    const key = Buffer.from(keyHex, "hex")
+
+    // Scrypt parameters: N=16384, r=8, p=1, keyLen=64
+    const derivedKey = scryptSync(password, salt, key.length, {
+      N: 16384,
+      r: 8,
+      p: 1,
+      maxmem: 32 * 1024 * 1024,
+    })
+
+    return key.length === derivedKey.length && timingSafeEqual(key, derivedKey)
+  } catch {
+    return false
+  }
 }
 
 function generateSessionToken(email: string, issuedAt: number): string {
@@ -45,8 +67,10 @@ export async function verifyAdminSession(): Promise<boolean> {
 export function verifyCredentials(email: string, password: string): boolean {
   assertAdminConfig()
   const normalizedEmail = email.trim().toLowerCase()
-  const passwordHash = createHash("sha256").update(password).digest("hex")
-  return normalizedEmail === ADMIN_EMAIL!.trim().toLowerCase() && passwordHash === ADMIN_PASSWORD_HASH!.trim()
+  const emailMatches = normalizedEmail === ADMIN_EMAIL!.trim().toLowerCase()
+  const passwordMatches = verifyScryptPassword(password, ADMIN_PASSWORD_SCRYPT_HASH!.trim())
+
+  return emailMatches && passwordMatches
 }
 
 export async function createSession(email: string) {
