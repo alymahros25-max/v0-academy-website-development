@@ -152,7 +152,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="font-bold text-foreground">{locale === "ar" ? "البريد الإلكتروني" : "Email"}</p>
-                    <a href="mailto:enamel311@gmail.com" className="text-sm text-primary hover:underline">enamel311@gmail.com</a>
+                    <a href="mailto:info@quran-elhafez.com" className="text-sm text-primary hover:underline">info@quran-elhafez.com</a>
                   </div>
                 </div>
               </div>
