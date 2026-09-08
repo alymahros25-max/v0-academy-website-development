@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from "next"
 import { Noto_Sans_Arabic, Inter } from "next/font/google"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/react"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { generateEducationalOrganizationSchema, generateWebSiteSchema, generateCombinedSchema } from "@/lib/schema"
 import "./globals.css"
 import { ClientProviders } from "@/components/client-providers"
+import { AnalyticsConsent } from "@/components/analytics-consent"
 
 const rootStructuredData = generateCombinedSchema(
   generateEducationalOrganizationSchema(),
@@ -125,8 +124,7 @@ export default function RootLayout({
         <ErrorBoundary context="RootLayout">
           <ClientProviders>{children}</ClientProviders>
         </ErrorBoundary>
-        <Analytics />
-        <SpeedInsights />
+        <AnalyticsConsent />
       </body>
     </html>
   )

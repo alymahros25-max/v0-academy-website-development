@@ -98,26 +98,13 @@ export function checkPasswordStrength(password: string): {
   return { score, feedback }
 }
 
-// Content Security Policy headers
-export const CSPHeaders = {
-  'Content-Security-Policy':
-    "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; " +
-    "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: https:; " +
-    "font-src 'self' data:; " +
-    "connect-src 'self' https:; " +
-    "frame-ancestors 'self'",
-}
-
-// Security headers
+// Security headers are emitted centrally by next.config.ts.
 export const securityHeaders = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'SAMEORIGIN',
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
-  ...CSPHeaders,
 }
 
 const securityUtilities = {

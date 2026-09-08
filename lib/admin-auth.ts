@@ -5,6 +5,7 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 const ADMIN_PASSWORD_SCRYPT_HASH = process.env.ADMIN_PASSWORD_SCRYPT_HASH
 const SESSION_COOKIE = "admin_session"
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000
 
 function assertAdminConfig(): void {
   if (!ADMIN_EMAIL?.trim() || !ADMIN_PASSWORD_SCRYPT_HASH?.trim() || !SESSION_SECRET?.trim()) {
@@ -40,7 +41,9 @@ function verifyScryptPassword(password: string, storedHash: string): boolean {
 
 function generateSessionToken(email: string, issuedAt: number): string {
   assertAdminConfig()
-  return createHmac("sha256", SESSION_SECRET!).update(`${email}:${issuedAt}`).digest("hex")
+  return createHmac("sha256", SESSION_SECRET!)
+    .update(`${email}:${issuedAt}:${getSessionVersion()}`)
+    .digest("hex")
 }
 
 export function verifySessionValue(value: string): boolean {
@@ -50,7 +53,7 @@ export function verifySessionValue(value: string): boolean {
     const [email, issuedAtText, token] = decoded.split(":")
     const issuedAt = Number(issuedAtText)
     if (!email || !token || !Number.isSafeInteger(issuedAt)) return false
-    if (Date.now() - issuedAt > 7 * 24 * 60 * 60 * 1000 || issuedAt > Date.now() + 60_000) return false
+    if (Date.now() - issuedAt > SESSION_TTL_MS || issuedAt > Date.now() + 60_000) return false
     const expected = generateSessionToken(email, issuedAt)
     return email === ADMIN_EMAIL?.trim().toLowerCase() && token.length === expected.length && timingSafeEqual(Buffer.from(token), Buffer.from(expected))
   } catch {
@@ -62,6 +65,19 @@ export async function verifyAdminSession(): Promise<boolean> {
   const cookieStore = await cookies()
   const session = cookieStore.get(SESSION_COOKIE)
   return Boolean(session?.value && verifySessionValue(session.value))
+}
+
+function verifyScryptPassword(password: string, encodedHash: string): boolean {
+  const [scheme, saltHex, hashHex] = encodedHash.split("$")
+  if (scheme !== "scrypt" || !saltHex || !hashHex) return false
+
+  try {
+    const derivedKey = scryptSync(password, Buffer.from(saltHex, "hex"), 64)
+    const expectedKey = Buffer.from(hashHex, "hex")
+    return derivedKey.length === expectedKey.length && timingSafeEqual(derivedKey, expectedKey)
+  } catch {
+    return false
+  }
 }
 
 export function verifyCredentials(email: string, password: string): boolean {
@@ -82,7 +98,7 @@ export async function createSession(email: string) {
   cookieStore.set(SESSION_COOKIE, sessionValue, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: "/",
   })
