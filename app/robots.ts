@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       // Allow all good bots
       {
-        userAgent: ['Googlebot', 'Bingbot', 'Slurp', 'DuckDuckBot', 'Baiduspider', 'Sogou'],
+        userAgent: ['Googlebot', 'Bingbot', 'Slurp', 'DuckDuckBot', 'Baiduspider', 'Sogou', 'YandexBot', 'YandexMobileBot'],
         allow: '/',
         crawlDelay: 1,
       },
@@ -32,8 +32,6 @@ export default function robots(): MetadataRoute.Robots {
           'SemrushBot',
           'DotBot',
           'MJ12bot',
-          'YandexBot',
-          'YandexMobileBot',
         ],
         disallow: '/',
       },
