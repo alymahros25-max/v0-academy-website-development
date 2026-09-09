@@ -1,10 +1,8 @@
 import type { Metadata } from 'next'
-import { getSeoAlternates } from '@/lib/seo-metadata'
+import { generatePageMetadata } from '@/lib/metadata-utils'
 import { CourseSchema } from '@/components/course-schema'
 
-export const metadata: Metadata = {
-  alternates: getSeoAlternates('https://quran-elhafez.com/arabic'),
-}
+export const metadata: Metadata = generatePageMetadata('arabic')
 
 export default function ArabicLayout({ children }: { children: React.ReactNode }) {
   return (

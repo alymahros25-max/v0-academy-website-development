@@ -48,6 +48,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'حلقات تحفيظ قران اون لاين مع معلمين مجازين',
         type: 'website',
         url: 'https://quran-elhafez.com/quran',
+        images: [{ url: '/images/teacher-quran.jpg', width: 1200, height: 630, alt: 'تحفيظ القرآن الكريم أونلاين' }],
       },
     },
     arabic: {
@@ -60,6 +61,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'برامج تأسيس اللغة العربية بطرق حديثة',
         type: 'website',
         url: 'https://quran-elhafez.com/arabic',
+        images: [{ url: '/images/arabic-learning.jpg', width: 1200, height: 630, alt: 'تأسيس اللغة العربية أونلاين' }],
       },
     },
     about: {
@@ -72,6 +74,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'تعرف على أكاديمية الحافظ المتميز',
         type: 'website',
         url: 'https://quran-elhafez.com/about',
+        images: [{ url: '/images/hero-children.webp', width: 1200, height: 630, alt: 'أكاديمية الحافظ المتميز' }],
       },
     },
     teachers: {
@@ -84,6 +87,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'فريق المعلمين والمعلمات المجازين والمتخصصين',
         type: 'website',
         url: 'https://quran-elhafez.com/teachers',
+        images: [{ url: '/images/hero-children.webp', width: 1200, height: 630, alt: 'معلمو أكاديمية الحافظ المتميز' }],
       },
     },
     reviews: {
@@ -96,6 +100,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'آراء وتقييمات الطلاب وأولياء الأمور',
         type: 'website',
         url: 'https://quran-elhafez.com/reviews',
+        images: [{ url: '/images/hero-children.webp', width: 1200, height: 630, alt: 'آراء طلاب أكاديمية الحافظ المتميز' }],
       },
     },
     games: {
@@ -108,6 +113,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'ألعاب تعليمية وممتعة',
         type: 'website',
         url: 'https://quran-elhafez.com/games',
+        images: [{ url: '/images/hero-children.webp', width: 1200, height: 630, alt: 'الألعاب التعليمية للأطفال' }],
       },
     },
     faq: {
@@ -120,6 +126,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'الأسئلة الشائعة والإجابات',
         type: 'website',
         url: 'https://quran-elhafez.com/faq',
+        images: [{ url: '/images/hero-children.webp', width: 1200, height: 630, alt: 'الأسئلة الشائعة عن الأكاديمية' }],
       },
     },
     contact: {
@@ -132,6 +139,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'تواصل معنا لأي استفسارات',
         type: 'website',
         url: 'https://quran-elhafez.com/contact',
+        images: [{ url: '/images/hero-children.webp', width: 1200, height: 630, alt: 'تواصل مع أكاديمية الحافظ المتميز' }],
       },
     },
     privacy: {
@@ -144,7 +152,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
       },
     },
     terms: {
-      title: 'الشروط والأحكام | أكاديمية الحافظ المتميز',
+      title: 'الشروط والأحكام | أكاديمية الحافظ المت��يز',
       description: 'الشروط والأحكام العامة والخدمات في أكاديمية الحافظ المتميز',
       alternates: getAlternates(pageRoutes.terms),
       robots: {
