@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
 
 const BASE_URL = 'https://quran-elhafez.com'
+const STATIC_CONTENT_LAST_MODIFIED = '2026-09-09'
 
 type BlogArticle = { slug: string; lastModified?: string }
 
@@ -68,6 +69,7 @@ const staticRoutes = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
     url: `${BASE_URL}${route === '/' ? '/' : route}`,
+    lastModified: STATIC_CONTENT_LAST_MODIFIED,
   }))
 
   const blogEntries: MetadataRoute.Sitemap = (await getDynamicBlogArticles())
