@@ -1,28 +1,25 @@
 import { cookies } from "next/headers"
-import { createHash, createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto"
+import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto"
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
-const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH
 const ADMIN_PASSWORD_SCRYPT_HASH = process.env.ADMIN_PASSWORD_SCRYPT_HASH
 const SESSION_COOKIE = "admin_session"
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000
 
 function assertAdminConfig(): void {
-  if (!ADMIN_EMAIL?.trim() || (!ADMIN_PASSWORD_SCRYPT_HASH?.trim() && !ADMIN_PASSWORD_HASH?.trim()) || !SESSION_SECRET?.trim()) {
+  if (!ADMIN_EMAIL?.trim() || !ADMIN_PASSWORD_SCRYPT_HASH?.trim() || !SESSION_SECRET?.trim()) {
     throw new Error("Admin authentication is not configured")
   }
 }
 
 export function isAdminAuthConfigured(): boolean {
-  return Boolean(ADMIN_EMAIL?.trim() && (ADMIN_PASSWORD_SCRYPT_HASH?.trim() || ADMIN_PASSWORD_HASH?.trim()) && SESSION_SECRET?.trim())
+  return Boolean(ADMIN_EMAIL?.trim() && ADMIN_PASSWORD_SCRYPT_HASH?.trim() && SESSION_SECRET?.trim())
 }
 
 function getSessionVersion(): string {
   assertAdminConfig()
-  return createHash("sha256")
-    .update(ADMIN_PASSWORD_SCRYPT_HASH?.trim() || ADMIN_PASSWORD_HASH!.trim())
-    .digest("hex")
+  return ADMIN_PASSWORD_SCRYPT_HASH!.trim()
 }
 
 function generateSessionToken(email: string, issuedAt: number): string {
@@ -70,9 +67,7 @@ export function verifyCredentials(email: string, password: string): boolean {
   assertAdminConfig()
   const normalizedEmail = email.trim().toLowerCase()
   const emailMatches = normalizedEmail === ADMIN_EMAIL!.trim().toLowerCase()
-  const passwordMatches = ADMIN_PASSWORD_SCRYPT_HASH
-    ? verifyScryptPassword(password, ADMIN_PASSWORD_SCRYPT_HASH.trim())
-    : Boolean(ADMIN_PASSWORD_HASH && createHash("sha256").update(password).digest("hex") === ADMIN_PASSWORD_HASH.trim())
+  const passwordMatches = verifyScryptPassword(password, ADMIN_PASSWORD_SCRYPT_HASH!.trim())
 
   return emailMatches && passwordMatches
 }
