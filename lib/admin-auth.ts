@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { createHmac, scryptSync, timingSafeEqual } from "crypto"
+import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "crypto"
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 const ADMIN_PASSWORD_SCRYPT_HASH = process.env.ADMIN_PASSWORD_SCRYPT_HASH
@@ -17,26 +17,9 @@ export function isAdminAuthConfigured(): boolean {
   return Boolean(ADMIN_EMAIL?.trim() && ADMIN_PASSWORD_SCRYPT_HASH?.trim() && SESSION_SECRET?.trim())
 }
 
-function verifyScryptPassword(password: string, storedHash: string): boolean {
-  try {
-    const [saltHex, keyHex] = storedHash.split(":")
-    if (!saltHex || !keyHex) return false
-
-    const salt = Buffer.from(saltHex, "hex")
-    const key = Buffer.from(keyHex, "hex")
-
-    // Scrypt parameters: N=16384, r=8, p=1, keyLen=64
-    const derivedKey = scryptSync(password, salt, key.length, {
-      N: 16384,
-      r: 8,
-      p: 1,
-      maxmem: 32 * 1024 * 1024,
-    })
-
-    return key.length === derivedKey.length && timingSafeEqual(key, derivedKey)
-  } catch {
-    return false
-  }
+function getSessionVersion(): string {
+  assertAdminConfig()
+  return ADMIN_PASSWORD_SCRYPT_HASH!.trim()
 }
 
 function generateSessionToken(email: string, issuedAt: number): string {
