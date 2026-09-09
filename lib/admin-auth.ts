@@ -72,12 +72,6 @@ export function verifyCredentials(email: string, password: string): boolean {
   return emailMatches && passwordMatches
 }
 
-export function createScryptPasswordHash(password: string): string {
-  const salt = randomBytes(16)
-  const derivedKey = scryptSync(password, salt, 64)
-  return `scrypt$${salt.toString("hex")}$${derivedKey.toString("hex")}`
-}
-
 export async function createSession(email: string) {
   assertAdminConfig()
   const issuedAt = Date.now()
