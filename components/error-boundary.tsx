@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import React, { ReactNode } from 'react'
 
 interface Props {
@@ -66,12 +67,12 @@ export class ErrorBoundary extends React.Component<Props, State> {
                 >
                   {this.state.isRecovering ? 'جاري الاسترجاع...' : 'إعادة تحميل'}
                 </button>
-                <button
-                  onClick={() => (window.location.href = '/')}
-                  className="w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:opacity-90 transition"
+                <Link
+                  href="/"
+                  className="block w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-lg font-medium hover:opacity-90 transition"
                 >
                   الصفحة الرئيسية
-                </button>
+                </Link>
               </div>
               {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="mt-6 text-start">
