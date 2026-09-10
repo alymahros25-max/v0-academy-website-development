@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { Check, ExternalLink, Loader2, MapPin, Save } from "lucide-react"
+import { Check, ExternalLink, Loader2, MapPin, Plus, Save } from "lucide-react"
 
 type Area = {
   id: number
@@ -131,6 +131,10 @@ export function CountryLandingPagesTab() {
   const [open, setOpen] = useState(true)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [showPackageForm, setShowPackageForm] = useState(false)
+  const [packageSaving, setPackageSaving] = useState(false)
+  const [packageMessage, setPackageMessage] = useState("")
+  const [newPackage, setNewPackage] = useState({ program: "quran", name_ar: "", price: "", sessions_per_month: "4", duration_minutes: "30", description_ar: "", features_ar: "" })
 
   async function load() {
     setLoading(true)
@@ -163,6 +167,34 @@ export function CountryLandingPagesTab() {
     await load()
   }
 
+  async function createPackage() {
+    if (!selectedArea?.id) return
+    setPackageSaving(true)
+    setPackageMessage("")
+    try {
+      const response = await fetch("/api/admin/areas", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+        area_id: selectedArea.id,
+        program: newPackage.program,
+        name_ar: newPackage.name_ar,
+        price: Number(newPackage.price),
+        sessions_per_month: Number(newPackage.sessions_per_month),
+        duration_minutes: Number(newPackage.duration_minutes),
+        description_ar: newPackage.description_ar,
+        features_ar: newPackage.features_ar.split(",").map((item) => item.trim()).filter(Boolean),
+      }) })
+      const body = await response.json().catch(() => ({})) as { error?: string }
+      if (!response.ok) throw new Error(body.error || "تعذر إنشاء الباقة")
+      setPackageMessage("تمت إضافة الباقة بنجاح")
+      setShowPackageForm(false)
+      setNewPackage({ program: "quran", name_ar: "", price: "", sessions_per_month: "4", duration_minutes: "30", description_ar: "", features_ar: "" })
+      await load()
+    } catch (reason) {
+      setPackageMessage(reason instanceof Error ? reason.message : "تعذر إنشاء الباقة")
+    } finally {
+      setPackageSaving(false)
+    }
+  }
+
   async function deletePackage(id: number) {
     if (!window.confirm("سيتم حذف هذه الباقة نهائياً من قاعدة البيانات. هل تريد المتابعة؟")) return
     const response = await fetch("/api/admin/areas", { method: "DELETE", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ resource: "packages", id }) })
@@ -185,7 +217,7 @@ export function CountryLandingPagesTab() {
       <div className="grid gap-4 md:grid-cols-4">
         {areas.map((area) => <article key={area.slug} className={`rounded-2xl border bg-card p-5 shadow-sm ${selectedArea?.slug === area.slug ? "border-primary" : "border-border"}`}><div className="flex items-center justify-between gap-3"><div className="flex items-center gap-3"><span className="text-2xl" role="img" aria-label={area.name_ar}>{area.area_type === "global" ? "🌐" : "📍"}</span><div><h3 className="font-bold text-foreground">{area.name_ar}</h3><p className="text-xs text-muted-foreground">{area.name_en}</p></div></div><MapPin className="size-5 text-primary" aria-hidden="true" /></div><p className="mt-3 text-xs text-muted-foreground">{area.currency_code} {area.currency_symbol ?? ""} · {area.area_type === "global" ? "بيانات الموقع الرئيسي" : "كيان دولة مستقل"}</p><div className="mt-4 grid grid-cols-3 gap-1 text-center text-[11px] text-muted-foreground"><span className="rounded bg-muted px-1 py-1">الهوية<strong className="block text-foreground">{counts.themes}</strong></span><span className="rounded bg-muted px-1 py-1">المدن<strong className="block text-foreground">{counts.cities}</strong></span><span className="rounded bg-muted px-1 py-1">التوقيت<strong className="block text-foreground">{counts.timezones}</strong></span></div><div className="mt-5 flex gap-2"><Link href={`/${area.slug === "global" ? "" : area.slug}`} target="_blank" className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted"><ExternalLink className="size-4" /> معاينة</Link><button type="button" onClick={() => { setSelectedSlug(area.slug); setResource("themes") }} className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground">إدارة</button></div></article>)}
       </div>
-      {selectedArea && <div className="rounded-2xl border border-border bg-card p-5 shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-semibold text-primary">الكيان المحدد</p><h3 className="text-2xl font-bold text-foreground">{selectedArea.name_ar}</h3><p className="text-sm text-muted-foreground">{selectedArea.slug} · {counts.cities} مدينة · {counts.timezones} منطقة زمنية</p></div><button type="button" onClick={() => void load()} className="rounded-lg border border-border px-3 py-2 text-sm font-semibold hover:bg-muted"><Check className="mr-1 inline size-4" /> تحديث</button></div><div className="mt-5 flex flex-wrap gap-2">{(Object.keys(labels) as Resource[]).map((key) => <button key={key} type="button" onClick={() => setResource(key)} className={`rounded-lg px-3 py-2 text-sm font-semibold ${resource === key ? "bg-primary text-primary-foreground" : "border border-border hover:bg-muted"}`}>{labels[key]} ({counts[key]})</button>)}</div><div className="mt-5 grid gap-3">{records.length ? records.map((record) => <div key={record.id} className="rounded-xl border border-border p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-foreground">{recordTitle(resource, record)}</p><p className="mt-1 text-xs text-muted-foreground">ID: {record.id} · {record.is_active ? "نشط ويظهر للعامة" : "معطل"}</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => void toggleRecord(record)} className="rounded-lg border border-border px-3 py-2 text-xs font-semibold hover:bg-muted">{record.is_active ? "تعطيل" : "تفعيل"}</button>{resource === "packages" && <button type="button" onClick={() => void deletePackage(record.id)} className="rounded-lg border border-destructive/40 px-3 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10">حذف نهائي</button>}</div></div><AreaRecordEditor resource={resource} record={record} onSave={updateRecord} /></div>) : <p className="rounded-xl bg-muted/30 p-5 text-sm text-muted-foreground">لا توجد سجلات لهذا القسم في الكيان المحدد.</p>}</div></div>}
+      {selectedArea && <div className="rounded-2xl border border-border bg-card p-5 shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-semibold text-primary">الكيان المحدد</p><h3 className="text-2xl font-bold text-foreground">{selectedArea.name_ar}</h3><p className="text-sm text-muted-foreground">{selectedArea.slug} · {counts.cities} مدينة · {counts.timezones} منطقة زمنية</p></div><button type="button" onClick={() => void load()} className="rounded-lg border border-border px-3 py-2 text-sm font-semibold hover:bg-muted"><Check className="mr-1 inline size-4" /> تحديث</button></div><div className="mt-5 flex flex-wrap gap-2">{(Object.keys(labels) as Resource[]).map((key) => <button key={key} type="button" onClick={() => { setResource(key); if (key !== "packages") setShowPackageForm(false) }} className={`rounded-lg px-3 py-2 text-sm font-semibold ${resource === key ? "bg-primary text-primary-foreground" : "border border-border hover:bg-muted"}`}>{labels[key]} ({counts[key]})</button>)}</div>{resource === "packages" && <div className="mt-5 rounded-xl border border-primary/20 bg-primary/5 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-bold text-foreground">إضافة باقة جديدة إلى {selectedArea.name_ar}</p><p className="text-xs text-muted-foreground">ستُحفظ مباشرة في قاعدة البيانات.</p></div><button type="button" onClick={() => setShowPackageForm((value) => !value)} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground"><Plus className="size-4" />{showPackageForm ? "إغلاق" : "إضافة باقة"}</button></div>{showPackageForm && <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"><label className="grid gap-1 text-sm"><span className="font-semibold">نوع البرنامج</span><select value={newPackage.program} onChange={(event) => setNewPackage((current) => ({ ...current, program: event.target.value }))} className="rounded-lg border border-border bg-background px-3 py-2"><option value="quran">قرآن كريم</option><option value="arabic">لغة عربية</option><option value="other">أخرى</option></select></label><label className="grid gap-1 text-sm"><span className="font-semibold">اسم الباقة</span><input value={newPackage.name_ar} onChange={(event) => setNewPackage((current) => ({ ...current, name_ar: event.target.value }))} placeholder="مثال: الباقة الأساسية" className="rounded-lg border border-border bg-background px-3 py-2" /></label><label className="grid gap-1 text-sm"><span className="font-semibold">السعر ({selectedArea.currency_code})</span><input type="number" min="0" value={newPackage.price} onChange={(event) => setNewPackage((current) => ({ ...current, price: event.target.value }))} className="rounded-lg border border-border bg-background px-3 py-2" /></label><label className="grid gap-1 text-sm"><span className="font-semibold">الحصص شهريًا</span><input type="number" min="1" value={newPackage.sessions_per_month} onChange={(event) => setNewPackage((current) => ({ ...current, sessions_per_month: event.target.value }))} className="rounded-lg border border-border bg-background px-3 py-2" /></label><label className="grid gap-1 text-sm"><span className="font-semibold">مدة الحصة بالدقائق</span><input type="number" min="1" max="240" value={newPackage.duration_minutes} onChange={(event) => setNewPackage((current) => ({ ...current, duration_minutes: event.target.value }))} className="rounded-lg border border-border bg-background px-3 py-2" /></label><label className="grid gap-1 text-sm sm:col-span-2 lg:col-span-3"><span className="font-semibold">المميزات (بفواصل)</span><input value={newPackage.features_ar} onChange={(event) => setNewPackage((current) => ({ ...current, features_ar: event.target.value }))} placeholder="معلم متخصص، متابعة أسبوعية" className="rounded-lg border border-border bg-background px-3 py-2" /></label><div className="flex items-center gap-3 sm:col-span-2 lg:col-span-3"><button type="button" disabled={packageSaving} onClick={() => void createPackage()} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60">{packageSaving ? "جارٍ الحفظ..." : "حفظ الباقة"}</button>{packageMessage && <span role="status" className="text-sm font-semibold text-foreground">{packageMessage}</span>}</div></div>}</div>}<div className="mt-5 grid gap-3">{records.length ? records.map((record) => <div key={record.id} className="rounded-xl border border-border p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-foreground">{recordTitle(resource, record)}</p><p className="mt-1 text-xs text-muted-foreground">ID: {record.id} · {record.is_active ? "نشط ويظهر للعامة" : "معطل"}</p></div><div className="flex flex-wrap gap-2"><button type="button" onClick={() => void toggleRecord(record)} className="rounded-lg border border-border px-3 py-2 text-xs font-semibold hover:bg-muted">{record.is_active ? "تعطيل" : "تفعيل"}</button>{resource === "packages" && <button type="button" onClick={() => void deletePackage(record.id)} className="rounded-lg border border-destructive/40 px-3 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10">حذف نهائي</button>}</div></div><AreaRecordEditor resource={resource} record={record} onSave={updateRecord} /></div>) : <p className="rounded-xl bg-muted/30 p-5 text-sm text-muted-foreground">لا توجد سجلات لهذا القسم في الكيان المحدد.</p>}</div></div>}
     </div>
   </section>
 }
