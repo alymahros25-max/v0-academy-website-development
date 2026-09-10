@@ -1,23 +1,23 @@
 export const UNITED_KINGDOM_WHATSAPP_NUMBER = "201130127894"
 
 export type UnitedKingdomProgram = "quran" | "arabic"
-export type UnitedKingdomDuration = 30 | 40 | 60
+export type UnitedKingdomDuration = 30
 export type UnitedKingdomPlan = { id: string; program: UnitedKingdomProgram; duration: UnitedKingdomDuration; monthlySessions: 4 | 8 | 12 | 16; weeklySessions: 1 | 2 | 3 | 4; price: number; name: string; description: string; features: string[]; popular?: boolean }
 
 const schedule = [[4, 1], [8, 2], [12, 3], [16, 4]] as const
 const prices = {
-  quran: { 30: [12, 22, 34, 44], 40: [16, 30, 46, 60], 60: [22, 42, 62, 76] },
-  arabic: { 30: [16, 29, 43, 58], 40: [20, 37, 54, 70], 60: [29, 54, 70, 88] },
+  quran: { 30: [12, 22, 34, 44] },
+  arabic: { 30: [16, 29, 43, 58] },
 } as const
 
 function makePlans(program: UnitedKingdomProgram) {
-  return ([30, 40, 60] as const).flatMap((duration) => schedule.map(([monthlySessions, weeklySessions], index) => ({
+  return ([30] as const).flatMap((duration) => schedule.map(([monthlySessions, weeklySessions], index) => ({
     id: `${program}-${duration}-${monthlySessions}`, program, duration, monthlySessions, weeklySessions,
     price: prices[program][duration][index],
     name: `${program === "quran" ? "تحفيظ القرآن" : "تأسيس اللغة العربية"} — ${duration} دقيقة — ${monthlySessions} حصص شهرياً`,
     description: program === "quran" ? "حصة فردية للحفظ والتسميع والتجويد وتصحيح التلاوة والمراجعة." : "حصة فردية لتأسيس القراءة والكتابة والنطق والفهم بالعربية.",
     features: program === "quran" ? ["معلمون ومعلمات", "خطة حفظ ومراجعة", "موعد يناسب المملكة المتحدة"] : ["معلمون ومعلمات", "قراءة وكتابة ونطق", "متابعة تناسب المستوى"],
-    popular: duration === 40 && monthlySessions === 8,
+    popular: monthlySessions === 8,
   })))
 }
 
