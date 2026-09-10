@@ -44,7 +44,7 @@ export function PackagesManager() {
         name: { ar: formData.name, en: `${formData.sessions} Sessions Package`, fr: `Forfait ${formData.sessions} séances` },
         sessions: formData.sessions,
         price: formData.price,
-        duration: formData.duration,
+        duration: 30,
         features: { ar: formData.features.split('،').map((item) => item.trim()).filter(Boolean), en: formData.features.split(',').map((item) => item.trim()).filter(Boolean), fr: formData.features.split(',').map((item) => item.trim()).filter(Boolean) },
         popular: false,
         active: true,
@@ -146,8 +146,9 @@ export function PackagesManager() {
           <Input
             type="number"
             placeholder="مدة الحصة (دقيقة)"
-            value={formData.duration}
-            onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
+            value={30}
+            readOnly
+            aria-label="مدة الحصة بالدقائق"
           />
 
           <Input

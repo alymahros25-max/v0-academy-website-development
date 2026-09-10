@@ -261,14 +261,14 @@ function packageToRow(pkg: Package, index: number): PackageRow {
 export const getPackages = async (): Promise<Package[]> => {
   if (supabaseAdmin) {
     const { data, error } = await supabaseAdmin.from("packages").select("*").order("type").order("sort_order")
-    if (!error && data?.length) return (data as PackageRow[]).map(packageRowToPackage)
+    if (!error && data?.length) return (data as PackageRow[]).filter((row) => row.duration === 30).map(packageRowToPackage)
   }
-  return readData<Package[]>("packages.json", defaultPackages)
+  return (await readData<Package[]>("packages.json", defaultPackages)).filter((pkg) => pkg.duration === 30)
 }
 
 export const setPackages = async (data: Package[]) => {
   if (supabaseAdmin) {
-    const rows = data.map(packageToRow)
+    const rows = data.filter((pkg) => pkg.duration === 30).map(packageToRow)
     const { data: saved, error } = await supabaseAdmin.rpc("replace_packages_atomic", { payload: rows })
     if (error) throw error
     return Array.isArray(saved) ? saved.map(packageRowToPackage) : data
