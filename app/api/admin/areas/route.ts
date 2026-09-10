@@ -10,6 +10,7 @@ const patchSchema = z.object({
   id: idSchema,
   changes: z.record(z.string(), z.unknown()),
 }).strict()
+const deleteSchema = z.object({ resource: z.literal("packages"), id: idSchema }).strict()
 
 const fieldAllowList: Record<z.infer<typeof resourceSchema>, Set<string>> = {
   content: new Set(["content_ar", "content_en", "content_fr", "content_type", "section", "href", "is_active", "sort_order"]),
@@ -129,4 +130,21 @@ export async function PATCH(request: NextRequest) {
   const { data, error } = await supabaseAdmin.from(table).update({ ...changes, updated_at: new Date().toISOString() }).eq("id", parsed.data.id).select().single()
   if (error) return NextResponse.json({ error: "Failed to update area record" }, { status: 400 })
   return NextResponse.json({ data })
+}
+
+export async function DELETE(request: NextRequest) {
+  if (!(await verifyAdminSession())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!supabaseAdmin) return NextResponse.json({ error: "Database not configured" }, { status: 503 })
+  const parsed = deleteSchema.safeParse(await request.json())
+  if (!parsed.success) return NextResponse.json({ error: "Only package records can be deleted" }, { status: 400 })
+
+  const { data, error } = await supabaseAdmin
+    .from("area_packages")
+    .delete()
+    .eq("id", parsed.data.id)
+    .select("id")
+    .maybeSingle()
+  if (error) return NextResponse.json({ error: "Failed to delete package" }, { status: 400 })
+  if (!data) return NextResponse.json({ error: "Package not found" }, { status: 404 })
+  return NextResponse.json({ deleted: true, id: data.id }, { headers: { "Cache-Control": "no-store" } })
 }
