@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
+import { revalidatePath } from "next/cache"
 import { verifyAdminSession } from "@/lib/admin-auth"
 import { supabaseAdmin } from "@/lib/supabaseAdmin"
 
@@ -129,6 +130,8 @@ export async function PATCH(request: NextRequest) {
   const table = tableByResource[parsed.data.resource]
   const { data, error } = await supabaseAdmin.from(table).update({ ...changes, updated_at: new Date().toISOString() }).eq("id", parsed.data.id).select().single()
   if (error) return NextResponse.json({ error: "Failed to update area record" }, { status: 400 })
+  const { data: area } = await supabaseAdmin.from("site_areas").select("slug").eq("id", data.area_id).maybeSingle()
+  if (area?.slug) revalidatePath(`/${area.slug}`)
   return NextResponse.json({ data })
 }
 
@@ -138,6 +141,13 @@ export async function DELETE(request: NextRequest) {
   const parsed = deleteSchema.safeParse(await request.json())
   if (!parsed.success) return NextResponse.json({ error: "Only package records can be deleted" }, { status: 400 })
 
+  const { data: packageBeforeDelete } = await supabaseAdmin
+    .from("area_packages")
+    .select("id, area_id")
+    .eq("id", parsed.data.id)
+    .maybeSingle()
+  if (!packageBeforeDelete) return NextResponse.json({ error: "Package not found" }, { status: 404 })
+
   const { data, error } = await supabaseAdmin
     .from("area_packages")
     .delete()
@@ -146,5 +156,7 @@ export async function DELETE(request: NextRequest) {
     .maybeSingle()
   if (error) return NextResponse.json({ error: "Failed to delete package" }, { status: 400 })
   if (!data) return NextResponse.json({ error: "Package not found" }, { status: 404 })
+  const { data: area } = await supabaseAdmin.from("site_areas").select("slug").eq("id", packageBeforeDelete.area_id).maybeSingle()
+  if (area?.slug) revalidatePath(`/${area.slug}`)
   return NextResponse.json({ deleted: true, id: data.id }, { headers: { "Cache-Control": "no-store" } })
 }
