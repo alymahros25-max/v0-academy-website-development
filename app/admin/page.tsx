@@ -30,24 +30,15 @@ function AdminSectionToolbar({ section }: { section: string }) {
   const [preview, setPreview] = useState(false)
   const [stylesOpen, setStylesOpen] = useState(false)
   const [styles, setStyles] = useState({ color: "", font: "inherit", motion: "هادئ", order: "0" })
-  const [status, setStatus] = useState("")
-
-  const action = (name: string) => {
-    window.dispatchEvent(new CustomEvent("admin:section-action", { detail: { section, action: name, styles } }))
-    setStatus(name === "translate" ? "تم تشغيل الترجمة التلقائية للعنصر المحدد" : `تم تنفيذ: ${name}`)
-  }
 
   return (
     <section className="mb-6 rounded-2xl border border-border bg-card p-4 shadow-sm" aria-label={`أدوات قسم ${section}`}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="font-bold text-foreground">أدوات إدارة القسم</p>
-          <p className="text-xs text-muted-foreground">{section} — الحفظ يحدّث بيانات الصفحة العامة بعد نجاح العملية</p>
+          <p className="font-bold text-foreground">إدارة قسم {section}</p>
+          <p className="text-xs text-muted-foreground">استخدم نموذج القسم نفسه للحفظ؛ لا توجد إجراءات عامة وهمية.</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={() => action("create")} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus data-icon="inline-start" /> إنشاء جديد</button>
-          <button type="button" onClick={() => action("save")} className="inline-flex items-center gap-2 rounded-lg bg-secondary px-3 py-2 text-sm font-bold text-secondary-foreground"><Save data-icon="inline-start" /> حفظ</button>
-          <button type="button" onClick={() => action("translate")} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground"><Languages data-icon="inline-start" /> ترجمة تلقائية</button>
           <button type="button" onClick={() => setPreview(!preview)} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground">{preview ? <EyeOff data-icon="inline-start" /> : <Eye data-icon="inline-start" />} {preview ? "إخفاء المعاينة" : "معاينة"}</button>
           <button type="button" onClick={() => setStylesOpen(!stylesOpen)} className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-foreground"><Wand2 data-icon="inline-start" /> تخصيص</button>
         </div>
@@ -59,7 +50,6 @@ function AdminSectionToolbar({ section }: { section: string }) {
         <label className="text-xs text-foreground">الترتيب<input type="number" value={styles.order} onChange={e => setStyles({ ...styles, order: e.target.value })} className="mt-1 w-full rounded border border-border bg-background p-2 text-sm" /></label>
       </div>}
       {preview && <div className="mt-4 rounded-xl border-2 border-dashed border-primary/30 bg-background p-4 text-sm text-foreground" style={{ color: styles.color || undefined, fontFamily: styles.font }}><span className="font-bold">معاينة مباشرة:</span> سيتم عرض تغييرات {section} هنا قبل الحفظ.</div>}
-      {status && <p className="mt-3 text-xs text-primary" role="status">{status}</p>}
     </section>
   )
 }
