@@ -81,10 +81,14 @@ function EditorInput({ label, value, onChange, type = "text" }: { label: string;
 function AreaRecordEditor({ resource, record, onSave }: { resource: Resource; record: AreaRecord; onSave: (resource: Resource, id: number, changes: Record<string, unknown>) => Promise<void> }) {
   const [values, setValues] = useState<Record<string, string | boolean>>(() => Object.fromEntries(Object.entries(record).map(([key, value]) => [key, typeof value === "boolean" ? value : value == null ? "" : String(value)])))
   const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState("")
+  const [saveError, setSaveError] = useState("")
   const setValue = (key: string, value: string | boolean) => setValues((current) => ({ ...current, [key]: value }))
 
   async function save() {
     setSaving(true)
+    setMessage("")
+    setSaveError("")
     try {
       const changes = resource === "faq"
         ? { question_ar: values.question_ar, answer_ar: values.answer_ar }
@@ -100,6 +104,9 @@ function AreaRecordEditor({ resource, record, onSave }: { resource: Resource; re
                   ? { name_ar: values.name_ar, name_en: values.name_en, region_name: values.region_name }
                   : { timezone_name: values.timezone_name, label_ar: values.label_ar, label_en: values.label_en, is_primary: Boolean(values.is_primary) }
       await onSave(resource, record.id, changes)
+      setMessage("تم حفظ التعديل بنجاح في قاعدة البيانات")
+    } catch (reason) {
+      setSaveError(reason instanceof Error ? reason.message : "تعذر حفظ التعديل")
     } finally {
       setSaving(false)
     }
@@ -113,7 +120,7 @@ function AreaRecordEditor({ resource, record, onSave }: { resource: Resource; re
     {resource === "packages" && <div className="grid gap-3 sm:grid-cols-2"><EditorInput label="اسم الباقة" value={String(values.name_ar ?? "")} onChange={(value) => setValue("name_ar", value)} /><EditorInput type="number" label="السعر" value={String(values.price ?? "")} onChange={(value) => setValue("price", value)} /></div>}
     {resource === "content" && <label className="grid gap-1 text-sm"><span className="font-semibold">المحتوى</span><textarea value={String(values.content_ar ?? "")} onChange={(event) => setValue("content_ar", event.target.value)} className="min-h-20 rounded-lg border border-border bg-background px-3 py-2" /></label>}
     {resource === "links" && <div className="grid gap-3 sm:grid-cols-2"><EditorInput label="العنوان" value={String(values.label_ar ?? "")} onChange={(value) => setValue("label_ar", value)} /><EditorInput label="الرابط" value={String(values.href ?? "")} onChange={(value) => setValue("href", value)} /></div>}
-    <button type="button" onClick={() => void save()} disabled={saving} className="inline-flex w-fit items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"><Save className="size-4" />{saving ? "جارٍ الحفظ" : "حفظ التعديل"}</button>
+    <div className="flex flex-wrap items-center gap-3"><button type="button" onClick={() => void save()} disabled={saving} className="inline-flex w-fit items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"><Save className="size-4" />{saving ? "جارٍ الحفظ" : "حفظ التعديل"}</button>{message && <span role="status" className="text-sm font-semibold text-emerald-700">{message}</span>}{saveError && <span role="alert" className="text-sm font-semibold text-destructive">{saveError}</span>}</div>
   </div>
 }
 
