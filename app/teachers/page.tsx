@@ -88,6 +88,7 @@ function TeacherCard({ teacher, index, locale }: { teacher: Teacher; index: numb
 
 export default function TeachersPage() {
   const { t, locale } = useI18n()
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || ""
   const [filter, setFilter] = useState<Filter>("all")
   const [liveTeachers, setLiveTeachers] = useState<Teacher[]>(teachers)
 
@@ -120,7 +121,7 @@ export default function TeachersPage() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{filteredTeachers.map((teacher, index) => <TeacherCard key={teacher.id} teacher={teacher} index={index} locale={locale} />)}</div>
         </div>
       </section>
-      <section className="relative overflow-hidden bg-primary py-16"><div className="absolute inset-0 islamic-pattern opacity-20" /><div className="relative z-10 mx-auto max-w-4xl px-4 text-center"><h2 className="text-3xl font-extrabold text-primary-foreground">{locale === "ar" ? "هل أنت معلم/ة وتريد الانضمام لفريقنا؟" : "Join our certified teaching team"}</h2><a href="mailto:enamel311@gmail.com" className="mt-7 inline-flex rounded-xl bg-[#d4af37] px-8 py-4 font-bold text-[#1f260d] transition hover:brightness-110">{locale === "ar" ? "تواصل معنا" : "Contact us"}</a></div></section>
+      <section className="relative overflow-hidden bg-primary py-16"><div className="absolute inset-0 islamic-pattern opacity-20" /><div className="relative z-10 mx-auto max-w-4xl px-4 text-center"><h2 className="text-3xl font-extrabold text-primary-foreground">{locale === "ar" ? "هل أنت معلم/ة وتريد الانضمام لفريقنا؟" : "Join our certified teaching team"}</h2><a href={contactEmail ? `mailto:${contactEmail}` : "#"} className="mt-7 inline-flex rounded-xl bg-[#d4af37] px-8 py-4 font-bold text-[#1f260d] transition hover:brightness-110">{locale === "ar" ? "تواصل معنا" : "Contact us"}</a></div></section>
     </>
   )
 }

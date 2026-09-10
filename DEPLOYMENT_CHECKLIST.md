@@ -279,7 +279,7 @@ git push origin main
 ### Contact for Issues
 - Technical Support: Vercel Dashboard → Support
 - Google Issues: Google Search Console Help
-- Security Concerns: Email alymahros25@gmail.com
+- Security Concerns: Email <ADMIN_EMAIL>
 
 ---
 

@@ -11,7 +11,7 @@
 ================================================================================
 
 1. تحديث بيانات المسؤول الإداري
-   ✅ البريد الجديد: alymahros25@gmail.com
+   ✅ البريد الجديد: <ADMIN_EMAIL>
    ✅ كلمة المرور: admin@hafiz2025 (محفوظة في lib/admin-auth.ts)
    ✅ المصادقة: آمنة (SHA256 + HTTP-only Cookies)
    ✅ الجلسة: 7 أيام
@@ -43,7 +43,7 @@
 1. اضغط على أيقونة الإعدادات (⚙️) في أعلى الموقع
 2. ستنقل إلى صفحة تسجيل الدخول
 3. أدخل:
-   البريد: alymahros25@gmail.com
+   البريد: <ADMIN_EMAIL>
    كلمة المرور: admin@hafiz2025
 4. اضغط "دخول"
 
@@ -122,7 +122,7 @@ https://yourdomain.com/admin/login
 
 💾 lib/admin-auth.ts
    نظام المصادقة الآمن
-   - ADMIN_EMAIL: alymahros25@gmail.com
+   - ADMIN_EMAIL: <ADMIN_EMAIL>
    - PASSWORD_HASH: محفوظة بآمان
    - SESSION: 7 أيام
 
@@ -136,7 +136,7 @@ https://yourdomain.com/admin/login
                          نقاط الأمان المُطبقة
 ================================================================================
 
-✓ بريد محدد فقط (alymahros25@gmail.com)
+✓ بريد محدد فقط (<ADMIN_EMAIL>)
 ✓ كلمة مرور مشفرة (SHA256)
 ✓ Cookies آمنة (HTTP-only, Secure, SameSite)
 ✓ جلسة 7 أيام قابلة للتحديث

@@ -187,7 +187,7 @@ export default function AdminDashboard() {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground hidden sm:inline">alymahros25@gmail.com</span>
+            <span className="text-xs text-muted-foreground hidden sm:inline">المدير العام</span>
             <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
               م
             </div>
@@ -1276,7 +1276,7 @@ function UsersManagementTab() {
           <div className="w-16 h-16 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold">م</div>
           <div>
             <p className="font-bold text-foreground text-lg">المشرف الرئيسي</p>
-            <p className="text-sm text-muted-foreground">alymahros25@gmail.com</p>
+            <p className="text-sm text-muted-foreground">المدير العام</p>
             <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">Super Admin</span>
           </div>
         </div>
@@ -1317,7 +1317,7 @@ function UsersManagementTab() {
           </div>
           <div className="flex items-center justify-between py-2 border-b border-border">
             <span className="text-muted-foreground">البريد الإلكتروني</span>
-            <span className="font-medium">alymahros25@gmail.com</span>
+            <span className="font-medium">المدير العام</span>
           </div>
           <div className="flex items-center justify-between py-2">
             <span className="text-muted-foreground">الدور</span>

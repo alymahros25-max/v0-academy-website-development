@@ -192,7 +192,7 @@ vercel deploy
 
 ### الدخول للإدارة
 - **الرابط**: /admin/login
-- **البريد**: enamel311@gmail.com
+- **البريد**: <NEXT_PUBLIC_CONTACT_EMAIL>
 - **كلمة المرور**: (انظر .env)
 
 ---
@@ -201,7 +201,7 @@ vercel deploy
 
 | القناة | الرابط |
 |-------|-------|
-| 📧 البريد | enamel311@gmail.com |
+| 📧 البريد | <NEXT_PUBLIC_CONTACT_EMAIL> |
 | 💬 واتساب | https://wa.me/201130127894 |
 | 📱 تليجرام | https://t.me/acabemy_quraan |
 

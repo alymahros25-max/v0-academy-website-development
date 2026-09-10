@@ -4,8 +4,8 @@
 
 ### 1. تحديث البريد الإداري ✓
 **الملف:** `lib/admin-auth.ts`
-- تغيير البريد من: `enamel311@gmail.com`
-- إلى: `alymahros25@gmail.com`
+- تغيير البريد من: `<NEXT_PUBLIC_CONTACT_EMAIL>`
+- إلى: `<ADMIN_EMAIL>`
 - كلمة المرور: `admin@hafiz2025` (لم تتغير)
 - المصادقة: آمنة (SHA256 + HTTP-only cookies)
 
@@ -35,7 +35,7 @@
 
 ### من الموقع مباشرة:
 1. اضغط على أيقونة الإعدادات (⚙️) في Header
-2. أدخل البريد: `alymahros25@gmail.com`
+2. أدخل البريد: `<ADMIN_EMAIL>`
 3. أدخل كلمة المرور: `admin@hafiz2025`
 4. اضغط دخول
 
@@ -70,7 +70,7 @@ https://yourdomain.com/admin/login
 
 ## نقاط الأمان المُطبقة
 
-✓ بريد واحد فقط (`alymahros25@gmail.com`)
+✓ بريد واحد فقط (`<ADMIN_EMAIL>`)
 ✓ كلمة مرور مُشفرة
 ✓ Cookies آمنة (HTTP-only + Secure + SameSite)
 ✓ جلسة 7 أيام

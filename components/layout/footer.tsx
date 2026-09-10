@@ -8,6 +8,7 @@ import { CountryPagesSection } from "@/components/layout/country-pages-section"
 
 export function Footer() {
   const { t, locale, dir } = useI18n()
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || ""
 
   const quickLinks = [
     { href: "/", label: t("nav.home") },
@@ -86,7 +87,7 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="mailto:enamel311@gmail.com"
+                href={contactEmail ? `mailto:${contactEmail}` : "#"}
                 className="w-9 h-9 flex items-center justify-center rounded-lg bg-primary-foreground/10 hover:bg-secondary hover:text-secondary-foreground transition-colors"
                 aria-label="Email"
               >
@@ -150,8 +151,8 @@ export function Footer() {
             <ul className="flex flex-col gap-3">
               <li className="flex items-center gap-2 text-sm text-primary-foreground/90">
                 <Mail className="w-4 h-4 text-secondary shrink-0" />
-                <a href="mailto:enamel311@gmail.com" className="hover:text-secondary transition-colors">
-                  enamel311@gmail.com
+                <a href={contactEmail ? `mailto:${contactEmail}` : "#"} className="hover:text-secondary transition-colors">
+                  {contactEmail || ""}
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-primary-foreground/90">

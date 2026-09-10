@@ -37,7 +37,7 @@ export function generateOrganizationSchema(): SchemaContext {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
-      email: 'enamel311@gmail.com',
+      email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
       url: 'https://bit.ly/4aJfOl6',
     },
   }
@@ -187,7 +187,7 @@ export function generateEducationalOrganizationSchema(): SchemaContext {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
-      email: 'enamel311@gmail.com',
+      email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
       url: 'https://wa.me/?text=مرحبا+..اريد+معرفة+تفاصيل+عن+التحفيظ+للقران',
       availableLanguage: ['ar', 'en', 'fr'],
     },

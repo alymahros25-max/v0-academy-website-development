@@ -420,7 +420,7 @@ try {
 
 2. **Admin Form:**
    - Go to: `http://localhost:3000/admin`
-   - Login with: `alymahros25@gmail.com` / `admin@hafiz2025`
+   - Login with: `<ADMIN_EMAIL>` / `admin@hafiz2025`
    - Click: "نقطات من الحصص" tab
    - Click: "إضافة فيديو جديد"
 

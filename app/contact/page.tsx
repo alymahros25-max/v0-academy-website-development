@@ -7,6 +7,7 @@ import { WhatsAppDialog } from "@/components/whatsapp-dialog"
 
 export default function ContactPage() {
   const { t, locale } = useI18n()
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || ""
   const [sent, setSent] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -152,7 +153,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="font-bold text-foreground">{locale === "ar" ? "البريد الإلكتروني" : "Email"}</p>
-                    <a href="mailto:info@quran-elhafez.com" className="text-sm text-primary hover:underline">info@quran-elhafez.com</a>
+                    <a href={contactEmail ? `mailto:${contactEmail}` : "#"} className="text-sm text-primary hover:underline">{contactEmail || ""}</a>
                   </div>
                 </div>
               </div>

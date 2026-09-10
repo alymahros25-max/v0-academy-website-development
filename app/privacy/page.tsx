@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         { title: "حماية المعلومات", text: "نتخذ إجراءات أمنية مناسبة لحماية معلوماتكم الشخصية من الوصول غير المصرح به أو التعديل أو الكشف أو الإتلاف." },
         { title: "مشاركة المعلومات", text: "لا نبيع أو نتاجر أو ننقل معلوماتكم الشخصية لأطراف خارجية. قد نشارك المعلومات مع مقدمي الخدمات الموثوقين الذين يساعدوننا في تشغيل الموقع وتقديم الخدمة." },
         { title: "حقوقكم", text: "يحق لكم طلب الوصول إلى بياناتكم الشخصية أو تصحيحها أو حذفها. يمكنكم التواصل معنا عبر البريد الإلكتروني لممارسة هذه الحقوق." },
-        { title: "تواصل معنا", text: "إذا كان لديكم أي أسئلة حول سياسة الخصوصية، يرجى التواصل معنا عبر البريد الإلكتروني: enamel311@gmail.com" },
+        { title: "تواصل معنا", text: "إذا كان لديكم أي أسئلة حول سياسة الخصوصية، يرجى التواصل معنا عبر صفحة التواصل الرسمية بالموقع." },
       ],
     },
     en: {
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         { title: "Information Protection", text: "We take appropriate security measures to protect your personal information from unauthorized access, modification, disclosure, or destruction." },
         { title: "Information Sharing", text: "We do not sell, trade, or transfer your personal information to external parties. We may share information with trusted service providers who help us operate the website." },
         { title: "Your Rights", text: "You have the right to request access to, correction of, or deletion of your personal data. You can contact us via email to exercise these rights." },
-        { title: "Contact Us", text: "If you have any questions about our privacy policy, please contact us at: enamel311@gmail.com" },
+        { title: "Contact Us", text: "If you have any questions about our privacy policy, please use the official contact page on the website." },
       ],
     },
     fr: {
@@ -48,7 +48,7 @@ export default function PrivacyPage() {
         { title: "Protection des informations", text: "Nous prenons des mesures de securite appropriees pour proteger vos informations personnelles." },
         { title: "Partage des informations", text: "Nous ne vendons pas vos informations personnelles a des tiers." },
         { title: "Vos droits", text: "Vous avez le droit de demander l'acces, la correction ou la suppression de vos donnees personnelles." },
-        { title: "Contactez-nous", text: "Pour toute question, contactez-nous a: enamel311@gmail.com" },
+        { title: "Contactez-nous", text: "Pour toute question, utilisez la page officielle de contact du site." },
       ],
     },
   }

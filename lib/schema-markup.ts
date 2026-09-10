@@ -16,7 +16,7 @@ export const generateOrganizationSchema = () => ({
   'contactPoint': {
     '@type': 'ContactPoint',
     'contactType': 'Customer Service',
-    'email': 'enamel311@gmail.com',
+    'email': process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
     'areaServed': 'Worldwide',
     'url': 'https://bit.ly/4aJfOl6',
   },
@@ -128,7 +128,7 @@ export const generateLocalBusinessSchema = () => ({
   'name': 'أكاديمية الحافظ المتميز',
   'image': 'https://quran-elhafez.com/images/hero-children.webp',
   'description': 'أكاديمية عالمية متخصصة في تحفيظ القرآن الكريم وتأسيس اللغة العربية',
-  'email': 'enamel311@gmail.com',
+  'email': process.env.NEXT_PUBLIC_CONTACT_EMAIL || '',
   'areaServed': {
     '@type': 'Country',
     'name': 'العالم',

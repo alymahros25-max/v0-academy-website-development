@@ -87,7 +87,7 @@
 ### تسجيل الدخول
 - **الرابط:** https://quran-elhafez.com/admin/login
 - **البيانات:**
-  - Email: alymahros25@gmail.com
+  - Email: <ADMIN_EMAIL>
   - Password: admin@hafiz2025
 - **الاختبار:**
   - [ ] تسجيل الدخول ينجح
