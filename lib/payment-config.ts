@@ -218,11 +218,11 @@ export async function updatePaymentSettings(
       .eq('provider_name', providerName)
 
     if (error) {
-      console.error(`[Payment Config] Error updating ${providerName}:`, error)
+      console.error('[Payment Config] Error updating provider:', providerName, error)
       return false
     }
 
-    console.log(`[Payment Config] Updated ${providerName} settings`)
+    console.log('[Payment Config] Updated provider settings:', providerName)
     return true
   } catch (error) {
     console.error('[Payment Config] Exception updating settings:', error)
