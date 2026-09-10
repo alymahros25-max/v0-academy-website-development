@@ -175,7 +175,7 @@ export async function getAreaLandingData(slug: string) {
   if (timezonesError) console.warn("[Country Content] landing timezones read failed:", timezonesError.message)
   return {
     area,
-    packages: packages ?? [],
+    packages: (packages ?? []).filter((pkg) => packageDuration(pkg.package_key) === 30),
     faq: faq ?? [],
     content: content ?? [],
     links: links ?? [],
