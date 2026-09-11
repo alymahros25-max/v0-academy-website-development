@@ -80,7 +80,7 @@ export default function ArabicPage() {
             <div className="hidden lg:block">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/images/arabic-learning.jpg"
+                  src="/images/arabic-learning.webp"
                   alt="Arabic learning class"
                   width={600}
                   height={400}

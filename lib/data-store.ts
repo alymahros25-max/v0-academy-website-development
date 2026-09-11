@@ -90,7 +90,7 @@ const defaultTeachers: Teacher[] = [
     name: { ar: "الشيخ أحمد محمود", en: "Sheikh Ahmad Mahmoud", fr: "Cheikh Ahmad Mahmoud" },
     specialty: { ar: "حفظ القرآن والقراءات العشر", en: "Quran Memorization & Ten Qira'at", fr: "Memorisation du Coran et Dix Qira'at" },
     experience: "15",
-    image: "/images/teacher-quran.jpg",
+    image: "/images/teacher-quran.webp",
     active: true,
   },
   {
@@ -98,7 +98,7 @@ const defaultTeachers: Teacher[] = [
     name: { ar: "الأستاذة نورا الهاشمي", en: "Ustaza Noura Al-Hashimi", fr: "Ustaza Noura Al-Hashimi" },
     specialty: { ar: "تحفيظ القرآن للأطفال", en: "Quran Teaching for Children", fr: "Enseignement du Coran pour enfants" },
     experience: "10",
-    image: "/images/teacher-quran.jpg",
+    image: "/images/teacher-quran.webp",
     active: true,
   },
   {
@@ -106,7 +106,7 @@ const defaultTeachers: Teacher[] = [
     name: { ar: "الشيخ عبدالرحمن السيد", en: "Sheikh Abdulrahman Al-Sayed", fr: "Cheikh Abdulrahman Al-Sayed" },
     specialty: { ar: "التجويد وعلم القراءات", en: "Tajweed & Qira'at Science", fr: "Tajweed et Science des Qira'at" },
     experience: "12",
-    image: "/images/teacher-quran.jpg",
+    image: "/images/teacher-quran.webp",
     active: true,
   },
   {
@@ -114,7 +114,7 @@ const defaultTeachers: Teacher[] = [
     name: { ar: "الأستاذة فاطمة العلي", en: "Ustaza Fatima Al-Ali", fr: "Ustaza Fatima Al-Ali" },
     specialty: { ar: "تأسيس اللغة العربية", en: "Arabic Language Foundation", fr: "Fondation de la langue arabe" },
     experience: "8",
-    image: "/images/teacher-quran.jpg",
+    image: "/images/teacher-quran.webp",
     active: true,
   },
   {
@@ -122,7 +122,7 @@ const defaultTeachers: Teacher[] = [
     name: { ar: "الشيخ محمد حسن", en: "Sheikh Muhammad Hassan", fr: "Cheikh Muhammad Hassan" },
     specialty: { ar: "الحفظ المتقن والمراجعة", en: "Expert Memorization & Review", fr: "Memorisation experte et revision" },
     experience: "20",
-    image: "/images/teacher-quran.jpg",
+    image: "/images/teacher-quran.webp",
     active: true,
   },
   {
@@ -130,7 +130,7 @@ const defaultTeachers: Teacher[] = [
     name: { ar: "الأستاذة مريم خالد", en: "Ustaza Maryam Khalid", fr: "Ustaza Maryam Khalid" },
     specialty: { ar: "تعليم العربية لغير الناطقين بها", en: "Arabic for Non-Native Speakers", fr: "Arabe pour non-arabophones" },
     experience: "7",
-    image: "/images/teacher-quran.jpg",
+    image: "/images/teacher-quran.webp",
     active: true,
   },
 ]

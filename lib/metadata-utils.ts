@@ -48,7 +48,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'حلقات تحفيظ قران اون لاين مع معلمين مجازين',
         type: 'website',
         url: 'https://quran-elhafez.com/quran',
-        images: [{ url: '/images/teacher-quran.jpg', width: 1200, height: 630, alt: 'تحفيظ القرآن الكريم أونلاين' }],
+        images: [{ url: '/images/teacher-quran.webp', width: 1200, height: 630, alt: 'تحفيظ القرآن الكريم أونلاين' }],
       },
     },
     arabic: {
@@ -61,7 +61,7 @@ export function generatePageMetadata(page: 'quran' | 'arabic' | 'about' | 'teach
         description: 'برامج تأسيس اللغة العربية بطرق حديثة',
         type: 'website',
         url: 'https://quran-elhafez.com/arabic',
-        images: [{ url: '/images/arabic-learning.jpg', width: 1200, height: 630, alt: 'تأسيس اللغة العربية أونلاين' }],
+        images: [{ url: '/images/arabic-learning.webp', width: 1200, height: 630, alt: 'تأسيس اللغة العربية أونلاين' }],
       },
     },
     about: {

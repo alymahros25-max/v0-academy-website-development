@@ -51,7 +51,7 @@ const blogPosts: Record<string, any> = {
     author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l'académie" },
     date: "2024-06-10",
     readTime: 7,
-    image: "/images/arabic-learning.jpg",
+    image: "/images/arabic-learning.webp",
     keywords: { ar: "تأسيس عربي، اللغة العربية، تعليم الأطفال", en: "Arabic foundation, language learning, children education", fr: "Fondation arabe, éducation des enfants" },
     description: { ar: "شرح مفصل لأهمية التأسيس الصحيح في اللغة العربية وتأثيره على مستقبل الطفل الأكاديمي والثقافي", en: "Detailed explanation of the importance of proper Arabic language foundation for children's academic and cultural future", fr: "Explication détaillée de l'importance d'une bonne base en arabe" },
     content: {
@@ -129,7 +129,7 @@ const blogPosts: Record<string, any> = {
     author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l’académie" },
     date: "2026-09-11",
     readTime: 9,
-    image: "/images/arabic-learning-children-1.jpg",
+    image: "/images/arabic-learning-children-1.webp",
     keywords: { ar: "تعلم العربية للأطفال، تأسيس اللغة العربية، تعليم القراءة، تعليم الأطفال", en: "Arabic learning for children, Arabic foundation, reading instruction, child education", fr: "Apprentissage de l’arabe pour enfants, fondation en arabe, lecture" },
     description: { ar: "دليل عملي للآباء والمعلمين يوضح أسس وأساليب تجعل تعلم اللغة العربية أسهل وأكثر متعة وثباتاً لدى الأطفال.", en: "A practical guide for parents and teachers to make Arabic learning easier, more engaging, and more lasting for children.", fr: "Un guide pratique pour aider les parents et les enseignants à rendre l’apprentissage de l’arabe plus simple et motivant." },
     content: {

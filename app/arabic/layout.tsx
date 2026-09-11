@@ -12,7 +12,7 @@ export default function ArabicLayout({ children }: { children: React.ReactNode }
         nameEn="Arabic Language Foundation"
         descriptionAr="برنامج تفاعلي لتأسيس القراءة والكتابة والإملاء والتعبير باللغة العربية مع متابعة دورية للطلاب."
         url="https://quran-elhafez.com/arabic"
-        image="https://quran-elhafez.com/images/arabic-learning.jpg"
+        image="https://quran-elhafez.com/images/arabic-learning.webp"
         teaches={["Arabic Reading", "Arabic Writing", "Dictation", "Expression"]}
       />
       {children}

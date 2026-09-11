@@ -13,7 +13,7 @@ export default function QuranPage() {
         nameEn="Quran Memorization and Tajweed"
         descriptionAr="برنامج تفاعلي لتحفيظ القرآن الكريم وتعليم أحكام التجويد مع معلمين مؤهلين عبر الإنترنت."
         url="https://quran-elhafez.com/quran"
-        image="https://quran-elhafez.com/images/teacher-quran.jpg"
+        image="https://quran-elhafez.com/images/teacher-quran.webp"
         teaches={["Quranic Memorization", "Tajweed", "Islamic Education"]}
       />
       <QuranPageClient />

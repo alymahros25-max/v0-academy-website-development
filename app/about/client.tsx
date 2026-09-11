@@ -62,12 +62,12 @@ export default function AboutPageClient({ content = {} }: { content?: Record<str
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <div className="rounded-3xl overflow-hidden shadow-2xl">
-                <Image 
-                  src="/images/about-academy.jpg" 
-                  alt="Academy about section" 
-                  width={600} 
-                  height={450} 
-                  className="w-full h-auto object-cover" 
+                <Image
+                  src="/images/about-academy.webp"
+                  alt="Academy about section"
+                  width={600}
+                  height={450}
+                  className="w-full h-auto object-cover"
                   quality={85}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
                   priority={false}

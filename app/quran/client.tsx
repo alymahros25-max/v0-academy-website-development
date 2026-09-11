@@ -68,7 +68,7 @@ export default function QuranPageClient() {
             <div className="hidden lg:block">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/images/teacher-quran.jpg"
+                  src="/images/teacher-quran.webp"
                   alt="Quran teacher teaching students"
                   width={600}
                   height={400}

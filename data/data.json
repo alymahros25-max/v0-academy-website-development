@@ -92,7 +92,7 @@
       "qualification_ar": "ماجستير في الدراسات القرآنية",
       "qualification_en": "Master's in Quranic Studies",
       "qualification_fr": "Master en Études Coraniques",
-      "image": "/images/teacher-quran.jpg",
+      "image": "/images/teacher-quran.webp",
       "active": true
     },
     {
@@ -107,7 +107,7 @@
       "qualification_ar": "بكالوريوس لغة عربية",
       "qualification_en": "Bachelor's in Arabic Language",
       "qualification_fr": "Licence en Langue Arabe",
-      "image": "/images/teacher-quran.jpg",
+      "image": "/images/teacher-quran.webp",
       "active": true
     }
   ],
