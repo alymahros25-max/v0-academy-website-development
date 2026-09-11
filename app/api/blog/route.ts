@@ -5,6 +5,31 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
+const featuredArabicLearningPost = {
+  id: 'static-easy-arabic-learning-for-children',
+  slug: 'easy-arabic-learning-for-children',
+  title_ar: 'أساليب وأسس عملية لتسهيل تعلم اللغة العربية للأطفال',
+  title_en: 'Practical Principles and Methods for Making Arabic Easier for Children',
+  title_fr: 'Principes et méthodes pratiques pour faciliter l’apprentissage de l’arabe aux enfants',
+  excerpt_ar: 'دليل عملي للآباء والمعلمين يوضح أسس وأساليب تجعل تعلم اللغة العربية أسهل وأكثر متعة وثباتاً لدى الأطفال.',
+  excerpt_en: 'A practical guide for parents and teachers to make Arabic learning easier, more engaging, and more lasting for children.',
+  excerpt_fr: 'Un guide pratique pour aider les parents et les enseignants à rendre l’apprentissage de l’arabe plus simple et motivant.',
+  content_ar: '',
+  content_en: '',
+  content_fr: '',
+  cover_image: '/images/arabic-learning.jpg',
+  category_ar: 'تأسيس العربية',
+  category_en: 'Arabic Foundation',
+  category_fr: 'Fondation en arabe',
+  author_ar: 'فريق الأكاديمية',
+  author_en: 'Academy Team',
+  author_fr: 'Équipe de l’académie',
+  read_time: 9,
+  is_published: true,
+  published_at: '2026-09-11T00:00:00.000Z',
+  created_at: '2026-09-11T00:00:00.000Z',
+}
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -52,7 +77,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
     }
 
-    return NextResponse.json(data || [])
+    const publishedPosts = data || []
+    if (!all && !publishedPosts.some(post => post.slug === featuredArabicLearningPost.slug)) {
+      return NextResponse.json([featuredArabicLearningPost, ...publishedPosts])
+    }
+    return NextResponse.json(publishedPosts)
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unknown error'
     console.error('[v0] blog GET exception:', msg)
