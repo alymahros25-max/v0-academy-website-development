@@ -30,6 +30,12 @@ const featuredArabicLearningPost = {
   created_at: '2026-09-11T00:00:00.000Z',
 }
 
+const staticBlogCoverBySlug: Record<string, string> = {
+  'quran-memorization-techniques': '/images/quran-memorization-techniques.webp',
+  'arabic-foundation-importance': '/images/arabic-foundation-importance.webp',
+  'online-learning-benefits': '/images/online-learning-benefits.webp',
+}
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -77,7 +83,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
     }
 
-    const publishedPosts = data || []
+    const publishedPosts = (data || []).map(post => ({
+      ...post,
+      cover_image: staticBlogCoverBySlug[post.slug] || post.cover_image,
+    }))
     if (!all && !publishedPosts.some(post => post.slug === featuredArabicLearningPost.slug)) {
       return NextResponse.json([featuredArabicLearningPost, ...publishedPosts])
     }

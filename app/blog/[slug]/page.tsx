@@ -11,9 +11,9 @@ const blogPosts: Record<string, any> = {
     author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l'académie" },
     date: "2024-06-15",
     readTime: 9,
-    image: "/images/hero-children.webp",
-    keywords: { ar: "حفظ القرآن، التقنيات، التجويد", en: "Quran memorization, techniques, tajweed", fr: "Mémorisation du Coran, techniques" },
-    description: { ar: "تقنيات عملية وفعالة لحفظ القرآن الكريم بسرعة واتقان باستخدام أحدث الطرق المجربة والناجحة", en: "Practical and effective techniques for memorizing the Holy Quran quickly and accurately", fr: "Techniques pratiques et efficaces pour mémoriser le Coran rapidement" },
+    image: "/images/quran-memorization-techniques.webp",
+    keywords: { ar: "طرق حفظ القرآن للأطفال، أسهل طريقة لحفظ القرآن، تقنيات حفظ القرآن، مراجعة القرآن، أحكام التجويد", en: "Quran memorization for children, Quran memorization techniques, Quran revision, Tajweed", fr: "Mémorisation du Coran pour enfants, méthodes de mémorisation, révision du Coran" },
+    description: { ar: "دليل عملي يشرح أسهل طرق حفظ القرآن للأطفال والكبار، مع تقنيات المراجعة والتكرار والاستماع والتجويد لتثبيت الحفظ.", en: "A practical guide to effective Quran memorization, revision, repetition, listening, and Tajweed techniques for children and adults.", fr: "Un guide pratique pour mémoriser le Coran avec des méthodes de révision, de répétition et de tajwid." },
     content: {
       ar: `<h2>مقدمة</h2>
 <p>حفظ القرآن الكريم أمنية غالية لكل مسلم ومسلمة، ولأولياء الأمور الذين يطمحون لرؤية أبنائهم من أهل القرآن. ومع تسارع وتيرة الحياة، يبحث الكثيرون عن طرق ذكية وعملية تساعدهم على تحقيق هذا الهدف العظيم بكفاءة عالية وبأقل جهد ووقت ممكن.</p>
@@ -51,9 +51,9 @@ const blogPosts: Record<string, any> = {
     author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l'académie" },
     date: "2024-06-10",
     readTime: 7,
-    image: "/images/arabic-learning.webp",
-    keywords: { ar: "تأسيس عربي، اللغة العربية، تعليم الأطفال", en: "Arabic foundation, language learning, children education", fr: "Fondation arabe, éducation des enfants" },
-    description: { ar: "شرح مفصل لأهمية التأسيس الصحيح في اللغة العربية وتأثيره على مستقبل الطفل الأكاديمي والثقافي", en: "Detailed explanation of the importance of proper Arabic language foundation for children's academic and cultural future", fr: "Explication détaillée de l'importance d'une bonne base en arabe" },
+    image: "/images/arabic-foundation-importance.webp",
+    keywords: { ar: "تأسيس اللغة العربية للأطفال، تعليم القراءة والكتابة، تعليم الحروف العربية، نور البيان، تعليم العربية", en: "Arabic foundation for children, Arabic reading and writing, Arabic letters, Noor Al Bayan", fr: "Fondation arabe pour enfants, lecture et écriture arabes, lettres arabes" },
+    description: { ar: "تعرف على أهمية تأسيس اللغة العربية للأطفال، وأفضل طرق تعليم الحروف والقراءة والكتابة وبناء مهارات لغوية قوية منذ الصغر.", en: "Learn why Arabic foundation matters for children and how to build strong reading, writing, and language skills from an early age.", fr: "Découvrez l’importance d’une bonne base en arabe et les méthodes pour apprendre la lecture et l’écriture dès le plus jeune âge." },
     content: {
       ar: `<h2>مقدمة</h2>
 <p>تُعد اللغة العربية الهوية والركيزة الأساسية التي يبني عليها الطفل ثقافته وقدراته التواصلية. إن مرحلة الطفولة المبكرة هي العصر الذهبي لاكتساب المهارات اللغوية، ومن هنا تنبع أهمية التأسيس الصحيح في اللغة العربية؛ فهو ليس مجرد تلقين للحروف، بل هو حجر الأساس لرحلة تعليمية مستدامة وناجحة.</p>
@@ -94,9 +94,9 @@ const blogPosts: Record<string, any> = {
     author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l'académie" },
     date: "2024-06-05",
     readTime: 8,
-    image: "/images/online-learning.jpg",
-    keywords: { ar: "التعليم الإلكتروني، التعليم الفعال، الحصص الفردية", en: "Online education, effective learning, individual sessions", fr: "Éducation en ligne, apprentissage efficace" },
-    description: { ar: "تحليل شامل لفوائد التعليم الإلكتروني وتأثيره الإيجابي على مستوى الطلاب الأكاديمي والنفسي", en: "Comprehensive analysis of online learning benefits and its positive impact on student academic and psychological levels", fr: "Analyse complète des avantages de l'apprentissage en ligne" },
+    image: "/images/online-learning-benefits.webp",
+    keywords: { ar: "فوائد التعليم الإلكتروني للأطفال، التعليم عن بعد، التعلم أونلاين، الحصص الفردية، تعليم اللغة العربية عن بعد", en: "online learning benefits for children, distance learning, online Arabic lessons, one-on-one classes", fr: "avantages de l’apprentissage en ligne, cours d’arabe à distance, cours individuels" },
+    description: { ar: "اكتشف فوائد التعليم الإلكتروني للأطفال ودور الحصص الفردية والتعلم عن بعد في تحسين التركيز والتحصيل والمهارات التعليمية.", en: "Discover how online learning, distance education, and one-on-one classes can improve children's focus, achievement, and learning skills.", fr: "Découvrez comment l’apprentissage en ligne et les cours individuels peuvent améliorer la concentration et les résultats des enfants." },
     content: {
       ar: `<h2>مقدمة</h2>
 <p>لم يعد التعليم الإلكتروني (عن بُعد) مجرد بديل مؤقت أو رفاهية تكنولوجية، بل أصبح ركيزة أساسية من ركائز التعليم الحديث. لقد أثبتت الفصول الافتراضية والمنصات التعليمية قدرتها العالية على سد الفجوات التعليمية وتطوير مهارات الطلاب بشكل ملحوظ مقارنة بالطرق التقليدية.</p>
