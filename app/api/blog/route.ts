@@ -17,7 +17,7 @@ const featuredArabicLearningPost = {
   content_ar: '',
   content_en: '',
   content_fr: '',
-  cover_image: '/images/arabic-learning.jpg',
+  cover_image: '/images/arabic-learning-children-1.jpg',
   category_ar: 'تأسيس العربية',
   category_en: 'Arabic Foundation',
   category_fr: 'Fondation en arabe',

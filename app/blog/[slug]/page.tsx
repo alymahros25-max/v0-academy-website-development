@@ -129,7 +129,7 @@ const blogPosts: Record<string, any> = {
     author: { ar: "فريق الأكاديمية", en: "Academy Team", fr: "Équipe de l’académie" },
     date: "2026-09-11",
     readTime: 9,
-    image: "/images/arabic-learning.jpg",
+    image: "/images/arabic-learning-children-1.jpg",
     keywords: { ar: "تعلم العربية للأطفال، تأسيس اللغة العربية، تعليم القراءة، تعليم الأطفال", en: "Arabic learning for children, Arabic foundation, reading instruction, child education", fr: "Apprentissage de l’arabe pour enfants, fondation en arabe, lecture" },
     description: { ar: "دليل عملي للآباء والمعلمين يوضح أسس وأساليب تجعل تعلم اللغة العربية أسهل وأكثر متعة وثباتاً لدى الأطفال.", en: "A practical guide for parents and teachers to make Arabic learning easier, more engaging, and more lasting for children.", fr: "Un guide pratique pour aider les parents et les enseignants à rendre l’apprentissage de l’arabe plus simple et motivant." },
     content: {
