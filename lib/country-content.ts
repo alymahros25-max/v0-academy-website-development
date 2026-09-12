@@ -1,5 +1,7 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin"
 
+import { unstable_cache } from "next/cache"
+
 export type AreaPackage = {
   id: number
   program: "quran" | "arabic" | "other"
@@ -146,7 +148,8 @@ export async function getAreaContent(slug: string, section?: string) {
   return { area, content: data ?? [] }
 }
 
-export async function getAreaLandingData(slug: string) {
+const getCachedAreaLandingData = unstable_cache(
+  async (slug: string) => {
   const area = await getSiteArea(slug)
   if (!area || !supabaseAdmin) return { area, packages: [], faq: [], content: [], links: [], theme: null, cities: [], timezones: [] }
   const [
@@ -183,6 +186,13 @@ export async function getAreaLandingData(slug: string) {
     cities: (cities ?? []) as AreaCity[],
     timezones: (timezones ?? []) as AreaTimezone[],
   }
+  },
+  ["country-landing-data"],
+  { revalidate: 3600, tags: ["country-content"] },
+)
+
+export async function getAreaLandingData(slug: string) {
+  return getCachedAreaLandingData(slug)
 }
 
 export function areaLocalized(value: { content_ar?: string | null; content_en?: string | null; content_fr?: string | null } | undefined, locale = "ar") {

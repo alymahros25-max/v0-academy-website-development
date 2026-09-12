@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getSeoAlternates } from "@/lib/seo-metadata"
+import { getCountrySeoAlternates } from "@/lib/seo-metadata"
 import Link from "next/link"
 import Image from "next/image"
 import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
@@ -13,10 +13,10 @@ import { CountryEnrichmentSection, getCountryThemeStyle } from "@/components/cou
 export const metadata: Metadata = {
   title: uaeLandingConfig.seo.title,
   description: uaeLandingConfig.seo.description,
-  alternates: getSeoAlternates(uaeLandingConfig.seo.canonical),
+  alternates: getCountrySeoAlternates("unitedArabEmirates"),
   robots: { index: true, follow: true },
-  openGraph: { title: uaeLandingConfig.seo.title, description: uaeLandingConfig.seo.description, url: uaeLandingConfig.seo.canonical, locale: "ar_AE", type: "website" },
-  twitter: { card: "summary_large_image", title: uaeLandingConfig.seo.title, description: uaeLandingConfig.seo.description },
+  openGraph: { title: uaeLandingConfig.seo.title, description: uaeLandingConfig.seo.description, url: uaeLandingConfig.seo.canonical, locale: "ar_AE", type: "website", images: [{ url: "https://quran-elhafez.com/images/og-default.webp", width: 1200, height: 630, alt: "أكاديمية الحافظ المتميز" }] },
+  twitter: { card: "summary_large_image", title: uaeLandingConfig.seo.title, description: uaeLandingConfig.seo.description, images: ["https://quran-elhafez.com/images/og-default.webp"] },
 }
 
 

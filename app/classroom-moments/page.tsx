@@ -19,11 +19,13 @@ export const metadata: Metadata = {
     url: 'https://quran-elhafez.com/classroom-moments',
     type: 'website',
     locale: 'ar_SA',
+    images: [{ url: 'https://quran-elhafez.com/images/og-default.webp', width: 1200, height: 630, alt: 'أكاديمية الحافظ المتميز' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'فيديوهات من حصصنا - أكاديمية الحافظ المتميز',
     description: 'شاهد فيديوهات الحصص واللقطات الترويجية',
+    images: ['https://quran-elhafez.com/images/og-default.webp'],
   },
 }
 

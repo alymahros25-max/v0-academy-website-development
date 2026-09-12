@@ -72,5 +72,26 @@ export function GA4Tracker() {
     }
   }, [locale, pathname])
 
+  useEffect(() => {
+    const handleTrialClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null
+      const link = target?.closest<HTMLAnchorElement>("a[href]")
+      if (!link) return
+
+      const href = link.href.toLowerCase()
+      if (!href.includes("wa.me") && !href.includes("whatsapp")) return
+
+      // Load GA4 on the first conversion click so an early booking is not lost.
+      loadGoogleAnalytics()
+      window.gtag?.("event", "trial_booking_click", {
+        page_path: window.location.pathname,
+        link_text: link.textContent?.trim().slice(0, 80) || "whatsapp_cta",
+      })
+    }
+
+    document.addEventListener("click", handleTrialClick, { capture: true })
+    return () => document.removeEventListener("click", handleTrialClick, { capture: true })
+  }, [])
+
   return null
 }

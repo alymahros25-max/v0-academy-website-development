@@ -27,8 +27,17 @@ function LayoutWrapper({ children }: { children: ReactNode }) {
     document.documentElement.dir = dir
   }, [dir, locale])
 
-  if (isAdmin || isSaudiLanding || isUaeLanding || isUnitedStatesLanding || isCanadaLanding || isUnitedKingdomLanding || isAustraliaLanding || isGermanyLanding) {
+  if (isAdmin) {
     return <div dir={dir}>{children}</div>
+  }
+
+  if (isSaudiLanding || isUaeLanding || isUnitedStatesLanding || isCanadaLanding || isUnitedKingdomLanding || isAustraliaLanding || isGermanyLanding) {
+    return (
+      <div dir={dir}>
+        <DeferredGA4Tracker />
+        {children}
+      </div>
+    )
   }
 
   return (

@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import AboutPageClient from './client'
-import { getPublicContent } from '@/lib/public-content'
+import { getPublicContent } from '@/lib/public-content-server'
 import { getSeoAlternates } from '@/lib/seo-metadata'
 
 export const revalidate = 3600
