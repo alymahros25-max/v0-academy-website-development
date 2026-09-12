@@ -21,8 +21,7 @@ export function HeroSection({ content = {} }: { content?: Record<string, PublicC
         fill
         className="object-cover object-[center_15%]"
         sizes="100vw"
-        quality={60}
-        unoptimized
+        quality={50}
         priority
         fetchPriority="high"
         decoding="async"
@@ -77,7 +76,7 @@ export function HeroSection({ content = {} }: { content?: Record<string, PublicC
             <div className="relative">
               <div className="relative w-80 h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-secondary/30 rotate-3 hover:rotate-0 transition-transform duration-500">
                 <Image
-                  src="/images/teacher-quran.jpg"
+                  src="/images/teacher-quran.webp"
                   alt="Quran teacher"
                   fill
                   sizes="(min-width: 1024px) 320px, 0px"

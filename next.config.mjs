@@ -24,7 +24,7 @@ const nextConfig = {
   // IMAGE OPTIMIZATION
   // ============================================================
   images: {
-    qualities: [55, 60, 75, 80, 85, 100],
+    qualities: [60, 75, 80, 85, 100],
     formats: ['image/avif', 'image/webp'],
   },
 

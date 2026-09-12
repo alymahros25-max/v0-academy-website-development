@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { revalidateTag } from "next/cache"
 import { z } from "zod"
+import { revalidatePath } from "next/cache"
 import { verifyAdminSession } from "@/lib/admin-auth"
 import { supabaseAdmin } from "@/lib/supabaseAdmin"
 
@@ -10,6 +10,18 @@ const patchSchema = z.object({
   resource: resourceSchema,
   id: idSchema,
   changes: z.record(z.string(), z.unknown()),
+}).strict()
+const deleteSchema = z.object({ resource: z.literal("packages"), id: idSchema }).strict()
+const createPackageSchema = z.object({
+  area_id: idSchema,
+  program: z.enum(["quran", "arabic", "other"]),
+  name_ar: z.string().trim().min(2).max(180),
+  price: z.coerce.number().finite().min(0).max(1000000),
+  sessions_per_month: z.coerce.number().int().min(1).max(1000),
+  duration_minutes: z.coerce.number().int().min(1).max(240),
+  description_ar: z.string().trim().max(700).optional().default(""),
+  features_ar: z.array(z.string().trim().min(1).max(160)).max(20).optional().default([]),
+  is_popular: z.boolean().optional().default(false),
 }).strict()
 
 const fieldAllowList: Record<z.infer<typeof resourceSchema>, Set<string>> = {
@@ -129,6 +141,67 @@ export async function PATCH(request: NextRequest) {
   const table = tableByResource[parsed.data.resource]
   const { data, error } = await supabaseAdmin.from(table).update({ ...changes, updated_at: new Date().toISOString() }).eq("id", parsed.data.id).select().single()
   if (error) return NextResponse.json({ error: "Failed to update area record" }, { status: 400 })
-  revalidateTag("country-content", "max")
+  const { data: area } = await supabaseAdmin.from("site_areas").select("slug").eq("id", data.area_id).maybeSingle()
+  if (area?.slug) revalidatePath(`/${area.slug}`)
   return NextResponse.json({ data })
+}
+
+export async function POST(request: NextRequest) {
+  if (!(await verifyAdminSession())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!supabaseAdmin) return NextResponse.json({ error: "Database not configured" }, { status: 503 })
+  const parsed = createPackageSchema.safeParse(await request.json())
+  if (!parsed.success) return NextResponse.json({ error: "بيانات الباقة غير صحيحة" }, { status: 400 })
+
+  const { data: area, error: areaError } = await supabaseAdmin
+    .from("site_areas")
+    .select("id, slug, currency_code")
+    .eq("id", parsed.data.area_id)
+    .maybeSingle()
+  if (areaError || !area) return NextResponse.json({ error: "الدولة المحددة غير موجودة" }, { status: 404 })
+
+  const packageKey = `${parsed.data.program}-${parsed.data.duration_minutes}-${parsed.data.sessions_per_month}-${Date.now()}`
+  const { duration_minutes: durationMinutes, ...packageInput } = parsed.data
+  const { data, error } = await supabaseAdmin
+    .from("area_packages")
+    .insert({
+      ...packageInput,
+      package_key: packageKey,
+      currency_code: area.currency_code,
+      billing_period: "month",
+      description_ar: packageInput.description_ar || `${durationMinutes} دقيقة للحصة مع متابعة فردية وتجويد ومراجعة.`,
+      name_ar: `${packageInput.name_ar} — ${durationMinutes} دقيقة`,
+      sort_order: 0,
+    })
+    .select("id, area_id, program, package_key, name_ar, price, currency_code, sessions_per_month, features_ar, is_popular, is_active, sort_order")
+    .single()
+  if (error) return NextResponse.json({ error: "تعذر إنشاء الباقة في قاعدة البيانات" }, { status: 400 })
+
+  revalidatePath(`/${area.slug}`)
+  return NextResponse.json({ data }, { status: 201, headers: { "Cache-Control": "no-store" } })
+}
+
+export async function DELETE(request: NextRequest) {
+  if (!(await verifyAdminSession())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!supabaseAdmin) return NextResponse.json({ error: "Database not configured" }, { status: 503 })
+  const parsed = deleteSchema.safeParse(await request.json())
+  if (!parsed.success) return NextResponse.json({ error: "Only package records can be deleted" }, { status: 400 })
+
+  const { data: packageBeforeDelete } = await supabaseAdmin
+    .from("area_packages")
+    .select("id, area_id")
+    .eq("id", parsed.data.id)
+    .maybeSingle()
+  if (!packageBeforeDelete) return NextResponse.json({ error: "Package not found" }, { status: 404 })
+
+  const { data, error } = await supabaseAdmin
+    .from("area_packages")
+    .delete()
+    .eq("id", parsed.data.id)
+    .select("id")
+    .maybeSingle()
+  if (error) return NextResponse.json({ error: "Failed to delete package" }, { status: 400 })
+  if (!data) return NextResponse.json({ error: "Package not found" }, { status: 404 })
+  const { data: area } = await supabaseAdmin.from("site_areas").select("slug").eq("id", packageBeforeDelete.area_id).maybeSingle()
+  if (area?.slug) revalidatePath(`/${area.slug}`)
+  return NextResponse.json({ deleted: true, id: data.id }, { headers: { "Cache-Control": "no-store" } })
 }
