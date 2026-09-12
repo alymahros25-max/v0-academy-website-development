@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     url: 'https://quran-elhafez.com/blog',
     type: 'website',
     locale: 'ar_SA',
+    images: [{ url: 'https://quran-elhafez.com/images/og-default.webp', width: 1200, height: 630, alt: 'أكاديمية الحافظ المتميز' }],
   },
 }
 

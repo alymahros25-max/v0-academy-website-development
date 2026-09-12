@@ -12,6 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: 'سياسة الاسترداد',
       description: 'سياسة الاسترجاع الكاملة والشروط والأحكام',
       type: 'website',
+      images: [{ url: 'https://quran-elhafez.com/images/og-default.webp', width: 1200, height: 630, alt: 'أكاديمية الحافظ المتميز' }],
     },
   }
 }

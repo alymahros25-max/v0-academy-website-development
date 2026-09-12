@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     title: "الألعاب التعليمية",
     description: "تعلم من خلال اللعب - 20 لعبة تفاعلية للأطفال",
     type: "website",
+    images: [{ url: "https://quran-elhafez.com/images/og-default.webp", width: 1200, height: 630, alt: "أكاديمية الحافظ المتميز" }],
   },
 }
 

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { revalidateTag } from "next/cache"
 import { z } from "zod"
 import { verifyAdminSession } from "@/lib/admin-auth"
 import { supabaseAdmin } from "@/lib/supabaseAdmin"
@@ -128,5 +129,6 @@ export async function PATCH(request: NextRequest) {
   const table = tableByResource[parsed.data.resource]
   const { data, error } = await supabaseAdmin.from(table).update({ ...changes, updated_at: new Date().toISOString() }).eq("id", parsed.data.id).select().single()
   if (error) return NextResponse.json({ error: "Failed to update area record" }, { status: 400 })
+  revalidateTag("country-content", "max")
   return NextResponse.json({ data })
 }

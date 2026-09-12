@@ -7,7 +7,7 @@ import { AboutSection } from "@/components/home/about-section"
 import { FeaturesSection } from "@/components/home/features-section"
 import { StatsSection } from "@/components/home/stats-section"
 import { Suspense } from "react"
-import { getPublicContent } from "@/lib/public-content"
+import { getPublicContent } from "@/lib/public-content-server"
 
 // SSG with 1-hour revalidation (ISR)
 export const revalidate = 3600
@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     description: "تعليم القرآن الكريم والعربية أون لاين",
     type: "website",
     locale: "ar_SA",
+    images: [{ url: "https://quran-elhafez.com/images/og-default.webp", width: 1200, height: 630, alt: "أكاديمية الحافظ المتميز" }],
   },
 }
 

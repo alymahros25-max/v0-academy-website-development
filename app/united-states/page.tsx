@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getSeoAlternates } from "@/lib/seo-metadata"
+import { getCountrySeoAlternates } from "@/lib/seo-metadata"
 import Link from "next/link"
 import { Check, ChevronLeft, Clock3, MapPin, MessageCircle, ShieldCheck, Sparkles } from "lucide-react"
 import { LandingPageVideoStrip } from "@/components/LandingPageVideoStrip"
@@ -11,9 +11,9 @@ import { CountryEnrichmentSection, getCountryThemeStyle } from "@/components/cou
 export const metadata: Metadata = {
   title: unitedStatesLandingConfig.seo.title,
   description: unitedStatesLandingConfig.seo.description,
-  alternates: getSeoAlternates(unitedStatesLandingConfig.seo.canonical),
-  openGraph: { title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description, url: unitedStatesLandingConfig.seo.canonical, locale: "ar_US", type: "website" },
-  twitter: { card: "summary_large_image", title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description },
+  alternates: getCountrySeoAlternates("unitedStates"),
+  openGraph: { title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description, url: unitedStatesLandingConfig.seo.canonical, locale: "ar_US", type: "website", images: [{ url: "https://quran-elhafez.com/images/og-default.webp", width: 1200, height: 630, alt: "أكاديمية الحافظ المتميز" }] },
+  twitter: { card: "summary_large_image", title: unitedStatesLandingConfig.seo.title, description: unitedStatesLandingConfig.seo.description, images: ["https://quran-elhafez.com/images/og-default.webp"] },
 }
 
 const faq = [

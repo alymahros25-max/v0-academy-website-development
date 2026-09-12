@@ -72,14 +72,14 @@ export const metadata: Metadata = {
     title: "أكاديمية الحافظ المتميز اون لاين | تحفيظ قران وتأسيس عربي",
     description:
       "تحفيظ القرآن وتأسيس العربية أونلاين للناطقين بالعربية في السعودية والإمارات وقطر وأوروبا وأمريكا وكندا، مع تعليم فردي عن بعد.",
-    images: [{ url: "/images/hero-children.webp", width: 1200, height: 630 }],
+    images: [{ url: "https://quran-elhafez.com/images/og-default.webp", width: 1200, height: 630, alt: "أكاديمية الحافظ المتميز" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "أكاديمية الحافظ المتميز اون لاين",
     description:
       "تعليم القرآن وتأسيس اللغة العربية أونلاين للطلاب العرب في الخليج وأوروبا وأمريكا وكندا.",
-    images: ["/images/hero-children.webp"],
+    images: ["https://quran-elhafez.com/images/og-default.webp"],
   },
   robots: {
     index: true,
