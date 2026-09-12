@@ -7,7 +7,7 @@ import {
   BookOpen, Users, Star, MessageSquare, Settings, LogOut, Package, Mail,
   Plus, Trash2, Edit3, Check, X, ChevronDown, Eye, EyeOff, LayoutDashboard,
   Menu, XIcon, Palette, FileText, Lock, Film, Gamepad2, Search, BarChart3,
-  Languages, Save, Wand2, MapPin
+  Languages, Save, Wand2, MapPin, ArrowUp, ArrowDown
 } from "lucide-react"
 import dynamic from "next/dynamic"
 import { AdminErrorBoundary } from "@/components/admin/AdminErrorBoundary"
@@ -25,6 +25,17 @@ import { CountryLandingPagesTab } from "@/components/admin/CountryLandingPagesTa
 import { FAQManager } from "@/components/admin/faq-manager"
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
+
+async function swapAdminOrder(type: "packages" | "teachers" | "reviews", current: { id?: string; sortOrder?: number } | null, neighbor: { id?: string; sortOrder?: number } | null) {
+  if (!current?.id || !neighbor?.id) return
+  const currentOrder = current.sortOrder ?? 0
+  const neighborOrder = neighbor.sortOrder ?? 0
+  const responses = await Promise.all([
+    fetch("/api/admin/data", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type, id: current.id, data: { sortOrder: neighborOrder } }) }),
+    fetch("/api/admin/data", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type, id: neighbor.id, data: { sortOrder: currentOrder } }) }),
+  ])
+  if (responses.some((response) => !response.ok)) throw new Error("تعذر حفظ الترتيب")
+}
 
 function AdminSectionToolbar({ section }: { section: string }) {
   const [preview, setPreview] = useState(false)
@@ -342,6 +353,7 @@ function PackagesTab() {
           name: { ar: newPackage.name || `باقة ${newPackage.sessions} حصص` },
           sessions: newPackage.sessions,
           price: newPackage.price,
+          duration: newPackage.duration,
           popular: newPackage.popular,
           active: true,
           features: { ar: newPackage.features.split(",").map((item) => item.trim()).filter(Boolean) },
@@ -438,7 +450,7 @@ function PackagesTab() {
 
       <div className="grid gap-4">
         {packageRows.length === 0 && <p className="p-4 text-muted-foreground">لا توجد باقات حالياً. استخدم زر إضافة باقة.</p>}
-        {packageRows.map((pkg: { id?: string; type?: string; sessions?: number; price?: number; popular?: boolean } | null) => {
+        {packageRows.map((pkg: { id?: string; type?: string; sessions?: number; price?: number; popular?: boolean; sortOrder?: number } | null, index: number) => {
           if (!pkg?.id) return null
           return (
             <div key={pkg.id} className="bg-card rounded-2xl border border-border p-5">
@@ -462,6 +474,10 @@ function PackagesTab() {
                         onChange={(e) => setEditData({...editData, price: parseInt(e.target.value)})}
                         className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
                       />
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">مدة الحصة بالدقائق</label>
+                      <input type="number" min="1" value={(editData.duration as number) ?? 30} onChange={(e) => setEditData({...editData, duration: parseInt(e.target.value)})} className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm" />
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -497,6 +513,8 @@ function PackagesTab() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
+                    <button type="button" aria-label="تحريك الباقة لأعلى" disabled={index === 0} onClick={async () => { try { await swapAdminOrder("packages", pkg, packageRows[index - 1]); globalMutate("/api/admin/data?type=packages") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowUp className="w-4 h-4" /></button>
+                    <button type="button" aria-label="تحريك الباقة لأسفل" disabled={index === packageRows.length - 1} onClick={async () => { try { await swapAdminOrder("packages", pkg, packageRows[index + 1]); globalMutate("/api/admin/data?type=packages") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowDown className="w-4 h-4" /></button>
                     <button
                       onClick={() => { pkg.id && setEditingId(pkg.id); pkg && setEditData(pkg) }}
                       className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
@@ -685,7 +703,7 @@ function TeachersTab() {
       )}
 
       <div className="grid gap-4">
-        {teacherRecords.map((teacher: { id?: string; name?: Record<string, string>; specialty?: Record<string, string>; experience?: string; active?: boolean } | null) => {
+        {teacherRecords.map((teacher: { id?: string; name?: Record<string, string>; specialty?: Record<string, string>; experience?: string; active?: boolean; sortOrder?: number } | null, index: number) => {
           if (!teacher?.id) return null
           return (
             <div key={teacher.id} className="bg-card rounded-2xl border border-border p-5 flex items-center justify-between">
@@ -699,6 +717,8 @@ function TeachersTab() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <button type="button" aria-label="تحريك المعلم لأعلى" disabled={index === 0} onClick={async () => { try { await swapAdminOrder("teachers", teacher, teacherRecords[index - 1]); globalMutate("/api/admin/data?type=teachers") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowUp className="w-4 h-4" /></button>
+                <button type="button" aria-label="تحريك المعلم لأسفل" disabled={index === teacherRecords.length - 1} onClick={async () => { try { await swapAdminOrder("teachers", teacher, teacherRecords[index + 1]); globalMutate("/api/admin/data?type=teachers") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowDown className="w-4 h-4" /></button>
                 <button
                   type="button"
                   aria-label="تعديل بيانات المعلم"
@@ -760,7 +780,7 @@ function ReviewsTab() {
     <div>
       <h2 className="text-lg font-bold text-foreground mb-6">آراء الطلاب</h2>
       <div className="grid gap-4">
-        {reviews?.map((review: any) => (
+        {reviews?.map((review: any, index: number) => (
           review?.id ? (
             <div key={review.id} className={`bg-card rounded-2xl border p-5 ${review?.active ? "border-border" : "border-destructive/30 opacity-60"}`}>
               <div className="flex items-start justify-between mb-3">
@@ -773,6 +793,8 @@ function ReviewsTab() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
+                  <button type="button" aria-label="تحريك الرأي لأعلى" disabled={index === 0} onClick={async () => { try { await swapAdminOrder("reviews", review, reviews[index - 1]); mutate() } catch (error) { console.error(error) } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowUp className="w-4 h-4" /></button>
+                  <button type="button" aria-label="تحريك الرأي لأسفل" disabled={index === reviews.length - 1} onClick={async () => { try { await swapAdminOrder("reviews", review, reviews[index + 1]); mutate() } catch (error) { console.error(error) } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowDown className="w-4 h-4" /></button>
                   <button
                     onClick={() => handleToggle(review.id, review?.active ?? false)}
                     className={`p-2 rounded-lg transition-colors ${review?.active ? "hover:bg-muted text-primary" : "hover:bg-primary/10 text-muted-foreground"}`}
