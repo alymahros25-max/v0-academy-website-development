@@ -1,59 +1,172 @@
+"use client"
+
 import Link from "next/link"
-import { ArrowLeft, BookOpen, GraduationCap, Languages, Users } from "lucide-react"
-import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Languages } from "lucide-react"
+import { useI18n } from "@/lib/i18n"
 import { generateFAQSchema } from "@/lib/schema-markup"
 
-const audiences = [
-  { title: "الأطفال", description: "بداية صحيحة ومتابعة هادئة تناسب عمر الطفل ومستواه.", icon: GraduationCap },
-  { title: "الفتيات والشباب", description: "برامج مرنة للحفظ والمراجعة وتحسين التلاوة.", icon: BookOpen },
-  { title: "النساء والرجال", description: "تعلم يناسب الوقت والهدف، من المبتدئ إلى المتقدم.", icon: Users },
-  { title: "المبتدئون", description: "خطوات واضحة لبناء أساس قوي في القرآن أو العربية.", icon: Languages },
-  { title: "متابعة الحفظ والمراجعة", description: "حصص تساعدك على تثبيت الحفظ وتصحيح التلاوة والتجويد.", icon: BookOpen },
-  { title: "متعلمو اللغة العربية", description: "تحسين القراءة والكتابة والنطق وفهم أساسيات اللغة.", icon: Languages },
-]
+const content = {
+  ar: {
+    programsLabel: "برامج تعليمية واضحة",
+    programsTitle: "اختر البرنامج المناسب لهدفك",
+    programsIntro: "مساران أساسيان يساعدان الطالب على البدء من مستواه والتقدم بخطوات عملية.",
+    programs: [
+      ["القرآن الكريم والتجويد", "تعلّم التلاوة الصحيحة، وحفظ القرآن ومراجعته، وتطبيق أحكام التجويد تدريجيًا وفق مستوى الطالب ووقته.", "/quran", "تفاصيل برنامج القرآن الكريم والتجويد"],
+      ["تأسيس اللغة العربية", "تأسيس الأطفال والمبتدئين في الحروف والحركات، ثم القراءة والكتابة والإملاء والتعبير بطريقة مبسطة تناسب العمر والمستوى.", "/arabic", "تفاصيل برنامج تأسيس اللغة العربية"],
+    ],
+    benefitsLabel: "تعلم يناسب احتياجك",
+    benefitsTitle: "لماذا تبدأ معنا؟",
+    benefits: [
+      ["خطة تناسب مستوى الطالب", "تبدأ الدراسة بفهم المستوى والهدف، ثم تُبنى الأولويات وفق احتياج الطالب."],
+      ["حصص فردية أونلاين", "وقت مباشر للتدريب والتصحيح والتكرار وطرح الأسئلة دون محتوى عام لا يناسب المستوى."],
+      ["مواعيد تراعي اختلاف الدول", "يمكن مناقشة الموعد المناسب مع مراعاة اختلاف المناطق الزمنية وجدول الأسرة."],
+      ["متابعة تساعد على الاستمرار", "تساعد المراجعة المنتظمة وملاحظة الصعوبات على معرفة ما تم إنجازه وما يحتاج إلى تدريب."],
+    ],
+    startLabel: "بداية واضحة",
+    startTitle: "كيف تبدأ؟",
+    steps: [
+      ["احجز الحصة التجريبية", "أخبرنا بالبرنامج المطلوب، ومستوى الطالب التقريبي، والوقت المناسب."],
+      ["تعرّف على مستوى الطالب", "يراجع المعلم مهارات الطالب وهدفه والجوانب التي تحتاج إلى تطوير."],
+      ["ابدأ خطتك التعليمية", "بعد مناقشة الاحتياج، اختر البرنامج والموعد المناسب وابدأ المتابعة."],
+    ],
+    faqLabel: "إجابات قبل البدء",
+    faqTitle: "أسئلة شائعة",
+    faqs: [
+      ["هل الدروس مناسبة للمبتدئين؟", "نعم. يمكن للمبتدئ أن يبدأ من الأساسيات، كما يمكن للطالب المتقدم التركيز على الحفظ أو المراجعة أو تحسين التلاوة."],
+      ["هل الدروس مناسبة للأطفال والكبار؟", "يمكن تكييف طريقة الشرح والتدريب بحسب عمر الطالب ومستواه وهدفه التعليمي."],
+      ["ماذا يحدث في الحصة التجريبية؟", "يتعرف المعلم على هدف الطالب ومستواه، ويراجع الجوانب التي تحتاج إلى تدريب، ثم يناقش طريقة البدء."],
+      ["هل الحصص فردية أم جماعية؟", "البرامج المعروضة تعتمد على الحصص الفردية حتى يحصل الطالب على توجيه مباشر ووقت مناسب للتدريب."],
+    ],
+    allFaq: "عرض جميع الأسئلة الشائعة",
+  },
+  en: {
+    programsLabel: "Clear learning programs",
+    programsTitle: "Choose the program for your goal",
+    programsIntro: "Two core programs help learners start from their level and progress through practical steps.",
+    programs: [
+      ["Quran and Tajweed", "Learn correct recitation, memorization, revision, and Tajweed gradually according to the learner’s level and schedule.", "/quran", "Explore the Quran program"],
+      ["Arabic Foundation", "Build a foundation in letters, vowels, reading, writing, spelling, and expression through age-appropriate lessons.", "/arabic", "Explore the Arabic program"],
+    ],
+    benefitsLabel: "Learning around the learner",
+    benefitsTitle: "Why start with us?",
+    benefits: [
+      ["A plan for the learner’s level", "Start with the learner’s level and goal, then set priorities around their needs."],
+      ["One-to-one online lessons", "Get direct time for practice, correction, repetition, and questions."],
+      ["Schedules across time zones", "Discuss a suitable lesson time while considering the family’s schedule and location."],
+      ["Consistent follow-up", "Regular review helps identify progress and the skills that need more practice."],
+    ],
+    startLabel: "A clear beginning",
+    startTitle: "How do you start?",
+    steps: [
+      ["Book a trial lesson", "Tell us the program, the learner’s level, and a suitable time."],
+      ["Understand the learner’s level", "The teacher reviews the learner’s skills, goal, and development needs."],
+      ["Start the learning plan", "Discuss the needs, choose a program and schedule, and begin regular lessons."],
+    ],
+    faqLabel: "Answers before you begin",
+    faqTitle: "Frequently asked questions",
+    faqs: [
+      ["Are lessons suitable for beginners?", "Yes. Beginners can start with the basics, while advanced learners can focus on memorization, revision, or recitation."],
+      ["Are lessons suitable for children and adults?", "Lessons can be adapted to the learner’s age, level, and educational goal."],
+      ["What happens in a trial lesson?", "The teacher reviews the learner’s goal and level, identifies practice needs, and discusses how to begin."],
+      ["Are lessons one-to-one or group-based?", "The listed programs use one-to-one lessons for direct guidance and practice time."],
+    ],
+    allFaq: "View all frequently asked questions",
+  },
+} as const
 
-const faqs = [
-  ["هل الحصص أونلاين أم حضورية؟", "الحصص أونلاين بالكامل، ويمكن حضورها من المنزل عبر الهاتف أو الكمبيوتر."],
-  ["هل البرامج للأطفال فقط؟", "لا، البرامج متاحة للأطفال والشباب والفتيات والنساء والرجال، ويتم اختيار المسار حسب عمر الطالب ومستواه واحتياجه."],
-  ["هل يمكن البدء من المستوى المبتدئ؟", "نعم، يمكن البدء من المستوى المبتدئ، وتساعدنا الحصة التجريبية على معرفة المستوى واختيار البرنامج المناسب."],
-  ["هل يمكن متابعة الحفظ والمراجعة؟", "نعم، يمكن اختيار برنامج يركز على الحفظ الجديد أو المراجعة أو تصحيح التلاوة والتجويد وفق احتياج الطالب."],
-  ["هل يمكن اختيار معلم أو معلمة؟", "يمكن طلب معلم أو معلمة، ويتم التنسيق حسب البرنامج والتوفر."],
-  ["هل يمكن اختيار وقت الحصة؟", "نعم، أرسل الوقت المناسب لك عبر واتساب، وسنساعدك في تنسيق الموعد."],
-  ["كيف أحجز حصة تجريبية؟", "اضغط على «جرب حصة مجانا» وأرسل بيانات الطالب والوقت المناسب، ثم ننسق معك موعد الحصة."],
-  ["هل توجد باقات شهرية؟", "نعم، تختلف الباقات حسب البرنامج ومدة الحصة وعدد الحصص، ويمكن معرفة التفاصيل من قسم البرامج والأسعار أو عبر التواصل معنا."],
-]
+export function HomeContentSections() {
+  const { locale, dir } = useI18n()
+  const isArabic = locale === "ar"
+  const copy = content[isArabic ? "ar" : "en"]
+  const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight
+  const faqSchema = generateFAQSchema(copy.faqs.map(([question, answer]) => ({ question, answer })))
 
-const faqSchema = generateFAQSchema(faqs.map(([question, answer]) => ({ question, answer })))
-
-export function HomeIntroSection() {
   return (
-    <section className="bg-card px-4 py-16 lg:py-24" aria-labelledby="home-intro-title">
-      <div className="mx-auto max-w-4xl text-center">
-        <p className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-bold text-primary">تعلم بمرونة</p>
-        <h2 id="home-intro-title" className="text-balance text-3xl font-extrabold text-foreground md:text-4xl">تعلم القرآن واللغة العربية أونلاين من أي مكان</h2>
-        <p className="mx-auto mt-5 max-w-3xl text-pretty text-lg leading-8 text-muted-foreground">نساعد الأطفال والشباب والنساء والرجال على تعلم القرآن الكريم واللغة العربية من خلال حصص أونلاين مرنة تناسب مستوى كل طالب ووقته. ابدأ بحصة تجريبية مجانية، وتعرّف على البرنامج الأنسب لك أو لأحد أفراد أسرتك.</p>
-        <Link href="/contact" className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-7 py-3 font-bold text-primary-foreground shadow-md transition-transform hover:-translate-y-0.5">جرب حصة مجانا <ArrowLeft className="size-5" aria-hidden="true" /></Link>
-      </div>
-    </section>
+    <>
+      <section className="content-auto bg-background px-4 py-16 lg:py-24" aria-labelledby="home-programs-title">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="saudi-eyebrow justify-center">{copy.programsLabel}</p>
+            <h2 id="home-programs-title" className="mt-3 text-3xl font-extrabold text-navy-primary md:text-4xl">{copy.programsTitle}</h2>
+            <p className="mt-4 text-pretty text-lg leading-8 text-muted-foreground">{copy.programsIntro}</p>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {copy.programs.map(([title, description, href, link]) => (
+              <article key={title} className="rounded-3xl border border-border bg-card p-7 shadow-sm transition-shadow hover:shadow-lg lg:p-9">
+                <div className="flex size-14 items-center justify-center rounded-2xl bg-gold-pale text-navy-primary">
+                  {title.includes("عربي") || title.includes("Arabic") ? <Languages className="size-7" aria-hidden="true" /> : <BookOpen className="size-7" aria-hidden="true" />}
+                </div>
+                <h3 className="mt-6 text-2xl font-extrabold text-navy-primary">{title}</h3>
+                <p className="mt-4 leading-8 text-muted-foreground">{description}</p>
+                <Link href={href} className="mt-6 inline-flex items-center gap-2 font-bold text-navy-primary hover:underline" aria-label={link}>
+                  {link}
+                  <Arrow className="size-4" aria-hidden="true" />
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="content-auto bg-navy-pale/25 px-4 py-16 lg:py-24" aria-labelledby="home-benefits-title">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="saudi-eyebrow justify-center">{copy.benefitsLabel}</p>
+            <h2 id="home-benefits-title" className="mt-3 text-3xl font-extrabold text-navy-primary md:text-4xl">{copy.benefitsTitle}</h2>
+          </div>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {copy.benefits.map(([title, description]) => (
+              <article key={title} className="rounded-3xl border border-navy-light/30 bg-card p-6 shadow-sm">
+                <CheckCircle2 className="size-7 text-primary" aria-hidden="true" />
+                <h3 className="mt-5 text-lg font-extrabold text-navy-primary">{title}</h3>
+                <p className="mt-3 text-sm leading-7 text-muted-foreground">{description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="content-auto bg-background px-4 py-16 lg:py-24" aria-labelledby="home-start-title">
+        <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="saudi-eyebrow justify-center">{copy.startLabel}</p>
+            <h2 id="home-start-title" className="mt-3 text-3xl font-extrabold text-navy-primary md:text-4xl">{copy.startTitle}</h2>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {copy.steps.map(([title, description], index) => (
+              <article key={title} className="rounded-3xl border border-border bg-card p-7 text-center shadow-sm">
+                <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-primary text-lg font-extrabold text-primary-foreground">{index + 1}</div>
+                <h3 className="mt-5 text-xl font-extrabold text-navy-primary">{title}</h3>
+                <p className="mt-3 leading-7 text-muted-foreground">{description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="content-auto bg-muted/30 px-4 py-16 lg:py-24" aria-labelledby="home-faq-title">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="saudi-eyebrow justify-center">{copy.faqLabel}</p>
+            <h2 id="home-faq-title" className="mt-3 text-3xl font-extrabold text-navy-primary md:text-4xl">{copy.faqTitle}</h2>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {copy.faqs.map(([question, answer]) => (
+              <details key={question} className="group rounded-2xl border border-border bg-card p-5 shadow-sm">
+                <summary className="cursor-pointer list-none pe-6 font-extrabold text-navy-primary marker:hidden [&::-webkit-details-marker]:hidden">{question}</summary>
+                <p className="mt-3 leading-7 text-muted-foreground">{answer}</p>
+              </details>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/faq" className="inline-flex items-center gap-2 font-bold text-navy-primary hover:underline">
+              {copy.allFaq}
+              <Arrow className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
   )
-}
-
-export function HomeAudienceSection() {
-  return (
-    <section className="bg-muted/30 px-4 py-16 lg:py-24" aria-labelledby="home-audience-title">
-      <div className="mx-auto max-w-7xl">
-        <div className="mx-auto max-w-3xl text-center"><h2 id="home-audience-title" className="text-balance text-3xl font-extrabold text-foreground md:text-4xl">برامج تناسب مختلف الأعمار والمستويات</h2><p className="mt-5 text-pretty text-lg leading-8 text-muted-foreground">سواء كنت تبحث عن بداية صحيحة لطفلك، أو ترغب في متابعة حفظك ومراجعتك، أو تريد تحسين القراءة واللغة العربية، نساعدك على اختيار المسار المناسب. البرامج متاحة للأطفال والفتيات والشباب والنساء والرجال، مع مراعاة عمر الطالب ومستواه وهدفه.</p></div>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{audiences.map(({ title, description, icon: Icon }, index) => <RevealOnScroll key={title} delay={index * 60}><article className="h-full rounded-2xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-lg"><div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon className="size-6" aria-hidden="true" /></div><h3 className="mt-5 text-lg font-bold">{title}</h3><p className="mt-2 leading-7 text-muted-foreground">{description}</p></article></RevealOnScroll>)}</div>
-      </div>
-    </section>
-  )
-}
-
-export function HomeHowToStartSection() {
-  const steps = ["اختر البرنامج المناسب لك.", "اضغط على «جرب حصة مجانا».", "أرسل بيانات الطالب والوقت المناسب.", "ننسق معك موعد الحصة التجريبية."]
-  return <section className="bg-card px-4 py-16 lg:py-24" aria-labelledby="home-start-title"><div className="mx-auto max-w-6xl"><div className="text-center"><h2 id="home-start-title" className="text-3xl font-extrabold text-foreground md:text-4xl">كيف تبدأ؟</h2><p className="mt-4 text-lg text-muted-foreground">أربع خطوات بسيطة للبدء في التعلم.</p></div><div className="mt-12 grid gap-6 md:grid-cols-4">{steps.map((step, index) => <RevealOnScroll key={step} delay={index * 80}><div className="relative text-center"><div className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary text-xl font-extrabold text-primary-foreground">{index + 1}</div><p className="mt-4 leading-7 text-foreground">{step}</p></div></RevealOnScroll>)}</div></div></section>
-}
-
-export function HomeFAQSection() {
-  return <section className="bg-muted/30 px-4 py-16 lg:py-24" aria-labelledby="home-faq-title"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /><div className="mx-auto max-w-4xl"><div className="text-center"><h2 id="home-faq-title" className="text-3xl font-extrabold text-foreground md:text-4xl">الأسئلة الشائعة</h2><p className="mt-4 text-lg text-muted-foreground">إجابات واضحة حول البرامج والحصص وطريقة البدء.</p></div><div className="mt-10 grid gap-3">{faqs.map(([question, answer]) => <details key={question} className="group rounded-2xl border border-border bg-card px-5 py-4 shadow-sm"><summary className="cursor-pointer list-none font-bold text-foreground marker:hidden [&::-webkit-details-marker]:hidden"><span className="flex items-center justify-between gap-4">{question}<span className="text-2xl font-normal text-primary transition-transform group-open:rotate-45" aria-hidden="true">+</span></span></summary><p className="mt-3 max-w-3xl leading-7 text-muted-foreground">{answer}</p></details>)}</div></div></section>
 }

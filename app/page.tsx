@@ -3,9 +3,7 @@ import dynamic from "next/dynamic"
 import { AcademyBanner } from "@/components/home/academy-banner"
 import { HeroSection } from "@/components/home/hero-section"
 import { DeferredLandingVideoStrip } from "@/components/home/deferred-landing-video-strip"
-import { AboutSection } from "@/components/home/about-section"
-import { FeaturesSection } from "@/components/home/features-section"
-import { StatsSection } from "@/components/home/stats-section"
+import { HomeContentSections } from "@/components/home/home-content-sections"
 import { Suspense } from "react"
 import { getPublicContent } from "@/lib/public-content-server"
 
@@ -13,22 +11,17 @@ import { getPublicContent } from "@/lib/public-content-server"
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: "أكاديمية الحافظ المتميز - تعليم القرآن الكريم والعربية أون لاين",
-  description: "أكاديمية متخصصة في تعليم القرآن الكريم وتأسيس اللغة العربية للناطقين بغيرها، بمعلمين محترفين وبرامج مميزة",
+  title: "تعلّم القرآن الكريم واللغة العربية أونلاين | أكاديمية الحافظ المتميز",
+  description: "حصص فردية أونلاين لتعليم القرآن الكريم والتجويد وتأسيس اللغة العربية، مع خطة تناسب مستوى الطالب وهدفه.",
   keywords: "تعليم القرآن، حفظ القرآن، تعليم عربي، تاجويد، معلمون",
   openGraph: {
-    title: "أكاديمية الحافظ المتميز",
-    description: "تعليم القرآن الكريم والعربية أون لاين",
+    title: "تعلّم القرآن الكريم واللغة العربية أونلاين | أكاديمية الحافظ المتميز",
+    description: "حصص فردية لتعليم القرآن الكريم والتجويد وتأسيس اللغة العربية.",
     type: "website",
     locale: "ar_SA",
     images: [{ url: "https://quran-elhafez.com/images/og-default.webp", width: 1200, height: 630, alt: "أكاديمية الحافظ المتميز" }],
   },
 }
-
-const TestimonialsPreview = dynamic(
-  () => import("@/components/home/testimonials-preview").then((module) => ({ default: module.TestimonialsPreview })),
-  { ssr: true, loading: () => <div className="min-h-80 bg-muted" /> },
-)
 
 const CTASection = dynamic(
   () => import("@/components/home/cta-section").then((module) => ({ default: module.CTASection })),
@@ -54,13 +47,8 @@ export default async function HomePage() {
     <>
       <AcademyBanner />
       <HeroSection content={content} />
+      <HomeContentSections />
       <DeferredLandingVideoStrip />
-      <FeaturesSection />
-      <StatsSection />
-      <Suspense fallback={<div className="min-h-80 bg-muted" />}>
-        <TestimonialsPreview />
-      </Suspense>
-      <AboutSection content={content} />
       <Suspense fallback={<div className="min-h-72 bg-muted" />}>
         <CTASection />
       </Suspense>

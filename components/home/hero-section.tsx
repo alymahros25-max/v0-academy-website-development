@@ -3,14 +3,13 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n"
-import { ArrowLeft, ArrowRight, Star } from "lucide-react"
-import { siteStats } from "@/lib/site-stats"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 import { RevealOnScroll } from "@/components/ui/reveal-on-scroll"
 import type { PublicContent } from "@/lib/public-content"
 import { localizedContent } from "@/lib/public-content"
 
 export function HeroSection({ content = {} }: { content?: Record<string, PublicContent> }) {
-  const { t, locale, dir } = useI18n()
+  const { locale, dir } = useI18n()
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight
 
   return (
@@ -34,42 +33,18 @@ export function HeroSection({ content = {} }: { content?: Record<string, PublicC
           <div className="text-center transition-transform lg:text-start">
             <div className="mx-auto inline-flex w-fit max-w-full flex-col items-center rounded-3xl bg-background/75 px-5 py-6 shadow-lg backdrop-blur-[2px] lg:mx-0 lg:items-start lg:px-8 lg:py-7">
               <h1 className="text-4xl font-extrabold leading-tight text-foreground text-balance md:text-5xl lg:text-6xl">
-                {localizedContent(content.hero_title, locale, "أكاديمية الحافظ المتميز")}
+                {localizedContent(content.hero_title, locale, "تعلّم القرآن الكريم واللغة العربية أونلاين بثقة")}
               </h1>
               <p className="mt-3 text-2xl font-bold leading-relaxed text-foreground md:text-3xl">
-                <span className="block">{localizedContent(content.hero_subtitle, locale, "تحفيظ القرآن وتأسيس العربية")}</span>
-                <span className="block">رجال ونساء وأطفال</span>
-                <span className="mt-1 block text-lg font-semibold text-muted-foreground md:text-xl">(الخليج، أوروبا، أمريكا)</span>
+                <span className="block">{localizedContent(content.hero_subtitle, locale, "حصص فردية لتعليم القرآن الكريم والتجويد وتأسيس اللغة العربية")}</span>
+                <span className="block">للأطفال والكبار والمبتدئين</span>
+                <span className="mt-1 block text-lg font-semibold text-muted-foreground md:text-xl">حصص فردية عبر الإنترنت</span>
               </p>
             </div>
 
-            {/* Trust indicators */}
-            <div className="mt-10 flex items-center gap-6 justify-center lg:justify-start text-primary-foreground/70 text-sm">
-              <div className="flex items-center gap-1">
-                <div className="flex -space-x-2 rtl:space-x-reverse">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div
-                      key={i}
-                      className="w-8 h-8 rounded-full bg-secondary/30 border-2 border-primary flex items-center justify-center text-xs font-bold text-secondary"
-                    >
-                      {locale === "ar" ? "ط" : "S"}
-                    </div>
-                  ))}
-                </div>
-                <span className="ms-2">
-                  {locale === "ar" ? `+${siteStats.students} طالب` : locale === "en" ? `+${siteStats.students} Students` : `+${siteStats.students} Etudiants`}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4 fill-gold-primary text-gold-primary"
-                  />
-                ))}
-                <span className="ms-1">4.9/5</span>
-              </div>
-            </div>
+            <p className="mx-auto mt-8 max-w-xl text-center text-base leading-7 text-foreground/80 lg:mx-0 lg:text-start">
+              {locale === "ar" ? "ابدأ من مستواك، وناقش هدفك، ثم تعلّم بخطوات واضحة مع متابعة تناسب احتياجك." : "Start from your level, discuss your goal, and learn through clear steps with support around your needs."}
+            </p>
           </div>
 
           {/* Decorative Card */}
@@ -86,28 +61,7 @@ export function HeroSection({ content = {} }: { content?: Record<string, PublicC
                   className="object-cover"
                 />
               </div>
-              {/* Floating card */}
-              <RevealOnScroll className="absolute -bottom-6 -start-12" delay={0}>
-                <div className="bg-card rounded-2xl shadow-xl p-4 animate-float">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <span className="text-2xl font-bold text-primary">
-                        {locale === "ar" ? "+" : "+"}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="font-bold text-foreground text-lg">{siteStats.countries}+</p>
-                      <p className="text-sm text-muted-foreground">
-                        {locale === "ar"
-                          ? "دولة حول العالم"
-                          : locale === "en"
-                            ? "Countries worldwide"
-                            : "Pays dans le monde"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </RevealOnScroll>
+
             </div>
           </div>
         </div>
@@ -115,17 +69,17 @@ export function HeroSection({ content = {} }: { content?: Record<string, PublicC
 
       <div className="absolute inset-x-0 bottom-10 z-20 flex flex-col items-center justify-center gap-2 px-4 sm:flex-row sm:gap-8">
         <Link
-          href="/classroom-moments"
-          className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+          href="/contact"
+          className="group inline-flex min-h-12 items-center gap-2 rounded-xl bg-primary px-7 py-3 text-base font-bold text-primary-foreground shadow-md transition-all hover:-translate-y-0.5 hover:bg-primary/90"
         >
-          {locale === "ar" ? "فيديوهات من حصصنا" : locale === "en" ? "Videos from our classes" : "Vidéos de nos cours"}
+          {locale === "ar" ? "احجز حصتك التجريبية" : locale === "en" ? "Book your trial lesson" : "Réserver votre cours d’essai"}
           <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
         </Link>
         <Link
           href="/quran"
-          className="group inline-flex items-center gap-2 py-2 text-base font-bold text-navy-primary transition-colors hover:text-navy-light hover:underline underline-offset-4"
+          className="group inline-flex min-h-12 items-center gap-2 rounded-xl border border-navy-primary/30 bg-background/80 px-7 py-3 text-base font-bold text-navy-primary transition-all hover:-translate-y-0.5 hover:bg-background"
         >
-          {t("hero.cta2")}
+          {locale === "ar" ? "تعرّف على البرامج" : locale === "en" ? "Explore the programs" : "Découvrir les programmes"}
           <Arrow className="size-4 transition-transform group-hover:-translate-x-1" />
         </Link>
       </div>
