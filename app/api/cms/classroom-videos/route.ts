@@ -33,6 +33,8 @@ interface ClassroomVideo {
 
 // GET: Fetch classroom videos
 export async function GET(request: NextRequest) {
+  const authError = await requireAdmin()
+  if (authError) return authError
   try {
     if (!supabase) {
       return NextResponse.json({ error: 'Database not configured', data: [] }, { status: 200 })
@@ -125,7 +127,14 @@ export async function POST(request: NextRequest) {
     // Generate thumbnail if not provided
     const thumbnail = body.thumbnail_url || getYouTubeThumbnail(embedId, 'high')
 
-    // Create the video record
+    const { data: lastVideo } = await supabase
+      .from('classroom_videos')
+      .select('display_order')
+      .order('display_order', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    // Create the video record after the current last item
     const { data, error } = await supabase
       .from('classroom_videos')
       .insert({
@@ -144,7 +153,7 @@ export async function POST(request: NextRequest) {
         category: body.category || 'عام',
         is_published: body.is_published ?? true,
         is_featured: body.is_featured ?? false,
-        display_order: body.display_order ?? 0,
+        display_order: body.display_order ?? (Number(lastVideo?.display_order ?? -1) + 1),
       })
       .select()
       .single()

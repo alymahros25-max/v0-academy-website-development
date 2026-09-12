@@ -513,8 +513,8 @@ function PackagesTab() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button type="button" aria-label="تحريك الباقة لأعلى" disabled={index === 0} onClick={async () => { try { await swapAdminOrder("packages", pkg, packageRows[index - 1]); globalMutate("/api/admin/data?type=packages") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowUp className="w-4 h-4" /></button>
-                    <button type="button" aria-label="تحريك الباقة لأسفل" disabled={index === packageRows.length - 1} onClick={async () => { try { await swapAdminOrder("packages", pkg, packageRows[index + 1]); globalMutate("/api/admin/data?type=packages") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowDown className="w-4 h-4" /></button>
+                    <button type="button" aria-label="تحريك الباقة لأعلى" onClick={async () => { try { await swapAdminOrder("packages", pkg, packageRows[(index - 1 + packageRows.length) % packageRows.length]); globalMutate("/api/admin/data?type=packages") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted"><ArrowUp className="w-4 h-4" /></button>
+                    <button type="button" aria-label="تحريك الباقة لأسفل" onClick={async () => { try { await swapAdminOrder("packages", pkg, packageRows[(index + 1) % packageRows.length]); globalMutate("/api/admin/data?type=packages") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted"><ArrowDown className="w-4 h-4" /></button>
                     <button
                       onClick={() => { pkg.id && setEditingId(pkg.id); pkg && setEditData(pkg) }}
                       className="p-2 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
@@ -717,8 +717,8 @@ function TeachersTab() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <button type="button" aria-label="تحريك المعلم لأعلى" disabled={index === 0} onClick={async () => { try { await swapAdminOrder("teachers", teacher, teacherRecords[index - 1]); globalMutate("/api/admin/data?type=teachers") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowUp className="w-4 h-4" /></button>
-                <button type="button" aria-label="تحريك المعلم لأسفل" disabled={index === teacherRecords.length - 1} onClick={async () => { try { await swapAdminOrder("teachers", teacher, teacherRecords[index + 1]); globalMutate("/api/admin/data?type=teachers") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowDown className="w-4 h-4" /></button>
+                <button type="button" aria-label="تحريك المعلم لأعلى" onClick={async () => { try { await swapAdminOrder("teachers", teacher, teacherRecords[(index - 1 + teacherRecords.length) % teacherRecords.length]); globalMutate("/api/admin/data?type=teachers") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted"><ArrowUp className="w-4 h-4" /></button>
+                <button type="button" aria-label="تحريك المعلم لأسفل" onClick={async () => { try { await swapAdminOrder("teachers", teacher, teacherRecords[(index + 1) % teacherRecords.length]); globalMutate("/api/admin/data?type=teachers") } catch (error) { setMessage(error instanceof Error ? error.message : "تعذر حفظ الترتيب") } }} className="p-2 rounded-lg hover:bg-muted"><ArrowDown className="w-4 h-4" /></button>
                 <button
                   type="button"
                   aria-label="تعديل بيانات المعلم"
@@ -793,8 +793,8 @@ function ReviewsTab() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button type="button" aria-label="تحريك الرأي لأعلى" disabled={index === 0} onClick={async () => { try { await swapAdminOrder("reviews", review, reviews[index - 1]); mutate() } catch (error) { console.error(error) } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowUp className="w-4 h-4" /></button>
-                  <button type="button" aria-label="تحريك الرأي لأسفل" disabled={index === reviews.length - 1} onClick={async () => { try { await swapAdminOrder("reviews", review, reviews[index + 1]); mutate() } catch (error) { console.error(error) } }} className="p-2 rounded-lg hover:bg-muted disabled:opacity-30"><ArrowDown className="w-4 h-4" /></button>
+                  <button type="button" aria-label="تحريك الرأي لأعلى" onClick={async () => { try { await swapAdminOrder("reviews", review, reviews[(index - 1 + reviews.length) % reviews.length]); mutate() } catch (error) { console.error(error) } }} className="p-2 rounded-lg hover:bg-muted"><ArrowUp className="w-4 h-4" /></button>
+                  <button type="button" aria-label="تحريك الرأي لأسفل" onClick={async () => { try { await swapAdminOrder("reviews", review, reviews[(index + 1) % reviews.length]); mutate() } catch (error) { console.error(error) } }} className="p-2 rounded-lg hover:bg-muted"><ArrowDown className="w-4 h-4" /></button>
                   <button
                     onClick={() => handleToggle(review.id, review?.active ?? false)}
                     className={`p-2 rounded-lg transition-colors ${review?.active ? "hover:bg-muted text-primary" : "hover:bg-primary/10 text-muted-foreground"}`}
@@ -1354,13 +1354,27 @@ function UsersManagementTab() {
 // Classroom Videos Management Tab
 function ClassroomVideosTab() {
   const [showForm, setShowForm] = useState(false)
+  const [editingVideo, setEditingVideo] = useState<any | null>(null)
   // Fetch ALL videos (published + drafts) so the admin sees everything
   // API returns { data: [...] } so we extract the array
-  const { data: apiResponse, isLoading, error } = useSWR("/api/cms/classroom-videos", fetcher, { 
+  const { data: apiResponse, isLoading, error, mutate } = useSWR("/api/cms/classroom-videos", fetcher, {
     revalidateOnFocus: true,
     dedupingInterval: 5000
   })
   const videos = Array.isArray(apiResponse?.data) ? apiResponse.data : []
+
+  const moveVideo = async (index: number, direction: -1 | 1) => {
+    if (videos.length < 2) return
+    const targetIndex = (index + direction + videos.length) % videos.length
+    const current = videos[index]
+    const target = videos[targetIndex]
+    const responses = await Promise.all([
+      fetch(`/api/cms/classroom-videos?id=${current.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ display_order: target.display_order }) }),
+      fetch(`/api/cms/classroom-videos?id=${target.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ display_order: current.display_order }) }),
+    ])
+    if (responses.some((response) => !response.ok)) throw new Error("تعذر حفظ ترتيب الفيديو")
+    await mutate()
+  }
 
   return (
     <div className="space-y-6">
@@ -1388,6 +1402,12 @@ function ClassroomVideosTab() {
         </div>
       )}
 
+      {editingVideo && (
+        <div className="bg-card rounded-lg border border-primary/30 p-6">
+          <VideoForm initialData={editingVideo} isEditing onSuccess={() => { setEditingVideo(null); void mutate() }} />
+        </div>
+      )}
+
       {/* Videos List */}
       <div className="bg-card rounded-lg border border-border p-6">
         {isLoading ? (
@@ -1408,8 +1428,8 @@ function ClassroomVideosTab() {
           </div>
         ) : (
           <div className="space-y-4">
-            {videos.map((video: any) => (
-              <ClassroomVideoItem key={video.id} video={video} onUpdate={() => globalMutate("/api/cms/classroom-videos")} />
+            {videos.map((video: any, index: number) => (
+              <ClassroomVideoItem key={video.id} video={video} index={index} onEdit={() => { setEditingVideo(video); setShowForm(false) }} onMove={moveVideo} onUpdate={() => void mutate()} />
             ))}
           </div>
         )}
@@ -1419,7 +1439,7 @@ function ClassroomVideosTab() {
 }
 
 // Classroom Video Item Component
-function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => void }) {
+function ClassroomVideoItem({ video, index, onEdit, onMove, onUpdate }: { video: any; index: number; onEdit: () => void; onMove: (index: number, direction: -1 | 1) => Promise<void>; onUpdate: () => void }) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
@@ -1457,6 +1477,12 @@ function ClassroomVideoItem({ video, onUpdate }: { video: any; onUpdate: () => v
           {video.teacher_name_ar && <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">👨‍🏫 {video.teacher_name_ar}</span>}
         </div>
       </div>
+      <div className="flex flex-col items-center gap-1">
+        <button type="button" aria-label="تحريك الفيديو لأعلى" onClick={() => void onMove(index, -1)} className="rounded p-2 text-muted-foreground hover:bg-muted hover:text-primary"><ArrowUp className="w-4 h-4" /></button>
+        <span className="text-xs text-muted-foreground">{video.display_order ?? index}</span>
+        <button type="button" aria-label="تحريك الفيديو لأسفل" onClick={() => void onMove(index, 1)} className="rounded p-2 text-muted-foreground hover:bg-muted hover:text-primary"><ArrowDown className="w-4 h-4" /></button>
+      </div>
+      <button type="button" onClick={onEdit} className="rounded p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary" aria-label="تعديل الفيديو"><Edit3 className="w-4 h-4" /></button>
       <button
         onClick={handleDelete}
         disabled={isDeleting}
