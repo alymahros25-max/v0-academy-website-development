@@ -8,7 +8,7 @@ import type { LandingVideo } from "@/lib/classroom-videos"
 export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
   const scroller = useRef<HTMLDivElement>(null)
   const [activeVideo, setActiveVideo] = useState<LandingVideo | null>(null)
-  const [visibleVideoIds, setVisibleVideoIds] = useState<Set<string>>(() => new Set())
+  const [visibleVideoIds, setVisibleVideoIds] = useState<Set<string>>(() => new Set(videos.slice(0, 3).map((video) => video.id)))
   const move = (direction: "next" | "previous") => {
     scroller.current?.scrollBy({ left: direction === "next" ? -340 : 340, behavior: "smooth" })
   }
@@ -17,22 +17,19 @@ export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
     const root = scroller.current
     if (!root || !videos.length) return
 
-    const revealThumbnails = () => {
-      setVisibleVideoIds(new Set(videos.map((video) => video.id)))
-    }
-
     if (typeof IntersectionObserver === "undefined") {
-      revealThumbnails()
+      setVisibleVideoIds(new Set(videos.map((video) => video.id)))
       return
     }
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      revealThumbnails()
-      observer.disconnect()
-    }, { rootMargin: "320px 0px" })
+    const observer = new IntersectionObserver((entries) => {
+      const newlyVisible = entries.filter((entry) => entry.isIntersecting).map((entry) => (entry.target as HTMLElement).dataset.videoId).filter(Boolean) as string[]
+      if (!newlyVisible.length) return
+      setVisibleVideoIds((current) => new Set([...current, ...newlyVisible]))
+      entries.filter((entry) => entry.isIntersecting).forEach((entry) => observer.unobserve(entry.target))
+    }, { root, rootMargin: "160px" })
 
-    observer.observe(root)
+    root.querySelectorAll<HTMLElement>("[data-video-id]").forEach((card) => observer.observe(card))
     return () => observer.disconnect()
   }, [videos])
 
@@ -52,7 +49,7 @@ export function LandingVideoCarousel({ videos }: { videos: LandingVideo[] }) {
     <div className="relative mt-8">
       <div ref={scroller} className="home-video-strip flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 [scrollbar-width:thin]" aria-label="فيديوهات الحصص">
         {videos.map((video) => (
-          <article key={video.id} data-video-id={video.id} className="saudi-reveal saudi-video-card min-w-[calc(100%-2rem)] snap-start overflow-hidden rounded-2xl border border-border bg-background shadow-sm sm:min-w-[calc(50%-0.5rem)] lg:min-w-[calc(33.333%-0.75rem)]">
+          <article key={video.id} data-video-id={video.id} className="saudi-reveal saudi-video-card min-w-[calc(100%-2rem)] snap-start overflow-hidden rounded-2xl border border-border bg-background shadow-sm [content-visibility:auto] [contain-intrinsic-size:0_280px] sm:min-w-[calc(50%-0.5rem)] lg:min-w-[calc(33.333%-0.75rem)]">
             <button type="button" onClick={() => setActiveVideo(video)} className="group block w-full text-right" aria-label={`تشغيل داخل الصفحة: ${video.title_ar}`}>
               <div className="relative aspect-video overflow-hidden bg-muted">
                 {visibleVideoIds.has(video.id) ? <Image src={video.poster || `https://img.youtube.com/vi/${video.youtube_embed_id}/mqdefault.jpg`} alt="" fill sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 33vw" loading="lazy" fetchPriority="low" className="object-cover transition-transform duration-300 group-hover:scale-105" unoptimized /> : <div className="size-full bg-muted" aria-hidden="true" />}
